@@ -1,0 +1,61 @@
+service: apollo-lambda
+provider:
+   name: aws
+   runtime: nodejs12.x
+   iamRoleStatements:
+      - Effect:
+           'Allow'
+           #This specifies the actions allowed on your resource, * is all
+        Action:
+           - 'dynamodb:*'
+           #This specifies the ARN of your resources
+        Resource: 'arn:aws:dynamodb:us-east-1:*:*'
+
+functions:
+   graphql:
+      handler: src/apollo-server.graphqlHandler
+      events:
+         - http:
+              path: graphql
+              method: post
+              cors: true
+         - http:
+              path: graphql
+              method: get
+              cors: true
+
+plugins:
+   - serverless-webpack
+   - serverless-offline
+   - serverless-dotenv-plugin
+
+custom:
+   users: Users
+   classes: Classes
+   webpack:
+      includeModules: true
+
+resources:
+   Resources:
+      UsersDynamoDbTable:
+         Type: AWS::DynamoDB::Table
+         Properties:
+            TableName: ${self:custom.users}
+            AttributeDefinitions:
+               - AttributeName: id
+                 AttributeType: S
+            KeySchema:
+               - AttributeName: id
+                 KeyType: HASH
+            BillingMode: PAY_PER_REQUEST
+      ClassesDynamoDbTable:
+         Type: AWS::DynamoDB::Table
+         Properties:
+            TableName: ${self:custom.classes}
+            AttributeDefinitions:
+               - AttributeName: id
+                 AttributeType: S
+            KeySchema:
+               - AttributeName: id
+                 KeyType: HASH
+            BillingMode: PAY_PER_REQUEST
