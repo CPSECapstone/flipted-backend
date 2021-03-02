@@ -30,8 +30,8 @@ plugins:
    - serverless-dotenv-plugin
 
 custom:
-   users: Users
-   classes: Classes
+   users: Users-${env:STAGE}
+   classes: Classes-${env:STAGE}
    webpack:
       includeModules: true
 
@@ -39,6 +39,7 @@ resources:
    Resources:
       UsersDynamoDbTable:
          Type: AWS::DynamoDB::Table
+         DeletionPolicy: Retain
          Properties:
             TableName: ${self:custom.users}
             AttributeDefinitions:
@@ -50,6 +51,7 @@ resources:
             BillingMode: PAY_PER_REQUEST
       ClassesDynamoDbTable:
          Type: AWS::DynamoDB::Table
+         DeletionPolicy: Retain
          Properties:
             TableName: ${self:custom.classes}
             AttributeDefinitions:
