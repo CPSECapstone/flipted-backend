@@ -8,8 +8,8 @@ phases:
          - npm install
    build:
       commands:
-         - echo starting offline server...
-         - serverless offline
+         - echo starting tests...
+         - npm run test
    post_build:
       commands:
          - echo Build completed on `date`
