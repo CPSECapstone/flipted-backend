@@ -21,4 +21,4 @@
 <p>In the same constant, we define all of the Queries our Graphql server will handle and what it returns.</p>
 
 <h5>Deployment</h5>
-<p>When you're ready, you can deploy or redeploy with <code>serverless deploy</code>. To specify the stage (dev/prod), use the following <code>serverless deploy --stage prod</code> or <code>serverless deploy --stage dev</code></p>
+<p>When you're ready, you can deploy or redeploy with <code>serverless deploy</code>. To specify the stage (dev/prod), use the following <code>serverless deploy --stage prod</code> or <code>serverless deploy --stage dev</code></p>.
