@@ -2,9 +2,9 @@
   "name": "flipted",
   "version": "1.0.0",
   "description": "LMS for K-12, Senior Capstone Project.",
-  "main": "index.js",
+  "main": "apollo-server.ts",
   "scripts": {
-    "test": "node test/example.test.ts"
+    "test": "mocha -r ts-node/register src/test/*"
   },
   "author": "Matt Cuento",
   "license": "ISC",
@@ -19,11 +19,16 @@
     "serverless": "^2.25.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.15",
+    "chai": "^4.3.1",
+    "mocha": "^8.3.0",
     "serverless-dotenv-plugin": "^3.3.0",
     "serverless-offline": "^6.8.0",
     "serverless-webpack": "^5.3.5",
     "ts-loader": "^8.0.17",
+    "ts-node": "^9.1.1",
     "typescript": "^4.1.5",
+    "typings": "^2.1.1",
     "webpack": "^5.22.0",
     "webpack-node-externals": "^2.5.2"
   }
