@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+   pre_build:
+      commands:
+         - echo pre-build installing modules...
+         - npm install -g serverless
+         - npm install
+   build:
+      commands:
+         - echo starting offline server...
+         - serverless offline
+   post_build:
+      commands:
+         - echo Build completed on `date`
+         - exit

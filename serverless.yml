@@ -30,8 +30,8 @@ plugins:
    - serverless-dotenv-plugin
 
 custom:
-   users: Users
-   classes: Classes
+   users: Users-${env:STAGE}
+   classes: Classes-${env:STAGE}
    webpack:
       includeModules: true
 
