@@ -13,4 +13,6 @@ phases:
    post_build:
       commands:
          - echo Build completed on `date`
-         - exit
+         - echo Deploying to dev...
+         - serverless deploy --stage dev
+         - echo Deployment COMPLETE

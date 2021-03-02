@@ -2,7 +2,6 @@ const { unmarshall } = require("@aws-sdk/util-dynamodb");
 const { DynamoDBClient, ScanCommand } = require("@aws-sdk/client-dynamodb");
 
 const client = new DynamoDBClient({ region: "us-east-1" });
-
 //THIS IS THE RESOLVER FUNCTION FOR USERS
 //GATHERS ITEMS FROM USERS TABLE IN DYNAMODB
 export const getUsers = async () => {
