@@ -1,24 +1,44 @@
 # flipted-backend
 
-<p>Clone the repo and:</p>
-<ul>
- 
-<li><code>npm install -g serverless</code></li>
-<li><code>npm install</code></li>
-</ul>
-<br>
-<p>Next, type in <code>serverless offline</code> and visit the url it generates on your local machine</p>
-<br>
-<p>Now you can start to play around with the <strong>resolvers, typedefs, and queries</strong> that our Apollo Server is working with (I use Postman to test queries).</p>
+[Repo](https://github.com/CPSECapstone/flipted-backend.git)
 
-<h5>Resolvers</h5>
-<p>These will be the keywords that are waiting to be triggered. Our only resolver right now is for users.</p>
- 
-<h5>Typedefs</h5>
-<p>Typedefs will define both Queries and the contents of any objects we return. This is where Graphql gets pretty powerful.</p>
+## Setup
 
-<h5>Queries</h5>
-<p>In the same constant, we define all of the Queries our Graphql server will handle and what it returns.</p>
+1. Clone the repo and install dependencies
 
-<h5>Deployment</h5>
-<p>When you're ready, you can deploy or redeploy with <code>serverless deploy</code>. To specify the stage (dev/prod), use the following <code>serverless deploy --stage prod</code> or <code>serverless deploy --stage dev</code></p>.
+```bash
+# install dependencies
+npm install -g serverless
+npm install
+```
+
+2. Next, type in `serverless offline` and visit the url it generates on your local machine
+
+3. Now you can start to play around with the **resolvers, typedefs, and queries** that our Apollo Server is working with (I use Postman to test queries).
+
+
+## Development
+
+### Resolvers
+
+These will be the keywords that are waiting to be triggered. Our only resolver right now is for users.
+
+#### Typedefs
+
+Typedefs will define both Queries and the contents of any objects we return. This is where Graphql gets pretty powerful.
+
+#### Queries
+
+In the same constant, we define all of the Queries our Graphql server will handle and what it returns.
+
+### Deployment
+
+When you're ready, you can deploy or redeploy with `serverless deploy`. To specify the stage (dev/prod), use the following `serverless deploy --stage prod` or `serverless deploy --stage dev`.
+
+```
+# Debug locally
+npm run debug
+
+# Deploy to AWS
+npm run deploy
+```

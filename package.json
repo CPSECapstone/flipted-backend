@@ -4,13 +4,17 @@
   "description": "LMS for K-12, Senior Capstone Project.",
   "main": "apollo-server.ts",
   "scripts": {
-    "test": "mocha -r ts-node/register src/test/*"
+    "test": "mocha -r ts-node/register src/test/*",
+    "deploy": "NODE_ENV=production sls deploy",
+    "debug": "export SLS_DEBUG=* NODE_ENV=production && node --inspect node_modules/.bin/sls offline -s dev"
   },
   "author": "Matt Cuento",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1.0",
     "@aws-sdk/util-dynamodb": "^3.1.0",
+    "@graphql-tools/load-files": "^6.3.0",
+    "@graphql-tools/merge": "^6.2.10",
     "apollo-server": "^2.19.1",
     "apollo-server-lambda": "^2.21.0",
     "graphql": "^15.4.0",
@@ -23,7 +27,11 @@
     "@types/chai": "^4.2.15",
     "chai": "^4.3.1",
     "mocha": "^8.3.0",
+    "react": "^17.0.1",
+    "serverless": "^2.25.2",
     "serverless-dotenv-plugin": "^3.3.0",
+    "serverless-dynamodb-client": "0.0.2",
+    "serverless-dynamodb-local": "^0.2.39",
     "serverless-offline": "^6.8.0",
     "serverless-webpack": "^5.3.5",
     "ts-loader": "^8.0.17",
