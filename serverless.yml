@@ -31,7 +31,9 @@ plugins:
 
 custom:
    users: Users-${env:STAGE}
-   classes: Classes-${env:STAGE}
+   courses: Courses-${env:STAGE}
+   missions: Missions-${env:STAGE}
+   tasks: Tasks-${env:STAGE}
    webpack:
       includeModules: true
 
@@ -49,11 +51,35 @@ resources:
                - AttributeName: id
                  KeyType: HASH
             BillingMode: PAY_PER_REQUEST
-      ClassesDynamoDbTable:
+      CoursesDynamoDbTable:
          Type: AWS::DynamoDB::Table
          DeletionPolicy: Retain
          Properties:
-            TableName: ${self:custom.classes}
+            TableName: ${self:custom.courses}
+            AttributeDefinitions:
+               - AttributeName: id
+                 AttributeType: S
+            KeySchema:
+               - AttributeName: id
+                 KeyType: HASH
+            BillingMode: PAY_PER_REQUEST
+      MissionsDynamoDbTable:
+         Type: AWS::DynamoDB::Table
+         DeletionPolicy: Retain
+         Properties:
+            TableName: ${self:custom.missions}
+            AttributeDefinitions:
+               - AttributeName: id
+                 AttributeType: S
+            KeySchema:
+               - AttributeName: id
+                 KeyType: HASH
+            BillingMode: PAY_PER_REQUEST
+      TasksDynamoDbTable:
+         Type: AWS::DynamoDB::Table
+         DeletionPolicy: Retain
+         Properties:
+            TableName: ${self:custom.tasks}
             AttributeDefinitions:
                - AttributeName: id
                  AttributeType: S
