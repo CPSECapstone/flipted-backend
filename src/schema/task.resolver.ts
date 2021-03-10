@@ -1,4 +1,4 @@
-import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { DynamoDBClient, ScanCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { uid } from 'uid/secure';
 import { environment } from "../environment";
@@ -29,24 +29,21 @@ const resolvers = {
   Mutation: {
     addTask: async (_: any, args: any, context: any, info: any) => {
       const task: TaskInput = args.task;
-      const command = new PutItemCommand({
+      const params = {
         TableName: TASK_TABLE,
-        Item: {
-          "id": { S: uid() },
-          "name": { S: task.name.toString() },
-          "description": { S: task.description.toString() },
-          "link": { S: task.link.toString() }
-        },
+        Item: marshall({
+          "id": uid(),
+          "name": task.name,
+          "description": task.description,
+          "link": task.link
+        }),
         ReturnValues: "ALL_OLD",
-      });
+      }
+      const command = new PutItemCommand(params);
 
       try {
-        const results = await client.send(command);
-        return {
-          name: task.name.toString(),
-          description: task.description.toString(),
-          link: task.link.toString()
-        }
+        await client.send(command);
+        return unmarshall(params.Item);
       } catch (err) {
         console.log(err);
         return err;

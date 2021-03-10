@@ -1,25 +1,20 @@
 type Mission {
-  id: String!
-  name: String!
-  description: String!
-  tasks: [Task]
-}
-
-type MissionResult{
-  name: String!
-  description: String!
+	id: String!
+	name: String!
+	description: String!
+	tasks: [Task]
 }
 
 input MissionInput {
-  name: String!
-  description: String!
-  tasks: [TaskInput]
+	name: String!
+	description: String!
+	tasks: [TaskInput]
 }
 
 type Query {
-   getMissions: [Mission]
+	getMissions: [Mission]
 }
 
 type Mutation {
-  addMission(mission: MissionInput): MissionResult
+	addMission(mission: MissionInput): Mission
 }
