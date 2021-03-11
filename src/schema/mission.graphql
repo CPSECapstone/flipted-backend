@@ -12,7 +12,7 @@ input MissionInput {
 }
 
 type Query {
-	getMissions: [Mission]
+	missions: [Mission]
 }
 
 type Mutation {

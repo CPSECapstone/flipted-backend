@@ -1,27 +1,5 @@
 ### GraphQL examples
 
-```
-# add user
-mutation {
-  addUser(user: {
-    firstName: "haha",
-    lastName: "Doe"
-  }) {
-    lastName
-  }
-}
-```
-
-```
-query {
-  getUsers(){
-    id
-    firstName
-    lastName
-  }
-}
-```
-
 ### Add a Task
 
 ```
@@ -36,17 +14,72 @@ mutation {
     link
   }
 }
+
+# get tasks
+{
+  tasks {
+    id
+    name
+    description
+    link
+  }
+}
 ```
 
-### Add a Mission
+### Missions
 
 ```
 mutation {
   addMission(mission: {
     name: "New Mission",
-    description: "Mission to do"
+    description: "Mission to do",
+    tasks: []
+  }) {
+    id
+    name
+    description
+  }
+}
+
+# getMissions
+{
+  missions {
+    id
+    name
+    description
+    tasks {
+      id
+      name
+      description
+      link
+    }
+  }
+}
+```
+
+### Courses
+
+```
+# addCourse
+mutation {
+  addCourse(course: {
+    name: "English 131"
+    instructor: "Dr. Fauci"
+    description: "Writing and Rhetoric Stretch",
+    missions:[]
   }) {
     name
+    instructor
+    description
+  }
+}
+
+# getCourses
+{
+  courses {
+    id
+    name
+    instructor
     description
   }
 }

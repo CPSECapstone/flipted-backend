@@ -1,4 +1,4 @@
-import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { marshall, unmarshall, marshallOptions } from "@aws-sdk/util-dynamodb";
 import { DynamoDBClient, ScanCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { environment } from "../environment";
 import { CourseInput } from "../interfaces";
@@ -7,9 +7,15 @@ import { uid } from "uid/secure";
 const client = new DynamoDBClient({ region: "us-east-1" });
 const COURSE_TABLE = "Courses-" + environment.stage;
 
+const marshallOpts: marshallOptions = {
+  removeUndefinedValues: true,
+  convertEmptyValues: false,
+  convertClassInstanceToMap: true
+};
+
 const resolvers = {
   Query: {
-    getCourses: async () => {
+    courses: async () => {
       const command = new ScanCommand({ TableName: COURSE_TABLE });
       try {
         const results = await client.send(command);
@@ -37,14 +43,12 @@ const resolvers = {
           "description": course.description,
           "instructor": course.instructor,
           "missions": course.missions
-        }),
+        }, marshallOpts),
         ReturnValues: "ALL_OLD",
       }
       const command = new PutItemCommand(params);
-
-        console.log(params)
       try {
-        await client.send(command);
+        const result = client.send(command);
         return unmarshall(params.Item);
       } catch (err) {
         console.log(err);

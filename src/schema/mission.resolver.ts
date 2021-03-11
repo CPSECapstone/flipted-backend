@@ -1,4 +1,4 @@
-import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { marshall, unmarshall, marshallOptions } from "@aws-sdk/util-dynamodb";
 import { DynamoDBClient, ScanCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { uid } from 'uid/secure';
 
@@ -8,9 +8,15 @@ import { MissionInput } from "../interfaces";
 const client = new DynamoDBClient({ region: "us-east-1" });
 const MISSION_TABLE = "Missions-" + environment.stage;
 
+const marshallOpts: marshallOptions = {
+  removeUndefinedValues: true,
+  convertEmptyValues: false,
+  convertClassInstanceToMap: true
+};
+
 const resolvers = {
   Query: {
-    getMissions: async () => {
+    missions: async () => {
       const command = new ScanCommand({ TableName: MISSION_TABLE });
       try {
         const results = await client.send(command);
@@ -37,7 +43,7 @@ const resolvers = {
           "name": mission.name,
           "description": mission.description,
           "tasks": mission.tasks
-        }),
+        }, marshallOpts),
         ReturnValues: "ALL_OLD",
       };
       const command = new PutItemCommand(params);

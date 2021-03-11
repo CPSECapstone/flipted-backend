@@ -18,7 +18,7 @@ input CourseInput {
 }
 
 type Query {
-	getCourses: [Course]
+	courses: [Course]
 }
 
 type Mutation {

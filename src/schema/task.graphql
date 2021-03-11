@@ -12,7 +12,7 @@ input TaskInput {
 }
 
 type Query {
-  getTasks: [Task]
+  tasks: [Task]
 }
 
 type Mutation {

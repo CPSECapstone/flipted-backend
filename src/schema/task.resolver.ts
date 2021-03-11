@@ -9,7 +9,7 @@ const TASK_TABLE = "Tasks-" + environment.stage;
 
 const resolvers = {
   Query: {
-    getTasks: async () => {
+    tasks: async () => {
       const command = new ScanCommand({ TableName: TASK_TABLE });
       try {
         const results = await client.send(command);
