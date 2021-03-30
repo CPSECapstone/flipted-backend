@@ -1,0 +1,67 @@
+type Query {
+  _empty: String
+}
+
+type Quiz {
+  id: String!
+  name: String!
+  course: String!
+  instructions: String!
+  totalPoints: Int!
+  time: Int
+  questions: [MultipleChoiceQuestion]
+}
+
+type MultipleChoiceQuestion {
+  id: String!
+  choices: [String]!
+}
+
+input MultipleChoiceQuestionInput {
+  choices: [String]!
+  answers: [Int]!
+}
+
+type Query {
+  quiz(id: String!): Quiz
+}
+
+input QuizInput {
+  course: String!
+  name: String!
+  instructions: String!
+  totalPoints: Int!
+  questions: [MultipleChoiceQuestionInput]
+}
+
+type Mutation {
+  addQuiz(quiz: QuizInput): Quiz
+}
+
+type QuizSubmission {
+  id: String!
+  student: String!
+  quiz: Quiz!
+  startedAt: Int
+  sumbittedAt: Int
+  points: Int!
+  choices: [String]
+}
+
+type Query {
+  quizSubmission(id: String): QuizSubmission
+}
+
+type Query {
+  quizSubmissions(quizId: String): [QuizSubmission]
+}
+
+input QuizSubmissionInput {
+  student: String!
+  quiz: String!
+  choices: [String]
+}
+
+type Mutation {
+  submitQuiz(submission: QuizSubmissionInput): QuizSubmission
+}

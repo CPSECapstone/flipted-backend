@@ -1,89 +1,141 @@
 service: apollo-lambda
 provider:
-   name: aws
-   runtime: nodejs12.x
-   iamRoleStatements:
-      - Effect:
-           'Allow'
-           #This specifies the actions allowed on your resource, * is all
-        Action:
-           - 'dynamodb:*'
-           #This specifies the ARN of your resources
-        Resource: 'arn:aws:dynamodb:us-east-1:*:*'
+  name: aws
+  runtime: nodejs12.x
+  iamRoleStatements:
+    - Effect:
+        "Allow"
+        #This specifies the actions allowed on your resource, * is all
+      Action:
+        - "dynamodb:*"
+        #This specifies the ARN of your resources
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
 functions:
-   graphql:
-      handler: src/apollo-server.graphqlHandler
-      events:
-         - http:
-              path: graphql
-              method: post
-              cors: true
-         - http:
-              path: graphql
-              method: get
-              cors: true
+  graphql:
+    handler: src/apollo-server.graphqlHandler
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
+      - http:
+          path: graphql
+          method: get
+          cors: true
 
 plugins:
-   - serverless-webpack
-   - serverless-offline
-   - serverless-dotenv-plugin
+  - serverless-webpack
+  - serverless-offline
+  - serverless-dotenv-plugin
 
 custom:
-   users: Users-${env:STAGE}
-   courses: Courses-${env:STAGE}
-   missions: Missions-${env:STAGE}
-   tasks: Tasks-${env:STAGE}
-   webpack:
-      includeModules: true
+  users: Users-${env:STAGE}
+  courses: Courses-${env:STAGE}
+  missions: Missions-${env:STAGE}
+  tasks: Tasks-${env:STAGE}
+  questions: Questions-${env:STAGE}
+  answers: Answers-${env:STAGE}
+  quizzes: Quizzes-${env:STAGE}
+  quizSubmissions: QuizSubmissions-${env:STAGE}
+  webpack:
+    includeModules: true
 
 resources:
-   Resources:
-      UsersDynamoDbTable:
-         Type: AWS::DynamoDB::Table
-         DeletionPolicy: Retain
-         Properties:
-            TableName: ${self:custom.users}
-            AttributeDefinitions:
-               - AttributeName: id
-                 AttributeType: S
-            KeySchema:
-               - AttributeName: id
-                 KeyType: HASH
-            BillingMode: PAY_PER_REQUEST
-      CoursesDynamoDbTable:
-         Type: AWS::DynamoDB::Table
-         DeletionPolicy: Retain
-         Properties:
-            TableName: ${self:custom.courses}
-            AttributeDefinitions:
-               - AttributeName: id
-                 AttributeType: S
-            KeySchema:
-               - AttributeName: id
-                 KeyType: HASH
-            BillingMode: PAY_PER_REQUEST
-      MissionsDynamoDbTable:
-         Type: AWS::DynamoDB::Table
-         DeletionPolicy: Retain
-         Properties:
-            TableName: ${self:custom.missions}
-            AttributeDefinitions:
-               - AttributeName: id
-                 AttributeType: S
-            KeySchema:
-               - AttributeName: id
-                 KeyType: HASH
-            BillingMode: PAY_PER_REQUEST
-      TasksDynamoDbTable:
-         Type: AWS::DynamoDB::Table
-         DeletionPolicy: Retain
-         Properties:
-            TableName: ${self:custom.tasks}
-            AttributeDefinitions:
-               - AttributeName: id
-                 AttributeType: S
-            KeySchema:
-               - AttributeName: id
-                 KeyType: HASH
-            BillingMode: PAY_PER_REQUEST
+  Resources:
+    UsersDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.users}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    CoursesDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.courses}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    MissionsDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.missions}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    TasksDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.tasks}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    QuestionsDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.questions}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    AnswersDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.answers}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    QuizzesDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.quizzes}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    QuizSubmissionsDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.quizSubmissions}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST

@@ -16,3 +16,22 @@ export interface CourseInput {
   instructor: String
   missions: [MissionInput]
 }
+
+export interface MultipleChoiceQuestionInput {
+  choices: [string]
+  answer: [number]
+}
+
+export interface QuizInput {
+  course: string
+  name: string
+  instructions: string
+  totalPoints: number
+  questions: [MultipleChoiceQuestionInput]
+}
+
+export interface QuizSubmissionInput {
+  student: string
+  quiz: string
+  choices: []
+}

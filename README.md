@@ -42,3 +42,8 @@ npm run debug
 # Deploy to AWS
 npm run deploy
 ```
+
+### Code Linting
+
++ [Getting Started - Linting your TypeScript Codebase](https://github.com/typescript-eslint/typescript-eslint/blob/HEAD/docs/getting-started/linting/README.md)
++ [The future of TypeScript on ESLint](https://eslint.org/blog/2019/01/future-typescript-eslint)
