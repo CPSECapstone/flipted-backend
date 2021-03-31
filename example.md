@@ -130,8 +130,8 @@ query ListQuizSubmissionsByQuizId {
 query GetQuizSubmissionById {
   quizSubmission(id: "a9c8e50acae") {
     id
-    course
-  	name
+    student
+    points
   }
 }
 
