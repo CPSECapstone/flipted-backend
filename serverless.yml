@@ -34,9 +34,9 @@ custom:
   courses: Courses-${env:STAGE}
   missions: Missions-${env:STAGE}
   tasks: Tasks-${env:STAGE}
+  quizzes: Quizzes-${env:STAGE}
   questions: Questions-${env:STAGE}
   answers: Answers-${env:STAGE}
-  quizzes: Quizzes-${env:STAGE}
   quizSubmissions: QuizSubmissions-${env:STAGE}
   webpack:
     includeModules: true

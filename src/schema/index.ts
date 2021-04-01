@@ -1,6 +1,5 @@
 import { mergeTypeDefs, mergeResolvers } from '@graphql-tools/merge';
 import { GraphQLDateTime } from 'graphql-iso-date';
-import { gql } from 'apollo-server';
 
 import customType from './custom.graphql';
 import userType from './user.graphql';
@@ -14,6 +13,8 @@ import courseResolvers from './course.resolver';
 import taskResolvers from './task.resolver';
 import missionResolvers from './mission.resolver';
 import quizResolvers from './quiz.resolver';
+import quizQuestionResolvers from './quizQuestion.resolver';
+import quizAnswerResolvers from './quizAnswer.resolver';
 import quizSubmissionResolvers from './quizSubmission.resolver';
 
 const customScalarResolver = {
@@ -36,7 +37,9 @@ const resolversArray = [
   taskResolvers,
   missionResolvers,
   quizResolvers,
-  quizSubmissionResolvers,
+  quizQuestionResolvers,
+  quizAnswerResolvers,
+  quizSubmissionResolvers
 ];
 
 export const typeDefs = mergeTypeDefs(typesArray);

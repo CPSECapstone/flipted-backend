@@ -18,20 +18,28 @@ export interface CourseInput {
 }
 
 export interface MultipleChoiceQuestionInput {
-  choices: [string]
-  answer: [number]
+  quizId: string
+  description: string
+  options: string[]
+  answers: number[]
+  points: number
 }
 
 export interface QuizInput {
   course: string
   name: string
   instructions: string
-  totalPoints: number
-  questions: [MultipleChoiceQuestionInput]
+  due: Date
+}
+
+export interface AnswerInput {
+  id: string
+  quizId: string
+  choices: string[]
 }
 
 export interface QuizSubmissionInput {
   student: string
-  quiz: string
-  choices: []
+  quizId: string
+  answers: AnswerInput[]
 }
