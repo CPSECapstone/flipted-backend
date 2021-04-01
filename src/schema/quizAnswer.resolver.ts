@@ -1,8 +1,8 @@
-import { AnswerInput } from "../interfaces";
+import { Answer } from "../interfaces";
 import answerService from '../services/quizAnswer';
 
 async function addAnswer(_: any, args: any, context: any, info: any) {
-  const answer: AnswerInput = args.answer;
+  const answer: Answer = args.answer;
   return answerService.add(answer);
 }
 

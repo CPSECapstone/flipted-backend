@@ -17,6 +17,27 @@ export interface CourseInput {
   missions: [MissionInput]
 }
 
+
+export interface Quiz {
+  id: string
+  name: string
+  course: string
+  instructions: string
+  due: Date
+}
+export interface QuestionOption {
+  id: String
+  description: String
+}
+
+export interface MultipleChoiceQuestion {
+  id: string
+  quizId: string
+  description: string
+  options: [QuestionOption]
+  points: number
+}
+
 export interface MultipleChoiceQuestionInput {
   quizId: string
   description: string
@@ -25,6 +46,13 @@ export interface MultipleChoiceQuestionInput {
   points: number
 }
 
+export interface Quiz {
+  id: string
+  course: string
+  name: string
+  instructions: string
+  due: Date
+}
 export interface QuizInput {
   course: string
   name: string
@@ -32,10 +60,31 @@ export interface QuizInput {
   due: Date
 }
 
-export interface AnswerInput {
+export interface Answer {
   id: string
   quizId: string
   choices: string[]
+}
+
+export interface AnswerInput {
+  questionId: string
+  choices: string[]
+}
+
+export interface QuizSubmissionSummary {
+  id: string
+  quizId: string
+  student: string
+  points: number
+  startedAt: Date
+  sumbittedAt: Date
+}
+
+export interface QuizSubmission {
+  submission: QuizSubmissionSummary
+  quiz: Quiz
+  questions: MultipleChoiceQuestion[]
+  answers: Answer[]
 }
 
 export interface QuizSubmissionInput {

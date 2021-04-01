@@ -9,7 +9,7 @@ import {
   ScanCommandOutput
 } from "@aws-sdk/client-dynamodb";
 import { environment } from "../environment";
-import { AnswerInput } from "../interfaces";
+import { AnswerInput, Answer } from "../interfaces";
 
 const client = new DynamoDBClient({ region: "us-east-1" });
 const ANSWERS_TABLE = "Answers-" + environment.stage;
@@ -20,7 +20,7 @@ const marshallOpts: marshallOptions = {
   convertClassInstanceToMap: true,
 };
 
-async function add(answer: AnswerInput) {
+async function add(answer: Answer) {
   const command = new PutItemCommand({
     TableName: ANSWERS_TABLE,
     Item: marshall(answer, marshallOpts)
@@ -34,7 +34,7 @@ async function add(answer: AnswerInput) {
 }
 
 // the primary key of Answer Table is questiond ID
-async function getById(questionId: string) {
+async function getById(questionId: string): Promise<Answer> {
   const command = new GetItemCommand({
     TableName: ANSWERS_TABLE,
     Key: marshall({
@@ -44,7 +44,7 @@ async function getById(questionId: string) {
   try {
     const output: GetItemCommandOutput = await client.send(command);
     if (output.Item) {
-      return unmarshall(output.Item);
+      return <Answer>unmarshall(output.Item);
     }
     throw new Error(`Answer not found with id=${questionId}`);
   } catch (err) {
@@ -53,7 +53,7 @@ async function getById(questionId: string) {
   }
 }
 
-async function listByQuizId(quizId: string) {
+async function listByQuizId(quizId: string): Promise<Answer[]> {
   const command = new ScanCommand({
     TableName: ANSWERS_TABLE,
     FilterExpression: 'quizId = :quizId',
@@ -64,8 +64,12 @@ async function listByQuizId(quizId: string) {
 
   try {
     const output: ScanCommandOutput = await client.send(command);
-    const questions = output.Items?.map((item: any) => unmarshall(item));
-    return questions;
+    if (output.Items) {
+      const answers = output.Items.map((item: any) => <Answer>unmarshall(item));
+      return answers;
+    }
+
+    return [];
   } catch (err) {
     return err;
   }

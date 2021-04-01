@@ -76,6 +76,45 @@ mutation {
   )
 }
 
+mutation {
+  addQuestion(
+    question: {
+      quizId: "3f1e9fe5b43"
+      points: 2
+      description: "tissue that stores food or water"
+        options: [
+          "interphase",
+          "fibrous root",
+          "root cap",
+          "root cortex",
+        ]
+        answers: [
+          2
+        ]
+    }
+  )
+}
+
+mutation {
+  addQuestion(
+    question: {
+      quizId: "3f1e9fe5b43"
+      points: 2
+      description: "During photosynthesis green plants absorb"
+        options: [
+          "oxygen",
+          "nitrogen",
+          "carbon monoxide",
+          "carbon dioxide",
+        ]
+        answers: [
+          4
+        ]
+    }
+  )
+}
+
+
 query GetQuestionById {
   question(questionId: "9e9c9625643") {
     id
@@ -91,7 +130,7 @@ query GetQuestionById {
 }
 
 query ListQuizQuestionsByQuizId {
-  question(quizId: "5af71953871") {
+  questions(quizId: "3f1e9fe5b43") {
     id
     quizId
   	description
@@ -139,34 +178,71 @@ query ListQuizAnswerssByQuizId {
 
 ```
 mutation {
-  addSubmission(submission: {
-    student: "Robb Stark"
-    quizId: "8989d1faaef"
-    answers:[{
-      questionId: "9e9c9625643",
-      choices: [
-        "1ef1a16dd87"
+  addSubmission(
+    submission: {
+      student: "Robb Stark"
+      quizId: "3f1e9fe5b43"
+      answers: [
+        { questionId: "14bb90666b1", choices: ["771d7a8a269"] }
+        { questionId: "a915872ccab", choices: ["e7ce8f84537"] }
+        { questionId: "026c841f9f5", choices: ["b1e3993f7c9"] }
       ]
-    }]
-  }) {
-    student
-    quiz {
-      name
     }
-    points
-  }
+  )
 }
 
+mutation {
+  addSubmission(
+    submission: {
+      student: "Sansa Stark"
+      quizId: "3f1e9fe5b43"
+      answers: [
+        { questionId: "14bb90666b1", choices: ["771d7a8a269"] }
+        { questionId: "a915872ccab", choices: ["e7ce8f84537"] }
+        { questionId: "026c841f9f5", choices: ["9ae89eb9d16"] }
+      ]
+    }
+  )
+}
+
+mutation {
+  addSubmission(
+    submission: {
+      student: "Arya Stark"
+      quizId: "3f1e9fe5b43"
+      answers: [
+        { questionId: "14bb90666b1", choices: ["771d7a8a269"] }
+        { questionId: "a915872ccab", choices: ["e7ce8f84537"] }
+        { questionId: "026c841f9f5", choices: ["9ae89eb9d16"] }
+      ]
+    }
+  )
+}
+
+
 query GetQuizSubmissionById {
-  quizSubmission(id: "a9c8e50acae") {
-    id
-    student
-    points
+  quizSubmission(submissionId: "085f2b83902") {
+    submission {
+      id
+      student
+      points
+    }
+    quiz {
+      name
+      instructions
+    }
+    questions {
+      id
+      description
+      options {
+        description
+      }
+    }
   }
 }
 
 query ListQuizSubmissionsByQuizId {
-  quizSubmissions(quizId: "8989d1faaef") {
+  quizSubmissions(quizId: "3f1e9fe5b43") {
     id
     student
     points

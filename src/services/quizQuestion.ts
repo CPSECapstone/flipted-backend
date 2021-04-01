@@ -10,7 +10,7 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { uid } from "uid/secure";
 import { environment } from "../environment";
-import { AnswerInput, MultipleChoiceQuestionInput } from "../interfaces";
+import { Answer, MultipleChoiceQuestionInput, MultipleChoiceQuestion } from "../interfaces";
 import answerService from './quizAnswer';
 
 const client = new DynamoDBClient({ region: "us-east-1" });
@@ -34,7 +34,7 @@ async function add(question: MultipleChoiceQuestionInput) {
   const choices: string[] = question.answers.map((index: number) => {
     return options[index - 1].id;
   });
-  const answer: AnswerInput = {
+  const answer: Answer = {
     id: questId,
     quizId: question.quizId,
     choices
@@ -79,7 +79,7 @@ async function getById(questionId: string) {
   }
 }
 
-async function listByQuizId(quizId: string) {
+async function listByQuizId(quizId: string): Promise<MultipleChoiceQuestion[]> {
   const command = new ScanCommand({
     TableName: QUESTIONS_TABLE,
     FilterExpression: 'quizId = :quizId',
@@ -90,8 +90,15 @@ async function listByQuizId(quizId: string) {
 
   try {
     const output: ScanCommandOutput = await client.send(command);
-    const questions = output.Items?.map((item: any) => unmarshall(item));
-    return questions;
+    if (output.Items) {
+      const questions = output.Items.map((item: any) => {
+        const unmarshalled = unmarshall(item);
+        return <MultipleChoiceQuestion>unmarshalled;
+      });
+      return questions;
+    }
+
+    return [];
   } catch (err) {
     return err;
   }

@@ -69,8 +69,7 @@ type Answer {
 }
 
 input AnswerInput {
-  id: String!
-  quizId: String!
+  questionId: String!
   choices: [String]!
 }
 
@@ -86,15 +85,21 @@ type Query {
   quizAnswers(quizId: String!): [Answer]
 }
 
-# Quiz Submission
-type QuizSubmission {
+type QuizSubmissionSummary {
   id: String!
+  quizId: String!
   student: String!
-  quiz: Quiz!
+  points: Int!
   startedAt: Int
   sumbittedAt: Int
-  points: Int!
-  options: [String]
+}
+
+# Quiz Submission
+type QuizSubmission {
+  submission: QuizSubmissionSummary
+  quiz: Quiz!
+  questions: [MultipleChoiceQuestion]
+  answers: [Answer]
 }
 
 input QuizSubmissionInput {
@@ -104,7 +109,7 @@ input QuizSubmissionInput {
 }
 
 type Mutation {
-  addSubmission(submission: QuizSubmissionInput): QuizSubmission
+  addSubmission(submission: QuizSubmissionInput): String
 }
 
 type Query {
@@ -112,5 +117,5 @@ type Query {
 }
 
 type Query {
-  quizSubmissions(quizId: String): [QuizSubmission]
+  quizSubmissions(quizId: String): [QuizSubmissionSummary]
 }
