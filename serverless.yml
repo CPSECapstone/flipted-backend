@@ -39,41 +39,6 @@ custom:
 
 resources:
    Resources:
-      CognitoUserPool:
-         Type: AWS::Cognito::UserPool
-         Properties:
-          # Generate a name based on the stage
-          UserPoolName: userpool-${env:STAGE}
-          # Set email as an alias
-          UsernameAttributes:
-            - email
-          AutoVerifiedAttributes:
-            - email
-      CognitoUserPoolClient:
-         Type: AWS::Cognito::UserPoolClient
-         Properties:
-            # Generate an app client name based on the stage
-            ClientName: ${env:STAGE}-test-user-pool-client
-            UserPoolId:
-               Ref: CognitoUserPool
-            ExplicitAuthFlows:
-               - ADMIN_NO_SRP_AUTH
-            GenerateSecret: false
-            RefreshTokenValidity: "30"
-            SupportedIdentityProviders:
-              - "Google"
-      UserPoolIdentityProvider:
-         Type: AWS::Cognito::UserPoolIdentityProvider
-         Properties:
-          UserPoolId: !Ref CognitoUserPool 
-          ProviderName: "Google"
-          ProviderDetails:
-            client_id: "http://371493750711-7hunfdkpsp1pc5r187cnu02d5tk3umnb.apps.googleusercontent.com/"
-            client_secret: "LtBYf1WjnfHyhghZ4ediYkDm"
-            authorize_scopes: "profile email openid"
-          ProviderType: "Google"
-          AttributeMapping:
-            email: "email"
       UsersDynamoDbTable:
          Type: AWS::DynamoDB::Table
          DeletionPolicy: Retain
