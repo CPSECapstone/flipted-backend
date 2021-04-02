@@ -71,6 +71,13 @@ export interface AnswerInput {
   choices: string[]
 }
 
+export interface StudentAnswer {
+  questionId: string
+  points: number
+  result: boolean
+  choices: string[]
+}
+
 export interface QuizSubmissionSummary {
   id: string
   quizId: string
@@ -78,6 +85,7 @@ export interface QuizSubmissionSummary {
   points: number
   startedAt: Date
   sumbittedAt: Date
+  answers: StudentAnswer[]
 }
 
 export interface QuizSubmission {

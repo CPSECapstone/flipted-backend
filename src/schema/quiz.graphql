@@ -85,6 +85,13 @@ type Query {
   quizAnswers(quizId: String!): [Answer]
 }
 
+type StudentAnswer {
+  questionId: String!
+  points: Int!
+  result: Boolean!
+  choices: [String]!
+}
+
 type QuizSubmissionSummary {
   id: String!
   quizId: String!
@@ -92,6 +99,7 @@ type QuizSubmissionSummary {
   points: Int!
   startedAt: Int
   sumbittedAt: Int
+  studentAnswers: [StudentAnswer]
 }
 
 # Quiz Submission

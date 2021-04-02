@@ -6,6 +6,12 @@ https://bz4ubl4t4e.execute-api.us-east-1.amazonaws.com/dev/graphql
 
 ## APIs
 
+- An instructor can create a quiz.
+- A quiz has multiple questions.
+- A question has multiple choices and one answer which may have multiple options
+- A student can make a quiz submission.
+- An instructor can list all the submissions of a quiz, as well as review individual submission.
+
 - Quiz
 
   - Add Quiz
@@ -13,7 +19,7 @@ https://bz4ubl4t4e.execute-api.us-east-1.amazonaws.com/dev/graphql
 
 - Questions
 
-  - Add Questions
+  - Add Question
   - Get Question By Id
   - List Questions By Quiz Id
 

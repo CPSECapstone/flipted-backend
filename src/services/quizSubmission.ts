@@ -46,7 +46,8 @@ function computeResult(correctAnswers: Answer[], questions: MultipleChoiceQuesti
     return {
       questionId,
       result,
-      points
+      points,
+      choices: answer.choices
     };
   });
 }
@@ -66,7 +67,7 @@ async function add(submission: QuizSubmissionInput) {
         id: submissionId,
         student: submission.student,
         quizId: submission.quizId,
-        answers: result,
+        studentAnswers: result,
         points: totalPoints
       },
         marshallOpts
