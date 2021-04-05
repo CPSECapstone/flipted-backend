@@ -7,7 +7,7 @@ type Quiz {
   name: String!
   course: String!
   instructions: String!
-  due: Date
+  dueDate: Date
   questions: [MultipleChoiceQuestion]
 }
 
@@ -15,7 +15,7 @@ input QuizInput {
   course: String!
   name: String!
   instructions: String!
-  due: Date
+  dueDate: Date
 }
 
 type Mutation {

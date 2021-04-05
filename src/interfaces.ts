@@ -17,14 +17,6 @@ export interface CourseInput {
   missions: [MissionInput]
 }
 
-
-export interface Quiz {
-  id: string
-  name: string
-  course: string
-  instructions: string
-  due: Date
-}
 export interface QuestionOption {
   id: String
   description: String
@@ -51,13 +43,13 @@ export interface Quiz {
   course: string
   name: string
   instructions: string
-  due: Date
+  dueDate: Date
 }
 export interface QuizInput {
   course: string
   name: string
   instructions: string
-  due: Date
+  dueDate: Date
 }
 
 export interface Answer {
