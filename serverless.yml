@@ -32,8 +32,8 @@ plugins:
    - serverless-dotenv-plugin
 
 custom:
-   users: Users-${env:STAGE}
-   classes: Classes-${env:STAGE}
+   users: Users-${env:STAGE}-GreasyStallions
+   classes: Classes-${env:STAGE}-GreasyStallions
    webpack:
       includeModules: true
 
