@@ -23,11 +23,11 @@ const marshallOpts: marshallOptions = {
  * Returns the role of the user given the user id contained in the JWT access token
  * Should be either "instructor" or "student"
  */
-async function getUserRole(user_id: string) {
+async function getUserRole(username: string) {
   const command = new GetItemCommand({
     TableName: USER_TABLE,
     Key: marshall({
-      id: user_id
+      id: username
     }, marshallOpts)
   });
   try {
@@ -35,7 +35,7 @@ async function getUserRole(user_id: string) {
     if (output.Item) {
       return unmarshall(output.Item).userRole;
     }
-    throw new Error(`user_id=${user_id} not found`);
+    throw new Error(`username: ${username} not found`);
   } catch (err) {
     console.error(err);
     return err;
