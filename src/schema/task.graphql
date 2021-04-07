@@ -12,15 +12,18 @@ type Task {
 }
 
 type Query {
+  task(taskId: String): Task
   tasks(subMissionId: String): [Task]
 }
 
 input TaskInput {
-  subMissionId: String
   name: String!
-  description: String!
   instructions: String!
+  startAt: Date
+  endAt: Date
   dueDate: Date
+  subMissionId: String
+  objectiveId: String
 }
 
 type Mutation {

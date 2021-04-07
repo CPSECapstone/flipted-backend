@@ -1,25 +1,56 @@
+export interface Task {
+  id: string
+  name: string
+  instructions: string
+  startAt: Date
+  endAt: Date
+  dueDate: Date
+  subMissionId: string
+  objectiveId: string
+  questions: MultipleChoiceQuestion[]
+}
 export interface TaskInput {
-  name: String
-  description: String
-  link: String
+  name: string
+  instructions: string
+  startAt: Date
+  endAt: Date
+  dueDate: Date
+  subMissionId: string
+  objectiveId: string
 }
 
+export interface Mission {
+  id: string
+  course: string
+  name: string
+  description: string
+  subMissions: SubMission[]
+}
 export interface MissionInput {
-  name: String
-  description: String
-  tasks: [TaskInput]
+  course: string
+  name: string
+  description: string
 }
 
-export interface CourseInput {
-  name: String
-  description: String
-  instructor: String
-  missions: [MissionInput]
+export interface SubMission {
+  id: string
+  name: string
+  description: string
+  missionId: string
+  objectiveId: string
+  tasks: Task[]
+}
+
+export interface SubMissionInput {
+  name: string
+  description: string
+  missionId: string
+  objectiveId: string
 }
 
 export interface QuestionOption {
-  id: String
-  description: String
+  id: string
+  description: string
 }
 
 export interface MultipleChoiceQuestion {
@@ -101,5 +132,11 @@ export interface LearningObjective {
 export interface LearningObjectiveInput {
   name: string
   course: string
+  description: string
+}
+
+export interface CourseInput {
+  name: string
+  instructor: string
   description: string
 }
