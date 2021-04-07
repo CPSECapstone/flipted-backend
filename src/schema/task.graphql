@@ -1,20 +1,28 @@
 type Task {
   id: String!
   name: String!
-  description: String!
-  link: String
-}
-
-input TaskInput {
-  name: String!
-  description: String!
-  link: String
+  instructions: String!
+  startAt: Date
+  endAt: Date
+  dueDate: Date
+  subMissionId: String
+  objectiveId: String
+  #might be other type of content
+  questions: [MultipleChoiceQuestion]
 }
 
 type Query {
-  tasks: [Task]
+  tasks(subMissionId: String): [Task]
+}
+
+input TaskInput {
+  subMissionId: String
+  name: String!
+  description: String!
+  instructions: String!
+  dueDate: Date
 }
 
 type Mutation {
-  addTask(task: TaskInput): Task
+  addTask(task: TaskInput): String
 }

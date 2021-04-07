@@ -92,3 +92,14 @@ export interface QuizSubmissionInput {
   quizId: string
   answers: AnswerInput[]
 }
+export interface LearningObjective {
+  id: string
+  name: string
+  course: string
+  description: string
+}
+export interface LearningObjectiveInput {
+  name: string
+  course: string
+  description: string
+}

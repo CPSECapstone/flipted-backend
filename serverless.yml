@@ -39,6 +39,7 @@ custom:
   questions: Questions-${env:STAGE}
   answers: Answers-${env:STAGE}
   quizSubmissions: QuizSubmissions-${env:STAGE}
+  learningObjectives: LearningObjectives-${env:STAGE}
   webpack:
     includeModules: true
 
@@ -133,6 +134,18 @@ resources:
       DeletionPolicy: Retain
       Properties:
         TableName: ${self:custom.quizSubmissions}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    LearningObjectivesDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.learningObjectives}
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
