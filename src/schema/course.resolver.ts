@@ -42,7 +42,6 @@ const resolvers = {
           "name": course.name,
           "description": course.description,
           "instructor": course.instructor,
-          "missions": course.missions
         }, marshallOpts),
         ReturnValues: "ALL_OLD",
       }

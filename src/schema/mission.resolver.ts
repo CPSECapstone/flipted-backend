@@ -1,62 +1,42 @@
-import { marshall, unmarshall, marshallOptions } from "@aws-sdk/util-dynamodb";
-import { DynamoDBClient, ScanCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
-import { uid } from 'uid/secure';
+import { MissionInput, SubMissionInput } from "../interfaces";
+import missionService from '../services/mission';
+import subMissionService from '../services/subMission';
 
-import { environment } from "../environment";
-import { MissionInput } from "../interfaces";
+async function addMission(_: any, args: any, context: any, info: any) {
+  const mission: MissionInput = args.mission;
+  return missionService.add(mission);
+}
 
-const client = new DynamoDBClient({ region: "us-east-1" });
-const MISSION_TABLE = "Missions-" + environment.stage;
+async function addSubMission(_: any, args: any, context: any, info: any) {
+  const subMission: SubMissionInput = args.subMission;
+  return subMissionService.add(subMission);
+}
 
-const marshallOpts: marshallOptions = {
-  removeUndefinedValues: true,
-  convertEmptyValues: false,
-  convertClassInstanceToMap: true
-};
+async function getMissionById(_: any, args: any, context: any, info: any) {
+  const missionId = args.missionId;
+  return missionService.getById(missionId);
+}
+
+async function listMissionsByCourse(_: any, args: any, context: any, info: any) {
+  const course: string = args.course;
+  return missionService.listByCourse(course);
+}
+
+async function listSubMissionByMission(_: any, args: any, context: any, info: any) {
+  const missionId: string = args.missionId;
+  return subMissionService.listByMissionId(missionId);
+}
 
 const resolvers = {
   Query: {
-    missions: async () => {
-      const command = new ScanCommand({ TableName: MISSION_TABLE });
-      try {
-        const results = await client.send(command);
-        const missions: any[] = [];
-        if (results.Items) {
-          results.Items.forEach((item: any) => {
-            missions.push(unmarshall(item));
-          });
-        }
-        return missions;
-      } catch (err) {
-        console.error(err);
-        return err;
-      }
-    }
+    mission: getMissionById,
+    missions: listMissionsByCourse,
+    subMissions: listSubMissionByMission
   },
   Mutation: {
-    addMission: async (_: any, args: any, context: any, info: any) => {
-      const mission: MissionInput = args.mission;
-      const params = {
-        TableName: MISSION_TABLE,
-        Item: marshall({
-          "id": uid(),
-          "name": mission.name,
-          "description": mission.description,
-          "tasks": mission.tasks
-        }, marshallOpts),
-        ReturnValues: "ALL_OLD",
-      };
-      const command = new PutItemCommand(params);
-
-      try {
-        await client.send(command);
-        return unmarshall(params.Item)
-      } catch (err) {
-        console.log(err);
-        return err;
-      }
-    }
+    addMission: addMission,
+    addSubMission: addSubMission
   }
-}
+};
 
 export default resolvers;
