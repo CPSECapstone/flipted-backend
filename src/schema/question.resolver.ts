@@ -11,18 +11,25 @@ async function getQuestionById(_: any, args: any, context: any, info: any) {
   return questionService.getById(questionId);
 }
 
-async function listQuestionsByQuestionIds(_: any, args: any, context: any) {
+async function addQuestionsToTask(_: any, args: any, context: any) {
   const questionIds: string[] = args.questionIds;
-  return questionService.listByIds(questionIds);
+  const taskId: string = args.taskId;
+  return questionService.addQuestionsToTask(questionIds, taskId);
+}
+
+async function listQuestionsByTaskId(_: any, args: any, context: any) {
+  const taskId: string = args.taskId;
+  return questionService.listQuestionsByTaskId(taskId);
 }
 
 const resolvers = {
   Query: {
     question: getQuestionById,
-    questions: listQuestionsByQuestionIds
+    questions: listQuestionsByTaskId
   },
   Mutation: {
-    addQuestion: addQuestion
+    addQuestion,
+    addQuestionsToTask
   }
 };
 

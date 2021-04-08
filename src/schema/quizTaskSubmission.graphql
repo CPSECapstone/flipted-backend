@@ -21,7 +21,7 @@ type QuizTaskSubmissionSummary {
 
 # Quiz Submission
 type QuizTaskSubmission {
-  submission: QuizSubmissionSummary
+  submission: QuizTaskSubmissionSummary
   task: Task!
   questions: [MultipleChoiceQuestion]
 }
@@ -42,6 +42,6 @@ type Mutation {
 }
 
 type Query {
-  quizSubmission(submissionId: String): QuizSubmission
-  quizSubmissions(quizId: String): [QuizSubmissionSummary]
+  quizSubmission(submissionId: String): QuizTaskSubmission
+  quizSubmissions(quizId: String): [QuizTaskSubmissionSummary]
 }

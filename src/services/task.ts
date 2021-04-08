@@ -1,14 +1,14 @@
 import { unmarshall, } from "@aws-sdk/util-dynamodb";
 
-import { environment } from "../environment";
+import { TABLE_NAME } from "../environment";
 import { Task, TaskInput } from "../interfaces";
 import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
 
-const TASK_TABLE = "Tasks-" + environment.stage;
+const TASKS_TABLE = TABLE_NAME("Tasks");
 
 async function add(input: TaskInput) {
   const params: PutParams = {
-    tableName: TASK_TABLE,
+    tableName: TASKS_TABLE,
     item: input
   };
 
@@ -17,7 +17,7 @@ async function add(input: TaskInput) {
 
 async function getById(taskId: string): Promise<Task> {
   const params: GetParams = {
-    tableName: TASK_TABLE,
+    tableName: TASKS_TABLE,
     key: taskId
   };
 
@@ -32,7 +32,7 @@ async function getById(taskId: string): Promise<Task> {
 
 async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
   const params: ScanParams = {
-    tableName: TASK_TABLE,
+    tableName: TASKS_TABLE,
     filterExpression: 'subMissionId = :subMissionId',
     expressionAttributeValues: {
       ":subMissionId": subMissionId

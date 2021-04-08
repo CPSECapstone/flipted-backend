@@ -1,11 +1,11 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
-import { environment } from "../environment";
+import { TABLE_NAME } from "../environment";
 import { MultipleChoiceQuestionInput, MultipleChoiceQuestion } from "../interfaces";
 import dynamodb, { BatchGetParams, BatchWriteParams, GetParams, PutParams, ScanParams } from "./dynamodb";
 
-const QUESTIONS_TABLE = "Questions-" + environment.stage;
-const TASK_TO_QUESTIONS_TABLE = environment.taskToQuestionsTable;
+const QUESTIONS_TABLE = TABLE_NAME("Questions")
+const TASK_TO_QUESTIONS_TABLE = TABLE_NAME("TaskToQuestions")
 
 async function add(question: MultipleChoiceQuestionInput) {
   const options = question.options.map((option: string, index: number) => {

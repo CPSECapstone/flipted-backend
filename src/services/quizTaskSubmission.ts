@@ -1,6 +1,6 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
-import { environment } from "../environment";
+import { TABLE_NAME } from "../environment";
 import {
   MultipleChoiceQuestion, QuizTaskSubmission, QuizTaskSubmissionInput, QuizTaskSubmissionSummary, StudentAnswerInput, StudentAnswerResult
 } from "../interfaces";
@@ -9,7 +9,7 @@ import questionService from "./question";
 import taskService from "./task";
 import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
 
-const TASK_SUBMISSIONS_TABLE = environment.taskSubmissionsTable;
+const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
 function computeResult(questions: MultipleChoiceQuestion[], answers: StudentAnswerInput[]) {
   let map: Map<string, MultipleChoiceQuestion> = new Map();

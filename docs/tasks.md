@@ -2,11 +2,13 @@
 
 ### APIs
 
-+ Add Task
-+ Get Task By Id
-+ List Tasks By SubMissionId
+- Add Task
+- Get Task By Id
+- List Tasks By SubMission Id
 
 ### Examples
+
+#### Add Task
 
 ```
 mutation {
@@ -20,6 +22,8 @@ mutation {
 }
 ```
 
+#### Get Task By Id
+
 ```
 query {
   task(taskId: "e0b607e30a7") {
@@ -30,6 +34,8 @@ query {
   }
 }
 ```
+
+#### List Tasks By SubMission Id
 
 ```
 query {

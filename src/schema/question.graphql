@@ -14,7 +14,7 @@ type MultipleChoiceQuestion {
 
 type Query {
   question(questionId: String!): MultipleChoiceQuestion
-  questions(questionIds: [String]!): [MultipleChoiceQuestion]
+  questions(taskId: String!): [MultipleChoiceQuestion]
 }
 
 input MultipleChoiceQuestionInput {
@@ -26,4 +26,5 @@ input MultipleChoiceQuestionInput {
 
 type Mutation {
   addQuestion(question: MultipleChoiceQuestionInput): String
+  addQuestionsToTask(questionIds: [String]!, taskId: String!): Int
 }

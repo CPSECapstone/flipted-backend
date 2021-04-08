@@ -1,10 +1,10 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
-import { environment } from "../environment";
+import { TABLE_NAME } from "../environment";
 import { LearningObjective, LearningObjectiveInput } from "../interfaces";
 import dynamodb, { PutParams, ScanParams } from "./dynamodb";
 
-const LEARNING_OBJECTIVES_TABLE = "LearningObjectives-" + environment.stage;
+const LEARNING_OBJECTIVES_TABLE = TABLE_NAME("LearningObjectives");
 
 async function add(input: LearningObjectiveInput) {
   const params: PutParams = {

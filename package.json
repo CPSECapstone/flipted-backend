@@ -7,7 +7,7 @@
     "test": "mocha -r ts-node/register src/test/*",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "deploy": "NODE_ENV=production sls deploy",
-    "debug": "export SLS_DEBUG=* NODE_ENV=production && node --inspect node_modules/.bin/sls offline -s dev"
+    "debug": "export SLS_DEBUG=* NODE_ENV=development && node --inspect node_modules/.bin/sls offline -s dev"
   },
   "author": "Matt Cuento",
   "license": "ISC",

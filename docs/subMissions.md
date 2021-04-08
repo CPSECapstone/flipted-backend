@@ -2,11 +2,12 @@
 
 ### APIs
 
-+ Add SubMission
-+ Get SubMission By Id
-+ List SubMissions By MissionId
+- Add SubMission
+- List SubMissions By MissionId
 
 ### Examples
+
+#### Add SubMission
 
 ```
 mutation {
@@ -21,9 +22,11 @@ mutation {
 }
 ```
 
+#### List SubMissions By MissionId
+
 ```
 query {
-  subMissions(missionId) {
+  subMissions(missionId: "mission 1") {
     id
     name
     description

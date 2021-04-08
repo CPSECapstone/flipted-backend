@@ -1,11 +1,11 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
-import { environment } from "../environment";
+import { TABLE_NAME } from "../environment";
 import { SubMission, SubMissionInput } from "../interfaces";
 import taskService from "./task";
 import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
 
-const SUBMISSIONS_TABLE = "SubMissions-" + environment.stage;
+const SUBMISSIONS_TABLE = TABLE_NAME("SubMissions");
 
 async function add(input: SubMissionInput) {
   const params: PutParams = {

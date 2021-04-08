@@ -2,10 +2,12 @@
 
 ### APIs
 
-+ Add Learning Objective
-+ List Learning Objectives By Course
+- Add Learning Objective
+- List Learning Objectives By Course
 
 ### Examples
+
+#### Add Learning Objective
 
 ```
 mutation {
@@ -18,6 +20,8 @@ mutation {
   )
 }
 ```
+
+#### List Learning Objectives By Course
 
 ```
 query {

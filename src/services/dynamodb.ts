@@ -106,7 +106,7 @@ async function batchWrite(params: BatchWriteParams): Promise<BatchWriteItemComma
     RequestItems: {
       [params.tableName]: putRequests
     },
-    ReturnConsumedCapacity: "TOTAl"
+    ReturnConsumedCapacity: "TOTAL"
   });
 
   return client.send(command);
