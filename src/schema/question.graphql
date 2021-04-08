@@ -1,0 +1,29 @@
+# Questions
+type QuestionOption {
+  id: Int!
+  description: String!
+}
+
+type MultipleChoiceQuestion {
+  id: String!
+  description: String!
+  options: [QuestionOption]
+  answers: [Int]
+  points: Int!
+}
+
+type Query {
+  question(questionId: String!): MultipleChoiceQuestion
+  questions(questionIds: [String]!): [MultipleChoiceQuestion]
+}
+
+input MultipleChoiceQuestionInput {
+  description: String!
+  options: [String]!
+  answers: [Int]!
+  points: Int
+}
+
+type Mutation {
+  addQuestion(question: MultipleChoiceQuestionInput): String
+}

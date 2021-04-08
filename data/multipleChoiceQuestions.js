@@ -1,14 +1,18 @@
 const data = require('./multipleChoiceQuestions.json');
 
 function generatePayload(question) {
+  let options = question.options.map((option) => {
+    return `"${option}"`;
+  }).join(", ");
+
   let query = `
     mutation {
       addQuestion(
         question: {
           description: "${question.description}"
-          points: "${question.points}"
-          options: "${question.options}"
-          answers: "${question.answers}"
+          points: ${question.points}
+          options: [${options}]
+          answers: [${question.answers}]
         }
       )
     }

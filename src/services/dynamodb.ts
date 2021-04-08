@@ -1,5 +1,9 @@
 import { marshall, marshallOptions } from "@aws-sdk/util-dynamodb";
 import {
+  BatchGetItemCommand,
+  BatchGetItemCommandOutput,
+  BatchWriteItemCommand,
+  BatchWriteItemCommandOutput,
   DynamoDBClient,
   GetItemCommand,
   GetItemCommandOutput,
@@ -38,12 +42,13 @@ async function put(params: PutParams): Promise<string> {
   }
 }
 
-async function get(params: any): Promise<GetItemCommandOutput> {
+async function get(params: GetParams): Promise<GetItemCommandOutput> {
   const command = new GetItemCommand({
     TableName: params.tableName,
     Key: marshall({
-      id: params.id
-    }, marshallOpts)
+      id: params.key
+    }, marshallOpts),
+    ProjectionExpression: params.projectionExpression
   });
 
   try {
@@ -70,10 +75,49 @@ async function scan(params: any): Promise<ScanCommandOutput> {
   }
 }
 
+
+async function batchGet(params: BatchGetParams): Promise<BatchGetItemCommandOutput> {
+  const keys = params.keyValues.map((value: string) => {
+    return marshall({ [params.keyName]: value });
+  });
+
+  const command = new BatchGetItemCommand({
+    RequestItems: {
+      [params.tableName]: {
+        Keys: keys,
+        ProjectionExpression: params.projectionExpression
+      }
+    }
+  });
+
+  return client.send(command);
+}
+
+async function batchWrite(params: BatchWriteParams): Promise<BatchWriteItemCommandOutput> {
+  const putRequests = params.items.map((item: { [key: string]: string }) => {
+    return {
+      PutRequest: {
+        Item: marshall(item, marshallOpts)
+      }
+    };
+  });
+
+  const command = new BatchWriteItemCommand({
+    RequestItems: {
+      [params.tableName]: putRequests
+    },
+    ReturnConsumedCapacity: "TOTAl"
+  });
+
+  return client.send(command);
+}
+
 const dynamodb = {
   put,
   get,
-  scan
+  scan,
+  batchGet,
+  batchWrite
 };
 
 export default dynamodb;
@@ -83,14 +127,32 @@ export interface PutParams {
   item: object
 }
 
-export interface GetParams {
+export interface UpdateParams {
   tableName: string
-  key: string
+  id: string
 }
 
+export interface GetParams {
+  tableName: string
+  key: string,
+  projectionExpression?: string
+}
 export interface ScanParams {
   tableName: string
   filterExpression: string
   expressionAttributeValues: object,
   limit?: number
 }
+
+export interface BatchGetParams {
+  tableName: string,
+  keyName: string,
+  keyValues: string[]
+  projectionExpression?: string
+}
+
+export interface BatchWriteParams {
+  tableName: string,
+  items: { [key: string]: string }[]
+}
+

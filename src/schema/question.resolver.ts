@@ -1,5 +1,5 @@
 import { MultipleChoiceQuestionInput } from "../interfaces";
-import questionService from '../services/quizQuestion';
+import questionService from '../services/question';
 
 async function addQuestion(_: any, args: any, context: any, info: any) {
   const question: MultipleChoiceQuestionInput = args.question;
@@ -11,15 +11,15 @@ async function getQuestionById(_: any, args: any, context: any, info: any) {
   return questionService.getById(questionId);
 }
 
-async function listQuestionsByQuizId(_: any, args: any, context: any) {
-  const quizId: string = args.quizId;
-  return questionService.listByQuizId(quizId);
+async function listQuestionsByQuestionIds(_: any, args: any, context: any) {
+  const questionIds: string[] = args.questionIds;
+  return questionService.listByIds(questionIds);
 }
 
 const resolvers = {
   Query: {
     question: getQuestionById,
-    questions: listQuestionsByQuizId
+    questions: listQuestionsByQuestionIds
   },
   Mutation: {
     addQuestion: addQuestion

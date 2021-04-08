@@ -49,49 +49,23 @@ export interface SubMissionInput {
 }
 
 export interface QuestionOption {
-  id: string
+  id: number
   description: string
 }
 
 export interface MultipleChoiceQuestion {
   id: string
-  quizId: string
   description: string
-  options: [QuestionOption]
-  points: number
-}
-
-export interface MultipleChoiceQuestionInput {
-  quizId: string
-  description: string
-  options: string[]
+  options: QuestionOption[]
   answers: number[]
   points: number
 }
 
-export interface Quiz {
-  id: string
-  course: string
-  name: string
-  instructions: string
-  dueDate: Date
-}
-export interface QuizInput {
-  course: string
-  name: string
-  instructions: string
-  dueDate: Date
-}
-
-export interface Answer {
-  id: string
-  quizId: string
-  choices: string[]
-}
-
-export interface AnswerInput {
-  questionId: string
-  choices: string[]
+export interface MultipleChoiceQuestionInput {
+  description: string
+  options: string[]
+  answers: number[]
+  points: number
 }
 
 export interface StudentAnswer {
@@ -101,28 +75,41 @@ export interface StudentAnswer {
   choices: string[]
 }
 
-export interface QuizSubmissionSummary {
+export interface QuizTaskSubmissionSummary {
   id: string
-  quizId: string
+  taskId: string
   student: string
   points: number
   startedAt: Date
   sumbittedAt: Date
-  answers: StudentAnswer[]
+  results: StudentAnswerResult[]
 }
 
-export interface QuizSubmission {
-  submission: QuizSubmissionSummary
-  quiz: Quiz
+export interface QuizTaskSubmission {
+  submission: QuizTaskSubmissionSummary
+  task: Task
   questions: MultipleChoiceQuestion[]
-  answers: Answer[]
 }
 
-export interface QuizSubmissionInput {
+export interface QuizTaskSubmissionInput {
   student: string
-  quizId: string
-  answers: AnswerInput[]
+  taskId: string
+  answers: StudentAnswerInput[]
 }
+
+export interface StudentAnswerInput {
+  questionId: string
+  choices: number[]
+}
+
+export interface StudentAnswerResult {
+  questionId: string
+  result: boolean,
+  points: number,
+  choices: number[],
+  correctChoices: number[]
+}
+
 export interface LearningObjective {
   id: string
   name: string

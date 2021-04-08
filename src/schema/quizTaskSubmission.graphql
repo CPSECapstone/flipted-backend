@@ -1,0 +1,47 @@
+type Query {
+  _empty: String
+}
+
+type StudentAnswer {
+  questionId: String!
+  points: Int!
+  result: Boolean!
+  choices: [Int]!
+}
+
+type QuizTaskSubmissionSummary {
+  id: String!
+  taskId: String!
+  student: String!
+  points: Int!
+  startedAt: Int
+  sumbittedAt: Int
+  studentAnswers: [StudentAnswer]
+}
+
+# Quiz Submission
+type QuizTaskSubmission {
+  submission: QuizSubmissionSummary
+  task: Task!
+  questions: [MultipleChoiceQuestion]
+}
+
+input StudentAnswerInput {
+  questionId: String!
+  choices: [Int]!
+}
+
+input QuizSubmissionInput {
+  student: String!
+  taskId: String!
+  answers: [StudentAnswerInput]
+}
+
+type Mutation {
+  addSubmission(submission: QuizSubmissionInput): String
+}
+
+type Query {
+  quizSubmission(submissionId: String): QuizSubmission
+  quizSubmissions(quizId: String): [QuizSubmissionSummary]
+}
