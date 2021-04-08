@@ -53,7 +53,6 @@ async function listByMissionId(missionId: string): Promise<SubMission[]> {
   return [];
 }
 
-
 const subMissionService = {
   add,
   getById,

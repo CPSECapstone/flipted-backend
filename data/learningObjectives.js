@@ -1,7 +1,4 @@
-const superagent = require('superagent');
-const learningObjectives = require('./learningObjectives.json');
-
-const END_POINT = 'http://localhost:3000/dev/graphql';
+const data = require('./learningObjectives.json');
 
 function generateLearningObjectivePayload(course, name) {
   let query = `
@@ -25,28 +22,15 @@ function generateLearningObjectivePayload(course, name) {
   return payload;
 }
 
-function sendRequest() {
-  const objectives = learningObjectives.learningObjectives;
+const objectives = data.learningObjectives;
 
-  objectives.forEach((objective) => {
-    const course = learningObjectives.course;
-    const name = objective;
-    const payload = generateLearningObjectivePayload(course, name);
+const payloads = objectives.map((objective) => {
+  const course = data.course;
+  const name = objective;
+  return generateLearningObjectivePayload(course, name);
+});
 
-    superagent
-      .post(END_POINT).send(payload)
-      .set('accept', 'json')
-      .end((err, res) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.dir(res.body.data, { depth: null, colors: true });
-        }
-      });
-  });
-}
-
-sendRequest();
+module.exports = payloads;
 
 
 
