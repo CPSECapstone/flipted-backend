@@ -1,92 +1,56 @@
-import { marshall, unmarshall, marshallOptions } from "@aws-sdk/util-dynamodb";
-import {
-  DynamoDBClient,
-  GetItemCommand,
-  GetItemCommandOutput,
-  PutItemCommand,
-  PutItemCommandOutput,
-  ScanCommand,
-  ScanCommandOutput
-} from "@aws-sdk/client-dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
+
 import { environment } from "../environment";
 import { Mission, MissionInput } from "../interfaces";
-import { uid } from "uid/secure";
 import subMissionService from "./subMission";
+import dynamodb, { PutParams, ScanParams } from "./dynamodb";
 
-const client = new DynamoDBClient({ region: "us-east-1" });
 const MISSIONS_TABLE = "Missions-" + environment.stage;
 
-const marshallOpts: marshallOptions = {
-  removeUndefinedValues: true,
-  convertEmptyValues: false,
-  convertClassInstanceToMap: true,
-};
-
 async function add(input: MissionInput) {
-  const mission = <Mission>input;
-  mission.id = uid();
+  const params: PutParams = {
+    tableName: MISSIONS_TABLE,
+    item: input
+  };
 
-  const command: PutItemCommand = new PutItemCommand({
-    TableName: MISSIONS_TABLE,
-    Item: marshall(mission, marshallOpts),
-    ReturnValues: "ALL_OLD",
-  });
-
-  try {
-    const output: PutItemCommandOutput = await client.send(command);
-    return mission.id;
-  } catch (err) {
-    return err;
-  }
+  return dynamodb.put(params);
 }
 
 async function getById(missionId: string): Promise<Mission> {
-  const command = new GetItemCommand({
-    TableName: MISSIONS_TABLE,
-    Key: marshall({
-      id: missionId
-    }, marshallOpts)
-  });
+  const params = {
+    tableName: MISSIONS_TABLE,
+    key: missionId
+  };
 
-  try {
-    const output: GetItemCommandOutput = await client.send(command);
-    if (output.Item) {
-      const mission = <Mission>unmarshall(output.Item);
-      const subMissions = await subMissionService.listByMissionId(mission.id);
-      mission.subMissions = subMissions;
-      return mission;
-    }
-
-    throw new Error(`Mission not found with id=${missionId}`);
-  } catch (err) {
-    console.error(err);
-    return err;
+  const output = await dynamodb.get(params);
+  if (output.Item) {
+    const mission = <Mission>unmarshall(output.Item);
+    const subMissions = await subMissionService.listByMissionId(mission.id);
+    mission.subMissions = subMissions;
+    return mission;
   }
+
+  throw new Error(`Mission not found with id=${missionId}`);
 }
 
 async function listByCourse(course: string): Promise<Mission[]> {
-  const command = new ScanCommand({
-    TableName: MISSIONS_TABLE,
-    FilterExpression: 'course = :course',
-    ExpressionAttributeValues: marshall({
+  const params: ScanParams = {
+    tableName: MISSIONS_TABLE,
+    filterExpression: 'course = :course',
+    expressionAttributeValues: {
       ":course": course
-    }, marshallOpts)
-  });
-
-  try {
-    const output: ScanCommandOutput = await client.send(command);
-    if (output.Items) {
-      const objectives = output.Items.map((item: any) => {
-        return <Mission>unmarshall(item);
-      });
-      return objectives;
     }
+  };
 
-    return [];
-  } catch (err) {
-    console.error(err);
-    return err;
+  const output = await dynamodb.scan(params);
+  if (output.Items) {
+    const objectives = output.Items.map((item: any) => {
+      return <Mission>unmarshall(item);
+    });
+    return objectives;
   }
+
+  return [];
 }
 
 const missionService = {
