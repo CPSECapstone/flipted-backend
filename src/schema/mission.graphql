@@ -1,0 +1,40 @@
+type Mission {
+  id: String!
+  course: String!
+  name: String!
+  description: String!
+  subMissions: [SubMission]
+}
+
+type SubMission {
+  id: String!
+  name: String!
+  description: String!
+  missionId: String!
+  objectiveId: String
+  tasks: [Task]!
+}
+
+type Query {
+  mission(missionId: String): Mission
+  missions(course: String): [Mission]
+  subMissions(missionId: String): [SubMission]
+}
+
+input MissionInput {
+  course: String!
+  name: String!
+  description: String!
+}
+
+input SubMissionInput {
+  name: String!
+  description: String!
+  missionId: String!
+  objectiveId: String # optional
+}
+
+type Mutation {
+  addMission(mission: MissionInput): String
+  addSubMission(subMission: SubMissionInput): String
+}

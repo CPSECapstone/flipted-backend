@@ -1,0 +1,29 @@
+{
+  "tasks": [
+    {
+      "name": " Task on Obtaining And Evaluating Information Introduction",
+      "instructions": "Task on Obtaining And Evaluating Information Introduction",
+      "subMissionId": "sub-mission 1"
+    },
+    {
+      "name": "Task on Setting and Full Goals Introduction",
+      "instructions": "Task on Setting and Full Goals Introduction",
+      "subMissionId": "sub-mission 1"
+    },
+    {
+      "name": "Task on 1A) Subject and Significance",
+      "instructions": "Task on 1A) Subject and Significance",
+      "subMissionId": "sub-mission 1"
+    },
+    {
+      "name": "Task on 1B) Identifying Main and Supporting Ideas",
+      "instructions": "Task on 1B) Identifying Main and Supporting Ideas",
+      "subMissionId": "sub-mission 1"
+    },
+    {
+      "name": "Task on 1C) Summarizing a Resource",
+      "instructions": "Task on 1C) Summarizing a Resource",
+      "subMissionId": "sub-mission 1"
+    }
+  ]
+}
