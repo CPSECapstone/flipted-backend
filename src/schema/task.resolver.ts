@@ -16,8 +16,26 @@ async function listTasksBySubmissionId(_: any, args: any, context: any, info: an
   return taskService.listBySubMissionId(subMissionId);
 }
 
+// TODO: QuizBlock
+async function resolveTaskBlockType(taskBlock: any, context: any, info: any) {
+   if(taskBlock.videoUrl) {
+      return 'VideoBlock'
+   }
+   if(taskBlock.imageUrl) {
+      return 'ImageBlock'
+   }
+   if(taskBlock.fontSize)
+   {
+      return 'TextBlock'
+   }
+   return null
+}
+
 const resolvers = {
-  Query: {
+   TaskBlock: {
+      __resolveType: resolveTaskBlockType
+   },
+   Query: {
     task: getTaskById,
     tasks: listTasksBySubmissionId
   },
