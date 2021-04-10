@@ -57,11 +57,53 @@ type Query {
 input TaskInput {
   name: String!
   instructions: String!
+  points: Int!
   startAt: Date
   endAt: Date
   dueDate: Date
   subMissionId: String
   objectiveId: String
+  pages: [PageInput]
+}
+
+input PageInput {
+   blocks: [TaskBlockInput]
+   canAdvanceBeforeRubricRequirementsComplete: Boolean
+}
+
+enum TaskBlockInputType {
+   TEXT,
+   IMAGE,
+   VIDEO
+}
+
+input TaskBlockInput {
+   title: String
+   requirement: RubricRequirementInput
+   type: TaskBlockInputType!
+   textBlock: TextBlockInput
+   imageBlock: ImageBlockInput
+   videoBlockInput: VideoBlockInput
+}
+
+input TextBlockInput {
+   contents: String
+   fontSize: Int!
+}
+
+input ImageBlockInput{
+   imageUrl: String
+}
+
+input VideoBlockInput {
+   videoUrl: String
+}
+
+
+input RubricRequirementInput {
+   description: String
+   isComplete: Boolean
+   pointValue: Int
 }
 
 type Mutation {
