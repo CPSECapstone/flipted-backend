@@ -2,13 +2,51 @@ type Task {
   id: String!
   name: String!
   instructions: String!
+  points: Int!
   startAt: Date
   endAt: Date
   dueDate: Date
   subMissionId: String
   objectiveId: String
+
   #might be other type of content
-  questions: [MultipleChoiceQuestion]
+  pages: [Page]
+}
+
+type Page {
+   blocks: [TaskBlock]
+   canAdvanceBeforeRubricRequirementsComplete: Boolean
+}
+
+interface TaskBlock {
+   title: String
+   requirement: RubricRequirement
+}
+
+type RubricRequirement {
+   id: String!
+   description: String
+   isComplete: Boolean
+   pointValue: Int
+}
+
+type ImageBlock implements TaskBlock {
+   title: String
+   requirement: RubricRequirement
+   imageUrl: String
+}
+
+type TextBlock implements TaskBlock {
+   title: String
+   requirement: RubricRequirement
+   contents: String
+   fontSize: Int!
+}
+
+type VideoBlock implements TaskBlock {
+   title: String
+   requirement: RubricRequirement
+   videoUrl: String!
 }
 
 type Query {
