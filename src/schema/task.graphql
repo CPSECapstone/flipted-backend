@@ -13,47 +13,6 @@ type Task {
   pages: [Page]
 }
 
-type Page {
-   blocks: [TaskBlock]
-   canAdvanceBeforeRubricRequirementsComplete: Boolean
-}
-
-interface TaskBlock {
-   title: String
-   requirement: RubricRequirement
-}
-
-type RubricRequirement {
-   id: String!
-   description: String
-   isComplete: Boolean
-   pointValue: Int
-}
-
-type ImageBlock implements TaskBlock {
-   title: String
-   requirement: RubricRequirement
-   imageUrl: String
-}
-
-type TextBlock implements TaskBlock {
-   title: String
-   requirement: RubricRequirement
-   contents: String
-   fontSize: Int!
-}
-
-type VideoBlock implements TaskBlock {
-   title: String
-   requirement: RubricRequirement
-   videoUrl: String!
-}
-
-type Query {
-  task(taskId: String): Task
-  tasks(subMissionId: String): [Task]
-}
-
 input TaskInput {
   name: String!
   instructions: String!
@@ -66,15 +25,19 @@ input TaskInput {
   pages: [PageInput]
 }
 
+type Page {
+   blocks: [TaskBlock]
+   canAdvanceBeforeRubricRequirementsComplete: Boolean
+}
+
 input PageInput {
    blocks: [TaskBlockInput]
    canAdvanceBeforeRubricRequirementsComplete: Boolean
 }
 
-enum TaskBlockInputType {
-   TEXT,
-   IMAGE,
-   VIDEO
+interface TaskBlock {
+   title: String
+   requirement: RubricRequirement
 }
 
 input TaskBlockInput {
@@ -86,19 +49,12 @@ input TaskBlockInput {
    videoBlockInput: VideoBlockInput
 }
 
-input TextBlockInput {
-   contents: String
-   fontSize: Int!
+type RubricRequirement {
+   id: String!
+   description: String
+   isComplete: Boolean
+   pointValue: Int
 }
-
-input ImageBlockInput{
-   imageUrl: String
-}
-
-input VideoBlockInput {
-   videoUrl: String
-}
-
 
 input RubricRequirementInput {
    description: String
@@ -106,6 +62,49 @@ input RubricRequirementInput {
    pointValue: Int
 }
 
+type ImageBlock implements TaskBlock {
+   title: String
+   requirement: RubricRequirement
+   imageUrl: String
+}
+
+input ImageBlockInput{
+   imageUrl: String
+}
+
+type TextBlock implements TaskBlock {
+   title: String
+   requirement: RubricRequirement
+   contents: String
+   fontSize: Int!
+}
+
+input TextBlockInput {
+   contents: String
+   fontSize: Int!
+}
+
+type VideoBlock implements TaskBlock {
+   title: String
+   requirement: RubricRequirement
+   videoUrl: String!
+}
+
+input VideoBlockInput {
+   videoUrl: String
+}
+
+type Query {
+  task(taskId: String): Task
+  tasks(subMissionId: String): [Task]
+}
+
 type Mutation {
   addTask(task: TaskInput): String
+}
+
+enum TaskBlockInputType {
+   TEXT,
+   IMAGE,
+   VIDEO
 }
