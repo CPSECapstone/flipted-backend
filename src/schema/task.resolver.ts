@@ -1,9 +1,18 @@
 import { TaskInput } from '../interfaces/taskInterfaces';
+import { validateToken } from '../jws-verifer';
 import taskService from '../services/task';
+import userTypeService from '../services/userRole';
 
 async function addTask(_: any, args: any, context: any, info: any) {
-  const task: TaskInput = args.task;
-  return taskService.add(task, );
+   const tokenPayload = await validateToken(context.headers.Authorization) // first validate the JWT token
+   const userRole = await userTypeService.getUserRole(tokenPayload.username) // then get the user role
+
+   if (userRole == "instructor") {
+      const task: TaskInput = args.task;
+      return taskService.add(task, );
+   } else {
+     return Error("User is not an instructor")
+   }
 }
 
 async function getTaskById(_: any, args: any, context: any, info: any) {
