@@ -44,8 +44,8 @@ input TaskBlockInput {
    title: String
    requirement: RubricRequirementInput
    type: TaskBlockInputType!
-   textBlock: TextBlockInput
-   imageBlock: ImageBlockInput
+   textBlockInput: TextBlockInput
+   imageBlockInput: ImageBlockInput
    videoBlockInput: VideoBlockInput
 }
 
@@ -53,13 +53,11 @@ type RubricRequirement {
    id: String!
    description: String
    isComplete: Boolean
-   pointValue: Int
 }
 
 input RubricRequirementInput {
    description: String
    isComplete: Boolean
-   pointValue: Int
 }
 
 type ImageBlock implements TaskBlock {
