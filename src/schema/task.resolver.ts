@@ -1,9 +1,9 @@
-import { TaskInput } from "../interfaces";
+import { TaskInput } from '../interfaces/taskInterfaces';
 import taskService from '../services/task';
 
 async function addTask(_: any, args: any, context: any, info: any) {
   const task: TaskInput = args.task;
-  return taskService.add(task);
+  return taskService.add(task, );
 }
 
 async function getTaskById(_: any, args: any, context: any, info: any) {
