@@ -18,7 +18,6 @@
                         "id": "0",
                         "description": "Fully read this text block",
                         "isComplete": false,
-                        "pointValue": 1
                      }
                   },
                   {
@@ -28,7 +27,6 @@
                         "id": "1",
                         "description": "Fully appreciate this puppy",
                         "isComplete": false,
-                        "pointValue": 1
                      }
                   },
                   {
@@ -38,7 +36,6 @@
                         "id": "2",
                         "description": "Finish this video",
                         "isComplete": false,
-                        "pointValue": 1
                      }
                   }
                ]
