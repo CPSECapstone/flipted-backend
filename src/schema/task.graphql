@@ -94,7 +94,7 @@ input VideoBlockInput {
 
 type Query {
   task(taskId: String): Task
-  tasks(subMissionId: String): [Task]
+  tasks(subMissionId: String): [Task!]!
 }
 
 type Mutation {
