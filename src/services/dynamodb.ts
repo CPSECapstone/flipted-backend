@@ -7,16 +7,19 @@ import {
   DynamoDBClient,
   GetItemCommand,
   GetItemCommandOutput,
+  UpdateItemCommand,
+  UpdateItemCommandOutput,
   PutItemCommand,
   PutItemCommandOutput,
   ScanCommand,
-  ScanCommandOutput
+  ScanCommandOutput,
+  AttributeValue
 } from "@aws-sdk/client-dynamodb";
 import { uid } from "uid/secure";
 
 const client = new DynamoDBClient({ region: "us-east-1" });
 
-const marshallOpts: marshallOptions = {
+export const marshallOpts: marshallOptions = {
   removeUndefinedValues: true,
   convertEmptyValues: false,
   convertClassInstanceToMap: true,
@@ -49,6 +52,25 @@ async function get(params: GetParams): Promise<GetItemCommandOutput> {
       id: params.key
     }, marshallOpts),
     ProjectionExpression: params.projectionExpression
+  });
+
+  try {
+    const output: GetItemCommandOutput = await client.send(command);
+    return output;
+  } catch (err) {
+    return err;
+  }
+}
+
+async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
+  const command = new UpdateItemCommand({
+    TableName: params.tableName,
+    Key: marshall({
+      id: params.key
+    }, marshallOpts),
+    UpdateExpression: params.updateExpression,
+    ExpressionAttributeValues: params.expressionAttributeValues,
+    ReturnValues:"UPDATED_NEW"
   });
 
   try {
@@ -116,6 +138,7 @@ const dynamodb = {
   put,
   get,
   scan,
+  update,
   batchGet,
   batchWrite
 };
@@ -129,7 +152,9 @@ export interface PutParams {
 
 export interface UpdateParams {
   tableName: string
-  id: string
+  key: string
+  updateExpression: string
+  expressionAttributeValues: {[key: string]: AttributeValue;}
 }
 
 export interface GetParams {

@@ -137,6 +137,6 @@ export interface User {
 }
 
 export interface UserInput {
-  id: string
-  role: string
+  firstName: string
+  lastName: string
 }

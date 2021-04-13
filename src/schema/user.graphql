@@ -16,6 +16,15 @@ input UserInput {
   lastName: String
 }
 
+type UpdateUserOutput {
+  firstName: String,
+  lastName: String
+}
+
 type Query {
   getUser: User
+}
+
+type Mutation {
+  updateUser(userInput: UserInput): UpdateUserOutput
 }
