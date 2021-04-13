@@ -1,0 +1,31 @@
+type Task {
+  id: String!
+  name: String!
+  instructions: String!
+  startAt: Date
+  endAt: Date
+  dueDate: Date
+  subMissionId: String
+  objectiveId: String
+  #might be other type of content
+  questions: [MultipleChoiceQuestion]
+}
+
+type Query {
+  task(taskId: String): Task
+  tasks(subMissionId: String): [Task]
+}
+
+input TaskInput {
+  name: String!
+  instructions: String!
+  startAt: Date
+  endAt: Date
+  dueDate: Date
+  subMissionId: String
+  objectiveId: String
+}
+
+type Mutation {
+  addTask(task: TaskInput): String
+}

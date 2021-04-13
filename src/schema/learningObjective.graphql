@@ -1,0 +1,24 @@
+type Query {
+  _empty: String
+}
+
+type LearningObjective {
+  id: String!
+  name: String!
+  course: String!
+  description: String!
+}
+
+type Query {
+  learningObjectives(course: String): [LearningObjective]
+}
+
+input LearningObjectiveInput {
+  name: String!
+  course: String!
+  description: String!
+}
+
+type Mutation {
+  addLearningObjective(objective: LearningObjectiveInput): String
+}
