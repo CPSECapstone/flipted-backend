@@ -37,6 +37,10 @@ async function update(userId: string, input: UserInput) {
   }
   const output = await dynamodb.update(params);
   if(output.Attributes){
+<<<<<<< HEAD
+=======
+    console.log(unmarshall(output.Attributes));
+>>>>>>> 40b9e2b1f783049b913a1d93a8f5bf9fbc83da84
     return unmarshall(output.Attributes);
   }
 }
