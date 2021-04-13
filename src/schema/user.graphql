@@ -1,18 +1,21 @@
+enum Role {
+  STUDENT
+  INSTRUCTOR
+}
+
 type User {
   id: String!
-  firstName: String!
-  lastName: String!
+  role: Role!
+  firstName: String
+  lastName: String
+  email: String
 }
 
 input UserInput {
-  firstName: String!
-  lastName: String!
+  firstName: String,
+  lastName: String
 }
 
 type Query {
-  getUsers: [User]
-}
-
-type Mutation {
-  addUser(user: UserInput): User
+  getUser: User
 }

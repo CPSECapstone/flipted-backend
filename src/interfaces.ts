@@ -127,3 +127,16 @@ export interface CourseInput {
   instructor: string
   description: string
 }
+
+export interface User {
+  id: string
+  role: string
+  firstName: string
+  lastName: string
+  email: string
+}
+
+export interface UserInput {
+  id: string
+  role: string
+}
