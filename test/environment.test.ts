@@ -1,4 +1,4 @@
-import { environment, TABLE_NAME } from "../environment";
+import { environment, TABLE_NAME } from "../src/environment";
 
 describe('Test environment variables', () => {
   it("will display correct `User` table name", () => {
