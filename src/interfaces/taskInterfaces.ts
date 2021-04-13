@@ -25,12 +25,12 @@ export interface Task {
  
  export interface Page {
     blocks: any[]
-    canAdvanceBeforeRubricRequirementsComplete: Boolean
+    skippable: Boolean
  }
  
  export interface PageInput {
     blocks: TaskBlockInput[]
-    canAdvanceBeforeRubricRequirementsComplete: Boolean
+    skippable: Boolean
  }
  
  export interface TaskBlockInput {
@@ -55,8 +55,7 @@ export interface Task {
     videoUrl: string
  }
  
- export interface RubricRequirementInput
- {
+ export interface RubricRequirementInput {
     description: String
     isComplete: Boolean
  }

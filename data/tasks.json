@@ -8,7 +8,7 @@
       "points": 10,
       "pages": [
          {
-            "canAdvanceBeforerequirementsComplete": false,
+            "skippable": false,
             "blocks": [
                   {
                      "title": "Welcome to the first page",
@@ -41,7 +41,7 @@
                ]
          },
          {
-            "canAdvanceBeforerequirementsComplete": false,
+            "skippable": false,
             "blocks": [
                {
                   "title": "Welcome to the second page",

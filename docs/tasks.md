@@ -21,7 +21,7 @@ mutation addTask {
       objectiveId: "0"
       pages: [
         {
-          canAdvanceBeforeRubricRequirementsComplete: false
+          skippable: false
           blocks: [
             {
               title: "My First Block"
@@ -47,7 +47,7 @@ mutation addTask {
           ]
         }
         {
-          canAdvanceBeforeRubricRequirementsComplete: false
+          skippable: false
           blocks: [
             {
               title: "Welcome to the second page"
@@ -82,7 +82,7 @@ mutation addTask {
     objectiveId
     points
     pages{
-      canAdvanceBeforeRubricRequirementsComplete
+      skippable
       blocks
       {
         title

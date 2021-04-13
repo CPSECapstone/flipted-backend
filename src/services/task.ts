@@ -10,7 +10,7 @@ const TASKS_TABLE = TABLE_NAME("Tasks");
 function convertPageInput(pageInput: PageInput) : Page
 {
       return {
-         canAdvanceBeforeRubricRequirementsComplete: pageInput.canAdvanceBeforeRubricRequirementsComplete,
+         skippable: pageInput.skippable,
          blocks: pageInput.blocks.map((blockInput: TaskBlockInput) => {
             return convertTaskBlockInput(blockInput)
          }),
@@ -54,7 +54,6 @@ function convertTaskBlockInput(blockInput: TaskBlockInput) : any
 }
 
 async function add(input: TaskInput) {
-
    const toSubmit = {
       name: input.name,
       instructions: input.instructions,
