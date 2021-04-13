@@ -1,13 +1,12 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
-import dynamodb, { PutParams } from "./dynamodb";
-import { User, UserInput } from "../interfaces";
+import dynamodb from "./dynamodb";
+import { User } from "../interfaces";
+import { USERS_TABLE_NAME } from "../environment";
 
-const USER_TABLE = "flipted-Users-dev";
-
-async function get(userId: string): Promise<User | null> {
+async function get(userId: string): Promise<User> {
   const params = {
-    tableName: USER_TABLE,
+    tableName: USERS_TABLE_NAME,
     key: userId
   };
 
@@ -15,11 +14,20 @@ async function get(userId: string): Promise<User | null> {
   if (output.Item) {
     return <User>unmarshall(output.Item);
   }
-  return null;
+  throw new Error(`username: ${userId} not found`);
+}
+
+/** 
+ * Returns the role of the user given the user id contained in the JWT access token
+ * Should be either "instructor" or "student"
+ */
+ async function getUserRole(userId: string) {
+  return (await get(userId)).role; 
 }
 
 const userService = {
-  get
+  get,
+  getUserRole
 }
 
 export default userService;

@@ -1,14 +1,19 @@
+enum Role {
+  STUDENT
+  INSTRUCTOR
+}
+
 type User {
   id: String!
-  role: String!
+  role: Role!
   firstName: String
   lastName: String
   email: String
 }
 
 input UserInput {
-  id: String!
-  role: String!
+  firstName: String,
+  lastName: String
 }
 
 type Query {

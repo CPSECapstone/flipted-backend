@@ -10,6 +10,10 @@ async function getUser(_: any, args: any, context: any, info: any) {
 const resolvers = {
   Query: {
     getUser: getUser
+  },
+  Role: {
+    STUDENT: 'student',
+    INSTRUCTOR: 'instructor'
   }
 }
 

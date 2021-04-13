@@ -1,5 +1,5 @@
 import { mergeTypeDefs, mergeResolvers } from '@graphql-tools/merge';
-import { GraphQLDateTime } from 'graphql-iso-date';
+import { GraphQLDate } from 'graphql-iso-date';
 
 import customType from './custom.graphql';
 import userType from './user.graphql';
@@ -19,7 +19,7 @@ import questionResolvers from './question.resolver';
 import learningObjectiveResolvers from './learningObjective.resolver';
 
 const customScalarResolver = {
-  Date: GraphQLDateTime
+  Date: GraphQLDate
 }
 
 const typesArray = [
