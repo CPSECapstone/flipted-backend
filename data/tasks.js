@@ -12,7 +12,7 @@ function generatePayload(task) {
        objectiveId: "0"
        pages: [
          {
-           canAdvanceBeforeRubricRequirementsComplete: false
+           skippable: false
            blocks: [
              {
                title: "My First Block"
@@ -38,7 +38,7 @@ function generatePayload(task) {
            ]
          }
          {
-           canAdvanceBeforeRubricRequirementsComplete: false
+           skippable: false
            blocks: [
              {
                title: "Welcome to the second page"
