@@ -20,7 +20,6 @@ function convertPageInput(pageInput: PageInput) : Page
 
 function convertTaskBlockInput(blockInput: TaskBlockInput) : any
 {
-   console.log(blockInput.type)
    var specificBlock
 
    switch (blockInput.type)
@@ -118,8 +117,7 @@ async function updateTaskProgress(taskProgress: TaskProgress)
       tableName: TASKS_SUBMISSIONS_TABLE,
       item: taskProgress
    }
-   //todo: need to handle rubric requirement IDs not found in given task id. 
-   dynamodb.put(params)
+   return dynamodb.put(params)
 }
 
 const taskService = {

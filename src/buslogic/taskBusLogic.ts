@@ -23,8 +23,7 @@ function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgress) : boole
    }
 
    // check that each id from submission is in the task
-   for (var id of taskProgress.finishedBlockIds)
-   {
+   for (var id of taskProgress.finishedBlockIds) {
       if (!ids.includes(id)){
          return false
       }
