@@ -3,7 +3,7 @@ import { uid } from "uid/secure";
 
 import { TABLE_NAME } from "../environment";
 import { PageInput, Page, TaskBlockInput, TaskInput, Task, TaskProgress } from "../interfaces/taskInterfaces";
-import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
+import dynamodb, { GetCompositeParams, GetParams, PutCompositeParams, PutParams, ScanParams } from "./dynamodb";
 
 const TASKS_TABLE = TABLE_NAME("Tasks");
 const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions")
@@ -76,7 +76,7 @@ async function add(input: TaskInput) {
   return dynamodb.put(params);
 }
 
-async function getById(taskId: string): Promise<Task> {
+async function getTaskById(taskId: string): Promise<Task> {
   const params: GetParams = {
     tableName: TASKS_TABLE,
     key: taskId
@@ -111,20 +111,39 @@ async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
   return [];
 }
 
+async function getTaskProgress(taskId: string, username: string) : Promise<TaskProgress> {
+   const params: GetCompositeParams = {
+      tableName: TASKS_SUBMISSIONS_TABLE,
+      key: {
+         username: username,
+         taskId: taskId,
+       },
+    };
+  
+    const output = await dynamodb.getComposite(params);
+    if (output.Item) {
+      const taskProgress = <TaskProgress>unmarshall(output.Item);
+      return taskProgress;
+    }
+  
+    throw new Error(`Task not found with id=${taskId}`);
+}
+
 async function updateTaskProgress(taskProgress: TaskProgress)
 {
-   const params: PutParams = {
+   const params: PutCompositeParams = {
       tableName: TASKS_SUBMISSIONS_TABLE,
       item: taskProgress
    }
-   return dynamodb.put(params)
+   return dynamodb.putComposite(params)
 }
 
 const taskService = {
   add,
-  getById,
+  getTaskById,
   listBySubMissionId,
-  updateTaskProgress
+  updateTaskProgress,
+  getTaskProgress
 }
 
 export default taskService;

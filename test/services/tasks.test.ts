@@ -80,7 +80,7 @@ describe('querying a task with existing task progress' , () => {
 
       const taskSubmission: TaskProgress = {
          finishedBlockIds: ["0", "2", "3"],
-         userId: "0",
+         username: "0",
          taskId: "0"
       }
 
@@ -103,7 +103,7 @@ describe('querying a task with existing task progress' , () => {
 
       const taskSubmission: TaskProgress = {
          finishedBlockIds: [],
-         userId: "0",
+         username: "0",
          taskId: "0"
       }
 
@@ -119,7 +119,7 @@ describe('submitting progress to a task', () => {
 
    const taskSubmission: TaskProgress = {
       finishedBlockIds: ["0", "1"],
-      userId: "0",
+      username: "0",
       taskId: "0"
    }
    
@@ -130,7 +130,7 @@ describe('submitting progress to a task', () => {
 
    const taskSubmission: TaskProgress = {
       finishedBlockIds: ["0", "4"],
-      userId: "0",
+      username: "0",
       taskId: "0"
    }
    
@@ -141,7 +141,7 @@ describe('submitting progress to a task', () => {
 
    const taskSubmission: TaskProgress = {
       finishedBlockIds: ["0", "1", "2", "3", "3"],
-      userId: "0",
+      username: "0",
       taskId: "0"
    }
    

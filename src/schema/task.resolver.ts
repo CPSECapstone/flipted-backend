@@ -20,12 +20,12 @@ async function submitTaskProgress(_: any, args: any, context: any, info: any) {
    const tokenPayload = await validateToken(context.headers.Authorization) 
    
    const taskProgress: TaskProgress = {
-      userId: tokenPayload.username,
+      username: tokenPayload.username,
       ...args.taskProgress
    }
 
    // verify that the list of completed requirement ids exist in the task
-   const task: Task = await taskService.getById(taskProgress.taskId)
+   const task: Task = await taskService.getTaskById(taskProgress.taskId)
    if(taskBusLogic.areTaskProgressIdsValid(task, taskProgress))
    {
       return taskService.updateTaskProgress(taskProgress)
@@ -35,8 +35,17 @@ async function submitTaskProgress(_: any, args: any, context: any, info: any) {
 }
 
 async function getTaskById(_: any, args: any, context: any, info: any) {
-  const taskId = args.taskId;
-  return taskService.getById(taskId);
+   const tokenPayload = await validateToken(context.headers.Authorization) 
+   const task: Task = await taskService.getTaskById(args.taskId);
+
+   try {
+      // apply any existing task progress
+      const taskProgress = await taskService.getTaskProgress(task.id, tokenPayload.username)
+      return taskBusLogic.applyTaskProgress(task, taskProgress);
+    } catch (err) {
+      // no existing task progress, return task in its current form
+      return task;
+    }
 }
 
 async function listTasksBySubmissionId(_: any, args: any, context: any, info: any) {

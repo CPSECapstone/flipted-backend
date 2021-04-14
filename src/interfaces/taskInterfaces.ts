@@ -68,7 +68,7 @@ export interface Task {
  }
 
  export interface TaskProgress {
-    userId: string
+    username: string
     taskId: string
     finishedBlockIds: string[]
  }
