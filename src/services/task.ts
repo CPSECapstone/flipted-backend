@@ -1,15 +1,76 @@
 import { unmarshall, } from "@aws-sdk/util-dynamodb";
+import { uid } from "uid/secure";
 
 import { TABLE_NAME } from "../environment";
-import { Task, TaskInput } from "../interfaces";
+import { PageInput, Page, TaskBlockInput, TaskInput, Task } from "../interfaces/taskInterfaces";
 import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
 
 const TASKS_TABLE = TABLE_NAME("Tasks");
 
+function convertPageInput(pageInput: PageInput) : Page
+{
+      return {
+         skippable: pageInput.skippable,
+         blocks: pageInput.blocks.map((blockInput: TaskBlockInput) => {
+            return convertTaskBlockInput(blockInput)
+         }),
+      }
+}
+
+function convertTaskBlockInput(blockInput: TaskBlockInput) : any
+{
+   console.log(blockInput.type)
+   var specificBlock
+
+   switch (blockInput.type)
+   {
+      case "TEXT":
+         specificBlock = {
+            contents: blockInput.textBlockInput.contents,
+            fontSize: blockInput.textBlockInput.fontSize
+         }
+         break;
+      case "IMAGE":
+         specificBlock = {
+            imageUrl: blockInput.imageBlockInput.imageUrl
+         }
+         break;
+      case "VIDEO":
+         specificBlock = {
+            videoUrl: blockInput.videoBlockInput.videoUrl
+         }
+         break;
+      default:
+         throw new Error("TaskBlockInput enum handling error")
+   }
+   return {
+      title: blockInput.title,
+      requirement: {
+         id: uid(),
+         ...blockInput.requirement
+      },
+      ...specificBlock
+   }
+}
+
 async function add(input: TaskInput) {
-  const params: PutParams = {
+   const toSubmit = {
+      name: input.name,
+      instructions: input.instructions,
+      points: input.points,
+      startAt: input.startAt,
+      endAt: input.endAt,
+      dueDate: input.dueDate,
+      subMissionId: input.subMissionId,
+      objectiveId: input.objectiveId,
+      pages: input.pages.map((element: any) => {
+         return convertPageInput(element)
+      }),
+   }
+   
+   const params: PutParams = {
     tableName: TASKS_TABLE,
-    item: input
+    item: toSubmit
   };
 
   return dynamodb.put(params);

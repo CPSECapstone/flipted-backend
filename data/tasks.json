@@ -1,29 +1,62 @@
 {
   "tasks": [
     {
-      "name": " Task on Obtaining And Evaluating Information Introduction",
-      "instructions": "Task on Obtaining And Evaluating Information Introduction",
-      "subMissionId": "sub-mission 1"
-    },
-    {
-      "name": "Task on Setting and Full Goals Introduction",
-      "instructions": "Task on Setting and Full Goals Introduction",
-      "subMissionId": "sub-mission 1"
-    },
-    {
-      "name": "Task on 1A) Subject and Significance",
-      "instructions": "Task on 1A) Subject and Significance",
-      "subMissionId": "sub-mission 1"
-    },
-    {
-      "name": "Task on 1B) Identifying Main and Supporting Ideas",
-      "instructions": "Task on 1B) Identifying Main and Supporting Ideas",
-      "subMissionId": "sub-mission 1"
-    },
-    {
-      "name": "Task on 1C) Summarizing a Resource",
-      "instructions": "Task on 1C) Summarizing a Resource",
-      "subMissionId": "sub-mission 1"
+      "id": "0",
+      "name": "Destin's Awesome Task",
+      "instructions": "If you're seeing these instructions, congrats! You've discovered my task! Message me on slack for a reward.",
+      "subMissionId": "sub-mission 1",
+      "points": 10,
+      "pages": [
+         {
+            "skippable": false,
+            "blocks": [
+                  {
+                     "title": "Welcome to the first page",
+                     "contents": "This is the contexts of a text block. You can put your random text here. Since this is my awesome task, you get to read the awesome contents of this text block.",
+                     "fontSize": 14,
+                     "requirement": {
+                        "id": "0",
+                        "description": "Fully read this text block",
+                        "isComplete": false,
+                     }
+                  },
+                  {
+                     "title": "Check Out This Cute Puppy",
+                     "imageUrl": "https://i.imgur.com/tmawqgH.jpg",
+                     "requirement": {
+                        "id": "1",
+                        "description": "Fully appreciate this puppy",
+                        "isComplete": false,
+                     }
+                  },
+                  {
+                     "title": "And Also This Video",
+                     "videoUrl": "https://youtu.be/F4we73GHH9k",
+                     "requirement": {
+                        "id": "2",
+                        "description": "Finish this video",
+                        "isComplete": false,
+                     }
+                  }
+               ]
+         },
+         {
+            "skippable": false,
+            "blocks": [
+               {
+                  "title": "Welcome to the second page",
+                  "contents": "I appreciate you for reading this far. Have a nice day.",
+                  "fontSize": 14,
+                  "requirement": {
+                     "id": "0",
+                     "description": "Aknowledge my appreciation.",
+                     "isComplete": false,
+                     "pointValue": 1
+                  }
+               }
+            ]
+         }
+      ]
     }
   ]
 }

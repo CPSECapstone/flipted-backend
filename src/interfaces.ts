@@ -1,23 +1,4 @@
-export interface Task {
-  id: string
-  name: string
-  instructions: string
-  startAt: Date
-  endAt: Date
-  dueDate: Date
-  subMissionId: string
-  objectiveId: string
-  questions: MultipleChoiceQuestion[]
-}
-export interface TaskInput {
-  name: string
-  instructions: string
-  startAt: Date
-  endAt: Date
-  dueDate: Date
-  subMissionId: string
-  objectiveId: string
-}
+import { Task } from "./interfaces/taskInterfaces";
 
 export interface Mission {
   id: string
