@@ -59,4 +59,10 @@ export interface Task {
     description: String
     isComplete: Boolean
  }
+
+ export interface TaskProgress {
+    userId: String
+    taskId: string
+    finishedBlockIds: String[]
+ }
  

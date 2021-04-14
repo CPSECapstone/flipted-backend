@@ -1,4 +1,4 @@
-import { TaskInput } from '../interfaces/taskInterfaces';
+import { TaskInput, TaskProgress} from '../interfaces/taskInterfaces';
 import { validateToken } from '../jws-verifer';
 import taskService from '../services/task';
 import userTypeService from '../services/userRole';
@@ -13,6 +13,17 @@ async function addTask(_: any, args: any, context: any, info: any) {
    } else {
      return Error("User is not an instructor")
    }
+}
+
+async function submitTaskProgress(_: any, args: any, context: any, info: any) {
+   const tokenPayload = await validateToken(context.headers.Authorization) 
+   
+   const taskProgress: TaskProgress = {
+      userId: tokenPayload.username,
+      ...args.taskProgress
+   }
+
+   taskService.updateTaskProgress(taskProgress)
 }
 
 async function getTaskById(_: any, args: any, context: any, info: any) {
@@ -49,7 +60,8 @@ const resolvers = {
     tasks: listTasksBySubmissionId
   },
   Mutation: {
-    addTask: addTask
+    addTask: addTask,
+    submitTaskProgress: submitTaskProgress
   }
 };
 

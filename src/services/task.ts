@@ -2,10 +2,11 @@ import { unmarshall, } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
 
 import { TABLE_NAME } from "../environment";
-import { PageInput, Page, TaskBlockInput, TaskInput, Task } from "../interfaces/taskInterfaces";
+import { PageInput, Page, TaskBlockInput, TaskInput, Task, TaskProgressInput, TaskProgress } from "../interfaces/taskInterfaces";
 import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
 
 const TASKS_TABLE = TABLE_NAME("Tasks");
+const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions")
 
 function convertPageInput(pageInput: PageInput) : Page
 {
@@ -111,10 +112,21 @@ async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
   return [];
 }
 
+async function updateTaskProgress(taskProgress: TaskProgress)
+{
+   const params: PutParams = {
+      tableName: TASKS_SUBMISSIONS_TABLE,
+      item: taskProgress
+   }
+   //todo: need to handle rubric requirement IDs not found in given task id. 
+   dynamodb.put(params)
+}
+
 const taskService = {
   add,
   getById,
-  listBySubMissionId
+  listBySubMissionId,
+  updateTaskProgress
 }
 
 export default taskService;
