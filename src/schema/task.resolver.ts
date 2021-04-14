@@ -2,6 +2,7 @@ import { TaskInput, TaskProgress} from '../interfaces/taskInterfaces';
 import { validateToken } from '../jws-verifer';
 import taskService from '../services/task';
 import userTypeService from '../services/userRole';
+import taskBusLogic from '../buslogic/taskBusLogic'
 
 async function addTask(_: any, args: any, context: any, info: any) {
    const tokenPayload = await validateToken(context.headers.Authorization) // first validate the JWT token
@@ -23,7 +24,14 @@ async function submitTaskProgress(_: any, args: any, context: any, info: any) {
       ...args.taskProgress
    }
 
-   taskService.updateTaskProgress(taskProgress)
+   // verify that the list of completed requirement ids exist in the task
+   const task = await taskService.getById(taskProgress.taskId)
+   if(taskBusLogic.areTaskProgressIdsValid(task, taskProgress))
+   {
+      taskService.updateTaskProgress(taskProgress)
+   }
+
+   return Error("Failed to verify task submission: Found requirement ids not associated with the task")
 }
 
 async function getTaskById(_: any, args: any, context: any, info: any) {

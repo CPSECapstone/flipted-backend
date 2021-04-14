@@ -2,7 +2,7 @@ import { unmarshall, } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
 
 import { TABLE_NAME } from "../environment";
-import { PageInput, Page, TaskBlockInput, TaskInput, Task, TaskProgressInput, TaskProgress } from "../interfaces/taskInterfaces";
+import { PageInput, Page, TaskBlockInput, TaskInput, Task, TaskProgress } from "../interfaces/taskInterfaces";
 import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
 
 const TASKS_TABLE = TABLE_NAME("Tasks");

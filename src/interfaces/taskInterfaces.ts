@@ -55,6 +55,12 @@ export interface Task {
     videoUrl: string
  }
  
+ export interface RubricRequirement {
+   id: String
+   description: String
+   isComplete: Boolean
+}
+
  export interface RubricRequirementInput {
     description: String
     isComplete: Boolean
