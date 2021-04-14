@@ -13,13 +13,12 @@ import {
   PutItemCommandOutput,
   ScanCommand,
   ScanCommandOutput,
-  AttributeValue
 } from "@aws-sdk/client-dynamodb";
 import { uid } from "uid/secure";
 
 const client = new DynamoDBClient({ region: "us-east-1" });
 
-export const marshallOpts: marshallOptions = {
+const marshallOpts: marshallOptions = {
   removeUndefinedValues: true,
   convertEmptyValues: false,
   convertClassInstanceToMap: true,
@@ -69,7 +68,9 @@ async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
       id: params.key
     }, marshallOpts),
     UpdateExpression: params.updateExpression,
-    ExpressionAttributeValues: params.expressionAttributeValues,
+    ExpressionAttributeValues: marshall(
+      params.expressionAttributeValues, marshallOpts
+    ),
     ReturnValues:"UPDATED_NEW"
   });
 
@@ -154,7 +155,7 @@ export interface UpdateParams {
   tableName: string
   key: string
   updateExpression: string
-  expressionAttributeValues: {[key: string]: AttributeValue;}
+  expressionAttributeValues: {[key: string]: any;}
 }
 
 export interface GetParams {

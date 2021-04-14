@@ -11,14 +11,14 @@ type User {
   email: String
 }
 
-input UserInput {
-  firstName: String,
-  lastName: String
+input UpdateUserInput {
+  firstName: String!,
+  lastName: String!
 }
 
 type UpdateUserOutput {
-  firstName: String,
-  lastName: String
+  firstName: String!,
+  lastName: String!
 }
 
 type Query {
@@ -26,5 +26,5 @@ type Query {
 }
 
 type Mutation {
-  updateUser(userInput: UserInput): UpdateUserOutput
+  updateUser(updateUserInput: UpdateUserInput): UpdateUserOutput
 }

@@ -136,7 +136,7 @@ export interface User {
   email: string
 }
 
-export interface UserInput {
+export interface UpdateUserInput {
   firstName: string
   lastName: string
 }

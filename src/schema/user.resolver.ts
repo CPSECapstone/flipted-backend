@@ -9,7 +9,7 @@ async function getUser(_: any, args: any, context: any, info: any) {
 
 async function updateUser(_: any, args: any, context: any, info: any) {
   const token = await validateToken(context.headers.Authorization);
-  return await userService.update(token.username, args.userInput);
+  return await userService.update(token.username, args.updateUserInput);
 }
 
 const resolvers = {
