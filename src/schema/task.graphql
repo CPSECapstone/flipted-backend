@@ -2,30 +2,107 @@ type Task {
   id: String!
   name: String!
   instructions: String!
+  points: Int!
   startAt: Date
   endAt: Date
   dueDate: Date
   subMissionId: String
   objectiveId: String
-  #might be other type of content
-  questions: [MultipleChoiceQuestion]
-}
 
-type Query {
-  task(taskId: String): Task
-  tasks(subMissionId: String): [Task]
+  #might be other type of content
+  pages: [Page!]!
 }
 
 input TaskInput {
   name: String!
   instructions: String!
+  points: Int!
   startAt: Date
   endAt: Date
   dueDate: Date
   subMissionId: String
   objectiveId: String
+  pages: [PageInput!]!
+}
+
+type Page {
+   blocks: [TaskBlock]
+   skippable: Boolean
+}
+
+input PageInput {
+   blocks: [TaskBlockInput]
+   skippable: Boolean
+}
+
+interface TaskBlock {
+   title: String
+   requirement: RubricRequirement
+}
+
+input TaskBlockInput {
+   title: String
+   requirement: RubricRequirementInput
+   type: TaskBlockInputType!
+   textBlockInput: TextBlockInput
+   imageBlockInput: ImageBlockInput
+   videoBlockInput: VideoBlockInput
+}
+
+type RubricRequirement {
+   id: String!
+   description: String
+   isComplete: Boolean!
+}
+
+input RubricRequirementInput {
+   description: String
+   isComplete: Boolean!
+}
+
+type ImageBlock implements TaskBlock {
+   title: String
+   requirement: RubricRequirement
+   imageUrl: String!
+}
+
+input ImageBlockInput{
+   imageUrl: String!
+}
+
+type TextBlock implements TaskBlock {
+   title: String
+   requirement: RubricRequirement
+   contents: String!
+   fontSize: Int!
+}
+
+input TextBlockInput {
+   contents: String!
+   fontSize: Int!
+}
+
+type VideoBlock implements TaskBlock {
+   title: String
+   requirement: RubricRequirement
+   videoUrl: String!
+}
+
+input VideoBlockInput {
+   videoUrl: String!
+}
+
+type Query {
+  task(taskId: String): Task
+  tasks(subMissionId: String): [Task!]!
 }
 
 type Mutation {
   addTask(task: TaskInput): String
+}
+
+enum TaskBlockInputType {
+   TEXT,
+   IMAGE,
+   VIDEO
 }
