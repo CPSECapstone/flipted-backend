@@ -32,8 +32,31 @@ function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgress) : boole
    return true
 }
 
+/**
+ * Modifies a teacher specified default task with any ongoing completion progress represented
+ * in a TaskProgress object. Specifically, sets any RubricRequirement.isComplete to true if the
+ * same id is contained within the completedBlockIds in TaskProgress.
+ * 
+ * @param task The task to be modified
+ * @param taskProgress The task progress used to modify the task
+ */
+function applyTaskProgress(task: Task, taskProgress: TaskProgress) : Task
+{
+   for (var page of task.pages) {
+      for (var block of page.blocks) {
+         const requirement: RubricRequirement = block.requirement
+         if(taskProgress.finishedBlockIds.includes(requirement.id))
+         {
+            block.requirement.isComplete = true;
+         }
+      }
+   }
+   return task; 
+}
+
 const taskBusLogic = {
-   areTaskProgressIdsValid
+   areTaskProgressIdsValid,
+   applyTaskProgress
  }
 
  export default taskBusLogic

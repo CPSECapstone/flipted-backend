@@ -7,7 +7,7 @@ import { LearningObjectiveInput } from '../../src/interfaces';
 import taskBusLogic from '../../src/buslogic/taskBusLogic';
 import { Task, TaskProgress } from '../../src/interfaces/taskInterfaces';
 
-const mockDate: Date = new Date()
+const mockDate: Date = new Date(0)
 const sampleTask: Task = {
    startAt: mockDate,
    endAt: mockDate,
@@ -20,7 +20,7 @@ const sampleTask: Task = {
    points: 10,
    pages: [
       {
-         skippable: false,
+         skippable: true,
          blocks: [
                {
                   title: "Welcome to the first page",
@@ -73,6 +73,45 @@ const sampleTask: Task = {
 
 jest.mock('../../src/services/dynamodb', () => {
   return dynamodbMock;
+});
+
+describe('querying a task with existing task progress' , () => {
+   it('will set the isComplete field of any rubric requirement in a task block if its contained in the task progress object', async () => {
+
+      const taskSubmission: TaskProgress = {
+         finishedBlockIds: ["0", "2", "3"],
+         userId: "0",
+         taskId: "0"
+      }
+
+      const modifiedTask: Task = taskBusLogic.applyTaskProgress(sampleTask, taskSubmission)
+      
+      // every task but the image task complete
+      const expectedOutput: Task = JSON.parse(JSON.stringify(sampleTask));
+      expectedOutput.pages[0].blocks[0].requirement.isComplete = true
+      expectedOutput.pages[0].blocks[2].requirement.isComplete = true
+      expectedOutput.pages[1].blocks[0].requirement.isComplete = true
+
+      expect(modifiedTask.pages[0].blocks[0].requirement.isComplete).toBeTruthy()
+      expect(modifiedTask.pages[0].blocks[2].requirement.isComplete).toBeTruthy()
+      expect(modifiedTask.pages[1].blocks[0].requirement.isComplete).toBeTruthy()
+
+      expect(modifiedTask.pages[0].blocks[1].requirement.isComplete).toBeFalsy()
+     });
+
+     it('will otherwise not modify the object', async () => {
+
+      const taskSubmission: TaskProgress = {
+         finishedBlockIds: [],
+         userId: "0",
+         taskId: "0"
+      }
+
+      var modifiedTask: Task = taskBusLogic.applyTaskProgress(sampleTask, taskSubmission)
+      modifiedTask = JSON.parse(JSON.stringify(modifiedTask))
+      // every task but the image task complete
+      expect(modifiedTask).toMatchObject(JSON.parse(JSON.stringify(sampleTask)))
+     });
 });
 
 describe('submitting progress to a task', () => {
