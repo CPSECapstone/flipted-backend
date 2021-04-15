@@ -80,8 +80,6 @@ async function getComposite(params: GetCompositeParams): Promise<GetItemCommandO
      Key: marshall(params.key, marshallOpts),
      ProjectionExpression: params.projectionExpression
    });
-
-   console.log(command)
  
    try {
      const output: GetItemCommandOutput = await client.send(command);

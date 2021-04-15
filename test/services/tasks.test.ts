@@ -79,7 +79,7 @@ describe('querying a task with existing task progress' , () => {
    it('will set the isComplete field of any rubric requirement in a task block if its contained in the task progress object', async () => {
 
       const taskSubmission: TaskProgress = {
-         finishedBlockIds: ["0", "2", "3"],
+         finishedRequirementIds: ["0", "2", "3"],
          username: "0",
          taskId: "0"
       }
@@ -102,7 +102,7 @@ describe('querying a task with existing task progress' , () => {
      it('will otherwise not modify the object', async () => {
 
       const taskSubmission: TaskProgress = {
-         finishedBlockIds: [],
+         finishedRequirementIds: [],
          username: "0",
          taskId: "0"
       }
@@ -117,7 +117,7 @@ describe('submitting progress to a task', () => {
   it('will verify task progress submission ids are valid', async () => {
 
    const taskSubmission: TaskProgress = {
-      finishedBlockIds: ["0", "1"],
+      finishedRequirementIds: ["0", "1"],
       username: "0",
       taskId: "0"
    }
@@ -128,7 +128,7 @@ describe('submitting progress to a task', () => {
   it('will fail to verify task progress if not all submission ids match', async () => {
 
    const taskSubmission: TaskProgress = {
-      finishedBlockIds: ["0", "4"],
+      finishedRequirementIds: ["0", "4"],
       username: "0",
       taskId: "0"
    }
@@ -139,7 +139,7 @@ describe('submitting progress to a task', () => {
   it('will fail to verify task progress if there are too many ids attached to the submission', async () => {
 
    const taskSubmission: TaskProgress = {
-      finishedBlockIds: ["0", "1", "2", "3", "3"],
+      finishedRequirementIds: ["0", "1", "2", "3", "3"],
       username: "0",
       taskId: "0"
    }

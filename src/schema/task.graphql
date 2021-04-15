@@ -103,7 +103,7 @@ input TaskProgressInput {
    The id if each requirement contained within each
    completed block
    """ 
-   finishedBlockIds: [String!]!
+   finishedRequirementIds: [String!]!
 }
 
 type Query {

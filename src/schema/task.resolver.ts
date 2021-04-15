@@ -5,7 +5,7 @@ import userTypeService from '../services/userRole';
 import taskBusLogic from '../buslogic/taskBusLogic'
 
 async function addTask(_: any, args: any, context: any, info: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization) // first validate the JWT token
+   const tokenPayload = await validateToken(context.headers.Authorization) 
    const userRole = await userTypeService.getUserRole(tokenPayload.username) // then get the user role
 
    if (userRole == "instructor") {
