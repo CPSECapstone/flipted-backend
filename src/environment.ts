@@ -11,4 +11,4 @@ export function TABLE_NAME(name: string): string {
   return `flipted-${name}-${environment.stage}`;
 }
 
-export const USERS_TABLE_NAME: string = 'flipted-dev-Users';
+export const USERS_TABLE_NAME: string = 'flipted-Users-dev';
