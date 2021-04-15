@@ -25,8 +25,26 @@ export interface Task {
  }
  
  export interface Page {
-    blocks: any[]
+    blocks: TaskBlock[]
     skippable: Boolean
+ }
+
+ export interface TaskBlock {
+   title: string
+   requirement: RubricRequirement
+ }
+
+ export interface ImageBlock extends TaskBlock {
+   imageUrl: string
+ }
+
+ export interface VideoBlock extends TaskBlock {
+   videoUrl: string
+ }
+
+ export interface TextBlock extends TaskBlock {
+   contents: string
+   fontSize: string
  }
  
  export interface PageInput {

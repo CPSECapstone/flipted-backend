@@ -1,5 +1,5 @@
 import { uid } from "uid";
-import { Page, PageInput, RubricRequirement, Task, TaskBlockInput, TaskInput, TaskProgress } from "../interfaces/taskInterfaces";
+import { Page, PageInput, RubricRequirement, Task, TaskBlock, TaskBlockInput, TaskInput, TaskProgress } from "../interfaces/taskInterfaces";
 /**
  * 
  * @param task The task to be compared to
@@ -86,7 +86,7 @@ function convertPageInput(pageInput: PageInput) : Page
  * @param blockInput The TaskBlockInput supplied via GraphQL
  * @returns A TaskBlock that maps to the GraphQL Schema TaskBlock type
  */
-function convertTaskBlockInput(blockInput: TaskBlockInput) : any
+function convertTaskBlockInput(blockInput: TaskBlockInput) : TaskBlock
 {
    var specificBlock
 
