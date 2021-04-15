@@ -63,12 +63,21 @@ function applyTaskProgress(task: Task, taskProgress: TaskProgress) : Task
  */
 function convertPageInput(pageInput: PageInput) : Page
 {
-      return {
-         skippable: pageInput.skippable,
-         blocks: pageInput.blocks.map((blockInput: TaskBlockInput) => {
-            return convertTaskBlockInput(blockInput)
-         }),
+   const blocks: any[] = []
+   for (var block of pageInput.blocks) {
+      try { 
+         blocks.push(convertTaskBlockInput(block))
       }
+      catch(err)
+      {
+         throw new Error("Failed to add task: Incorrect block type: " + err.message)
+      }
+   }
+
+   return {
+      skippable: pageInput.skippable,
+      blocks: blocks
+   }
 }
 
 /**
@@ -81,36 +90,27 @@ function convertTaskBlockInput(blockInput: TaskBlockInput) : any
 {
    var specificBlock
 
-   switch (blockInput.type)
-   {
-      case "TEXT":
-         if (blockInput.textBlockInput == null) {
-            return Error("Missing TextBlockInput field in TaskBlockInput.")
-         }
-         specificBlock = {
-            contents: blockInput.textBlockInput.contents,
-            fontSize: blockInput.textBlockInput.fontSize
-         }
-         break;
-      case "IMAGE":
-         if (blockInput.imageBlockInput == null) {
-            return Error("Missing ImageBlockInput field in TaskBlockInput.")
-         }
-         specificBlock = {
+   switch (blockInput.type) {
+   case "TEXT":
+      specificBlock = {
+         contents: blockInput.textBlockInput.contents,
+         fontSize: blockInput.textBlockInput.fontSize
+      }
+      break;
+   case "IMAGE":
+      specificBlock = {
             imageUrl: blockInput.imageBlockInput.imageUrl
          }
-         break;
-      case "VIDEO":
-         if (blockInput.videoBlockInput == null) {
-            return Error("Missing VideoBlockInput field in TaskBlockInput.")
-         }
-         specificBlock = {
-            videoUrl: blockInput.videoBlockInput.videoUrl
-         }
-         break;
-      default:
-         throw new Error("TaskBlockInput enum handling error")
+      break;
+   case "VIDEO":
+      specificBlock = {
+         videoUrl: blockInput.videoBlockInput.videoUrl
+      }
+      break;
+   default:
+      throw new Error("TaskBlockInput enum handling error")
    }
+   
    return {
       title: blockInput.title,
       requirement: {
@@ -127,6 +127,12 @@ function convertTaskBlockInput(blockInput: TaskBlockInput) : any
  * @returns A GraphQL Task
  */
 function convertTaskInputToTask(input: TaskInput) : Task {
+   var convertedPages: Page[] = []
+   
+   for(var page of input.pages) {
+      convertedPages.push(convertPageInput(page))
+   }
+   
    return {
       id: uid(),
       name: input.name,
@@ -137,9 +143,7 @@ function convertTaskInputToTask(input: TaskInput) : Task {
       dueDate: input.dueDate,
       subMissionId: input.subMissionId,
       objectiveId: input.objectiveId,
-      pages: input.pages.map((element: any) => {
-         return convertPageInput(element)
-      }),
+      pages: convertedPages
    }
 }
 

@@ -11,7 +11,7 @@ const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions")
 
 async function add(input: TaskInput) {
    
-   const toSubmit = taskBusLogic.convertTaskInputToTask(input)
+   const toSubmit: Task = taskBusLogic.convertTaskInputToTask(input)
    
    const params: PutParams = {
     tableName: TASKS_TABLE,

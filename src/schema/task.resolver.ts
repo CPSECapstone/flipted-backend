@@ -10,7 +10,7 @@ async function addTask(_: any, args: any, context: any, info: any) {
 
    if (userRole == "instructor") {
       const task: TaskInput = args.task;
-      return taskService.add(task, );
+      return taskService.add(task);
    } else {
      return Error("User is not an instructor")
    }
