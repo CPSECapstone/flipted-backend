@@ -109,7 +109,6 @@ describe('querying a task with existing task progress' , () => {
 
       var modifiedTask: Task = taskBusLogic.applyTaskProgress(sampleTask, taskSubmission)
       modifiedTask = JSON.parse(JSON.stringify(modifiedTask))
-      // every task but the image task complete
       expect(modifiedTask).toMatchObject(JSON.parse(JSON.stringify(sampleTask)))
      });
 });
