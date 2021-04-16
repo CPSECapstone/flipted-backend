@@ -11,11 +11,8 @@ function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgress) : boole
    const ids:string[] = []
    
    // construct a list of requirement ids by extracting them from each block
-   for (var page of task.pages) {
-      for (var block of page.blocks) {
-         const requirement: RubricRequirement = block.requirement
-         ids.push(requirement.id)
-      }
+   for (var requirement of task.requirements) {  
+      ids.push(requirement.id)
    }
 
    // check submission size is size of required task blocks or smaller
@@ -43,15 +40,14 @@ function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgress) : boole
  */
 function applyTaskProgress(task: Task, taskProgress: TaskProgress) : Task
 {
-   for (var page of task.pages) {
-      for (var block of page.blocks) {
-         const requirement: RubricRequirement = block.requirement
-         if(taskProgress.finishedRequirementIds.includes(requirement.id))
-         {
-            block.requirement.isComplete = true;
-         }
+   for(var requirement of task.requirements)
+   {
+      if(taskProgress.finishedRequirementIds.includes(requirement.id))
+      {
+         requirement.isComplete = true;
       }
    }
+  
    return task; 
 }
 
@@ -113,10 +109,6 @@ function convertTaskBlockInput(blockInput: TaskBlockInput) : TaskBlock
    
    return {
       title: blockInput.title,
-      requirement: {
-         id: uid(),
-         ...blockInput.requirement
-      },
       ...specificBlock
    }
 }
@@ -128,11 +120,20 @@ function convertTaskBlockInput(blockInput: TaskBlockInput) : TaskBlock
  */
 function convertTaskInputToTask(input: TaskInput) : Task {
    var convertedPages: Page[] = []
-   
+   var convertedRequirements: RubricRequirement[] = []
+
    for(var page of input.pages) {
       convertedPages.push(convertPageInput(page))
    }
-   
+
+   for(var requirement of input.requirements) {
+      convertedRequirements.push({
+         id: uid(),
+         isComplete: false,
+         ...requirement
+      })
+   }
+
    return {
       id: uid(),
       name: input.name,
@@ -143,7 +144,8 @@ function convertTaskInputToTask(input: TaskInput) : Task {
       dueDate: input.dueDate,
       subMissionId: input.subMissionId,
       objectiveId: input.objectiveId,
-      pages: convertedPages
+      pages: convertedPages,
+      requirements: convertedRequirements
    }
 }
 
