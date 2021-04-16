@@ -1,72 +1,17 @@
 import { unmarshall, } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
+import taskBusLogic from "../buslogic/taskBusLogic";
 
 import { TABLE_NAME } from "../environment";
-import { PageInput, Page, TaskBlockInput, TaskInput, Task } from "../interfaces/taskInterfaces";
-import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
+import { PageInput, Page, TaskBlockInput, TaskInput, Task, TaskProgress } from "../interfaces/taskInterfaces";
+import dynamodb, { GetCompositeParams, GetParams, PutCompositeParams, PutParams, ScanParams } from "./dynamodb";
 
 const TASKS_TABLE = TABLE_NAME("Tasks");
-
-function convertPageInput(pageInput: PageInput) : Page
-{
-      return {
-         skippable: pageInput.skippable,
-         blocks: pageInput.blocks.map((blockInput: TaskBlockInput) => {
-            return convertTaskBlockInput(blockInput)
-         }),
-      }
-}
-
-function convertTaskBlockInput(blockInput: TaskBlockInput) : any
-{
-   console.log(blockInput.type)
-   var specificBlock
-
-   switch (blockInput.type)
-   {
-      case "TEXT":
-         specificBlock = {
-            contents: blockInput.textBlockInput.contents,
-            fontSize: blockInput.textBlockInput.fontSize
-         }
-         break;
-      case "IMAGE":
-         specificBlock = {
-            imageUrl: blockInput.imageBlockInput.imageUrl
-         }
-         break;
-      case "VIDEO":
-         specificBlock = {
-            videoUrl: blockInput.videoBlockInput.videoUrl
-         }
-         break;
-      default:
-         throw new Error("TaskBlockInput enum handling error")
-   }
-   return {
-      title: blockInput.title,
-      requirement: {
-         id: uid(),
-         ...blockInput.requirement
-      },
-      ...specificBlock
-   }
-}
+const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions")
 
 async function add(input: TaskInput) {
-   const toSubmit = {
-      name: input.name,
-      instructions: input.instructions,
-      points: input.points,
-      startAt: input.startAt,
-      endAt: input.endAt,
-      dueDate: input.dueDate,
-      subMissionId: input.subMissionId,
-      objectiveId: input.objectiveId,
-      pages: input.pages.map((element: any) => {
-         return convertPageInput(element)
-      }),
-   }
+   
+   const toSubmit: Task = taskBusLogic.convertTaskInputToTask(input)
    
    const params: PutParams = {
     tableName: TASKS_TABLE,
@@ -76,7 +21,7 @@ async function add(input: TaskInput) {
   return dynamodb.put(params);
 }
 
-async function getById(taskId: string): Promise<Task> {
+async function getTaskById(taskId: string): Promise<Task> {
   const params: GetParams = {
     tableName: TASKS_TABLE,
     key: taskId
@@ -111,10 +56,39 @@ async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
   return [];
 }
 
+async function getTaskProgress(taskId: string, username: string) : Promise<TaskProgress> {
+   const params: GetCompositeParams = {
+      tableName: TASKS_SUBMISSIONS_TABLE,
+      key: {
+         username: username,
+         taskId: taskId,
+       },
+    };
+  
+    const output = await dynamodb.getComposite(params);
+    if (output.Item) {
+      const taskProgress = <TaskProgress>unmarshall(output.Item);
+      return taskProgress;
+    }
+  
+    throw new Error(`Task not found with id=${taskId}`);
+}
+
+async function updateTaskProgress(taskProgress: TaskProgress)
+{
+   const params: PutCompositeParams = {
+      tableName: TASKS_SUBMISSIONS_TABLE,
+      item: taskProgress
+   }
+   return dynamodb.putComposite(params)
+}
+
 const taskService = {
   add,
-  getById,
-  listBySubMissionId
+  getTaskById,
+  listBySubMissionId,
+  updateTaskProgress,
+  getTaskProgress
 }
 
 export default taskService;

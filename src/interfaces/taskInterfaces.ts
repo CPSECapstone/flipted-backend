@@ -3,6 +3,7 @@ import { MultipleChoiceQuestion } from "../interfaces";
 export interface Task {
    id: string
    name: string
+   points: number
    instructions: string
    startAt: Date
    endAt: Date
@@ -24,8 +25,26 @@ export interface Task {
  }
  
  export interface Page {
-    blocks: any[]
+    blocks: TaskBlock[]
     skippable: Boolean
+ }
+
+ export interface TaskBlock {
+   title: string
+   requirement: RubricRequirement
+ }
+
+ export interface ImageBlock extends TaskBlock {
+   imageUrl: string
+ }
+
+ export interface VideoBlock extends TaskBlock {
+   videoUrl: string
+ }
+
+ export interface TextBlock extends TaskBlock {
+   contents: string
+   fontSize: string
  }
  
  export interface PageInput {
@@ -55,8 +74,20 @@ export interface Task {
     videoUrl: string
  }
  
+ export interface RubricRequirement {
+   id: string
+   description: string
+   isComplete: boolean
+}
+
  export interface RubricRequirementInput {
-    description: String
-    isComplete: Boolean
+    description: string
+    isComplete: boolean
+ }
+
+ export interface TaskProgress {
+    username: string
+    taskId: string
+    finishedRequirementIds: string[]
  }
  

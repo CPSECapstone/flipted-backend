@@ -79,7 +79,7 @@ async function getById(submissionId: string) {
 
     const submission = <QuizTaskSubmissionSummary>(unmarshall(output.Item));
     const taskId = submission.taskId;
-    const task = await taskService.getById(submission.taskId);
+    const task = await taskService.getTaskById(submission.taskId);
     const questions = await questionService.listQuestionsByTaskId(taskId);
 
     return { task, questions, submission };

@@ -44,6 +44,21 @@ async function put(params: PutParams): Promise<string> {
   }
 }
 
+async function putComposite(params: PutCompositeParams): Promise<boolean> {
+   const command: PutItemCommand = new PutItemCommand({
+     TableName: params.tableName,
+     Item: marshall(params.item, marshallOpts),
+     ReturnValues: "ALL_OLD",
+   });
+ 
+   try {
+     const output: PutItemCommandOutput = await client.send(command);
+     return true;
+   } catch (err) {
+     return err;
+   }
+ }
+
 async function get(params: GetParams): Promise<GetItemCommandOutput> {
   const command = new GetItemCommand({
     TableName: params.tableName,
@@ -81,6 +96,20 @@ async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
     return err;
   }
 }
+async function getComposite(params: GetCompositeParams): Promise<GetItemCommandOutput> {
+   const command = new GetItemCommand({
+     TableName: params.tableName,
+     Key: marshall(params.key, marshallOpts),
+     ProjectionExpression: params.projectionExpression
+   });
+ 
+   try {
+     const output: GetItemCommandOutput = await client.send(command);
+     return output;
+   } catch (err) {
+     return err;
+   }
+ }
 
 async function scan(params: any): Promise<ScanCommandOutput> {
   const command = new ScanCommand({
@@ -138,6 +167,8 @@ async function batchWrite(params: BatchWriteParams): Promise<BatchWriteItemComma
 const dynamodb = {
   put,
   get,
+  getComposite,
+  putComposite,
   scan,
   update,
   batchGet,
@@ -149,6 +180,11 @@ export default dynamodb;
 export interface PutParams {
   tableName: string
   item: object
+}
+
+export interface PutCompositeParams {
+   tableName: string
+   item: object
 }
 
 export interface UpdateParams {
@@ -163,6 +199,13 @@ export interface GetParams {
   key: string,
   projectionExpression?: string
 }
+
+export interface GetCompositeParams {
+   tableName: string
+   key: object,
+   projectionExpression?: string
+}
+
 export interface ScanParams {
   tableName: string
   filterExpression: string
