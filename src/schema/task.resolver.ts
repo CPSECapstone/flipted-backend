@@ -16,24 +16,6 @@ async function addTask(_: any, args: any, context: any, info: any) {
    }
 }
 
-async function submitTaskProgress(_: any, args: any, context: any, info: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization) 
-   
-   const taskProgress: TaskProgress = {
-      username: tokenPayload.username,
-      ...args.taskProgress
-   }
-
-   // verify that the list of completed requirement ids exist in the task
-   const task: Task = await taskService.getTaskById(taskProgress.taskId)
-   if(taskBusLogic.areTaskProgressIdsValid(task, taskProgress))
-   {
-      return taskService.updateTaskProgress(taskProgress)
-   }
-
-   return Error("Failed to verify ids contained in task submission")
-}
-
 async function getTaskById(_: any, args: any, context: any, info: any) {
    const tokenPayload = await validateToken(context.headers.Authorization) 
    const task: Task = await taskService.getTaskById(args.taskId);
@@ -78,7 +60,6 @@ const resolvers = {
   },
   Mutation: {
     addTask: addTask,
-    submitTaskProgress: submitTaskProgress
   }
 };
 
