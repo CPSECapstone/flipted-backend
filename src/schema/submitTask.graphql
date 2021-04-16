@@ -61,6 +61,14 @@ type GradedAnswer {
    pointsAwarded: Int!
 }
 
+type Query {
+   """
+   Returns an existing task submission or errors if it does not exist.
+   May be useful as a TaskSubmissionResult can change as a result of instructor actions. 
+   """
+   retrieveTaskSubmission(taskId: String) : TaskSubmissionResult!
+}
+
 type Mutation {
 
   """
@@ -71,7 +79,7 @@ type Mutation {
   Even on a successful submission, many fields may be null 
   as a Task may require manual grading by an instructor.
   """
-  submitTask(taskId: String) : TaskSubmissionResult
+  submitTask(taskId: String) : TaskSubmissionResult!
 
   """
   Saves completed rubric requirements linked to this task for the user

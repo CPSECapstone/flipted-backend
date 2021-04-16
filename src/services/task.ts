@@ -8,6 +8,8 @@ import dynamodb, { GetCompositeParams, GetParams, PutCompositeParams, PutParams,
 
 const TASKS_TABLE = TABLE_NAME("Tasks");
 const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions")
+const TASK_SUBMISSION_PREFIX = "TASK_SUBMISSION_"
+const TASK_PROGRESS_PREFIX = "TASK_PROGRESS_"
 
 async function add(input: TaskInput) {
    
@@ -60,7 +62,7 @@ async function getTaskProgress(taskId: string, username: string) : Promise<TaskP
    const params: GetCompositeParams = {
       tableName: TASKS_SUBMISSIONS_TABLE,
       key: {
-         username: username,
+         username: TASK_PROGRESS_PREFIX + username,
          taskId: taskId,
        },
     };
@@ -71,14 +73,41 @@ async function getTaskProgress(taskId: string, username: string) : Promise<TaskP
       return taskProgress;
     }
   
-    throw new Error(`Task not found with id=${taskId}`);
+    throw new Error(`Task Progress not found with id=${taskId}`);
 }
 
 async function updateTaskProgress(taskProgress: TaskProgress)
 {
    const params: PutCompositeParams = {
       tableName: TASKS_SUBMISSIONS_TABLE,
-      item: taskProgress
+      item: {
+         username: TASK_PROGRESS_PREFIX + taskProgress.username,
+         taskId: taskProgress.taskId,
+         finishedRequirementIds: taskProgress.finishedRequirementIds
+      }
+   }
+   return dynamodb.putComposite(params)
+}
+
+async function getTaskSubmission(taskId: string, username: string) {
+   const params: GetCompositeParams = {
+      tableName: TASKS_SUBMISSIONS_TABLE,
+      key: {
+         username:  TASK_SUBMISSION_PREFIX + username,
+         taskId: taskId
+      }
+   }
+
+   return dynamodb.getComposite(params)
+}
+
+async function createTaskSubmission(taskId: string, username: string) {
+   const params: PutCompositeParams = {
+      tableName: TASKS_SUBMISSIONS_TABLE,
+      item: {
+         username: TASK_SUBMISSION_PREFIX + username,
+         taskId: taskId
+      }
    }
    return dynamodb.putComposite(params)
 }
@@ -88,7 +117,9 @@ const taskService = {
   getTaskById,
   listBySubMissionId,
   updateTaskProgress,
-  getTaskProgress
+  getTaskProgress,
+  getTaskSubmission,
+  createTaskSubmission
 }
 
 export default taskService;

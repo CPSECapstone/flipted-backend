@@ -151,10 +151,15 @@ function convertTaskInputToTask(input: TaskInput): Task {
    };
 }
 
+function isEligibleForSubmission(task: Task, taskProgress: TaskProgress) {
+   return false;
+}
+
 const taskBusLogic = {
    areTaskProgressIdsValid,
    applyTaskProgress,
-   convertTaskInputToTask
+   convertTaskInputToTask,
+   isEligibleForSubmission
 };
 
 export default taskBusLogic;
