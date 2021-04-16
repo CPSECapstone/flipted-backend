@@ -4,7 +4,7 @@ import { mocked } from 'ts-jest/utils';
 
 import learningObjectiveService from '../../src/services/learningObjective';
 import { LearningObjectiveInput } from '../../src/interfaces';
-import taskBusLogic from '../../src/buslogic/taskBusLogic';
+import taskBusLogic from '../../src/services/taskBusLogic';
 import { Task, TaskProgress } from '../../src/interfaces/taskInterfaces';
 
 const mockDate: Date = new Date(0)

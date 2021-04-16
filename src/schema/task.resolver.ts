@@ -2,7 +2,7 @@ import { Task, TaskInput, TaskProgress} from '../interfaces/taskInterfaces';
 import { validateToken } from '../jws-verifer';
 import taskService from '../services/task';
 import userTypeService from '../services/userRole';
-import taskBusLogic from '../buslogic/taskBusLogic'
+import taskBusLogic from '../services/taskBusLogic'
 
 async function addTask(_: any, args: any, context: any, info: any) {
    const tokenPayload = await validateToken(context.headers.Authorization) 
