@@ -11,6 +11,7 @@ export interface Task {
    subMissionId: string
    objectiveId: string
    pages: Page[]
+   requirements: RubricRequirement[]
  }
  export interface TaskInput {
    points: number
@@ -22,6 +23,7 @@ export interface Task {
    subMissionId: string
    objectiveId: string
    pages: PageInput[]
+   requirements: RubricRequirementInput[]
  }
  
  export interface Page {
@@ -31,7 +33,6 @@ export interface Task {
 
  export interface TaskBlock {
    title: string
-   requirement: RubricRequirement
  }
 
  export interface ImageBlock extends TaskBlock {
@@ -82,7 +83,6 @@ export interface Task {
 
  export interface RubricRequirementInput {
     description: string
-    isComplete: boolean
  }
 
  export interface TaskProgress {

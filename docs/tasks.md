@@ -14,33 +14,27 @@
 mutation addTask {
   addTask(
     task: {
-      name: "AwesomeTask"
+      name: "Destin's Awesome Task!"
       instructions: "Follow these instructions"
       points: 3
       subMissionId: "0"
       objectiveId: "0"
+      requirements: [
+        { description: "Do this thing" }
+        { description: "Do this other thing" }
+        { description: "Finally, do this last thing" }
+      ]
       pages: [
         {
           skippable: false
           blocks: [
             {
               title: "My First Block"
-              requirement: {
-                description: "Read this first block"
-                isComplete: false
-              }
               type: TEXT
-              textBlockInput: {
-                contents: "This is the contents of this first block"
-                fontSize: 12
-              }
+              textBlockInput: { contents: "", fontSize: 12 }
             }
             {
               title: "Here is an image"
-              requirement: {
-                description: "Look at this image"
-                isComplete: false
-              }
               type: IMAGE
               imageBlockInput: { imageUrl: "https://i.imgur.com/tmawqgH.jpg" }
             }
@@ -51,10 +45,6 @@ mutation addTask {
           blocks: [
             {
               title: "Welcome to the second page"
-              requirement: {
-                description: "Read this block"
-                isComplete: false
-              }
               type: TEXT
               textBlockInput: {
                 contents: "This is the contents of this second page first block"
@@ -68,29 +58,27 @@ mutation addTask {
   )
 }
 
+
 ```
 
 #### Get Task By Id
 
 ```
 {
-  task(taskId: "fc566d1bb09"){
+  task(taskId: "4f150df2e8d"){
     id
+    requirements
+    {
+      id
+      description
+      isComplete
+    }
     name
-    instructions
-    subMissionId
-    objectiveId
-    points
     pages{
       skippable
       blocks
       {
         title
-        requirement {
-          id
-          description
-          isComplete
-        }
          ... on ImageBlock {
           imageUrl
       }
@@ -105,6 +93,7 @@ mutation addTask {
   }
 }
 }
+
 
 ```
 

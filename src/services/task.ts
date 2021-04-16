@@ -1,6 +1,6 @@
 import { unmarshall, } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-import taskBusLogic from "../buslogic/taskBusLogic";
+import taskBusLogic from "./taskBusLogic";
 
 import { TABLE_NAME } from "../environment";
 import { PageInput, Page, TaskBlockInput, TaskInput, Task, TaskProgress } from "../interfaces/taskInterfaces";
