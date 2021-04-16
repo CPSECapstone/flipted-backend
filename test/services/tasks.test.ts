@@ -102,13 +102,13 @@ describe('querying a task with existing task progress' , () => {
 
      it('will otherwise not modify the object', async () => {
 
-      const taskSubmission: TaskProgress = {
+      const taskProgress: TaskProgress = {
          finishedRequirementIds: [],
          username: "0",
          taskId: "0"
       }
 
-      var modifiedTask: Task = taskBusLogic.applyTaskProgress(sampleTask, taskSubmission)
+      var modifiedTask: Task = taskBusLogic.applyTaskProgress(sampleTask, taskProgress)
       modifiedTask = JSON.parse(JSON.stringify(modifiedTask))
       expect(modifiedTask).toMatchObject(JSON.parse(JSON.stringify(sampleTask)))
      });
@@ -117,43 +117,57 @@ describe('querying a task with existing task progress' , () => {
 describe('submitting progress to a task', () => {
   it('will verify task progress submission ids are valid', async () => {
 
-   const taskSubmission: TaskProgress = {
+   const taskProgress: TaskProgress = {
       finishedRequirementIds: ["0", "1"],
       username: "0",
       taskId: "0"
    }
    
-    expect(taskBusLogic.areTaskProgressIdsValid(sampleTask, taskSubmission)).toBeTruthy()
+    expect(taskBusLogic.areTaskProgressIdsValid(sampleTask, taskProgress)).toBeTruthy()
   });
 
   it('will fail to verify task progress if not all submission ids match', async () => {
 
-   const taskSubmission: TaskProgress = {
+   const taskProgress: TaskProgress = {
       finishedRequirementIds: ["0", "4"],
       username: "0",
       taskId: "0"
    }
    
-    expect(taskBusLogic.areTaskProgressIdsValid(sampleTask, taskSubmission)).toBeFalsy()
+    expect(taskBusLogic.areTaskProgressIdsValid(sampleTask, taskProgress)).toBeFalsy()
   });
 
   it('will fail to verify task progress if there are too many ids attached to the submission', async () => {
 
-   const taskSubmission: TaskProgress = {
+   const taskProgress: TaskProgress = {
       finishedRequirementIds: ["0", "1", "2", "3", "3"],
       username: "0",
       taskId: "0"
    }
    
-    expect(taskBusLogic.areTaskProgressIdsValid(sampleTask, taskSubmission)).toBeFalsy()
+    expect(taskBusLogic.areTaskProgressIdsValid(sampleTask, taskProgress)).toBeFalsy()
   });
 
 });
 
-describe('TODO: Test Task Submissions', () => {
-   it('', async () => {
- 
+describe('Submitting a task', () => {
+   it('Will not be eligible if not all rubric requirements are checked', async () => {
+      const taskProgress: TaskProgress = {
+         finishedRequirementIds: ["0", "4"],
+         username: "0",
+         taskId: "0"
+      }
   
-     expect(false).toBeTruthy()
+     expect(taskBusLogic.isEligibleForSubmission(sampleTask, taskProgress)).toBeFalsy()
+   }); 
+
+   it('Will be eligible if all rubric requirements are checked', async () => {
+      const taskProgress: TaskProgress = {
+         finishedRequirementIds: ["0", "1", "2", "3"],
+         username: "0",
+         taskId: "0"
+      }
+  
+     expect(taskBusLogic.isEligibleForSubmission(sampleTask, taskProgress)).toBeTruthy()
    }); 
 });

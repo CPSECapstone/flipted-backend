@@ -151,8 +151,18 @@ function convertTaskInputToTask(input: TaskInput): Task {
    };
 }
 
+/**
+ * Ensures that that all rubric requirements contained in a task have been recorded in task progress.
+ * 
+ * @param task The task the submission is meant for
+ * @param taskProgress The progress towards the task
+ * @returns True if the task is ready to be submitted. False if the rubric requirements are not yet complete.
+ */
 function isEligibleForSubmission(task: Task, taskProgress: TaskProgress) {
-   return false;
+   return (
+      areTaskProgressIdsValid(task, taskProgress) &&
+      task.requirements.length == taskProgress.finishedRequirementIds.length
+   );
 }
 
 const taskBusLogic = {
