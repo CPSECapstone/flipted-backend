@@ -7,10 +7,12 @@ import {
   DynamoDBClient,
   GetItemCommand,
   GetItemCommandOutput,
+  UpdateItemCommand,
+  UpdateItemCommandOutput,
   PutItemCommand,
   PutItemCommandOutput,
   ScanCommand,
-  ScanCommandOutput
+  ScanCommandOutput,
 } from "@aws-sdk/client-dynamodb";
 import { uid } from "uid/secure";
 
@@ -74,6 +76,26 @@ async function get(params: GetParams): Promise<GetItemCommandOutput> {
   }
 }
 
+async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
+  const command = new UpdateItemCommand({
+    TableName: params.tableName,
+    Key: marshall({
+      id: params.key
+    }, marshallOpts),
+    UpdateExpression: params.updateExpression,
+    ExpressionAttributeValues: marshall(
+      params.expressionAttributeValues, marshallOpts
+    ),
+    ReturnValues:"UPDATED_NEW"
+  });
+
+  try {
+    const output: GetItemCommandOutput = await client.send(command);
+    return output;
+  } catch (err) {
+    return err;
+  }
+}
 async function getComposite(params: GetCompositeParams): Promise<GetItemCommandOutput> {
    const command = new GetItemCommand({
      TableName: params.tableName,
@@ -148,6 +170,7 @@ const dynamodb = {
   getComposite,
   putComposite,
   scan,
+  update,
   batchGet,
   batchWrite
 };
@@ -166,7 +189,9 @@ export interface PutCompositeParams {
 
 export interface UpdateParams {
   tableName: string
-  id: string
+  key: string
+  updateExpression: string
+  expressionAttributeValues: {[key: string]: any;}
 }
 
 export interface GetParams {

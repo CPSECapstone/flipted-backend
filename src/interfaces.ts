@@ -108,3 +108,16 @@ export interface CourseInput {
   instructor: string
   description: string
 }
+
+export interface User {
+  id: string
+  role: string
+  firstName: string
+  lastName: string
+  email: string
+}
+
+export interface UpdateUserInput {
+  firstName: string
+  lastName: string
+}
