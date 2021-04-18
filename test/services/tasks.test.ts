@@ -4,11 +4,11 @@ import { mocked } from 'ts-jest/utils';
 
 import learningObjectiveService from '../../src/services/learningObjective';
 import { LearningObjectiveInput } from '../../src/interfaces';
-import taskBusLogic from '../../src/buslogic/taskBusLogic';
+import taskBusLogic from '../../src/services/taskBusLogic';
 import { Task, TaskProgress } from '../../src/interfaces/taskInterfaces';
 
 const mockDate: Date = new Date(0)
-const sampleTask: Task = {
+const sampleTask = {
    startAt: mockDate,
    endAt: mockDate,
    dueDate: mockDate,
@@ -18,6 +18,28 @@ const sampleTask: Task = {
    instructions: "If you're seeing these instructions, congrats! You've discovered my task! Message me on slack for a reward.",
    subMissionId: "sub-mission 1",
    points: 10,
+   requirements: [
+      {
+         id: "0",
+         description: "Req 0",
+         isComplete: false
+      },
+      {
+         id: "1",
+         description: "Req 1",
+         isComplete: false
+      },
+      {
+         id: "2",
+         description: "Req 2",
+         isComplete: false
+      },
+      {
+         id: "3",
+         description: "Req 3",
+         isComplete: false
+      },
+   ],
    pages: [
       {
          skippable: true,
@@ -26,29 +48,14 @@ const sampleTask: Task = {
                   title: "Welcome to the first page",
                   contents: "This is the contexts of a text block. You can put your random text here. Since this is my awesome task, you get to read the awesome contents of this text block.",
                   fontSize: 14,
-                  requirement: {
-                     id: "0",
-                     description: "Fully read this text block",
-                     isComplete: false,
-                  }
                },
                {
                   title: "Check Out This Cute Puppy",
                   imageUrl: "https://i.imgur.com/tmawqgH.jpg",
-                  requirement: {
-                     id: "1",
-                     description: "Fully appreciate this puppy",
-                     isComplete: false,
-                  }
                },
                {
                   title: "And Also This Video",
                   videoUrl: "https://youtu.be/F4we73GHH9k",
-                  requirement: {
-                     id: "2",
-                     description: "Finish this video",
-                     isComplete: false,
-                  }
                }
             ]
       },
@@ -59,12 +66,6 @@ const sampleTask: Task = {
                title: "Welcome to the second page",
                contents: "I appreciate you for reading this far. Have a nice day.",
                fontSize: 14,
-               requirement: {
-                  id: "3",
-                  description: "Aknowledge my appreciation.",
-                  isComplete: false,
-                  pointValue: 1
-               }
             }
          ]
       }
@@ -83,20 +84,20 @@ describe('querying a task with existing task progress' , () => {
          username: "0",
          taskId: "0"
       }
-
-      const modifiedTask: Task = taskBusLogic.applyTaskProgress(sampleTask, taskSubmission)
+      const typedTask: Task = sampleTask
+      const modifiedTask: Task = taskBusLogic.applyTaskProgress(typedTask, taskSubmission)
       
       // every task but the image task complete
       const expectedOutput: Task = JSON.parse(JSON.stringify(sampleTask));
-      expectedOutput.pages[0].blocks[0].requirement.isComplete = true
-      expectedOutput.pages[0].blocks[2].requirement.isComplete = true
-      expectedOutput.pages[1].blocks[0].requirement.isComplete = true
+      expectedOutput.requirements[0].isComplete = true
+      expectedOutput.requirements[2].isComplete = true
+      expectedOutput.requirements[3].isComplete = true
 
-      expect(modifiedTask.pages[0].blocks[0].requirement.isComplete).toBeTruthy()
-      expect(modifiedTask.pages[0].blocks[2].requirement.isComplete).toBeTruthy()
-      expect(modifiedTask.pages[1].blocks[0].requirement.isComplete).toBeTruthy()
+      expect(modifiedTask.requirements[0].isComplete).toBeTruthy()
+      expect(modifiedTask.requirements[2].isComplete).toBeTruthy()
+      expect(modifiedTask.requirements[3].isComplete).toBeTruthy()
 
-      expect(modifiedTask.pages[0].blocks[1].requirement.isComplete).toBeFalsy()
+      expect(modifiedTask.requirements[1].isComplete).toBeFalsy()
      });
 
      it('will otherwise not modify the object', async () => {

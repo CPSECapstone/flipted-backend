@@ -11,6 +11,7 @@ type Task {
 
   #might be other type of content
   pages: [Page!]!
+  requirements: [RubricRequirement!]!
 }
 
 input TaskInput {
@@ -23,6 +24,7 @@ input TaskInput {
   subMissionId: String
   objectiveId: String
   pages: [PageInput!]!
+  requirements: [RubricRequirementInput!]!
 }
 
 type Page {
@@ -37,12 +39,10 @@ input PageInput {
 
 interface TaskBlock {
    title: String
-   requirement: RubricRequirement
 }
 
 input TaskBlockInput {
    title: String
-   requirement: RubricRequirementInput
    type: TaskBlockInputType!
    textBlockInput: TextBlockInput
    imageBlockInput: ImageBlockInput
@@ -57,12 +57,10 @@ type RubricRequirement {
 
 input RubricRequirementInput {
    description: String
-   isComplete: Boolean!
 }
 
 type ImageBlock implements TaskBlock {
    title: String
-   requirement: RubricRequirement
    imageUrl: String!
 }
 
@@ -72,7 +70,6 @@ input ImageBlockInput{
 
 type TextBlock implements TaskBlock {
    title: String
-   requirement: RubricRequirement
    contents: String!
    fontSize: Int!
 }
@@ -84,7 +81,6 @@ input TextBlockInput {
 
 type VideoBlock implements TaskBlock {
    title: String
-   requirement: RubricRequirement
    videoUrl: String!
 }
 
