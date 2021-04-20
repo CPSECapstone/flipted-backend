@@ -1,30 +1,30 @@
 type Task {
-  id: String!
-  name: String!
-  instructions: String!
-  points: Int!
-  startAt: Date
-  endAt: Date
-  dueDate: Date
-  subMissionId: String
-  objectiveId: String
+   id: String!
+   name: String!
+   instructions: String!
+   points: Int!
+   startAt: Date
+   endAt: Date
+   dueDate: Date
+   subMissionId: String
+   objectiveId: String
 
-  #might be other type of content
-  pages: [Page!]!
-  requirements: [RubricRequirement!]!
+   #might be other type of content
+   pages: [Page!]!
+   requirements: [RubricRequirement!]!
 }
 
 input TaskInput {
-  name: String!
-  instructions: String!
-  points: Int!
-  startAt: Date
-  endAt: Date
-  dueDate: Date
-  subMissionId: String
-  objectiveId: String
-  pages: [PageInput!]!
-  requirements: [RubricRequirementInput!]!
+   name: String!
+   instructions: String!
+   points: Int!
+   startAt: Date
+   endAt: Date
+   dueDate: Date
+   subMissionId: String
+   objectiveId: String
+   pages: [PageInput!]!
+   requirements: [RubricRequirementInput!]!
 }
 
 type Page {
@@ -64,7 +64,7 @@ type ImageBlock implements TaskBlock {
    imageUrl: String!
 }
 
-input ImageBlockInput{
+input ImageBlockInput {
    imageUrl: String!
 }
 
@@ -88,37 +88,37 @@ input VideoBlockInput {
    videoUrl: String!
 }
 
-
 input TaskProgressInput {
    """
    The id of the task the user is submitting progress towards.
-   """ 
+   """
    taskId: String!
 
    """
    The id if each requirement contained within each
    completed block
-   """ 
+   """
    finishedRequirementIds: [String!]!
 }
 
 type Query {
-  task(taskId: String): Task
-  tasks(subMissionId: String): [Task!]!
+   task(taskId: String): Task
+   tasks(subMissionId: String): [Task!]!
 }
 
 type Mutation {
-  addTask(task: TaskInput): String
+   addTask(task: TaskInput): String
 
-  """
-  Saves completed rubric requirements linked to this task for the user
-  calling this function
-  """
-  submitTaskProgress(taskProgress: TaskProgressInput) : String
+   """
+   Saves completed rubric requirements linked to this task for the user
+   calling this function
+   """
+   submitTaskProgress(taskProgress: TaskProgressInput): String
 }
 
 enum TaskBlockInputType {
-   TEXT,
-   IMAGE,
+   TEXT
+   IMAGE
    VIDEO
+   QUIZ
 }

@@ -2,122 +2,109 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 import { TABLE_NAME } from "../environment";
 import {
-  MultipleChoiceQuestion, QuizTaskSubmission, QuizTaskSubmissionInput, QuizTaskSubmissionSummary, StudentAnswerInput, StudentAnswerResult
+   QuizTaskSubmission,
+   QuizTaskSubmissionInput,
+   QuizTaskSubmissionSummary,
+   StudentAnswerInput,
+   StudentAnswerResult
 } from "../interfaces";
 
-import questionService from "./question";
+import quizblockService from "./quizblock";
 import taskService from "./task";
 import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
+import { Question, QuizBlock } from "../interfaces/quizblock";
 
 const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
-function computeResult(questions: MultipleChoiceQuestion[], answers: StudentAnswerInput[]) {
-  let map: Map<string, MultipleChoiceQuestion> = new Map();
-  questions.forEach((question: MultipleChoiceQuestion) => {
-    map.set(question.id, question);
-  });
+function computeResult(questions: Question[], answers: StudentAnswerInput[]) {
+   let map: Map<string, Question> = new Map();
+   questions.forEach((question: Question) => {
+      map.set(question.id, question);
+   });
 
-  let results: StudentAnswerResult[] = [];
+   let results: StudentAnswerResult[] = [];
 
-  answers.forEach((answer: StudentAnswerInput) => {
-    const questionId = answer.questionId;
-    const questtion = map.get(questionId);
-    if (!questtion) {
-      return;
-    }
+   // grade student's quizblock submission
+   // todo
 
-    const correctChoices = questtion.answers;
-    const result = answer.choices[0] === correctChoices[0];
-    const points = result ? questtion.points : 0;
-
-    results.push({
-      questionId,
-      result,
-      points,
-      choices: answer.choices,
-      correctChoices
-    });
-  });
-
-  return results;
+   return results;
 }
 
 async function add(submission: QuizTaskSubmissionInput) {
-  try {
-    const questions = await questionService.listQuestionsByTaskId(submission.taskId);
-    const results = computeResult(questions, submission.answers);
-    const points = results.reduce((acc, curr) => acc + curr.points, 0);
+   try {
+      const questions = await quizblockService.listQuestionsByBlockId(submission.taskId);
+      const results = computeResult(questions, submission.answers);
+      const points = results.reduce((acc, curr) => acc + curr.points, 0);
 
-    const params: PutParams = {
-      tableName: TASK_SUBMISSIONS_TABLE,
-      item: {
-        student: submission.student,
-        taskId: submission.taskId,
-        results,
-        points
-      }
-    };
+      const params: PutParams = {
+         tableName: TASK_SUBMISSIONS_TABLE,
+         item: {
+            student: submission.student,
+            taskId: submission.taskId,
+            results,
+            points
+         }
+      };
 
-    return dynamodb.put(params);
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
+      return dynamodb.put(params);
+   } catch (err) {
+      console.log(err);
+      return err;
+   }
 }
 
 async function getById(submissionId: string) {
-  const params: GetParams = {
-    tableName: TASK_SUBMISSIONS_TABLE,
-    key: submissionId
-  };
+   const params: GetParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      key: submissionId
+   };
 
-  try {
-    const output = await dynamodb.get(params);
-    if (!output.Item) {
-      throw new Error(`Submission not found with id=${submissionId}`);
-    }
+   try {
+      const output = await dynamodb.get(params);
+      if (!output.Item) {
+         throw new Error(`Submission not found with id=${submissionId}`);
+      }
 
-    const submission = <QuizTaskSubmissionSummary>(unmarshall(output.Item));
-    const taskId = submission.taskId;
-    const task = await taskService.getTaskById(submission.taskId);
-    const questions = await questionService.listQuestionsByTaskId(taskId);
+      const submission = <QuizTaskSubmissionSummary>unmarshall(output.Item);
+      const taskId = submission.taskId;
+      const task = await taskService.getTaskById(submission.taskId);
 
-    return { task, questions, submission };
-  } catch (err) {
-    return err;
-  }
+      return { task, submission };
+   } catch (err) {
+      return err;
+   }
 }
 
 async function listByTaskId(taskId: string): Promise<QuizTaskSubmission[]> {
-  const param: ScanParams = {
-    tableName: TASK_SUBMISSIONS_TABLE,
-    filterExpression: 'taskId = :taskId',
-    expressionAttributeValues: {
-      ":taskId": taskId
-    }
-  };
+   const param: ScanParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      filterExpression: "taskId = :taskId",
+      expressionAttributeValues: {
+         ":taskId": taskId
+      }
+   };
 
-  try {
-    const output = await dynamodb.scan(param);
-    if (!output.Items) {
-      return [];
-    }
-    const submissions = output.Items.map((item: any) => {
-      return <QuizTaskSubmission>(unmarshall(item));
-    });
-    return submissions;
-  } catch (err) {
-    return err;
-  }
+   try {
+      const output = await dynamodb.scan(param);
+      if (!output.Items) {
+         return [];
+      }
+      const submissions = output.Items.map((item: any) => {
+         return <QuizTaskSubmission>unmarshall(item);
+      });
+      return submissions;
+   } catch (err) {
+      return err;
+   }
 }
 
 /*
   quiz task submission in submit
 */
 const quizTaskSubmissionService = {
-  add,
-  getById,
-  listByTaskId
+   add,
+   getById,
+   listByTaskId
 };
 
 export default quizTaskSubmissionService;
