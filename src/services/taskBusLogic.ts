@@ -107,8 +107,9 @@ function convertTaskBlockInput(blockInput: TaskBlockInput): TaskBlock {
          break;
       case "QUIZ":
          specificBlock = {
-            blockId: blockInput.quizBlockInput.blockId
+            blockId: blockInput.quizblockId
          };
+         break;
       default:
          throw new Error("TaskBlockInput enum handling error");
    }

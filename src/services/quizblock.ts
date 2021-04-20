@@ -26,8 +26,8 @@ async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
    const params: GetCompositeParams = {
       tableName: QUIZBLOCKS_TABLE,
       key: {
-         PK: `QUIZ_BLOCK#${blockId}`,
-         SK: `QUIZ_BLOCK#${blockId}`
+         PK: blockId,
+         SK: blockId
       }
    };
 
@@ -37,7 +37,7 @@ async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
          const quizblockItem = <QuizBlockItem>unmarshall(output.Item);
          const questions = await questionService.listByIds(quizblockItem.questionIds);
          return <QuizBlock>{
-            id: quizblockItem.blockId,
+            id: quizblockItem.PK,
             title: quizblockItem.title,
             points: quizblockItem.points,
             requiredScore: quizblockItem.requiredScore,

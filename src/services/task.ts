@@ -18,6 +18,8 @@ import dynamodb, {
    PutParams,
    ScanParams
 } from "./dynamodb";
+import quizblockService from "./quizblock";
+import { QuizBlock } from "../interfaces/quizblock";
 
 const TASKS_TABLE = TABLE_NAME("Tasks");
 const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
@@ -42,7 +44,45 @@ async function getTaskById(taskId: string): Promise<Task> {
    const output = await dynamodb.get(params);
    if (output.Item) {
       const task = <Task>unmarshall(output.Item);
-      return task;
+      let quizblockIds: string[] = [];
+      task.pages.forEach((page: Page) => {
+         page.blocks.forEach((block: any) => {
+            if (block.blockId) {
+               // quiz block
+               quizblockIds.push(block.blockId);
+            }
+         });
+      });
+
+      const promises = quizblockIds.map(quizblockId => {
+         return quizblockService.getQuizBlockById(quizblockId);
+      });
+
+      const quizblocks = await Promise.all(promises);
+      const map = new Map();
+      quizblocks.forEach((quizblock: QuizBlock) => {
+         map.set(quizblock.id, quizblock);
+      });
+
+      let pages: Page[] = task.pages.map((page: Page) => {
+         let blocks = page.blocks.map((block: any) => {
+            if (block.blockId) {
+               // quiz block
+               return map.get(block.blockId);
+            } else {
+               return block;
+            }
+         });
+         return <Page>{
+            ...page,
+            blocks
+         };
+      });
+
+      return <Task>{
+         ...task,
+         pages
+      };
    }
 
    throw new Error(`Task not found with id=${taskId}`);

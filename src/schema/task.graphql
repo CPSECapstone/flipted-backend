@@ -47,6 +47,7 @@ input TaskBlockInput {
    textBlockInput: TextBlockInput
    imageBlockInput: ImageBlockInput
    videoBlockInput: VideoBlockInput
+   quizblockId: String
 }
 
 type RubricRequirement {

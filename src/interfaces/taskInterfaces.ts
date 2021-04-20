@@ -1,5 +1,3 @@
-import { QuizBlockInput } from "./quizblock";
-
 export interface Task {
    id: string;
    name: string;
@@ -55,12 +53,11 @@ export interface PageInput {
 
 export interface TaskBlockInput {
    title: string;
-   requirement: RubricRequirementInput;
    type: string;
    textBlockInput: TextBlockInput;
    imageBlockInput: ImageBlockInput;
    videoBlockInput: VideoBlockInput;
-   quizBlockInput: QuizBlockInput;
+   quizblockId: string;
 }
 
 export interface TextBlockInput {
