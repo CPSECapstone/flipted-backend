@@ -66,21 +66,23 @@ export function mcQuestionInputToDBItem(question: MCQuestionInput): QuestionItem
 export function dbResponsesToQuestions(items: any[]): Question[] {
    const questions: Question[] = items.map((item: any) => {
       const questionItem = unmarshall(item);
-      const id = questionItem.id;
-      if (id.startsWith("MC_QUESTION#")) {
+      const splits = questionItem.id.split("#");
+      const type = splits[0];
+      const id = splits[1];
+      if (type === "MC_QUESTION") {
          return <MCQuestion>{
-            id: questionItem.questionId,
+            id,
             description: questionItem.description,
             points: questionItem.points,
             options: questionItem.options,
             answers: questionItem.answers
          };
-      } else if (id.startsWith("FR_QUESTION#")) {
+      } else if (type === "FR_QUESTION") {
          return <FRQuestion>{
-            id: questionItem.questionId,
+            id,
             description: questionItem.description,
             points: questionItem.points,
-            answer: questionItem.answers
+            answer: questionItem.answer
          };
       } else {
          throw new Error("Unknown Question Type");

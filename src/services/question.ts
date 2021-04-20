@@ -40,14 +40,10 @@ async function addMCQuestion(question: MCQuestionInput) {
 }
 
 async function listByIds(questionIds: string[], withAnswer: boolean = false): Promise<Question[]> {
-   let projection = withAnswer
-      ? "id, description, options, points"
-      : "id, description, options, points, answer";
    const params: BatchGetParams = {
       tableName: QUESTIONS_TABLE,
       keyName: "id",
-      keyValues: questionIds,
-      projectionExpression: projection //answers
+      keyValues: questionIds
    };
 
    try {

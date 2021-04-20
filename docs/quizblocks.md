@@ -33,10 +33,20 @@ query {
     questions{
       __typename
       ... on FRQuestion {
+        id
+        description
+        points
         answer
       }
       ... on MCQuestion {
+        id
+        description
+        points
         answers
+        options {
+          id
+          description
+        }
       }
     }
   }
