@@ -1,4 +1,4 @@
-import { FRQuestionInput, MCQuestionInput, QuizBlockInput } from "../interfaces/quizblock";
+import { QuizBlockInput } from "../interfaces/quizblock";
 import quizblockService from "../services/quizblock";
 
 async function addQuizBlock(_: any, args: any, context: any) {
@@ -6,22 +6,12 @@ async function addQuizBlock(_: any, args: any, context: any) {
    return quizblockService.addQuizBlock(quizblock);
 }
 
-async function addMCQuestionToQuizBlock(_: any, args: any, context: any) {
-   const question: MCQuestionInput = args.question;
-   return quizblockService.addMCQuestionToQuizBlock(question);
-}
-
-async function addFRQuestionToQuizBlock(_: any, args: any, context: any) {
-   const question: FRQuestionInput = args.question;
-   return quizblockService.addFRQuestionToQuizBlock(question);
-}
-
-async function listQuestionsByBlockId(_: any, args: any, context: any) {
+async function getQuizBlockById(_: any, args: any, context: any) {
    const blockId: string = args.blockId;
-   return quizblockService.listQuestionsByBlockId(blockId);
+   return quizblockService.getQuizBlockById(blockId);
 }
 
-function resolveQuestionType(question: any, context: any, info: any) {
+async function resolveQuestionType(question: any, context: any, info: any) {
    if (question.answers) {
       return "MCQuestion";
    }
@@ -36,12 +26,10 @@ const resolvers = {
       __resolveType: resolveQuestionType
    },
    Query: {
-      quizblock: listQuestionsByBlockId
+      quizblock: getQuizBlockById
    },
    Mutation: {
-      addQuizBlock,
-      addMCQuestionToQuizBlock,
-      addFRQuestionToQuizBlock
+      addQuizBlock
    }
 };
 

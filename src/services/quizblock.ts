@@ -1,28 +1,16 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-
 import { TABLE_NAME } from "../environment";
-import {
-   FRQuestionInput,
-   MCQuestionInput,
-   Question,
-   QuizBlock,
-   QuizBlockInput
-} from "../interfaces/quizblock";
-import dynamodb, {
-   BatchGetParams,
-   BatchWriteParams,
-   PutCompositeParams,
-   QueryParams
-} from "./dynamodb";
+import { QuizBlockInput, QuizBlock } from "../interfaces/quizblock";
+import dynamodb, { PutCompositeParams, GetCompositeParams } from "./dynamodb";
+import questionService from "./question";
+import { quizblockInputToDBItem, QuizBlockItem } from "./quizblockHelper";
 
-import * as helper from "./quizblockHelper";
-
-const QUIZBLOCK_TABLE = TABLE_NAME("QuizBlocks");
+const QUIZBLOCKS_TABLE = TABLE_NAME("QuizBlocks");
 
 async function addQuizBlock(quizblock: QuizBlockInput) {
-   const dbItem = helper.quizblockInputToDBItem(quizblock);
+   const dbItem = quizblockInputToDBItem(quizblock);
    const params: PutCompositeParams = {
-      tableName: QUIZBLOCK_TABLE,
+      tableName: QUIZBLOCKS_TABLE,
       item: dbItem
    };
 
@@ -34,61 +22,27 @@ async function addQuizBlock(quizblock: QuizBlockInput) {
    }
 }
 
-async function addMCQuestionToQuizBlock(question: MCQuestionInput) {
-   const dbItems = helper.mcQuestionInputToDBItems(question);
-   const params: BatchWriteParams = {
-      tableName: QUIZBLOCK_TABLE,
-      items: dbItems
-   };
-
-   try {
-      const output = await dynamodb.batchWrite(params);
-      if (output.ConsumedCapacity && output.ConsumedCapacity[0].CapacityUnits) {
-         return output.ConsumedCapacity[0].CapacityUnits;
-      }
-
-      return 0;
-   } catch (err) {
-      return err;
-   }
-}
-
-async function addFRQuestionToQuizBlock(question: FRQuestionInput) {
-   const dbItems = helper.frQuestionInputToDBItems(question);
-   const params: BatchWriteParams = {
-      tableName: QUIZBLOCK_TABLE,
-      items: dbItems
-   };
-
-   try {
-      const output = await dynamodb.batchWrite(params);
-      if (output.ConsumedCapacity && output.ConsumedCapacity[0].CapacityUnits) {
-         return output.ConsumedCapacity[0].CapacityUnits;
-      }
-
-      return 0;
-   } catch (err) {
-      return err;
-   }
-}
-
-async function listQuestionsByBlockId(blockId: string): Promise<Question[]> {
-   const params: QueryParams = {
-      tableName: QUIZBLOCK_TABLE,
-      keyConditionExpression: "PK = :blockId",
-      expressionAttributeValues: {
-         ":blockId": `QUIZ_BLOCK#${blockId}`
+async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
+   const params: GetCompositeParams = {
+      tableName: QUIZBLOCKS_TABLE,
+      key: {
+         PK: `QUIZ_BLOCK#${blockId}`,
+         SK: `QUIZ_BLOCK#${blockId}`
       }
    };
 
    try {
-      const output = await dynamodb.query(params);
-      if (output.Items) {
-         const questionIds = output.Items.map((item: any) => {
-            return item.SK;
-         });
-         const questions = await listByIds(questionIds);
-         return questions;
+      const output = await dynamodb.getComposite(params);
+      if (output.Item) {
+         const quizblockItem = <QuizBlockItem>unmarshall(output.Item);
+         const questions = await questionService.listByIds(quizblockItem.questionIds);
+         return <QuizBlock>{
+            id: quizblockItem.blockId,
+            title: quizblockItem.title,
+            points: quizblockItem.points,
+            requiredScore: quizblockItem.requiredScore,
+            questions
+         };
       }
       throw new Error(`QuizBlock not found with blockId=${blockId}`);
    } catch (err) {
@@ -96,37 +50,9 @@ async function listQuestionsByBlockId(blockId: string): Promise<Question[]> {
    }
 }
 
-async function listByIds(questionIds: string[], withAnswer: boolean = false): Promise<Question[]> {
-   let projection = withAnswer
-      ? "id, description, options, points"
-      : "id, description, options, points, answers";
-   const params: BatchGetParams = {
-      tableName: QUIZBLOCK_TABLE,
-      keyName: "id",
-      keyValues: questionIds,
-      projectionExpression: projection //answers
-   };
-
-   try {
-      const output = await dynamodb.batchGet(params);
-      if (output.Responses) {
-         const questions = output.Responses[QUIZBLOCK_TABLE];
-         return questions.map((item: any) => {
-            return <Question>unmarshall(item);
-         });
-      }
-
-      return [];
-   } catch (err) {
-      return err;
-   }
-}
-
-const questionService = {
+const quizblockService = {
    addQuizBlock,
-   addMCQuestionToQuizBlock,
-   addFRQuestionToQuizBlock,
-   listQuestionsByBlockId
+   getQuizBlockById
 };
 
-export default questionService;
+export default quizblockService;

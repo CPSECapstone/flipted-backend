@@ -102,6 +102,7 @@ async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
       return err;
    }
 }
+
 async function getComposite(params: GetCompositeParams): Promise<GetItemCommandOutput> {
    const command = new GetItemCommand({
       TableName: params.tableName,
@@ -245,4 +246,13 @@ export interface QueryParams {
    tableName: string;
    keyConditionExpression: string;
    expressionAttributeValues: { [key: string]: any };
+}
+
+export interface DBItem {
+   id: string;
+}
+
+export interface CompositeDBItem {
+   PK: string;
+   SK: string;
 }

@@ -1,0 +1,50 @@
+interface Question {
+   id: String!
+   description: String!
+   points: Int!
+}
+
+# FreeResponseQuestion
+type FRQuestion implements Question {
+   id: String!
+   description: String!
+   points: Int!
+   answer: String
+}
+
+# Questions
+type QuestionOption {
+   id: Int!
+   description: String!
+}
+
+# MultipleChoiceQuestion
+type MCQuestion implements Question {
+   id: String!
+   description: String!
+   points: Int!
+   options: [QuestionOption]
+   answers: [Int]
+}
+
+input FRQuestionInput {
+   description: String
+   points: Int
+   answer: String
+}
+
+input MCQuestionInput {
+   description: String!
+   points: Int
+   options: [String]!
+   answers: [Int]!
+}
+
+type Query {
+   questions(questionIds: [String]): [Question]
+}
+
+type Mutation {
+   addFRQuestion(question: FRQuestionInput): String
+   addMCQuestion(question: MCQuestionInput): String
+}
