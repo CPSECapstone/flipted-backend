@@ -42,7 +42,7 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
 async function submitFreeResponseQuestion(_: any, args: any, context: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
 
-   const blockSubmission: FreeResponseBlockSubmission = args.mcBlockInput;
+   const blockSubmission: FreeResponseBlockSubmission = args.frBlockInput;
 
    // TODO: Assert given question id is contained in given quizblock
    // TODO: Assert given block id is contained in given task
@@ -50,7 +50,7 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
 
     // get the question as defined by the database
    const question: FRQuestion = <FRQuestion>(await questionService.getById(blockSubmission.questionId));
-   
+
    if (!question.id) {
       throw new Error("Could not find question with id: " + blockSubmission.questionId)
    } 

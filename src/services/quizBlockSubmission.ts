@@ -23,8 +23,8 @@ async function submitMCQuestion(username: string, taskId: string, quizBlockId: s
       tableName: TASK_SUBMISSIONS_TABLE,
       item: {
          pk: "MC_SUBMISSION#" + username,
-         sk: "MC_QUESTION#" + questionId,
-         taskId: "TASK#" + taskId,
+         sk: questionId,
+         taskId: taskId,
          quizBlockId: quizBlockId,
          pointsAwarded: pointsAwarded
       }
@@ -32,15 +32,15 @@ async function submitMCQuestion(username: string, taskId: string, quizBlockId: s
    return dynamodb.putComposite(params);
 }
 
-async function submitFRQuestion(username: string, taskId: string, quizBlockId: string, questionId: string, pointsAwarded: number) {
+async function submitFRQuestion(username: string, taskId: string, quizBlockId: string, questionId: string, answer: string) {
    const params: PutCompositeParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       item: {
          pk: "FR_SUBMISSION#" + username,
-         sk: "FR_QUESTION#" + questionId,
-         taskId: "TASK#" + taskId,
+         sk: questionId,
+         taskId: taskId,
          quizBlockId: quizBlockId,
-         pointsAwarded: pointsAwarded
+         answer: answer
       }
    };
    return dynamodb.putComposite(params);
