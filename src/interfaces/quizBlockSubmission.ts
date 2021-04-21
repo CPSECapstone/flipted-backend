@@ -8,5 +8,6 @@ export interface MultipleChoiceBlockSubmission {
 export interface FreeResponseBlockSubmission {
    taskId: string
    questionBlockId: string
-   answerId: string 
+   questionId: string
+   answer: string
 }

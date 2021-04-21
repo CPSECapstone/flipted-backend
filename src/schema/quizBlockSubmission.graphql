@@ -50,12 +50,12 @@ input FreeResponseAnswerInput {
 
 type Mutation {
    """
-   Saves and grades a students answer to a multiple choice question quiz block
+   Saves a students answer to a multiple choice question quiz block
    """
-   submitMultChoiceQuestion(mcBlockInput: MultipleChoiceAnswerInput) : Boolean
+   saveMultipleChoiceProgress(mcBlockInput: MultipleChoiceAnswerInput) : Boolean
 
    """
-   Saves and a students answer to a free response question quiz block for teacher grading
+   Saves and a students answer to a free response question quiz block
    """
-   submitFreeResponseBlock(frBlockInput: FreeResponseAnswerInput) : Boolean 
+   saveFreeResponseProgress(frBlockInput: FreeResponseAnswerInput) : Boolean 
 }
