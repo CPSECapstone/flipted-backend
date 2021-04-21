@@ -5,30 +5,29 @@ import { validateToken } from "../jws-verifer";
 import questionService from "../services/question";
 import { gradeMultipleChoiceQuestion } from "../services/questionHelper";
 import quizblockService from "../services/quizblock";
+import quizBlockSubmissionService from "../services/quizBlockSubmission";
 
-async function submitMultChoiceBlock(_: any, args: any, context: any) {
+async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
 
    const blockSubmission: MultipleChoiceBlockSubmission = args.mcBlockInput;
 
-   // get the correct quiz answer index
-   const quizBlock: QuizBlock = await quizblockService.getQuizBlockById(
-      blockSubmission.taskId,
-      blockSubmission.questionBlockId
-   );
+
+   // get the question as defined by the database
    const questionsArray = await questionService.listByIds([blockSubmission.questionId]);
    const question: MCQuestion = <MCQuestion>questionsArray[0]
+   console.log(question)
    
-   // grade the question
+   // grade the question against the students answer
    const pointsAwarded: number = gradeMultipleChoiceQuestion(
       question,
       blockSubmission.answerIndex,
    );
 
-   // grade the quiz block
-
    // store the grade for that quiz block and associate with the user
-   return Error("Failed to finish writing this function");
+   quizBlockSubmissionService.submitMCQuestion(tokenPayload.username, blockSubmission.taskId, question, pointsAwarded)
+
+   return true;
 }
 
 async function submitFreeResponseBlock(_: any, args: any, context: any) {}
@@ -36,7 +35,7 @@ async function submitFreeResponseBlock(_: any, args: any, context: any) {}
 const resolvers = {
    Query: {},
    Mutation: {
-      submitMultChoiceBlock: submitMultChoiceBlock,
+      submitMultChoiceQuestion: submitMultChoiceQuestion,
       submitFreeResponseBlock: submitFreeResponseBlock
    }
 };

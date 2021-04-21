@@ -20,7 +20,7 @@ input MultipleChoiceAnswerInput {
    """
    The index of the question option chosen by the student
    """
-   answerIndex: int! 
+   answerIndex: Int! 
 }
 
 """
@@ -52,10 +52,10 @@ type Mutation {
    """
    Saves and grades a students answer to a multiple choice question quiz block
    """
-   submitMultChoiceQuestion(mcBlockInput: MultipleChoiceChoiceAnswerInput) : Boolean
+   submitMultChoiceQuestion(mcBlockInput: MultipleChoiceAnswerInput) : Boolean
 
    """
    Saves and a students answer to a free response question quiz block for teacher grading
    """
-   submitFreeResponseBlock(frBlockInput: FreeResponseBlockSubmissionInput) : Boolean 
+   submitFreeResponseBlock(frBlockInput: FreeResponseAnswerInput) : Boolean 
 }
