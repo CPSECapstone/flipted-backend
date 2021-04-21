@@ -1,14 +1,31 @@
 import { uid } from "uid";
+import { CompositeDBItem } from "./dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
+import questionService from "./question";
 import {
-   Page,
-   PageInput,
-   RubricRequirement,
    Task,
-   TaskBlock,
-   TaskBlockInput,
    TaskInput,
-   TaskProgress
+   TaskProgress,
+   RubricRequirementInput,
+   Page
 } from "../interfaces/taskInterfaces";
+import {
+   QuizBlockInput,
+   TextBlockInput,
+   ImageBlockInput,
+   VideoBlockInput,
+   TaskBlockItem,
+   TextBlockItem,
+   ImageBlockItem,
+   VideoBlockItem,
+   QuizBlockItem,
+   ImageBlock,
+   QuizBlock,
+   TaskBlock,
+   TextBlock,
+   VideoBlock
+} from "../interfaces/taskblock";
+
 /**
  *
  * @param task The task to be compared to
@@ -57,67 +74,26 @@ function applyTaskProgress(task: Task, taskProgress: TaskProgress): Task {
    return task;
 }
 
-/**
- * Converts a GraphQL PageInput to a GraphQL Page
- *
- * @param pageInput The page input supplied via GraphQL
- * @returns A Page that maps to the GraphQL Schema Page type
- */
-function convertPageInput(pageInput: PageInput): Page {
-   const blocks: any[] = [];
-   for (var block of pageInput.blocks) {
-      try {
-         blocks.push(convertTaskBlockInput(block));
-      } catch (err) {
-         throw new Error("Failed to add task: Incorrect block type: " + err.message);
-      }
-   }
-
-   return {
-      skippable: pageInput.skippable,
-      blocks: blocks
-   };
+interface PageItem {
+   skippable: boolean;
 }
 
-/**
- * Converts a GraphQL TaskBlockInput to a GraphQL TaskBlock
- *
- * @param blockInput The TaskBlockInput supplied via GraphQL
- * @returns A TaskBlock that maps to the GraphQL Schema TaskBlock type
- */
-function convertTaskBlockInput(blockInput: TaskBlockInput): TaskBlock {
-   var specificBlock;
+interface RubricRequirementItem {
+   id: string;
+   description: string;
+}
 
-   switch (blockInput.type) {
-      case "TEXT":
-         specificBlock = {
-            contents: blockInput.textBlockInput.contents,
-            fontSize: blockInput.textBlockInput.fontSize
-         };
-         break;
-      case "IMAGE":
-         specificBlock = {
-            imageUrl: blockInput.imageBlockInput.imageUrl
-         };
-         break;
-      case "VIDEO":
-         specificBlock = {
-            videoUrl: blockInput.videoBlockInput.videoUrl
-         };
-         break;
-      case "QUIZ":
-         specificBlock = {
-            blockId: blockInput.quizblockId
-         };
-         break;
-      default:
-         throw new Error("TaskBlockInput enum handling error");
-   }
-
-   return {
-      title: blockInput.title,
-      ...specificBlock
-   };
+export interface TaskItem extends CompositeDBItem {
+   points: number;
+   name: string;
+   instructions: string;
+   startAt: Date;
+   endAt: Date;
+   dueDate: Date;
+   subMissionId: string;
+   objectiveId: string;
+   pages: PageItem[];
+   requirements: RubricRequirementItem[];
 }
 
 /**
@@ -125,24 +101,18 @@ function convertTaskBlockInput(blockInput: TaskBlockInput): TaskBlock {
  * @param input The TaskInput recieved from GraphQL
  * @returns A GraphQL Task
  */
-function convertTaskInputToTask(input: TaskInput): Task {
-   var convertedPages: Page[] = [];
-   var convertedRequirements: RubricRequirement[] = [];
-
-   for (var page of input.pages) {
-      convertedPages.push(convertPageInput(page));
-   }
-
-   for (var requirement of input.requirements) {
-      convertedRequirements.push({
+function convertTaskInputToTaskItem(input: TaskInput): TaskItem {
+   const taskId = uid();
+   const requirements = input.requirements.map((requirement: RubricRequirementInput) => {
+      return <RubricRequirementItem>{
          id: uid(),
-         isComplete: false,
-         ...requirement
-      });
-   }
+         description: requirement.description
+      };
+   });
 
-   return {
-      id: uid(),
+   const taskItem = <TaskItem>{
+      PK: `TASK#${taskId}`,
+      SK: `TASK#${taskId}`,
       name: input.name,
       instructions: input.instructions,
       points: input.points,
@@ -151,15 +121,87 @@ function convertTaskInputToTask(input: TaskInput): Task {
       dueDate: input.dueDate,
       subMissionId: input.subMissionId,
       objectiveId: input.objectiveId,
-      pages: convertedPages,
-      requirements: convertedRequirements
+      pages: input.pages,
+      requirements
    };
+
+   return taskItem;
+}
+
+async function dbItemToQuizBlock(item: QuizBlockItem): Promise<QuizBlock> {
+   const questions = await questionService.listByIds(item.questionIds);
+   const [_, blockId] = item.SK.split("#");
+
+   return <QuizBlock>{
+      blockId,
+      title: item.title,
+      pageIndex: item.pageIndex,
+      blockIndex: item.blockIndex,
+      points: item.points,
+      requiredScore: item.requiredScore,
+      questions
+   };
+}
+
+/*
+   item - the representation in database
+   aggregate task related items () into a single task
+   TaskItem, TextBlockItem, ImageBlockItem, VideoBlockItem, QuizBlockItem
+*/
+export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
+   let task: Task | undefined;
+   let blocks: TaskBlock[] = [];
+   let promises: Promise<QuizBlock>[] = []; // promises to get questions
+
+   if (!items) {
+      throw new Error("Task Not Found");
+   }
+
+   items.forEach((rawItem: any) => {
+      const item = unmarshall(rawItem);
+      const [type, id] = item.SK.split("#");
+
+      if (type === "TASK") {
+         task = <Task>item;
+      } else if (type == "IMAGE_BLOCK") {
+         blocks.push(<ImageBlock>item);
+      } else if (type == "VIDEO_BLOCK") {
+         blocks.push(<VideoBlock>item);
+      } else if (type == "TEXT_BLOCK") {
+         blocks.push(<TextBlock>item);
+      } else if (type == "QUIZ_BLOCK") {
+         const quizblock = <QuizBlockItem>item;
+         promises.push(dbItemToQuizBlock(quizblock));
+      }
+   });
+
+   if (!task) {
+      throw new Error("Task Not Found");
+   }
+
+   let quizblocks = await Promise.all(promises);
+   blocks = blocks.concat(quizblocks);
+   blocks.sort((a, b) => a.blockIndex - b.blockIndex);
+
+   let pages: Page[] = task.pages.map(page => {
+      return {
+         skippable: page.skippable,
+         blocks: []
+      };
+   });
+   blocks.forEach(quizblock => {
+      pages[quizblock.pageIndex].blocks.push(quizblock);
+   });
+
+   task.pages = pages;
+
+   return task;
 }
 
 const taskBusLogic = {
    areTaskProgressIdsValid,
    applyTaskProgress,
-   convertTaskInputToTask
+   convertTaskInputToTaskItem
 };
 
 export default taskBusLogic;

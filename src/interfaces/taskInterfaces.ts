@@ -1,3 +1,5 @@
+import { TaskBlock } from "./taskblock";
+
 export interface Task {
    id: string;
    name: string;
@@ -11,6 +13,7 @@ export interface Task {
    pages: Page[];
    requirements: RubricRequirement[];
 }
+
 export interface TaskInput {
    points: number;
    name: string;
@@ -25,52 +28,12 @@ export interface TaskInput {
 }
 
 export interface Page {
+   skippable: boolean;
    blocks: TaskBlock[];
-   skippable: Boolean;
-}
-
-export interface TaskBlock {
-   title: string;
-}
-
-export interface ImageBlock extends TaskBlock {
-   imageUrl: string;
-}
-
-export interface VideoBlock extends TaskBlock {
-   videoUrl: string;
-}
-
-export interface TextBlock extends TaskBlock {
-   contents: string;
-   fontSize: string;
 }
 
 export interface PageInput {
-   blocks: TaskBlockInput[];
-   skippable: Boolean;
-}
-
-export interface TaskBlockInput {
-   title: string;
-   type: string;
-   textBlockInput: TextBlockInput;
-   imageBlockInput: ImageBlockInput;
-   videoBlockInput: VideoBlockInput;
-   quizblockId: string;
-}
-
-export interface TextBlockInput {
-   contents: string;
-   fontSize: number;
-}
-
-export interface ImageBlockInput {
-   imageUrl: string;
-}
-
-export interface VideoBlockInput {
-   videoUrl: string;
+   skippable: boolean;
 }
 
 export interface RubricRequirement {

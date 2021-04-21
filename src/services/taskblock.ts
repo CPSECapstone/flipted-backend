@@ -1,25 +1,57 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TABLE_NAME } from "../environment";
-import { QuizBlockInput, QuizBlock } from "../interfaces/quizblock";
 import dynamodb, { PutCompositeParams, GetCompositeParams } from "./dynamodb";
 import questionService from "./question";
-import { quizblockInputToDBItem, QuizBlockItem } from "./quizblockHelper";
+import {
+   TextBlockInput,
+   ImageBlockInput,
+   VideoBlockInput,
+   QuizBlockInput,
+   QuizBlock,
+   TaskBlockItem,
+   QuizBlockItem
+} from "../interfaces/taskblock";
+import {
+   imageblockInputToDBItem,
+   quizblockInputToDBItem,
+   textblockInputToDBItem,
+   videoblockInputToDBItem
+} from "./taskblockHelper";
 
 const QUIZBLOCKS_TABLE = TABLE_NAME("QuizBlocks");
 
-async function addQuizBlock(quizblock: QuizBlockInput) {
-   const dbItem = quizblockInputToDBItem(quizblock);
+async function addTaskBlock(taskblockItem: TaskBlockItem) {
    const params: PutCompositeParams = {
       tableName: QUIZBLOCKS_TABLE,
-      item: dbItem
+      item: taskblockItem
    };
 
    try {
       const output = await dynamodb.putComposite(params);
-      return dbItem.PK;
+      return taskblockItem.SK;
    } catch (err) {
       return err;
    }
+}
+
+async function addTextBlock(textblock: TextBlockInput) {
+   const dbItem = textblockInputToDBItem(textblock);
+   return addTaskBlock(dbItem);
+}
+
+async function addImageBlock(imageblock: ImageBlockInput) {
+   const dbItem = imageblockInputToDBItem(imageblock);
+   return addTaskBlock(dbItem);
+}
+
+async function addVideoBlock(videoblock: VideoBlockInput) {
+   const dbItem = videoblockInputToDBItem(videoblock);
+   return addTaskBlock(dbItem);
+}
+
+async function addQuizBlock(quizblock: QuizBlockInput) {
+   const dbItem = quizblockInputToDBItem(quizblock);
+   return addTaskBlock(dbItem);
 }
 
 async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
@@ -37,7 +69,7 @@ async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
          const quizblockItem = <QuizBlockItem>unmarshall(output.Item);
          const questions = await questionService.listByIds(quizblockItem.questionIds);
          return <QuizBlock>{
-            id: quizblockItem.PK,
+            blockId,
             title: quizblockItem.title,
             points: quizblockItem.points,
             requiredScore: quizblockItem.requiredScore,
@@ -51,6 +83,9 @@ async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
 }
 
 const quizblockService = {
+   addTextBlock,
+   addImageBlock,
+   addVideoBlock,
    addQuizBlock,
    getQuizBlockById
 };

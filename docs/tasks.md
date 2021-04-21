@@ -3,7 +3,13 @@
 ### APIs
 
 -  Add Task
+-  Add Text Block To Task
+-  Add Image Block To Task
+-  Add Video Block To Task
+-  Add Quiz Block To Task
 -  Get Task By Id
+
+-  Submit Progress Towards a Task
 -  List Tasks By SubMission Id
 
 ### Examples
@@ -11,7 +17,7 @@
 #### Add Task
 
 ```
-mutation addTask {
+mutation {
   addTask(
     task: {
       name: "A song of fire and ice"
@@ -19,33 +25,80 @@ mutation addTask {
       points: 3
       subMissionId: "0"
       objectiveId: "0"
+      pages: [
+        {skippable: true},
+        {skippable: true}
+      ]
       requirements: [
         { description: "Do this thing" }
         { description: "Do this other thing" }
         { description: "Finally, do this last thing" }
       ]
-      pages: [
-        {
-          skippable: false
-          blocks: [
-            {
-              title: "My First Block"
-              type: TEXT
-              textBlockInput: { contents: "", fontSize: 12 }
-            }
-            {
-              title: "Here is an image"
-              type: IMAGE
-              imageBlockInput: { imageUrl: "https://i.imgur.com/tmawqgH.jpg" }
-            }
-            {
-              title: "Here is a quiz block"
-              type: QUIZ
-              blockId: "QUIZ_BLOCK#d56778bc210"
-            }
-          ]
-        }
-      ]
+    }
+  )
+}
+```
+
+### Add Text Block To Task
+
+```
+mutation {
+  addTextBlock(textblock: {
+    taskId: "2407ae1f060"
+    title: "Introduction to GOT",
+    pageIndex: 0,
+    blockIndex: 0
+    contents: "A Song of Ice and Fire is a series of epic fantasy novels by the American novelist and screenwriter George R. R. Martin."
+    fontSize: 15
+  })
+}
+```
+
+### Add Image Block To Task
+
+```
+mutation {
+  addImageBlock(
+    imageblock: {
+      taskId: "2407ae1f060"
+      title: "Introduction to GOT"
+      pageIndex: 0
+      blockIndex: 1
+      imageUrl: "https://upload.wikimedia.org/wikipedia/en/d/dc/A_Song_of_Ice_and_Fire_book_collection_box_set_cover.jpg"
+    }
+  )
+}
+```
+
+### Add Video Block To Task
+
+```
+mutation {
+  addVideoBlock(
+    videoblock: {
+      taskId: "2407ae1f060"
+      title: "The Game of Thrones Series Finale Ending Explained"
+      pageIndex: 1
+      blockIndex: 0
+      videoUrl: "https://www.youtube.com/watch?v=V7y1IGyPo_w"
+    }
+  )
+}
+```
+
+### Add Quiz Block To Task
+
+```
+mutation {
+  addQuizBlock(
+    quizblock: {
+      taskId: "2407ae1f060"
+      title: "Quiz on Game of Thrones"
+      pageIndex: 1
+      blockIndex: 1
+      requiredScore: 20
+      points: 20
+      questionIds: ["FR_QUESTION#c375b5a56f8", "MC_QUESTION#a9bfcb78e7d"]
     }
   )
 }
@@ -55,7 +108,7 @@ mutation addTask {
 
 ```
 query {
-  task(taskId: "e2389f2fafd") {
+  task(taskId: "2407ae1f060") {
     id
     requirements {
       id
