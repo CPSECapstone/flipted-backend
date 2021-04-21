@@ -1,0 +1,14 @@
+input MultipleChoiceBlockSubmissionInput {
+   taskId: String!
+   questionBlockId: String!
+   answerId: String! # id of QuestionOption
+}
+input FreeResponseBlockSubmissionInput {
+   taskId: String!
+   questionBlockId: String!
+   answer: String! # free response text string
+}
+type Mutation {
+   submitMultChoiceBlock(mcBlockInput: MultipleChoiceBlockSubmissionInput) : Boolean
+   submitFreeResponseBlock(frBlockInput: FreeResponseBlockSubmissionInput) : Boolean 
+}
