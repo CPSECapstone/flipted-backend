@@ -105,6 +105,11 @@ function convertTaskBlockInput(blockInput: TaskBlockInput): TaskBlock {
             videoUrl: blockInput.videoBlockInput.videoUrl
          };
          break;
+      case "QUIZ":
+         specificBlock = {
+            blockId: blockInput.quizblockId
+         };
+         break;
       default:
          throw new Error("TaskBlockInput enum handling error");
    }

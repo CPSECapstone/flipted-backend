@@ -2,9 +2,9 @@
 
 ### APIs
 
-- Add Task
-- Get Task By Id
-- List Tasks By SubMission Id
+-  Add Task
+-  Get Task By Id
+-  List Tasks By SubMission Id
 
 ### Examples
 
@@ -14,7 +14,7 @@
 mutation addTask {
   addTask(
     task: {
-      name: "Destin's Awesome Task!"
+      name: "A song of fire and ice"
       instructions: "Follow these instructions"
       points: 3
       subMissionId: "0"
@@ -38,18 +38,10 @@ mutation addTask {
               type: IMAGE
               imageBlockInput: { imageUrl: "https://i.imgur.com/tmawqgH.jpg" }
             }
-          ]
-        }
-        {
-          skippable: false
-          blocks: [
             {
-              title: "Welcome to the second page"
-              type: TEXT
-              textBlockInput: {
-                contents: "This is the contents of this second page first block"
-                fontSize: 12
-              }
+              title: "Here is a quiz block"
+              type: QUIZ
+              blockId: "QUIZ_BLOCK#d56778bc210"
             }
           ]
         }
@@ -57,31 +49,28 @@ mutation addTask {
     }
   )
 }
-
-
 ```
 
 #### Get Task By Id
 
 ```
-{
-  task(taskId: "4f150df2e8d"){
+query {
+  task(taskId: "e2389f2fafd") {
     id
-    requirements
-    {
+    requirements {
       id
       description
       isComplete
     }
     name
-    pages{
+    pages {
       skippable
-      blocks
-      {
+      blocks {
         title
-         ... on ImageBlock {
+        __typename
+        ... on ImageBlock {
           imageUrl
-      }
+        }
         ... on TextBlock {
           contents
           fontSize
@@ -89,15 +78,34 @@ mutation addTask {
         ... on VideoBlock {
           videoUrl
         }
+        ... on QuizBlock {
+          requiredScore
+          questions {
+            __typename
+            ...on FRQuestion {
+              id
+              description
+              answer
+            }
+            ...on MCQuestion {
+              id
+              description
+              options {
+                id
+                description
+              }
+              answers
+            }
+          }
+        }
+      }
     }
   }
 }
-}
-
-
 ```
 
 #### Submit Progress Towards a Task
+
 ```
 mutation submitTaskProgress {
   submitTaskProgress(taskProgress: {
