@@ -1,14 +1,43 @@
 input MultipleChoiceBlockSubmissionInput {
+   """
+   The id of the task the question block is contained in 
+   """
    taskId: String!
+   
+   """
+   The id of the question block the student is answering
+   """
    questionBlockId: String!
-   answerId: String! # id of QuestionOption
+   
+   """
+   The id of the question option chosen by the student.
+   """
+   answerId: String! 
 }
 input FreeResponseBlockSubmissionInput {
+   """
+   The id of the task the question block is contained in 
+   """
    taskId: String!
+
+   """
+   The id of the question block the student is answering
+   """
    questionBlockId: String!
+
+   """
+   The string response provided by the student
+   """
    answer: String! # free response text string
 }
 type Mutation {
+   """
+   Saves and grades a students answer to a multiple choice question quiz block
+   """
    submitMultChoiceBlock(mcBlockInput: MultipleChoiceBlockSubmissionInput) : Boolean
+
+   """
+   Saves and a students answer to a free response question quiz block for teacher grading
+   """
    submitFreeResponseBlock(frBlockInput: FreeResponseBlockSubmissionInput) : Boolean 
 }
