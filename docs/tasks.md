@@ -44,7 +44,7 @@ mutation {
 ```
 mutation {
   addTextBlock(textblock: {
-    taskId: "2407ae1f060"
+    taskId: "c5110abd8c4"
     title: "Introduction to GOT",
     pageIndex: 0,
     blockIndex: 0
@@ -60,7 +60,7 @@ mutation {
 mutation {
   addImageBlock(
     imageblock: {
-      taskId: "2407ae1f060"
+      taskId: "c5110abd8c4"
       title: "Introduction to GOT"
       pageIndex: 0
       blockIndex: 1
@@ -76,7 +76,7 @@ mutation {
 mutation {
   addVideoBlock(
     videoblock: {
-      taskId: "2407ae1f060"
+      taskId: "c5110abd8c4"
       title: "The Game of Thrones Series Finale Ending Explained"
       pageIndex: 1
       blockIndex: 0
@@ -92,7 +92,7 @@ mutation {
 mutation {
   addQuizBlock(
     quizblock: {
-      taskId: "2407ae1f060"
+      taskId: "c5110abd8c4"
       title: "Quiz on Game of Thrones"
       pageIndex: 1
       blockIndex: 1
@@ -108,12 +108,11 @@ mutation {
 
 ```
 query {
-  task(taskId: "2407ae1f060") {
+  task(taskId: "c5110abd8c4") {
     id
     requirements {
       id
       description
-      isComplete
     }
     name
     pages {

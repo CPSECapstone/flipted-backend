@@ -1,23 +1,16 @@
 import { uid } from "uid";
-import { CompositeDBItem } from "./dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import questionService from "./question";
 import {
    Task,
    TaskInput,
+   TaskItem,
    TaskProgress,
    RubricRequirementInput,
+   RubricRequirementItem,
    Page
 } from "../interfaces/taskInterfaces";
 import {
-   QuizBlockInput,
-   TextBlockInput,
-   ImageBlockInput,
-   VideoBlockInput,
-   TaskBlockItem,
-   TextBlockItem,
-   ImageBlockItem,
-   VideoBlockItem,
    QuizBlockItem,
    ImageBlock,
    QuizBlock,
@@ -74,28 +67,6 @@ function applyTaskProgress(task: Task, taskProgress: TaskProgress): Task {
    return task;
 }
 
-interface PageItem {
-   skippable: boolean;
-}
-
-interface RubricRequirementItem {
-   id: string;
-   description: string;
-}
-
-export interface TaskItem extends CompositeDBItem {
-   points: number;
-   name: string;
-   instructions: string;
-   startAt: Date;
-   endAt: Date;
-   dueDate: Date;
-   subMissionId: string;
-   objectiveId: string;
-   pages: PageItem[];
-   requirements: RubricRequirementItem[];
-}
-
 /**
  *
  * @param input The TaskInput recieved from GraphQL
@@ -113,6 +84,7 @@ function convertTaskInputToTaskItem(input: TaskInput): TaskItem {
    const taskItem = <TaskItem>{
       PK: `TASK#${taskId}`,
       SK: `TASK#${taskId}`,
+      id: taskId,
       name: input.name,
       instructions: input.instructions,
       points: input.points,

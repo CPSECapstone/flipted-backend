@@ -1,12 +1,11 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import taskBusLogic, { TaskItem, dbItemsToTaskItem } from "./taskBusLogic";
+import taskBusLogic, { dbItemsToTaskItem } from "./taskBusLogic";
 
 import { TABLE_NAME } from "../environment";
-import { TaskInput, Task, TaskProgress } from "../interfaces/taskInterfaces";
+import { TaskInput, TaskItem, Task, TaskProgress } from "../interfaces/taskInterfaces";
 import dynamodb, {
    GetCompositeParams,
    PutCompositeParams,
-   PutParams,
    QueryParams,
    ScanParams
 } from "./dynamodb";
@@ -17,12 +16,17 @@ const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 async function add(input: TaskInput) {
    const toSubmit: TaskItem = taskBusLogic.convertTaskInputToTaskItem(input);
 
-   const params: PutParams = {
+   const params: PutCompositeParams = {
       tableName: TASKS_TABLE,
       item: toSubmit
    };
 
-   return dynamodb.put(params);
+   try {
+      const output = dynamodb.putComposite(params);
+      return toSubmit.id;
+   } catch (err) {
+      return err;
+   }
 }
 
 async function getTaskById(taskId: string): Promise<Task> {

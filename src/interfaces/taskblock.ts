@@ -1,32 +1,7 @@
 import { Question } from "./question";
 import { CompositeDBItem } from "../services/dynamodb";
 
-export interface TaskBlock {
-   blockId: string;
-   title: string;
-   pageIndex: number;
-   blockIndex: number;
-}
-
-export interface ImageBlock extends TaskBlock {
-   imageUrl: string;
-}
-
-export interface VideoBlock extends TaskBlock {
-   videoUrl: string;
-}
-
-export interface TextBlock extends TaskBlock {
-   contents: string;
-   fontSize: number;
-}
-
-export interface QuizBlock extends TaskBlock {
-   points: number;
-   requiredScore: number;
-   questions: Question[];
-}
-
+/***************** Input from Client *****************************/
 export interface TaskBlockInput {
    taskId: string;
    title: string;
@@ -53,6 +28,34 @@ export interface QuizBlockInput extends TaskBlockInput {
    questionIds: string[];
 }
 
+/***************** Output to Client *****************************/
+export interface TaskBlock {
+   blockId: string;
+   title: string;
+   pageIndex: number;
+   blockIndex: number;
+}
+
+export interface ImageBlock extends TaskBlock {
+   imageUrl: string;
+}
+
+export interface VideoBlock extends TaskBlock {
+   videoUrl: string;
+}
+
+export interface TextBlock extends TaskBlock {
+   contents: string;
+   fontSize: number;
+}
+
+export interface QuizBlock extends TaskBlock {
+   points: number;
+   requiredScore: number;
+   questions: Question[];
+}
+
+/***************** Database item ******************************/
 export declare type TaskBlockItem = TaskBlock & CompositeDBItem;
 export declare type TextBlockItem = TextBlock & TaskBlockItem;
 export declare type ImageBlockItem = ImageBlock & TaskBlockItem;

@@ -1,4 +1,34 @@
 import { TaskBlock } from "./taskblock";
+import { CompositeDBItem } from "../services/dynamodb";
+
+/***************** Input from Client *****************************/
+export interface TaskInput {
+   points: number;
+   name: string;
+   instructions: string;
+   startAt: Date;
+   endAt: Date;
+   dueDate: Date;
+   subMissionId: string;
+   objectiveId: string;
+   pages: PageInput[];
+   requirements: RubricRequirementInput[];
+}
+
+export interface PageInput {
+   skippable: boolean;
+}
+
+export interface RubricRequirementInput {
+   description: string;
+}
+
+/***************** Output to Client *****************************/
+export interface TaskProgress {
+   username: string;
+   taskId: string;
+   finishedRequirementIds: string[];
+}
 
 export interface Task {
    id: string;
@@ -14,26 +44,9 @@ export interface Task {
    requirements: RubricRequirement[];
 }
 
-export interface TaskInput {
-   points: number;
-   name: string;
-   instructions: string;
-   startAt: Date;
-   endAt: Date;
-   dueDate: Date;
-   subMissionId: string;
-   objectiveId: string;
-   pages: PageInput[];
-   requirements: RubricRequirementInput[];
-}
-
 export interface Page {
    skippable: boolean;
    blocks: TaskBlock[];
-}
-
-export interface PageInput {
-   skippable: boolean;
 }
 
 export interface RubricRequirement {
@@ -42,12 +55,26 @@ export interface RubricRequirement {
    isComplete: boolean;
 }
 
-export interface RubricRequirementInput {
+/***************** Database item ******************************/
+export interface PageItem {
+   skippable: boolean;
+}
+
+export interface RubricRequirementItem {
+   id: string;
    description: string;
 }
 
-export interface TaskProgress {
-   username: string;
-   taskId: string;
-   finishedRequirementIds: string[];
+export interface TaskItem extends CompositeDBItem {
+   id: string;
+   points: number;
+   name: string;
+   instructions: string;
+   startAt: Date;
+   endAt: Date;
+   dueDate: Date;
+   subMissionId: string;
+   objectiveId: string;
+   pages: PageItem[];
+   requirements: RubricRequirementItem[];
 }
