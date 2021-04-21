@@ -18,13 +18,14 @@ import { MCQuestion, Question } from "../interfaces/question";
 
 const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
-async function submitMCQuestion(username: string, taskId: string, question: MCQuestion, pointsAwarded: number) {
+async function submitMCQuestion(username: string, taskId: string, quizBlockId: string, questionId: string, pointsAwarded: number) {
    const params: PutCompositeParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       item: {
          pk: "MC_SUBMISSION#" + username,
-         sk: "QUESTION#" +question.id,
+         sk: "QUESTION#" +questionId,
          taskId: taskId,
+         quizBlockId: quizBlockId,
          pointsAwarded: pointsAwarded
       }
    };

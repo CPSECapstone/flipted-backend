@@ -11,21 +11,23 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
 
    const blockSubmission: MultipleChoiceBlockSubmission = args.mcBlockInput;
-
-
+   // TODO: Assert question contained in block and block contained in task?
    // get the question as defined by the database
    const questionsArray = await questionService.listByIds([blockSubmission.questionId]);
-   const question: MCQuestion = <MCQuestion>questionsArray[0]
-   console.log(question)
-   
+   const question: MCQuestion = <MCQuestion>questionsArray[0];
+   console.log(question);
+
    // grade the question against the students answer
-   const pointsAwarded: number = gradeMultipleChoiceQuestion(
-      question,
-      blockSubmission.answerIndex,
-   );
+   const pointsAwarded: number = gradeMultipleChoiceQuestion(question, blockSubmission.answerIndex);
 
    // store the grade for that quiz block and associate with the user
-   quizBlockSubmissionService.submitMCQuestion(tokenPayload.username, blockSubmission.taskId, question, pointsAwarded)
+   quizBlockSubmissionService.submitMCQuestion(
+      tokenPayload.username,
+      blockSubmission.taskId,
+      blockSubmission.questionBlockId,
+      question.id,
+      pointsAwarded
+   );
 
    return true;
 }
