@@ -1,17 +1,17 @@
 import { CompositeDBItem } from "../services/dynamodb";
 
 /***************** Input from Client *****************************/
-export interface MultipleChoiceBlockSubmission {
+export interface QuestionAnswerInput {
    taskId: string
    questionBlockId: string
    questionId: string
+}
+
+export interface MultipleChoiceAnswerInput extends QuestionAnswerInput {
    answerIndex: number
 }
 
-export interface FreeResponseBlockSubmission {
-   taskId: string
-   questionBlockId: string
-   questionId: string
+export interface FreeResponseAnswerInput extends QuestionAnswerInput {
    answer: string
 }
 
@@ -30,4 +30,39 @@ export interface TaskProgress {
 export interface TaskProgressItem extends CompositeDBItem {
    username: string;
    finishedRequirementIds: string[];
+}
+
+export interface QuestionAnswerItem {
+   PK: string
+   SK: string
+   taskId: string
+   questionBlockId: string
+}
+
+export interface MultipleChoiceAnswerItem extends QuestionAnswerItem {
+   answerIndex: number
+}
+
+export interface FreeResponseAnswerItem extends QuestionAnswerItem {
+   answer: string
+}
+
+/***************** Internal Types ******************************/
+export interface QuestionProgress {
+   questionAnswers: QuestionAnswer[]
+}
+
+export interface QuestionAnswer {
+   username: string
+   answerId: string
+   taskId: string
+   questionBlockId: string
+}
+
+export interface MultipleChoiceAnswer extends QuestionAnswer {
+   answerIndex: number
+}
+
+export interface FreeResponseAnswer extends QuestionAnswer {
+   answer: string
 }

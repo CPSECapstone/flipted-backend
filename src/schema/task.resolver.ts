@@ -22,7 +22,7 @@ async function getTaskById(_: any, args: any, context: any, info: any) {
 
    try {
       // apply any existing task progress
-      const taskProgress = await taskService.getTaskProgress(task.id, tokenPayload.username);
+      const taskProgress = await taskService.getTaskRubricProgress(task.id, tokenPayload.username);
       return taskBusLogic.applyTaskProgress(task, taskProgress);
    } catch (err) {
       // no existing task progress, return task in its current form

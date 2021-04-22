@@ -72,29 +72,10 @@ async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
    return [];
 }
 
-async function getTaskProgress(taskId: string, username: string): Promise<TaskProgress> {
-   const params: GetCompositeParams = {
-      tableName: TASKS_SUBMISSIONS_TABLE,
-      key: {
-         username: username,
-         taskId: taskId
-      }
-   };
-
-   const output = await dynamodb.getComposite(params);
-   if (output.Item) {
-      const taskProgress = <TaskProgress>unmarshall(output.Item);
-      return taskProgress;
-   }
-
-   throw new Error(`Task not found with id=${taskId}`);
-}
-
 const taskService = {
    add,
    getTaskById,
    listBySubMissionId,
-   getTaskProgress
 };
 
 export default taskService;

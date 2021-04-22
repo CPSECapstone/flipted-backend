@@ -1,5 +1,5 @@
-import { TaskBlock } from "./taskblock";
 import { CompositeDBItem } from "../services/dynamodb";
+import { TaskBlock } from "./taskblock";
 
 /***************** Input from Client *****************************/
 export interface TaskInput {

@@ -168,6 +168,7 @@ async function batchWrite(params: BatchWriteParams): Promise<BatchWriteItemComma
 async function query(params: QueryParams): Promise<QueryCommandOutput> {
    const command = new QueryCommand({
       TableName: params.tableName,
+      FilterExpression: params.filterExpression,
       KeyConditionExpression: params.keyConditionExpression,
       ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts)
    });
@@ -241,6 +242,7 @@ export interface QueryParams {
    tableName: string;
    keyConditionExpression: string;
    expressionAttributeValues: { [key: string]: any };
+   filterExpression?: string
 }
 
 export interface DBItem {
