@@ -72,8 +72,3 @@ export interface TaskItem extends CompositeDBItem {
    pages: PageItem[];
    requirements: RubricRequirementItem[];
 }
-
-export interface TaskProgressItem extends CompositeDBItem {
-   username: string;
-   finishedRequirementIds: string[];
-}

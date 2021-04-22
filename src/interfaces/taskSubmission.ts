@@ -1,3 +1,5 @@
+import { CompositeDBItem } from "../services/dynamodb";
+
 /***************** Input from Client *****************************/
 export interface MultipleChoiceBlockSubmission {
    taskId: string
@@ -21,5 +23,11 @@ export interface TaskProgressInput {
 export interface TaskProgress {
    username: string;
    taskId: string;
+   finishedRequirementIds: string[];
+}
+
+/***************** Database item ******************************/
+export interface TaskProgressItem extends CompositeDBItem {
+   username: string;
    finishedRequirementIds: string[];
 }
