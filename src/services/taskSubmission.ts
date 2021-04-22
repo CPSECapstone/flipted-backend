@@ -1,6 +1,6 @@
 
 import { TABLE_NAME } from "../environment";
-import { TaskProgressItem } from "../interfaces/taskInterfaces";
+import { TaskProgressItem } from "../interfaces/taskSubmission";
 
 import dynamodb, { PutCompositeParams } from "./dynamodb";
 

@@ -1,4 +1,4 @@
-import { TaskProgressInput, TaskProgressItem } from "../../src/interfaces/taskInterfaces";
+import { TaskProgressInput, TaskProgressItem } from "../../src/interfaces/taskSubmission";
 import { taskProgressInputToDBItem } from "../../src/services/taskSubmissionHelper";
 
 describe("converting a TaskProgressInput to a TaskProgressItem", () => {

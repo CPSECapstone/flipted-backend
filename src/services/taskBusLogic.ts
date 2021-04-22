@@ -5,12 +5,14 @@ import {
    Task,
    TaskInput,
    TaskItem,
-   TaskProgress,
    RubricRequirementInput,
    RubricRequirementItem,
    Page,
-   TaskProgressInput
 } from "../interfaces/taskInterfaces";
+import {
+   TaskProgress,
+   TaskProgressInput
+} from "../interfaces/taskSubmission";
 import {
    QuizBlockItem,
    ImageBlock,
