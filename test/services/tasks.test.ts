@@ -1,6 +1,6 @@
 import dynamodbMock from "../__mocks__/dynamodb";
 import taskBusLogic from "../../src/services/taskBusLogic";
-import { Task, TaskProgress } from "../../src/interfaces/taskInterfaces";
+import { Task, TaskProgress, TaskProgressInput } from "../../src/interfaces/taskInterfaces";
 
 const mockDate: Date = new Date(0);
 const sampleTask = {
@@ -121,11 +121,10 @@ describe("querying a task with existing task progress", () => {
    });
 });
 
-describe("submitting progress to a task", () => {
-   it("will verify task progress submission ids are valid", async () => {
-      const taskSubmission: TaskProgress = {
+describe("Verifying a task progress submission", () => {
+   it("will properly verify task progress if submission ids are valid", async () => {
+      const taskSubmission: TaskProgressInput = {
          finishedRequirementIds: ["0", "1"],
-         username: "0",
          taskId: "0"
       };
 
@@ -133,9 +132,8 @@ describe("submitting progress to a task", () => {
    });
 
    it("will fail to verify task progress if not all submission ids match", async () => {
-      const taskSubmission: TaskProgress = {
+      const taskSubmission: TaskProgressInput = {
          finishedRequirementIds: ["0", "4"],
-         username: "0",
          taskId: "0"
       };
 
@@ -143,9 +141,8 @@ describe("submitting progress to a task", () => {
    });
 
    it("will fail to verify task progress if there are too many ids attached to the submission", async () => {
-      const taskSubmission: TaskProgress = {
+      const taskSubmission: TaskProgressInput = {
          finishedRequirementIds: ["0", "1", "2", "3", "3"],
-         username: "0",
          taskId: "0"
       };
 

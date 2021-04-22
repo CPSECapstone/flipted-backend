@@ -1,4 +1,4 @@
-import { Task, TaskInput, TaskProgress } from "../interfaces/taskInterfaces";
+import { Task, TaskInput } from "../interfaces/taskInterfaces";
 import { validateToken } from "../jws-verifer";
 import taskService from "../services/task";
 import userService from "../services/user";
@@ -14,23 +14,6 @@ async function addTask(_: any, args: any, context: any, info: any) {
    } else {
       return Error("User is not an instructor");
    }
-}
-
-async function submitTaskProgress(_: any, args: any, context: any, info: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
-
-   const taskProgress: TaskProgress = {
-      username: tokenPayload.username,
-      ...args.taskProgress
-   };
-
-   // verify that the list of completed requirement ids exist in the task
-   const task: Task = await taskService.getTaskById(taskProgress.taskId);
-   if (taskBusLogic.areTaskProgressIdsValid(task, taskProgress)) {
-      return taskService.updateTaskProgress(taskProgress);
-   }
-
-   return Error("Failed to verify ids contained in task submission");
 }
 
 async function getTaskById(_: any, args: any, context: any, info: any) {
@@ -79,7 +62,6 @@ const resolvers = {
    },
    Mutation: {
       addTask: addTask,
-      submitTaskProgress: submitTaskProgress
    }
 };
 

@@ -2,13 +2,14 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import taskBusLogic, { dbItemsToTaskItem } from "./taskBusLogic";
 
 import { TABLE_NAME } from "../environment";
-import { TaskInput, TaskItem, Task, TaskProgress } from "../interfaces/taskInterfaces";
+import { TaskInput, TaskItem, Task } from "../interfaces/taskInterfaces";
 import dynamodb, {
    GetCompositeParams,
    PutCompositeParams,
    QueryParams,
    ScanParams
 } from "./dynamodb";
+import { TaskProgress } from "../interfaces/taskSubmission";
 
 const TASKS_TABLE = TABLE_NAME("QuizBlocks");
 const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
@@ -89,19 +90,10 @@ async function getTaskProgress(taskId: string, username: string): Promise<TaskPr
    throw new Error(`Task not found with id=${taskId}`);
 }
 
-async function updateTaskProgress(taskProgress: TaskProgress) {
-   const params: PutCompositeParams = {
-      tableName: TASKS_SUBMISSIONS_TABLE,
-      item: taskProgress
-   };
-   return dynamodb.putComposite(params);
-}
-
 const taskService = {
    add,
    getTaskById,
    listBySubMissionId,
-   updateTaskProgress,
    getTaskProgress
 };
 

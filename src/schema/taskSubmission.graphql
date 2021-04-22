@@ -48,6 +48,19 @@ input FreeResponseAnswerInput {
    answer: String! # free response text string
 }
 
+input TaskProgressInput {
+   """
+   The id of the task the user is submitting progress towards.
+   """
+   taskId: String!
+
+   """
+   The id if each requirement contained within each
+   completed block
+   """
+   finishedRequirementIds: [String!]!
+}
+
 type Mutation {
    """
    Saves a students answer to a multiple choice question quiz block
@@ -58,4 +71,12 @@ type Mutation {
    Saves and a students answer to a free response question quiz block
    """
    saveFreeResponseProgress(frBlockInput: FreeResponseAnswerInput) : Boolean 
+
+   
+   """
+   Saves completed rubric requirements linked to this task for the user
+   calling this function
+   """
+   submitTaskProgress(taskProgress: TaskProgressInput): Boolean
+
 }
