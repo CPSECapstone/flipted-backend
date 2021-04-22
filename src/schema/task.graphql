@@ -1,31 +1,54 @@
 type Task {
-  id: String!
-  name: String!
-  instructions: String!
-  startAt: Date
-  endAt: Date
-  dueDate: Date
-  subMissionId: String
-  objectiveId: String
-  #might be other type of content
-  questions: [MultipleChoiceQuestion]
-}
-
-type Query {
-  task(taskId: String): Task
-  tasks(subMissionId: String): [Task]
+   id: String!
+   name: String!
+   instructions: String!
+   points: Int!
+   startAt: Date
+   endAt: Date
+   dueDate: Date
+   subMissionId: String
+   objectiveId: String
+   pages: [Page!]!
+   requirements: [RubricRequirement!]!
 }
 
 input TaskInput {
-  name: String!
-  instructions: String!
-  startAt: Date
-  endAt: Date
-  dueDate: Date
-  subMissionId: String
-  objectiveId: String
+   name: String!
+   instructions: String!
+   points: Int!
+   startAt: Date
+   endAt: Date
+   dueDate: Date
+   subMissionId: String
+   objectiveId: String
+   pages: [PageInput]!
+   requirements: [RubricRequirementInput]!
+}
+
+type Page {
+   blocks: [TaskBlock]
+   skippable: Boolean
+}
+
+input PageInput {
+   skippable: Boolean
+}
+
+type RubricRequirement {
+   id: String!
+   description: String
+   isComplete: Boolean!
+}
+
+input RubricRequirementInput {
+   description: String
+}
+
+type Query {
+   task(taskId: String): Task
+   tasks(subMissionId: String): [Task!]!
 }
 
 type Mutation {
-  addTask(task: TaskInput): String
+   addTask(task: TaskInput): String
 }

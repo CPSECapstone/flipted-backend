@@ -4,11 +4,11 @@ type Environment = {
 };
 
 export const environment: Environment = {
-  stage: process.env.STAGE as string
+  stage: process.env.STAGE as string || "dev"
 };
 
 export function TABLE_NAME(name: string): string {
-  return `flipted-${name}-${environment.stage}`;
+  return `flipted-${environment.stage}-${name}`;
 }
 
 export const USERS_TABLE_NAME: string = 'flipted-dev-Users';

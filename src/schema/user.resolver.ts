@@ -4,12 +4,20 @@ const { validateToken } = require("../jws-verifer");
 
 async function getUser(_: any, args: any, context: any, info: any) {
   const token = await validateToken(context.headers.Authorization);
-  return await userService.get(token.username);;
+  return await userService.get(token.username);
+}
+
+async function updateUser(_: any, args: any, context: any, info: any) {
+  const token = await validateToken(context.headers.Authorization);
+  return await userService.update(token.username, args.updateUserInput);
 }
 
 const resolvers = {
   Query: {
-    getUser: getUser
+    getUser: getUser,
+  },
+  Mutation: {
+    updateUser: updateUser
   },
   Role: {
     STUDENT: 'student',

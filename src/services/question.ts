@@ -1,133 +1,82 @@
+import { TABLE_NAME } from "../environment";
+import dynamodb, { BatchGetParams, GetParams, PutParams } from "./dynamodb";
+import { FRQuestionInput, MCQuestionInput, Question, QuestionItem } from "../interfaces/question";
+
+import {
+   dbResponsesToQuestions,
+   frQuestionInputToDBItem,
+   mcQuestionInputToDBItem
+} from "./questionHelper";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
-import { TABLE_NAME } from "../environment";
-import { MultipleChoiceQuestionInput, MultipleChoiceQuestion } from "../interfaces";
-import dynamodb, { BatchGetParams, BatchWriteParams, GetParams, PutParams, ScanParams } from "./dynamodb";
+const QUESTIONS_TABLE = TABLE_NAME("Questions");
 
-const QUESTIONS_TABLE = TABLE_NAME("Questions")
-const TASK_TO_QUESTIONS_TABLE = TABLE_NAME("TaskToQuestions")
+async function addQuestion(dbItem: QuestionItem) {
+   const params: PutParams = {
+      tableName: QUESTIONS_TABLE,
+      item: dbItem
+   };
 
-async function add(question: MultipleChoiceQuestionInput) {
-  const options = question.options.map((option: string, index: number) => {
-    return {
-      id: index,
-      description: option
-    };
-  });
-
-  const params: PutParams = {
-    tableName: QUESTIONS_TABLE,
-    item: {
-      description: question.description,
-      answers: question.answers,
-      options,
-      points: question.points
-    }
-  }
-
-  return dynamodb.put(params);
+   try {
+      const output = await dynamodb.put(params);
+      return dbItem.id;
+   } catch (err) {
+      return err;
+   }
 }
 
-async function getById(questionId: string): Promise<MultipleChoiceQuestion> {
-  const params: GetParams = {
-    tableName: QUESTIONS_TABLE,
-    key: questionId,
-    projectionExpression: "id, description, options, points"//answer
-  };
+// add free response question to question bank
+async function addFRQuestion(question: FRQuestionInput) {
+   const dbItem = frQuestionInputToDBItem(question);
+   return addQuestion(dbItem);
+}
 
-  try {
+// add multiple choice question to question bank
+async function addMCQuestion(question: MCQuestionInput) {
+   const dbItem = mcQuestionInputToDBItem(question);
+   return addQuestion(dbItem);
+}
+
+async function getById(questionId: string, withAnswer: boolean = false) {
+   const params: GetParams = {
+      tableName: QUESTIONS_TABLE,
+      key: questionId
+    };
+  
     const output = await dynamodb.get(params);
     if (output.Item) {
-      return <MultipleChoiceQuestion>unmarshall(output.Item);
+      const question = <Question>unmarshall(output.Item);
+      return question
     }
-    throw new Error(`Quiz not found with id=${questionId}`);
-  } catch (err) {
-    console.error(err);
-    return err;
-  }
+  
+    throw new Error(`Question not found with id=${questionId}`);
 }
 
-async function listByIds(questionIds: string[], withAnswer: boolean = false)
-  : Promise<MultipleChoiceQuestion[]> {
-  let projection = withAnswer ? "id, description, options, points"
-    : "id, description, options, points, answer";
-  const params: BatchGetParams = {
-    tableName: QUESTIONS_TABLE,
-    keyName: "id",
-    keyValues: questionIds,
-    projectionExpression: projection //answers
-  };
+async function listByIds(questionIds: string[], withAnswer: boolean = false): Promise<Question[]> {
+   const params: BatchGetParams = {
+      tableName: QUESTIONS_TABLE,
+      keyName: "id",
+      keyValues: questionIds
+   };
 
-  try {
-    const output = await dynamodb.batchGet(params);
-    if (output.Responses) {
-      const questions = output.Responses[QUESTIONS_TABLE];
-      return questions.map((item: any) => {
-        return <MultipleChoiceQuestion>unmarshall(item);
-      });
-    }
+   try {
+      const output = await dynamodb.batchGet(params);
+      if (output.Responses) {
+         const questions = dbResponsesToQuestions(output.Responses[QUESTIONS_TABLE]);
+         return questions;
+      }
 
-    return [];
-  } catch (err) {
-    return err;
-  }
-}
-
-async function addQuestionsToTask(questionIds: string[], taskId: string): Promise<number> {
-  const params: BatchWriteParams = {
-    tableName: TASK_TO_QUESTIONS_TABLE,
-    items: questionIds.map((questionId: string) => {
-      return {
-        questionId,
-        taskId
-      };
-    })
-  };
-
-  try {
-    const output = await dynamodb.batchWrite(params);
-    if (output.ConsumedCapacity && output.ConsumedCapacity[0].CapacityUnits) {
-      return output.ConsumedCapacity[0].CapacityUnits;
-    }
-
-    return 0;
-  } catch (err) {
-    return err;
-  }
-}
-
-async function listQuestionsByTaskId(taskId: string): Promise<MultipleChoiceQuestion[]> {
-  const params: ScanParams = {
-    tableName: TASK_TO_QUESTIONS_TABLE,
-    filterExpression: 'taskId = :taskId',
-    expressionAttributeValues: {
-      ":taskId": taskId
-    }
-  };
-
-  try {
-    const output = await dynamodb.scan(params);
-    if (output.Items) {
-      const questionIds: string[] = output.Items.map((item: any) => {
-        const unmarshalled = unmarshall(item)
-        return unmarshalled["questionId"];
-      });
-      const questions = await questionService.listByIds(questionIds);
-      return questions;
-    }
-
-    return [];
-  } catch (err) {
-    return err;
-  }
+      return [];
+   } catch (err) {
+      return err;
+   }
 }
 
 const questionService = {
-  add,
-  getById,
-  listByIds,
-  addQuestionsToTask,
-  listQuestionsByTaskId
-}
+   addFRQuestion,
+   addMCQuestion,
+   listByIds,
+   getById
+};
 
 export default questionService;

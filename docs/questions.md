@@ -2,17 +2,30 @@
 
 ### APIs
 
-- Add Question
-- Add Questions To Task
-- List Questions By Task Id
+-  Add Free Response Question
+-  Add Multiple Choice Question
 
 ### Examples
 
-#### Add Question
+#### Add Free Response Question
 
 ```
 mutation {
-  addQuestion(
+  addFRQuestion(
+    question: {
+      points: 2
+      description: "A disturbance that transfers energy from place to place"
+      answer: "Wave"
+    }
+  )
+}
+```
+
+#### Add Multiple Choice Question
+
+```
+mutation {
+  addMCQuestion(
     question: {
       points: 2
       description: "Ginger is a stem and not a root because"
@@ -25,35 +38,5 @@ mutation {
       answers: [3]
     }
   )
-}
-```
-
-#### Add Questions To Task
-
-```
-mutation {
-  addQuestionsToTask(questionIds: [
-    "9b0bf81d04e",
-    "2a13ccac15a",
-    "0501d7b68f4"
-    ],
-    taskId: "baced0ec648")
-}
-```
-
-#### List Questions By Task Id
-
-```
-query {
-  questions(taskId: "30b931d1f75") {
-    id
-    description
-    options {
-      id
-      description
-    }
-    points
-    answers
-  }
 }
 ```
