@@ -2,7 +2,7 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import taskBusLogic, { dbItemsToTaskItem } from "./taskBusLogic";
 
 import { TABLE_NAME } from "../environment";
-import { TaskInput, TaskItem, Task, TaskProgress } from "../interfaces/taskInterfaces";
+import { TaskInput, TaskItem, Task, TaskProgress, TaskProgressItem } from "../interfaces/taskInterfaces";
 import dynamodb, {
    GetCompositeParams,
    PutCompositeParams,
@@ -89,19 +89,10 @@ async function getTaskProgress(taskId: string, username: string): Promise<TaskPr
    throw new Error(`Task not found with id=${taskId}`);
 }
 
-async function updateTaskProgress(taskProgress: TaskProgress) {
-   const params: PutCompositeParams = {
-      tableName: TASKS_SUBMISSIONS_TABLE,
-      item: taskProgress
-   };
-   return dynamodb.putComposite(params);
-}
-
 const taskService = {
    add,
    getTaskById,
    listBySubMissionId,
-   updateTaskProgress,
    getTaskProgress
 };
 

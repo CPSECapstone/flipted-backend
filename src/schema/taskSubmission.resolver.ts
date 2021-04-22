@@ -1,9 +1,13 @@
 import { FRQuestion, MCQuestion } from "../interfaces/question";
 import { FreeResponseBlockSubmission, MultipleChoiceBlockSubmission } from "../interfaces/quizBlockSubmission";
+import { Task, TaskProgress, TaskProgressInput } from "../interfaces/taskInterfaces";
 import { validateToken } from "../jws-verifer";
 import questionService from "../services/question";
 import { gradeMultipleChoiceQuestion } from "../services/questionHelper";
-import quizBlockSubmissionService from "../services/quizBlockSubmission";
+import taskService from "../services/task";
+import taskBusLogic from "../services/taskBusLogic";
+import taskSubmissionService from "../services/taskSubmission";
+import { taskProgressInputToDBItem } from "../services/taskSubmissionHelper";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
@@ -25,7 +29,7 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    const pointsAwarded: number = gradeMultipleChoiceQuestion(question, blockSubmission.answerIndex);
 
    // store the grade for that quiz block and associate with the user
-   quizBlockSubmissionService.submitMCQuestion(
+   taskSubmissionService.submitMCQuestion(
       tokenPayload.username,
       blockSubmission.taskId,
       blockSubmission.questionBlockId,
@@ -53,7 +57,7 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
    } 
 
     // store the grade for that quiz block and associate with the user
-    quizBlockSubmissionService.submitFRQuestion(
+    taskSubmissionService.submitFRQuestion(
       tokenPayload.username,
       blockSubmission.taskId,
       blockSubmission.questionBlockId,
@@ -65,11 +69,27 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
    return true
 }
 
+async function submitTaskRubricProgress(_: any, args: any, context: any, info: any) {
+   const tokenPayload = await validateToken(context.headers.Authorization);
+   const taskProgInput: TaskProgressInput = args.taskProgress
+    
+   // verify that the list of completed requirement ids exist in the task
+   const task: Task = await taskService.getTaskById(taskProgInput.taskId);
+   if (taskBusLogic.areTaskProgressIdsValid(task, taskProgInput)) {
+      const taskItem = taskProgressInputToDBItem(taskProgInput, tokenPayload.username)
+      taskSubmissionService.submitTaskProgress(taskItem);
+      return true
+   }
+
+   return Error("Failed to verify ids contained in task submission");
+}
+
 const resolvers = {
    Query: {},
    Mutation: {
       saveMultipleChoiceProgress: submitMultChoiceQuestion,
-      saveFreeResponseProgress: submitFreeResponseQuestion
+      saveFreeResponseProgress: submitFreeResponseQuestion,
+      submitTaskProgress: submitTaskRubricProgress
    }
 };
 

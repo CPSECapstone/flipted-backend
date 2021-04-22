@@ -8,7 +8,8 @@ import {
    TaskProgress,
    RubricRequirementInput,
    RubricRequirementItem,
-   Page
+   Page,
+   TaskProgressInput
 } from "../interfaces/taskInterfaces";
 import {
    QuizBlockItem,
@@ -26,7 +27,7 @@ import {
  * @returns True if the task progress is valid, false if not
  * (such as containing taskBlock ids not associated with the task)
  */
-function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgress): boolean {
+function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgressInput): boolean {
    const ids: string[] = [];
 
    // construct a list of requirement ids by extracting them from each block

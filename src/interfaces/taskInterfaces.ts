@@ -23,6 +23,11 @@ export interface RubricRequirementInput {
    description: string;
 }
 
+export interface TaskProgressInput {
+   taskId: string;
+   finishedRequirementIds: string[];
+}
+
 /***************** Output to Client *****************************/
 export interface TaskProgress {
    username: string;
@@ -77,4 +82,9 @@ export interface TaskItem extends CompositeDBItem {
    objectiveId: string;
    pages: PageItem[];
    requirements: RubricRequirementItem[];
+}
+
+export interface TaskProgressItem extends CompositeDBItem {
+   username: string;
+   finishedRequirementIds: string[];
 }
