@@ -23,18 +23,7 @@ export interface RubricRequirementInput {
    description: string;
 }
 
-export interface TaskProgressInput {
-   taskId: string;
-   finishedRequirementIds: string[];
-}
-
 /***************** Output to Client *****************************/
-export interface TaskProgress {
-   username: string;
-   taskId: string;
-   finishedRequirementIds: string[];
-}
-
 export interface Task {
    id: string;
    name: string;

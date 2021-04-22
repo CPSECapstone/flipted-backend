@@ -1,4 +1,4 @@
-import { Task, TaskInput, TaskProgress } from "../interfaces/taskInterfaces";
+import { Task, TaskInput } from "../interfaces/taskInterfaces";
 import { validateToken } from "../jws-verifer";
 import taskService from "../services/task";
 import userService from "../services/user";
