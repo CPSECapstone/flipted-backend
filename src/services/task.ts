@@ -1,91 +1,54 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { uid } from "uid/secure";
-import taskBusLogic from "./taskBusLogic";
+import taskBusLogic, { dbItemsToTaskItem } from "./taskBusLogic";
 
 import { TABLE_NAME } from "../environment";
-import {
-   PageInput,
-   Page,
-   TaskBlockInput,
-   TaskInput,
-   Task,
-   TaskProgress
-} from "../interfaces/taskInterfaces";
+import { TaskInput, TaskItem, Task, TaskProgress } from "../interfaces/taskInterfaces";
 import dynamodb, {
    GetCompositeParams,
-   GetParams,
    PutCompositeParams,
-   PutParams,
+   QueryParams,
    ScanParams
 } from "./dynamodb";
-import quizblockService from "./quizblock";
-import { QuizBlock } from "../interfaces/quizblock";
 
-const TASKS_TABLE = TABLE_NAME("Tasks");
+const TASKS_TABLE = TABLE_NAME("QuizBlocks");
 const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
 async function add(input: TaskInput) {
-   const toSubmit: Task = taskBusLogic.convertTaskInputToTask(input);
+   const toSubmit: TaskItem = taskBusLogic.convertTaskInputToTaskItem(input);
 
-   const params: PutParams = {
+   const params: PutCompositeParams = {
       tableName: TASKS_TABLE,
       item: toSubmit
    };
 
-   return dynamodb.put(params);
+   try {
+      const output = dynamodb.putComposite(params);
+      return toSubmit.id;
+   } catch (err) {
+      return err;
+   }
 }
 
 async function getTaskById(taskId: string): Promise<Task> {
-   const params: GetParams = {
+   const params: QueryParams = {
       tableName: TASKS_TABLE,
-      key: taskId
+      keyConditionExpression: "PK = :pkVal",
+      expressionAttributeValues: {
+         ":pkVal": `TASK#${taskId}`
+      }
    };
 
-   const output = await dynamodb.get(params);
-   if (output.Item) {
-      const task = <Task>unmarshall(output.Item);
-      let quizblockIds: string[] = [];
-      task.pages.forEach((page: Page) => {
-         page.blocks.forEach((block: any) => {
-            if (block.blockId) {
-               // quiz block
-               quizblockIds.push(block.blockId);
-            }
-         });
-      });
+   try {
+      const output = await dynamodb.query(params);
+      const task = await dbItemsToTaskItem(output.Items);
+      if (!task) {
+         throw new Error(`Task not found with id=${taskId}`);
+      }
 
-      const promises = quizblockIds.map(quizblockId => {
-         return quizblockService.getQuizBlockById(quizblockId);
-      });
-
-      const quizblocks = await Promise.all(promises);
-      const map = new Map();
-      quizblocks.forEach((quizblock: QuizBlock) => {
-         map.set(quizblock.id, quizblock);
-      });
-
-      let pages: Page[] = task.pages.map((page: Page) => {
-         let blocks = page.blocks.map((block: any) => {
-            if (block.blockId) {
-               // quiz block
-               return map.get(block.blockId);
-            } else {
-               return block;
-            }
-         });
-         return <Page>{
-            ...page,
-            blocks
-         };
-      });
-
-      return <Task>{
-         ...task,
-         pages
-      };
+      return task;
+   } catch (err) {
+      return err;
    }
-
-   throw new Error(`Task not found with id=${taskId}`);
 }
 
 async function listBySubMissionId(subMissionId: string): Promise<Task[]> {

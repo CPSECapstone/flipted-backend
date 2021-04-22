@@ -1,15 +1,13 @@
-import { unmarshall } from "@aws-sdk/util-dynamodb";
-
 import { TABLE_NAME } from "../environment";
-import { FRQuestionInput, MCQuestionInput, Question } from "../interfaces/question";
 import dynamodb, { BatchGetParams, GetParams, PutParams } from "./dynamodb";
+import { FRQuestionInput, MCQuestionInput, Question, QuestionItem } from "../interfaces/question";
 
 import {
    dbResponsesToQuestions,
    frQuestionInputToDBItem,
-   mcQuestionInputToDBItem,
-   QuestionItem
+   mcQuestionInputToDBItem
 } from "./questionHelper";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 const QUESTIONS_TABLE = TABLE_NAME("Questions");
 

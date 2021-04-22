@@ -3,28 +3,14 @@ import { uid } from "uid/secure";
 
 import {
    FRQuestionInput,
+   FRQuestionItem,
    MCQuestionInput,
-   QuestionOption,
+   MCQuestionItem,
    Question,
+   QuestionItem,
    FRQuestion,
    MCQuestion
 } from "../interfaces/question";
-
-import { DBItem } from "./dynamodb";
-
-export interface QuestionItem extends DBItem {
-   description: string;
-   points: number;
-}
-
-interface FRQuestionDBItem extends QuestionItem {
-   answer: string;
-}
-
-interface MCQuestionDBItem extends QuestionItem {
-   options: QuestionOption[];
-   answers: number[];
-}
 
 export function gradeMultipleChoiceQuestion(question: MCQuestion, answerIndex: number) : number {
    return question.answers.includes(answerIndex) ? question.points : 0
@@ -34,7 +20,7 @@ export function gradeMultipleChoiceQuestion(question: MCQuestion, answerIndex: n
 export function frQuestionInputToDBItem(question: FRQuestionInput): QuestionItem {
    const questionId = uid();
 
-   const questionItem: FRQuestionDBItem = {
+   const questionItem: FRQuestionItem = {
       id: `FR_QUESTION#${questionId}`,
       description: question.description,
       points: question.points,
@@ -55,7 +41,7 @@ export function mcQuestionInputToDBItem(question: MCQuestionInput): QuestionItem
 
    const questionId = uid();
 
-   const questionItem: MCQuestionDBItem = {
+   const questionItem: MCQuestionItem = {
       id: `MC_QUESTION#${questionId}`,
       description: question.description,
       points: question.points,

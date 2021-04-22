@@ -8,8 +8,6 @@ type Task {
    dueDate: Date
    subMissionId: String
    objectiveId: String
-
-   #might be other type of content
    pages: [Page!]!
    requirements: [RubricRequirement!]!
 }
@@ -23,8 +21,8 @@ input TaskInput {
    dueDate: Date
    subMissionId: String
    objectiveId: String
-   pages: [PageInput!]!
-   requirements: [RubricRequirementInput!]!
+   pages: [PageInput]!
+   requirements: [RubricRequirementInput]!
 }
 
 type Page {
@@ -33,21 +31,7 @@ type Page {
 }
 
 input PageInput {
-   blocks: [TaskBlockInput]
    skippable: Boolean
-}
-
-interface TaskBlock {
-   title: String
-}
-
-input TaskBlockInput {
-   title: String
-   type: TaskBlockInputType!
-   textBlockInput: TextBlockInput
-   imageBlockInput: ImageBlockInput
-   videoBlockInput: VideoBlockInput
-   quizblockId: String
 }
 
 type RubricRequirement {
@@ -58,35 +42,6 @@ type RubricRequirement {
 
 input RubricRequirementInput {
    description: String
-}
-
-type ImageBlock implements TaskBlock {
-   title: String
-   imageUrl: String!
-}
-
-input ImageBlockInput {
-   imageUrl: String!
-}
-
-type TextBlock implements TaskBlock {
-   title: String
-   contents: String!
-   fontSize: Int!
-}
-
-input TextBlockInput {
-   contents: String!
-   fontSize: Int!
-}
-
-type VideoBlock implements TaskBlock {
-   title: String
-   videoUrl: String!
-}
-
-input VideoBlockInput {
-   videoUrl: String!
 }
 
 input TaskProgressInput {
@@ -115,11 +70,4 @@ type Mutation {
    calling this function
    """
    submitTaskProgress(taskProgress: TaskProgressInput): String
-}
-
-enum TaskBlockInputType {
-   TEXT
-   IMAGE
-   VIDEO
-   QUIZ
 }

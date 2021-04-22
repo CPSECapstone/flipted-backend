@@ -1,20 +1,7 @@
-import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 import { TABLE_NAME } from "../environment";
-import {
-   QuizTaskSubmission,
-   QuizTaskSubmissionInput,
-   QuizTaskSubmissionSummary,
-   StudentAnswerInput,
-   StudentAnswerResult
-} from "../interfaces";
 
-import quizblockService from "./quizblock";
-import questionService from "./question";
-import taskService from "./task";
-import dynamodb, { GetParams, PutCompositeParams, PutParams, ScanParams } from "./dynamodb";
-import { QuizBlock } from "../interfaces/quizblock";
-import { MCQuestion, Question } from "../interfaces/question";
+import dynamodb, { PutCompositeParams } from "./dynamodb";
 
 const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 

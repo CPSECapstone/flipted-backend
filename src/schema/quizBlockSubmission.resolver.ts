@@ -1,11 +1,8 @@
-import { assert } from "chai";
 import { FRQuestion, MCQuestion } from "../interfaces/question";
-import { QuizBlock } from "../interfaces/quizblock";
 import { FreeResponseBlockSubmission, MultipleChoiceBlockSubmission } from "../interfaces/quizBlockSubmission";
 import { validateToken } from "../jws-verifer";
 import questionService from "../services/question";
 import { gradeMultipleChoiceQuestion } from "../services/questionHelper";
-import quizblockService from "../services/quizblock";
 import quizBlockSubmissionService from "../services/quizBlockSubmission";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: any) {
