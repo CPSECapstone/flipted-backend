@@ -1,7 +1,7 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import taskBusLogic, { dbItemsToTaskItem } from "./taskBusLogic";
 
-import { TABLE_NAME } from "../environment";
+import { TABLE_NAME, COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { TaskInput, TaskItem, Task, TaskProgress } from "../interfaces/taskInterfaces";
 import dynamodb, {
    GetCompositeParams,
@@ -10,7 +10,7 @@ import dynamodb, {
    ScanParams
 } from "./dynamodb";
 
-const TASKS_TABLE = TABLE_NAME("QuizBlocks");
+const TASKS_TABLE = COURSE_CONTENT_TABLE_NAME;
 const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
 async function add(input: TaskInput) {

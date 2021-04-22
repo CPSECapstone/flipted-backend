@@ -91,7 +91,8 @@ function convertTaskInputToTaskItem(input: TaskInput): TaskItem {
       startAt: input.startAt,
       endAt: input.endAt,
       dueDate: input.dueDate,
-      subMissionId: input.subMissionId,
+      parentMissionId: input.parentMissionId,
+      parentMissionIndex: input.parentMissionIndex,
       objectiveId: input.objectiveId,
       pages: input.pages,
       requirements
@@ -111,7 +112,7 @@ async function dbItemToQuizBlock(item: QuizBlockItem): Promise<QuizBlock> {
       blockIndex: item.blockIndex,
       points: item.points,
       requiredScore: item.requiredScore,
-      questions
+      questions: questions
    };
 }
 

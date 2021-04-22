@@ -1,5 +1,6 @@
 import { TaskBlock } from "./taskblock";
 import { CompositeDBItem } from "../services/dynamodb";
+import { MissionContent } from "./mission"
 
 /***************** Input from Client *****************************/
 export interface TaskInput {
@@ -9,7 +10,8 @@ export interface TaskInput {
    startAt: Date;
    endAt: Date;
    dueDate: Date;
-   subMissionId: string;
+   parentMissionId: string;
+   parentMissionIndex: number;
    objectiveId: string;
    pages: PageInput[];
    requirements: RubricRequirementInput[];
@@ -30,7 +32,7 @@ export interface TaskProgress {
    finishedRequirementIds: string[];
 }
 
-export interface Task {
+export interface Task extends MissionContent{
    id: string;
    name: string;
    points: number;
@@ -38,7 +40,6 @@ export interface Task {
    startAt: Date;
    endAt: Date;
    dueDate: Date;
-   subMissionId: string;
    objectiveId: string;
    pages: Page[];
    requirements: RubricRequirement[];
@@ -73,7 +74,8 @@ export interface TaskItem extends CompositeDBItem {
    startAt: Date;
    endAt: Date;
    dueDate: Date;
-   subMissionId: string;
+   parentMissionId: string;
+   parentMissionIndex: number;
    objectiveId: string;
    pages: PageItem[];
    requirements: RubricRequirementItem[];

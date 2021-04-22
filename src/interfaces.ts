@@ -1,34 +1,5 @@
 import { Task } from "./interfaces/taskInterfaces";
 
-export interface Mission {
-   id: string;
-   course: string;
-   name: string;
-   description: string;
-   subMissions: SubMission[];
-}
-export interface MissionInput {
-   course: string;
-   name: string;
-   description: string;
-}
-
-export interface SubMission {
-   id: string;
-   name: string;
-   description: string;
-   missionId: string;
-   objectiveId: string;
-   tasks: Task[];
-}
-
-export interface SubMissionInput {
-   name: string;
-   description: string;
-   missionId: string;
-   objectiveId: string;
-}
-
 export interface StudentAnswer {
    questionId: string;
    points: number;
