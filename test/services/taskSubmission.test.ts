@@ -1,5 +1,5 @@
-import { FreeResponseAnswerInput, FreeResponseAnswerItem, MultipleChoiceAnswerInput, MultipleChoiceAnswerItem, TaskProgressInput, TaskProgressItem } from "../../src/interfaces/taskSubmission";
-import { freeResponseAnswerInputToDBItem, multipleChoiceAnswerInputToDBItem, taskProgressInputToDBItem } from "../../src/services/taskSubmissionHelper";
+import { FreeResponseAnswer, FreeResponseAnswerInput, FreeResponseAnswerItem, MultipleChoiceAnswer, MultipleChoiceAnswerInput, MultipleChoiceAnswerItem, TaskProgressInput, TaskProgressItem } from "../../src/interfaces/taskSubmission";
+import { dbItemToFreeResponseAnswer, dbItemToMultipleChoiceAnswer, freeResponseAnswerInputToDBItem, multipleChoiceAnswerInputToDBItem, taskProgressInputToDBItem } from "../../src/services/taskSubmissionHelper";
 
 describe("converting a TaskProgressInput to a TaskProgressItem", () => {
    it("will do so as expected without errors", async () => {
@@ -19,6 +19,50 @@ describe("converting a TaskProgressInput to a TaskProgressItem", () => {
       }
 
       expect(taskProgressInputToDBItem(input, username)).toEqual(expectedOutput);
+   });
+});
+
+describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
+   it("will do so as expected for multiple choice without errors", async () => {
+      
+      const input: MultipleChoiceAnswerItem = {
+         answerIndex: 2,
+         PK: "USER#Google_114560337406279161954",
+         SK: "MC_QUESTION#a9bfcb78e7d",
+         taskId: "c5110abd8c4",
+         questionBlockId: "123"
+       }
+
+      const expectedOutput: MultipleChoiceAnswer = {
+         username: "Google_114560337406279161954",
+         taskId: "c5110abd8c4",
+         answerId: "MC_QUESTION#a9bfcb78e7d",
+         answerIndex: 2,
+         questionBlockId: "123"
+      }
+
+      expect(dbItemToMultipleChoiceAnswer(input)).toEqual(expectedOutput);
+   });
+
+   it("will do so as expected for free response without errors", async () => {
+      
+      const input: FreeResponseAnswerItem = {
+         answer: "Hello World!",
+         PK: "USER#Google_114560337406279161954",
+         SK: "MC_QUESTION#a9bfcb78e7d",
+         taskId: "c5110abd8c4",
+         questionBlockId: "123"
+       }
+
+      const expectedOutput: FreeResponseAnswer = {
+         username: "Google_114560337406279161954",
+         taskId: "c5110abd8c4",
+         answerId: "MC_QUESTION#a9bfcb78e7d",
+         answer: "Hello World!",
+         questionBlockId: "123"
+      }
+
+      expect(dbItemToFreeResponseAnswer(input)).toEqual(expectedOutput);
    });
 });
 

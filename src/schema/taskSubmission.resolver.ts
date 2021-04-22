@@ -2,8 +2,10 @@ import { FRQuestion, MCQuestion } from "../interfaces/question";
 import {
    FreeResponseAnswerInput,
    MultipleChoiceAnswerInput,
+   QuestionAnswerItem,
    TaskProgress,
-   TaskProgressInput
+   TaskProgressInput,
+   TaskProgressItem
 } from "../interfaces/taskSubmission";
 import { Task } from "../interfaces/taskInterfaces";
 import { validateToken } from "../jws-verifer";
@@ -91,18 +93,20 @@ async function submitTask(_: any, args: any, context: any, info: any) {
    const task: Task = await taskService.getTaskById(taskId);
 
    // This should fail if no task progress has been recorded
-   const questionProgress = await taskSubmissionService.getQuizProgressForTask(taskId, username)
-   //const taskProgress =0//: TaskProgress = await taskSubmissionService.getTaskRubricProgress(taskId, username);
-   return 
+   const questionAnswers: QuestionAnswer[] = await taskSubmissionService.getQuizProgressForTask(taskId, username)
+   const taskProgressItem: TaskProgressItem = await taskSubmissionService.getTaskRubricProgress(taskId, username);
+
+   const questionProgress = 
 
    // Verify that all rubric requirements are complete
-  // if (taskBusLogic.isEligibleForSubmission(task, taskProgress, questionProgress)) {
+   if (taskBusLogic.isEligibleForSubmission(task, taskProgress, questionProgress)) {
       // create task submission
-      //taskSubmissionService.creat
-   //   return taskSubmissionService.submitTask(username, taskId);
-  // } else {
-  //    throw new Error("Task is ineligible for submission. Not all requirements complete");
-  // }
+      
+      taskSubmissionService.creat
+      return taskSubmissionService.submitTask(username, taskId);
+   } else {
+     throw new Error("Task is ineligible for submission. Not all requirements complete");
+  }
 }
 
 async function retrieveTaskSubmission(_: any, args: any, context: any, info: any) {

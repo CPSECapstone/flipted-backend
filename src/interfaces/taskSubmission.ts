@@ -28,8 +28,10 @@ export interface TaskProgress {
 
 /***************** Database item ******************************/
 export interface TaskProgressItem extends CompositeDBItem {
-   username: string;
+   PK: string; //username
+   SK: string; //taskid
    finishedRequirementIds: string[];
+   username: string
 }
 
 export interface QuestionAnswerItem {
@@ -48,10 +50,6 @@ export interface FreeResponseAnswerItem extends QuestionAnswerItem {
 }
 
 /***************** Internal Types ******************************/
-export interface QuestionProgress {
-   questionAnswers: QuestionAnswer[]
-}
-
 export interface QuestionAnswer {
    username: string
    answerId: string

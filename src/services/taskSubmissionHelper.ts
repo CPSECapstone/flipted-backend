@@ -1,4 +1,4 @@
-import { FreeResponseAnswerInput, FreeResponseAnswerItem, MultipleChoiceAnswerInput, MultipleChoiceAnswerItem, TaskProgressInput, TaskProgressItem } from "../interfaces/taskSubmission";
+import { FreeResponseAnswer, FreeResponseAnswerInput, FreeResponseAnswerItem, MultipleChoiceAnswer, MultipleChoiceAnswerInput, MultipleChoiceAnswerItem, QuestionAnswer, QuestionAnswerItem, TaskProgressInput, TaskProgressItem } from "../interfaces/taskSubmission";
 
 // convert input from request to a item object that will be inserted into db
 export function taskProgressInputToDBItem(input: TaskProgressInput, username: string): TaskProgressItem {
@@ -6,9 +6,8 @@ export function taskProgressInputToDBItem(input: TaskProgressInput, username: st
    const taskProgressItem: TaskProgressItem = {
       PK: `TASK_PROGRESS#${username}`,
       SK: input.taskId,
-      username: username,
-      finishedRequirementIds: input.finishedRequirementIds
-
+      finishedRequirementIds: input.finishedRequirementIds,
+      username: username
    };
 
    return taskProgressItem;
@@ -36,4 +35,41 @@ export function freeResponseAnswerInputToDBItem(input: FreeResponseAnswerInput, 
    }
 
    return freeResponseAnswerItem
+}
+
+export function dbItemToMultipleChoiceAnswer(input: MultipleChoiceAnswerItem) : QuestionAnswer {
+   const questionAnswer: MultipleChoiceAnswer = {
+      username: input.PK.replace("USER#", ""),
+      answerId: input.SK,
+      taskId: input.taskId,
+      questionBlockId: input.questionBlockId,
+      answerIndex: input.answerIndex
+   }
+
+   return questionAnswer
+}
+
+export function dbItemToFreeResponseAnswer(input: FreeResponseAnswerItem) : QuestionAnswer {
+   const questionAnswer: FreeResponseAnswer = {
+      username: input.PK.replace("USER#", ""),
+      answerId: input.SK,
+      taskId: input.taskId,
+      questionBlockId: input.questionBlockId,
+      answer: input.answer
+   }
+
+   return questionAnswer
+}
+
+export function dbItemsToQuestionAnswerItems(input: QuestionAnswerItem[]) : QuestionAnswer[] {
+   return input.map(element => {
+      if ("answerIndex" in element) {
+         return dbItemToMultipleChoiceAnswer(element)
+      }
+
+      if ("answer" in element) {
+         return dbItemToFreeResponseAnswer(element)
+      }
+      throw new Error("Type mismatch on question answer type")
+   });
 }

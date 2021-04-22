@@ -1,10 +1,17 @@
-
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TABLE_NAME } from "../environment";
-import { FreeResponseAnswerItem, MultipleChoiceAnswerItem, QuestionAnswerItem, TaskProgress, TaskProgressItem } from "../interfaces/taskSubmission";
+import {
+   FreeResponseAnswerItem,
+   MultipleChoiceAnswerItem,
+   QuestionAnswer,
+   QuestionAnswerItem,
+   TaskProgress,
+   TaskProgressItem
+} from "../interfaces/taskSubmission";
 
 import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "./dynamodb";
 import { dbItemsToTaskItem } from "./taskBusLogic";
+import { dbItemsToQuestionAnswerItems } from "./taskSubmissionHelper";
 
 const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
@@ -27,32 +34,30 @@ async function submitQuestionAnswer(answer: QuestionAnswerItem) {
 async function getTaskSubmission(username: string, taskId: string) {
    const params: PutCompositeParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
-      item: {
-       
-      }
+      item: {}
    };
    return dynamodb.putComposite(params);
 }
 
-async function getTaskRubricProgress(taskId: string, username: string): Promise<TaskProgress> {
+async function getTaskRubricProgress(taskId: string, username: string): Promise<TaskProgressItem> {
    const params: GetCompositeParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       key: {
-         pk: "USER#" + username,
-         taskId: taskId
+         PK: "USER#" + username,
+         SK: taskId
       }
    };
 
    const output = await dynamodb.getComposite(params);
    if (output.Item) {
-      const taskProgress = <TaskProgress>unmarshall(output.Item);
+      const taskProgress = <TaskProgressItem>unmarshall(output.Item);
       return taskProgress;
    }
 
    throw new Error(`Task not found with id=${taskId}`);
 }
 
-async function getQuizProgressForTask(taskId: string, username: string) {
+async function getQuizProgressForTask(taskId: string, username: string): Promise<QuestionAnswer[]> {
    const params: QueryParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       keyConditionExpression: "PK = :pkVal",
@@ -62,15 +67,16 @@ async function getQuizProgressForTask(taskId: string, username: string) {
          ":taskId": taskId
       }
    };
-  
-   try {
-      const output = await dynamodb.query(params);
-      
 
-      return output;
-   } catch (err) {
-      return err;
+   const output = await dynamodb.query(params);
+   if(output.Items) {
+      const questionAnswerItems = output.Items.map((item: any) => {
+         return <QuestionAnswerItem>unmarshall(item);
+      });
+
+      return dbItemsToQuestionAnswerItems(questionAnswerItems);
    }
+   throw new Error(`Task not found with id=${taskId}`);
 }
 
 const taskSubmissionService = {
