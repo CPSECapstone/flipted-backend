@@ -1,6 +1,7 @@
 import dynamodbMock from "../__mocks__/dynamodb";
 import taskBusLogic from "../../src/services/taskBusLogic";
-import { Task, TaskProgress, TaskProgressInput } from "../../src/interfaces/taskInterfaces";
+import { Task } from "../../src/interfaces/taskInterfaces";
+import { TaskProgress, TaskProgressInput } from "../../src/interfaces/taskSubmission";
 
 const mockDate: Date = new Date(0);
 const sampleTask = {

@@ -1,6 +1,6 @@
 import { FRQuestion, MCQuestion } from "../interfaces/question";
-import { FreeResponseBlockSubmission, MultipleChoiceBlockSubmission } from "../interfaces/taskSubmission";
-import { Task, TaskProgress, TaskProgressInput } from "../interfaces/taskInterfaces";
+import { FreeResponseBlockSubmission, MultipleChoiceBlockSubmission, TaskProgressInput } from "../interfaces/taskSubmission";
+import { Task } from "../interfaces/taskInterfaces";
 import { validateToken } from "../jws-verifer";
 import questionService from "../services/question";
 import { gradeMultipleChoiceQuestion } from "../services/questionHelper";

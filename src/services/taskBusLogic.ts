@@ -5,11 +5,9 @@ import {
    Task,
    TaskInput,
    TaskItem,
-   TaskProgress,
    RubricRequirementInput,
    RubricRequirementItem,
    Page,
-   TaskProgressInput
 } from "../interfaces/taskInterfaces";
 import {
    QuizBlockItem,
@@ -19,6 +17,7 @@ import {
    TextBlock,
    VideoBlock
 } from "../interfaces/taskblock";
+import { TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
 
 /**
  *
