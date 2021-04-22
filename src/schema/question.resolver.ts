@@ -1,36 +1,29 @@
-import { MultipleChoiceQuestionInput } from "../interfaces";
-import questionService from '../services/question';
+import { FRQuestionInput, MCQuestionInput } from "../interfaces/question";
+import questionService from "../services/question";
 
-async function addQuestion(_: any, args: any, context: any, info: any) {
-  const question: MultipleChoiceQuestionInput = args.question;
-  return questionService.add(question);
+async function addFRQuestion(_: any, args: any, context: any, info: any) {
+   const question: FRQuestionInput = args.question;
+   return questionService.addFRQuestion(question);
 }
 
-async function getQuestionById(_: any, args: any, context: any, info: any) {
-  const questionId: string = args.questionId;
-  return questionService.getById(questionId);
+async function addMCQuestion(_: any, args: any, context: any, info: any) {
+   const question: MCQuestionInput = args.question;
+   return questionService.addMCQuestion(question);
 }
 
-async function addQuestionsToTask(_: any, args: any, context: any) {
-  const questionIds: string[] = args.questionIds;
-  const taskId: string = args.taskId;
-  return questionService.addQuestionsToTask(questionIds, taskId);
-}
-
-async function listQuestionsByTaskId(_: any, args: any, context: any) {
-  const taskId: string = args.taskId;
-  return questionService.listQuestionsByTaskId(taskId);
+async function listQuestionsByIds(_: any, args: any, context: any) {
+   const questionIds: string[] = args.questionIds;
+   return questionService.listByIds(questionIds);
 }
 
 const resolvers = {
-  Query: {
-    question: getQuestionById,
-    questions: listQuestionsByTaskId
-  },
-  Mutation: {
-    addQuestion,
-    addQuestionsToTask
-  }
+   Query: {
+      questions: listQuestionsByIds
+   },
+   Mutation: {
+      addFRQuestion,
+      addMCQuestion
+   }
 };
 
 export default resolvers;

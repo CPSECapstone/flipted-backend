@@ -1,30 +1,28 @@
 type Task {
-  id: String!
-  name: String!
-  instructions: String!
-  points: Int!
-  startAt: Date
-  endAt: Date
-  dueDate: Date
-  subMissionId: String
-  objectiveId: String
-
-  #might be other type of content
-  pages: [Page!]!
-  requirements: [RubricRequirement!]!
+   id: String!
+   name: String!
+   instructions: String!
+   points: Int!
+   startAt: Date
+   endAt: Date
+   dueDate: Date
+   subMissionId: String
+   objectiveId: String
+   pages: [Page!]!
+   requirements: [RubricRequirement!]!
 }
 
 input TaskInput {
-  name: String!
-  instructions: String!
-  points: Int!
-  startAt: Date
-  endAt: Date
-  dueDate: Date
-  subMissionId: String
-  objectiveId: String
-  pages: [PageInput!]!
-  requirements: [RubricRequirementInput!]!
+   name: String!
+   instructions: String!
+   points: Int!
+   startAt: Date
+   endAt: Date
+   dueDate: Date
+   subMissionId: String
+   objectiveId: String
+   pages: [PageInput]!
+   requirements: [RubricRequirementInput]!
 }
 
 type Page {
@@ -33,20 +31,7 @@ type Page {
 }
 
 input PageInput {
-   blocks: [TaskBlockInput]
    skippable: Boolean
-}
-
-interface TaskBlock {
-   title: String
-}
-
-input TaskBlockInput {
-   title: String
-   type: TaskBlockInputType!
-   textBlockInput: TextBlockInput
-   imageBlockInput: ImageBlockInput
-   videoBlockInput: VideoBlockInput
 }
 
 type RubricRequirement {
@@ -59,46 +44,11 @@ input RubricRequirementInput {
    description: String
 }
 
-type ImageBlock implements TaskBlock {
-   title: String
-   imageUrl: String!
-}
-
-input ImageBlockInput{
-   imageUrl: String!
-}
-
-type TextBlock implements TaskBlock {
-   title: String
-   contents: String!
-   fontSize: Int!
-}
-
-input TextBlockInput {
-   contents: String!
-   fontSize: Int!
-}
-
-type VideoBlock implements TaskBlock {
-   title: String
-   videoUrl: String!
-}
-
-input VideoBlockInput {
-   videoUrl: String!
-}
-
 type Query {
-  task(taskId: String): Task
-  tasks(subMissionId: String): [Task!]!
+   task(taskId: String): Task
+   tasks(subMissionId: String): [Task!]!
 }
 
 type Mutation {
-  addTask(task: TaskInput): String
-}
-
-enum TaskBlockInputType {
-   TEXT,
-   IMAGE,
-   VIDEO
+   addTask(task: TaskInput): String
 }

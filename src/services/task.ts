@@ -1,125 +1,100 @@
-import { unmarshall, } from "@aws-sdk/util-dynamodb";
-import { uid } from "uid/secure";
-import taskBusLogic from "./taskBusLogic";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
+import taskBusLogic, { dbItemsToTaskItem } from "./taskBusLogic";
 
 import { TABLE_NAME } from "../environment";
-import { PageInput, Page, TaskBlockInput, TaskInput, Task, TaskProgress } from "../interfaces/taskInterfaces";
-import dynamodb, { GetCompositeParams, GetParams, PutCompositeParams, PutParams, ScanParams } from "./dynamodb";
+import { TaskInput, TaskItem, Task } from "../interfaces/taskInterfaces";
+import dynamodb, {
+   GetCompositeParams,
+   PutCompositeParams,
+   QueryParams,
+   ScanParams
+} from "./dynamodb";
+import { TaskProgress } from "../interfaces/taskSubmission";
 
-const TASKS_TABLE = TABLE_NAME("Tasks");
-const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions")
-const TASK_SUBMISSION_PREFIX = "TASK_SUBMISSION_"
-const TASK_PROGRESS_PREFIX = "TASK_PROGRESS_"
+const TASKS_TABLE = TABLE_NAME("QuizBlocks");
+const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
 async function add(input: TaskInput) {
-   
-   const toSubmit: Task = taskBusLogic.convertTaskInputToTask(input)
-   
-   const params: PutParams = {
-    tableName: TASKS_TABLE,
-    item: toSubmit
-  };
+   const toSubmit: TaskItem = taskBusLogic.convertTaskInputToTaskItem(input);
 
-  return dynamodb.put(params);
+   const params: PutCompositeParams = {
+      tableName: TASKS_TABLE,
+      item: toSubmit
+   };
+
+   try {
+      const output = dynamodb.putComposite(params);
+      return toSubmit.id;
+   } catch (err) {
+      return err;
+   }
 }
 
 async function getTaskById(taskId: string): Promise<Task> {
-  const params: GetParams = {
-    tableName: TASKS_TABLE,
-    key: taskId
-  };
+   const params: QueryParams = {
+      tableName: TASKS_TABLE,
+      keyConditionExpression: "PK = :pkVal",
+      expressionAttributeValues: {
+         ":pkVal": `TASK#${taskId}`
+      }
+   };
 
-  const output = await dynamodb.get(params);
-  if (output.Item) {
-    const task = <Task>unmarshall(output.Item);
-    return task;
-  }
+   try {
+      const output = await dynamodb.query(params);
+      const task = await dbItemsToTaskItem(output.Items);
+      if (!task) {
+         throw new Error(`Task not found with id=${taskId}`);
+      }
 
-  throw new Error(`Task not found with id=${taskId}`);
+      return task;
+   } catch (err) {
+      return err;
+   }
 }
 
 async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
-  const params: ScanParams = {
-    tableName: TASKS_TABLE,
-    filterExpression: 'subMissionId = :subMissionId',
-    expressionAttributeValues: {
-      ":subMissionId": subMissionId
-    }
-  };
+   const params: ScanParams = {
+      tableName: TASKS_TABLE,
+      filterExpression: "subMissionId = :subMissionId",
+      expressionAttributeValues: {
+         ":subMissionId": subMissionId
+      }
+   };
 
-  const output = await dynamodb.scan(params);
-  if (output.Items) {
-    const tasks = output.Items.map((item: any) => {
-      return <Task>unmarshall(item);
-    });
-    return tasks;
-  }
+   const output = await dynamodb.scan(params);
+   if (output.Items) {
+      const tasks = output.Items.map((item: any) => {
+         return <Task>unmarshall(item);
+      });
+      return tasks;
+   }
 
-  return [];
+   return [];
 }
 
-async function getTaskProgress(taskId: string, username: string) : Promise<TaskProgress> {
+async function getTaskProgress(taskId: string, username: string): Promise<TaskProgress> {
    const params: GetCompositeParams = {
       tableName: TASKS_SUBMISSIONS_TABLE,
       key: {
-         username: TASK_PROGRESS_PREFIX + username,
-         taskId: taskId,
-       },
-    };
-  
-    const output = await dynamodb.getComposite(params);
-    if (output.Item) {
+         username: username,
+         taskId: taskId
+      }
+   };
+
+   const output = await dynamodb.getComposite(params);
+   if (output.Item) {
       const taskProgress = <TaskProgress>unmarshall(output.Item);
       return taskProgress;
-    }
-  
-    throw new Error(`Task Progress not found with id=${taskId}`);
-}
-
-async function updateTaskProgress(taskProgress: TaskProgress)
-{
-   const params: PutCompositeParams = {
-      tableName: TASKS_SUBMISSIONS_TABLE,
-      item: {
-         username: TASK_PROGRESS_PREFIX + taskProgress.username,
-         taskId: taskProgress.taskId,
-         finishedRequirementIds: taskProgress.finishedRequirementIds
-      }
-   }
-   return dynamodb.putComposite(params)
-}
-
-async function getTaskSubmission(taskId: string, username: string) {
-   const params: GetCompositeParams = {
-      tableName: TASKS_SUBMISSIONS_TABLE,
-      key: {
-         username:  TASK_SUBMISSION_PREFIX + username,
-         taskId: taskId
-      }
    }
 
-   return dynamodb.getComposite(params)
-}
-
-async function createTaskSubmission(taskId: string, username: string) {
-   const params: PutCompositeParams = {
-      tableName: TASKS_SUBMISSIONS_TABLE,
-      item: {
-         username: TASK_SUBMISSION_PREFIX + username,
-         taskId: taskId
-      }
-   }
-   return dynamodb.putComposite(params)
+   throw new Error(`Task not found with id=${taskId}`);
 }
 
 const taskService = {
-  add,
-  getTaskById,
-  listBySubMissionId,
-  updateTaskProgress,
-  getTaskProgress,
-  getTaskSubmission,
-  createTaskSubmission
-}
+   add,
+   getTaskById,
+   listBySubMissionId,
+   getTaskProgress
+};
 
 export default taskService;

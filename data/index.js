@@ -28,3 +28,6 @@ function sendRequest(payload) {
 
 // const questionPayloads = require("./multipleChoiceQuestions");
 // questionPayloads.forEach(sendRequest);
+
+// const frQuestionPayloads = require("./freeResponseQuestions");
+// frQuestionPayloads.forEach(sendRequest);

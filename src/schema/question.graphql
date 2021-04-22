@@ -1,30 +1,50 @@
-# Questions
-type QuestionOption {
-  id: Int!
-  description: String!
+interface Question {
+   id: String!
+   description: String!
+   points: Int!
 }
 
-type MultipleChoiceQuestion {
-  id: String!
-  description: String!
-  options: [QuestionOption]
-  answers: [Int]
-  points: Int!
+# FreeResponseQuestion
+type FRQuestion implements Question {
+   id: String!
+   description: String!
+   points: Int!
+   answer: String
+}
+
+# Questions
+type QuestionOption {
+   id: Int!
+   description: String!
+}
+
+# MultipleChoiceQuestion
+type MCQuestion implements Question {
+   id: String!
+   description: String!
+   points: Int!
+   options: [QuestionOption]
+   answers: [Int]
+}
+
+input FRQuestionInput {
+   description: String
+   points: Int
+   answer: String
+}
+
+input MCQuestionInput {
+   description: String!
+   points: Int
+   options: [String]!
+   answers: [Int]!
 }
 
 type Query {
-  question(questionId: String!): MultipleChoiceQuestion
-  questions(taskId: String!): [MultipleChoiceQuestion]
-}
-
-input MultipleChoiceQuestionInput {
-  description: String!
-  options: [String]!
-  answers: [Int]!
-  points: Int
+   questions(questionIds: [String]): [Question]
 }
 
 type Mutation {
-  addQuestion(question: MultipleChoiceQuestionInput): String
-  addQuestionsToTask(questionIds: [String]!, taskId: String!): Int
+   addFRQuestion(question: FRQuestionInput): String
+   addMCQuestion(question: MCQuestionInput): String
 }

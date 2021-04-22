@@ -1,93 +1,74 @@
-import { MultipleChoiceQuestion } from "../interfaces";
+import { TaskBlock } from "./taskblock";
+import { CompositeDBItem } from "../services/dynamodb";
 
-export interface Task {
-   id: string
-   name: string
-   points: number
-   instructions: string
-   startAt: Date
-   endAt: Date
-   dueDate: Date
-   subMissionId: string
-   objectiveId: string
-   pages: Page[]
-   requirements: RubricRequirement[]
- }
- export interface TaskInput {
-   points: number
-   name: string
-   instructions: string
-   startAt: Date
-   endAt: Date
-   dueDate: Date
-   subMissionId: string
-   objectiveId: string
-   pages: PageInput[]
-   requirements: RubricRequirementInput[]
- }
- 
- export interface Page {
-    blocks: TaskBlock[]
-    skippable: Boolean
- }
-
- export interface TaskBlock {
-   title: string
- }
-
- export interface ImageBlock extends TaskBlock {
-   imageUrl: string
- }
-
- export interface VideoBlock extends TaskBlock {
-   videoUrl: string
- }
-
- export interface TextBlock extends TaskBlock {
-   contents: string
-   fontSize: string
- }
- 
- export interface PageInput {
-    blocks: TaskBlockInput[]
-    skippable: Boolean
- }
- 
- export interface TaskBlockInput {
-    title: string
-    requirement: RubricRequirementInput
-    type: string
-    textBlockInput: TextBlockInput
-    imageBlockInput: ImageBlockInput
-    videoBlockInput: VideoBlockInput
- }
- 
- export interface TextBlockInput {
-    contents: string
-    fontSize: number
- }
- 
- export interface ImageBlockInput {
-    imageUrl: string
- }
- 
- export interface VideoBlockInput {
-    videoUrl: string
- }
- 
- export interface RubricRequirement {
-   id: string
-   description: string
-   isComplete: boolean
+/***************** Input from Client *****************************/
+export interface TaskInput {
+   points: number;
+   name: string;
+   instructions: string;
+   startAt: Date;
+   endAt: Date;
+   dueDate: Date;
+   subMissionId: string;
+   objectiveId: string;
+   pages: PageInput[];
+   requirements: RubricRequirementInput[];
 }
 
- export interface RubricRequirementInput {
-    description: string
- }
+export interface PageInput {
+   skippable: boolean;
+}
 
- export interface TaskProgress {
-    username: string
-    taskId: string
-    finishedRequirementIds: string[]
- }
- 
+export interface RubricRequirementInput {
+   description: string;
+}
+
+/***************** Output to Client *****************************/
+export interface Task {
+   id: string;
+   name: string;
+   points: number;
+   instructions: string;
+   startAt: Date;
+   endAt: Date;
+   dueDate: Date;
+   subMissionId: string;
+   objectiveId: string;
+   pages: Page[];
+   requirements: RubricRequirement[];
+}
+
+export interface Page {
+   skippable: boolean;
+   blocks: TaskBlock[];
+}
+
+export interface RubricRequirement {
+   id: string;
+   description: string;
+   isComplete: boolean;
+}
+
+/***************** Database item ******************************/
+export interface PageItem {
+   skippable: boolean;
+}
+
+export interface RubricRequirementItem {
+   id: string;
+   description: string;
+}
+
+export interface TaskItem extends CompositeDBItem {
+   id: string;
+   points: number;
+   name: string;
+   instructions: string;
+   startAt: Date;
+   endAt: Date;
+   dueDate: Date;
+   subMissionId: string;
+   objectiveId: string;
+   pages: PageItem[];
+   requirements: RubricRequirementItem[];
+}
