@@ -12,6 +12,10 @@ import {
    MCQuestion
 } from "../interfaces/question";
 
+export function gradeMultipleChoiceQuestion(question: MCQuestion, answerIndex: number) : number {
+   return question.answers.includes(answerIndex) ? question.points : 0
+}
+
 // convert input from request to a item object that will be inserted into db
 export function frQuestionInputToDBItem(question: FRQuestionInput): QuestionItem {
    const questionId = uid();

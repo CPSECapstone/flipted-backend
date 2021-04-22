@@ -1,5 +1,5 @@
 import { TABLE_NAME } from "../environment";
-import dynamodb, { BatchGetParams, PutParams } from "./dynamodb";
+import dynamodb, { BatchGetParams, GetParams, PutParams } from "./dynamodb";
 import { FRQuestionInput, MCQuestionInput, Question, QuestionItem } from "../interfaces/question";
 
 import {
@@ -7,6 +7,7 @@ import {
    frQuestionInputToDBItem,
    mcQuestionInputToDBItem
 } from "./questionHelper";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 const QUESTIONS_TABLE = TABLE_NAME("Questions");
 
@@ -36,6 +37,21 @@ async function addMCQuestion(question: MCQuestionInput) {
    return addQuestion(dbItem);
 }
 
+async function getById(questionId: string, withAnswer: boolean = false) {
+   const params: GetParams = {
+      tableName: QUESTIONS_TABLE,
+      key: questionId
+    };
+  
+    const output = await dynamodb.get(params);
+    if (output.Item) {
+      const question = <Question>unmarshall(output.Item);
+      return question
+    }
+  
+    throw new Error(`Question not found with id=${questionId}`);
+}
+
 async function listByIds(questionIds: string[], withAnswer: boolean = false): Promise<Question[]> {
    const params: BatchGetParams = {
       tableName: QUESTIONS_TABLE,
@@ -59,7 +75,8 @@ async function listByIds(questionIds: string[], withAnswer: boolean = false): Pr
 const questionService = {
    addFRQuestion,
    addMCQuestion,
-   listByIds
+   listByIds,
+   getById
 };
 
 export default questionService;
