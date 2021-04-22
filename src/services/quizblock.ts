@@ -22,12 +22,13 @@ async function addQuizBlock(quizblock: QuizBlockInput) {
    }
 }
 
-async function getQuizBlockById(taskId: string, blockId: string): Promise<QuizBlock> {
+async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
+   
    const params: GetCompositeParams = {
       tableName: QUIZBLOCKS_TABLE,
       key: {
-         PK: `TASK#${taskId}`,
-         SK: `QUIZ_BLOCK#${blockId}`,
+         PK: blockId,
+         SK: blockId,
       }
    };
 
