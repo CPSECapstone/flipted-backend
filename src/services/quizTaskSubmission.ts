@@ -9,11 +9,9 @@ import {
    StudentAnswerResult
 } from "../interfaces";
 
-import quizblockService from "./quizblock";
-import questionService from "./question";
+import taskblockService from "./taskblock";
 import taskService from "./task";
 import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
-import { QuizBlock } from "../interfaces/quizblock";
 import { Question } from "../interfaces/question";
 
 const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
@@ -34,7 +32,7 @@ function computeResult(questions: Question[], answers: StudentAnswerInput[]) {
 
 async function add(submission: QuizTaskSubmissionInput) {
    try {
-      const quizblock = await quizblockService.getQuizBlockById(submission.taskId);
+      const quizblock = await taskblockService.getQuizBlockById(submission.taskId);
       const questions = quizblock.questions;
       const results = computeResult(questions, submission.answers);
       const points = results.reduce((acc, curr) => acc + curr.points, 0);

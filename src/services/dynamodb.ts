@@ -46,19 +46,14 @@ async function put(params: PutParams): Promise<string> {
    }
 }
 
-async function putComposite(params: PutCompositeParams): Promise<boolean> {
+async function putComposite(params: PutCompositeParams): Promise<PutItemCommandOutput> {
    const command: PutItemCommand = new PutItemCommand({
       TableName: params.tableName,
       Item: marshall(params.item, marshallOpts),
       ReturnValues: "ALL_OLD"
    });
 
-   try {
-      const output: PutItemCommandOutput = await client.send(command);
-      return true;
-   } catch (err) {
-      return err;
-   }
+   return client.send(command);
 }
 
 async function get(params: GetParams): Promise<GetItemCommandOutput> {

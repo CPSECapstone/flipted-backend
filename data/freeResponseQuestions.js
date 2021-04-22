@@ -1,18 +1,13 @@
-const data = require('./multipleChoiceQuestions.json');
+const data = require('./freeResponseQuestions.json');
 
 function generatePayload(question) {
-  let options = question.options.map((option) => {
-    return `"${option}"`;
-  }).join(", ");
-
   let query = `
     mutation {
-      addMCQuestion(
+      addFRQuestion(
         question: {
           description: "${question.description}"
           points: ${question.points}
-          options: [${options}]
-          answers: [${question.answers}]
+          answer: "${question.answer}"
         }
       )
     }

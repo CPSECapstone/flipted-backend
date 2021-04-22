@@ -1,0 +1,77 @@
+interface TaskBlock {
+   title: String
+}
+
+type TextBlock implements TaskBlock {
+   title: String
+   contents: String!
+   fontSize: Int!
+}
+
+type ImageBlock implements TaskBlock {
+   title: String
+   imageUrl: String!
+}
+
+type VideoBlock implements TaskBlock {
+   title: String
+   videoUrl: String!
+}
+
+type QuizBlock implements TaskBlock {
+   title: String
+   blockId: String
+   requiredScore: Int
+   points: Int
+   questions: [Question]
+}
+
+input ImageBlockInput {
+   taskId: String!
+   title: String
+   pageIndex: Int!
+   blockIndex: Int!
+   imageUrl: String!
+}
+
+input TextBlockInput {
+   taskId: String!
+   title: String
+   pageIndex: Int!
+   blockIndex: Int!
+   contents: String!
+   fontSize: Int!
+}
+
+input VideoBlockInput {
+   taskId: String!
+   title: String
+   pageIndex: Int!
+   blockIndex: Int!
+   videoUrl: String!
+}
+
+input QuizBlockInput {
+   taskId: String!
+   title: String
+   pageIndex: Int!
+   blockIndex: Int!
+   requiredScore: Int
+   points: Int
+   questionIds: [String]
+}
+
+type QuizBlock implements TaskBlock {
+   title: String
+   blockId: String
+   requiredScore: Int
+   points: Int
+   questions: [Question]
+}
+
+type Mutation {
+   addTextBlock(textblock: TextBlockInput): String
+   addImageBlock(imageblock: ImageBlockInput): String
+   addVideoBlock(videoblock: VideoBlockInput): String
+   addQuizBlock(quizblock: QuizBlockInput): String
+}
