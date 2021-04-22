@@ -2,13 +2,14 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import taskBusLogic, { dbItemsToTaskItem } from "./taskBusLogic";
 
 import { TABLE_NAME } from "../environment";
-import { TaskInput, TaskItem, Task, TaskProgress, TaskProgressItem } from "../interfaces/taskInterfaces";
+import { TaskInput, TaskItem, Task } from "../interfaces/taskInterfaces";
 import dynamodb, {
    GetCompositeParams,
    PutCompositeParams,
    QueryParams,
    ScanParams
 } from "./dynamodb";
+import { TaskProgress } from "../interfaces/taskSubmission";
 
 const TASKS_TABLE = TABLE_NAME("QuizBlocks");
 const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
