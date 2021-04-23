@@ -15,7 +15,14 @@ import { gradeMultipleChoiceQuestion } from "../services/questionHelper";
 import taskService from "../services/task";
 import taskBusLogic from "../services/taskBusLogic";
 import taskSubmissionService from "../services/taskSubmission";
-import { areTaskProgressIdsValid, freeResponseAnswerInputToDBItem, multipleChoiceAnswerInputToDBItem, taskRubricRequirementsComplete, taskProgressInputToDBItem } from "../services/taskSubmissionHelper";
+import {
+   areTaskProgressIdsValid,
+   freeResponseAnswerInputToDBItem,
+   multipleChoiceAnswerInputToDBItem,
+   taskRubricRequirementsComplete,
+   taskProgressInputToDBItem,
+   taskQuestionsAllAnswered
+} from "../services/taskSubmissionHelper";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
@@ -27,9 +34,7 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    // TODO: Assert given task id exists
 
    // get the question as defined by the database
-   const question: MCQuestion = <MCQuestion>(
-      await questionService.getById(mcAnswerInput.questionId)
-   );
+   const question: MCQuestion = <MCQuestion>await questionService.getById(mcAnswerInput.questionId, "MC_QUESTION#");
 
    if (!question.id) {
       throw new Error("Could not find question with id: " + mcAnswerInput.questionId);
@@ -57,7 +62,7 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
 
    // get the question as defined by the database
    const question: FRQuestion = <FRQuestion>(
-      (<unknown>await questionService.getById(frAnswerInput.questionId))
+      (<unknown>await questionService.getById(frAnswerInput.questionId, "FR_QUESTION#"))
    );
 
    if (!question.id) {
@@ -66,7 +71,7 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
 
    // store the grade for that quiz block and associate with the user
    taskSubmissionService.submitQuestionAnswer(
-     freeResponseAnswerInputToDBItem(frAnswerInput, tokenPayload.username)
+      freeResponseAnswerInputToDBItem(frAnswerInput, tokenPayload.username)
    );
 
    return true;
@@ -94,18 +99,28 @@ async function submitTask(_: any, args: any, context: any, info: any) {
    const task: Task = await taskService.getTaskById(taskId);
 
    // This should fail if no task progress has been recorded
-   const questionAnswers: QuestionAnswer[] = await taskSubmissionService.getQuizProgressForTask(taskId, username)
-   const taskProgress: TaskProgress = await taskSubmissionService.getTaskRubricProgress(taskId, username);
+   const questionAnswers: QuestionAnswer[] = await taskSubmissionService.getQuizProgressForTask(
+      taskId,
+      username
+   );
 
-   // Verify that all rubric requirements are complete
-   if (taskRubricRequirementsComplete(task, taskProgress, questionAnswers)) {
-      // create task submission
-      
-      
-      return taskSubmissionService.submitTaskForGrading();
-   } else {
-     throw new Error("Task is ineligible for submission. Not all requirements complete");
-  }
+   console.log(questionAnswers)
+
+   const taskProgress: TaskProgress = await taskSubmissionService.getTaskRubricProgress(
+      taskId,
+      username
+   );
+
+   if (!taskRubricRequirementsComplete(task, taskProgress)) {
+      throw new Error("Task is ineligible for submission. Not all rubric requirements checked.");
+   }
+
+   if(!taskQuestionsAllAnswered(task, questionAnswers)) {
+      throw new Error("Task is ineligible for submission. Not all quiz questions answered.");
+   }
+
+
+   taskSubmissionService.submitTaskForGrading()
 }
 
 async function retrieveTaskSubmission(_: any, args: any, context: any, info: any) {
@@ -129,4 +144,3 @@ const resolvers = {
 };
 
 export default resolvers;
-

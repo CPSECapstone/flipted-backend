@@ -10,8 +10,7 @@ input MultipleChoiceAnswerInput {
    """
    the id of the quiz block the question is contained in
    """
-   blockId: String!
-
+   questionBlockId: String!
    """
    The id of the question the student is answering
    """
@@ -35,7 +34,7 @@ input FreeResponseAnswerInput {
    """
    the id of the quiz block the question is contained in
    """
-   blockId: String!
+   questionBlockId: String!
 
    """
    The id of the question block the student is answering
@@ -85,7 +84,7 @@ type TaskSubmissionResult {
    graded: Boolean!
 
    """ 
-   The current amount of points awarded for completing this class.
+   The current amount of points awarded for completing this task.
    May be different before and after graded is set based on a combination of
    automatic scoring and teacher grading
    """

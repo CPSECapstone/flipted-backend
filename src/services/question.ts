@@ -37,10 +37,10 @@ async function addMCQuestion(question: MCQuestionInput) {
    return addQuestion(dbItem);
 }
 
-async function getById(questionId: string, withAnswer: boolean = false) {
+async function getById(questionId: string, prefix: string, withAnswer: boolean = false) {
    const params: GetParams = {
       tableName: QUESTIONS_TABLE,
-      key: questionId
+      key: prefix + questionId
     };
   
     const output = await dynamodb.get(params);
