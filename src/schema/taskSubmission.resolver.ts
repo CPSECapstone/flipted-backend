@@ -2,6 +2,7 @@ import { FRQuestion, MCQuestion } from "../interfaces/question";
 import {
    FreeResponseAnswerInput,
    MultipleChoiceAnswerInput,
+   QuestionAnswer,
    QuestionAnswerItem,
    TaskProgress,
    TaskProgressInput,
@@ -94,7 +95,7 @@ async function submitTask(_: any, args: any, context: any, info: any) {
 
    // This should fail if no task progress has been recorded
    const questionAnswers: QuestionAnswer[] = await taskSubmissionService.getQuizProgressForTask(taskId, username)
-   const taskProgressItem: TaskProgressItem = await taskSubmissionService.getTaskRubricProgress(taskId, username);
+   const taskProgress: TaskProgress = await taskSubmissionService.getTaskRubricProgress(taskId, username);
 
    const questionProgress = 
 

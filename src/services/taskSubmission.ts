@@ -39,7 +39,7 @@ async function getTaskSubmission(username: string, taskId: string) {
    return dynamodb.putComposite(params);
 }
 
-async function getTaskRubricProgress(taskId: string, username: string): Promise<TaskProgressItem> {
+async function getTaskRubricProgress(taskId: string, username: string): Promise<TaskProgress> {
    const params: GetCompositeParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       key: {
@@ -51,7 +51,7 @@ async function getTaskRubricProgress(taskId: string, username: string): Promise<
    const output = await dynamodb.getComposite(params);
    if (output.Item) {
       const taskProgress = <TaskProgressItem>unmarshall(output.Item);
-      return taskProgress;
+      return dbItemToTaskProgressItem(taskProgress);
    }
 
    throw new Error(`Task not found with id=${taskId}`);
@@ -88,3 +88,7 @@ const taskSubmissionService = {
 };
 
 export default taskSubmissionService;
+function dbItemToTaskProgressItem(taskProgress: TaskProgressItem): TaskProgress | PromiseLike<TaskProgress> {
+   throw new Error("Function not implemented.");
+}
+

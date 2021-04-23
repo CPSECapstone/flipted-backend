@@ -1,5 +1,5 @@
-import { FreeResponseAnswer, FreeResponseAnswerInput, FreeResponseAnswerItem, MultipleChoiceAnswer, MultipleChoiceAnswerInput, MultipleChoiceAnswerItem, TaskProgressInput, TaskProgressItem } from "../../src/interfaces/taskSubmission";
-import { dbItemToFreeResponseAnswer, dbItemToMultipleChoiceAnswer, freeResponseAnswerInputToDBItem, multipleChoiceAnswerInputToDBItem, taskProgressInputToDBItem } from "../../src/services/taskSubmissionHelper";
+import { FreeResponseAnswer, FreeResponseAnswerInput, FreeResponseAnswerItem, MultipleChoiceAnswer, MultipleChoiceAnswerInput, MultipleChoiceAnswerItem, TaskProgress, TaskProgressInput, TaskProgressItem } from "../../src/interfaces/taskSubmission";
+import { dbItemToFreeResponseAnswer, dbItemToMultipleChoiceAnswer, dbItemToTaskProgress, freeResponseAnswerInputToDBItem, multipleChoiceAnswerInputToDBItem, taskProgressInputToDBItem } from "../../src/services/taskSubmissionHelper";
 
 describe("converting a TaskProgressInput to a TaskProgressItem", () => {
    it("will do so as expected without errors", async () => {
@@ -19,6 +19,28 @@ describe("converting a TaskProgressInput to a TaskProgressItem", () => {
       }
 
       expect(taskProgressInputToDBItem(input, username)).toEqual(expectedOutput);
+   });
+});
+
+describe("converting a TaskProgressItem to a TaskProgress", () => {
+   it("will do so as expected without errors", async () => {
+      
+      const input: TaskProgressItem = {
+         finishedRequirementIds: [
+           "5110abd8c4f"
+         ],
+         PK: "TASK_PROGRESS#Google_114560337406279161954",
+         SK: "c5110abd8c4",
+         username: "Google_114560337406279161954"
+       }
+
+      const expectedOutput: TaskProgress = {
+         username: "Google_114560337406279161954",
+         taskId: "c5110abd8c4",
+         finishedRequirementIds: ["5110abd8c4f"]
+      }
+
+      expect(dbItemToTaskProgress(input)).toEqual(expectedOutput);
    });
 });
 

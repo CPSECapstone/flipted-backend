@@ -17,7 +17,7 @@ import {
    TextBlock,
    VideoBlock
 } from "../interfaces/taskblock";
-import { QuestionProgress, TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
+import {QuestionAnswer, TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
 
 /**
  *
@@ -177,7 +177,7 @@ export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
  * @param taskProgress The progress towards the task
  * @returns True if the task is ready to be submitted. False if the rubric requirements are not yet complete.
  */
-function isEligibleForSubmission(task: Task, taskProgress: TaskProgress, questionProgress: QuestionProgress) {
+function isEligibleForSubmission(task: Task, taskProgress: TaskProgress, questionProgress: QuestionAnswer[]) {
    return (
       areTaskProgressIdsValid(task, taskProgress) &&
       task.requirements.length == taskProgress.finishedRequirementIds.length

@@ -1,4 +1,4 @@
-import { FreeResponseAnswer, FreeResponseAnswerInput, FreeResponseAnswerItem, MultipleChoiceAnswer, MultipleChoiceAnswerInput, MultipleChoiceAnswerItem, QuestionAnswer, QuestionAnswerItem, TaskProgressInput, TaskProgressItem } from "../interfaces/taskSubmission";
+import { FreeResponseAnswer, FreeResponseAnswerInput, FreeResponseAnswerItem, MultipleChoiceAnswer, MultipleChoiceAnswerInput, MultipleChoiceAnswerItem, QuestionAnswer, QuestionAnswerItem, TaskProgress, TaskProgressInput, TaskProgressItem } from "../interfaces/taskSubmission";
 
 // convert input from request to a item object that will be inserted into db
 export function taskProgressInputToDBItem(input: TaskProgressInput, username: string): TaskProgressItem {
@@ -72,4 +72,14 @@ export function dbItemsToQuestionAnswerItems(input: QuestionAnswerItem[]) : Ques
       }
       throw new Error("Type mismatch on question answer type")
    });
+}
+
+export function dbItemToTaskProgress(item: TaskProgressItem) : TaskProgress {
+   const taskProgress: TaskProgress = {
+      username: item.PK.replace("TASK_PROGRESS#", ""),
+      taskId: item.SK,
+      finishedRequirementIds: item.finishedRequirementIds
+   }
+
+   return taskProgress
 }
