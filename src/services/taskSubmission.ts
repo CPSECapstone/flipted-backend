@@ -79,9 +79,14 @@ async function getQuizProgressForTask(taskId: string, username: string): Promise
    throw new Error(`Task not found with id=${taskId}`);
 }
 
+async function submitTaskForGrading() {
+   return false
+}
+
 const taskSubmissionService = {
    submitQuestionAnswer,
    submitTaskProgress,
+   submitTaskForGrading,
    getTaskSubmission,
    getQuizProgressForTask,
    getTaskRubricProgress

@@ -97,14 +97,12 @@ async function submitTask(_: any, args: any, context: any, info: any) {
    const questionAnswers: QuestionAnswer[] = await taskSubmissionService.getQuizProgressForTask(taskId, username)
    const taskProgress: TaskProgress = await taskSubmissionService.getTaskRubricProgress(taskId, username);
 
-   const questionProgress = 
-
    // Verify that all rubric requirements are complete
-   if (taskBusLogic.isEligibleForSubmission(task, taskProgress, questionProgress)) {
+   if (taskBusLogic.isEligibleForSubmission(task, taskProgress, questionAnswers)) {
       // create task submission
       
-      taskSubmissionService.creat
-      return taskSubmissionService.submitTask(username, taskId);
+      
+      return taskSubmissionService.submitTaskForGrading();
    } else {
      throw new Error("Task is ineligible for submission. Not all requirements complete");
   }
