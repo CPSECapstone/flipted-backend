@@ -15,7 +15,7 @@ import { gradeMultipleChoiceQuestion } from "../services/questionHelper";
 import taskService from "../services/task";
 import taskBusLogic from "../services/taskBusLogic";
 import taskSubmissionService from "../services/taskSubmission";
-import { freeResponseAnswerInputToDBItem, multipleChoiceAnswerInputToDBItem, taskProgressInputToDBItem } from "../services/taskSubmissionHelper";
+import { areTaskProgressIdsValid, freeResponseAnswerInputToDBItem, multipleChoiceAnswerInputToDBItem, taskRubricRequirementsComplete, taskProgressInputToDBItem } from "../services/taskSubmissionHelper";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
@@ -78,7 +78,7 @@ async function submitTaskRubricProgress(_: any, args: any, context: any, info: a
 
    // verify that the list of completed requirement ids exist in the task
    const task: Task = await taskService.getTaskById(taskProgInput.taskId);
-   if (taskBusLogic.areTaskProgressIdsValid(task, taskProgInput)) {
+   if (areTaskProgressIdsValid(task, taskProgInput)) {
       const taskItem = taskProgressInputToDBItem(taskProgInput, tokenPayload.username);
       taskSubmissionService.submitTaskProgress(taskItem);
       return true;
@@ -98,7 +98,7 @@ async function submitTask(_: any, args: any, context: any, info: any) {
    const taskProgress: TaskProgress = await taskSubmissionService.getTaskRubricProgress(taskId, username);
 
    // Verify that all rubric requirements are complete
-   if (taskBusLogic.isEligibleForSubmission(task, taskProgress, questionAnswers)) {
+   if (taskRubricRequirementsComplete(task, taskProgress, questionAnswers)) {
       // create task submission
       
       
@@ -129,3 +129,4 @@ const resolvers = {
 };
 
 export default resolvers;
+

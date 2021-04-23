@@ -52,7 +52,7 @@ export interface FreeResponseAnswerItem extends QuestionAnswerItem {
 /***************** Internal Types ******************************/
 export interface QuestionAnswer {
    username: string
-   answerId: string
+   questionId: string
    taskId: string
    questionBlockId: string
 }

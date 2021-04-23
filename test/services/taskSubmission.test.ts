@@ -58,7 +58,7 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
       const expectedOutput: MultipleChoiceAnswer = {
          username: "Google_114560337406279161954",
          taskId: "c5110abd8c4",
-         answerId: "MC_QUESTION#a9bfcb78e7d",
+         questionId: "MC_QUESTION#a9bfcb78e7d",
          answerIndex: 2,
          questionBlockId: "123"
       }
@@ -79,7 +79,7 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
       const expectedOutput: FreeResponseAnswer = {
          username: "Google_114560337406279161954",
          taskId: "c5110abd8c4",
-         answerId: "MC_QUESTION#a9bfcb78e7d",
+         questionId: "MC_QUESTION#a9bfcb78e7d",
          answer: "Hello World!",
          questionBlockId: "123"
       }

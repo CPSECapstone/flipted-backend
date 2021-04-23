@@ -20,36 +20,6 @@ import {
 import {QuestionAnswer, TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
 
 /**
- *
- * @param task The task to be compared to
- * @param taskProgress The task progress to verify
- * @returns True if the task progress is valid, false if not
- * (such as containing taskBlock ids not associated with the task)
- */
-function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgressInput): boolean {
-   const ids: string[] = [];
-
-   // construct a list of requirement ids by extracting them from each block
-   for (var requirement of task.requirements) {
-      ids.push(requirement.id);
-   }
-
-   // check submission size is size of required task blocks or smaller
-   if (taskProgress.finishedRequirementIds.length > ids.length) {
-      return false;
-   }
-
-   // check that each id from submission is in the task
-   for (var id of taskProgress.finishedRequirementIds) {
-      if (!ids.includes(id)) {
-         return false;
-      }
-   }
-
-   return true;
-}
-
-/**
  * Modifies a teacher specified default task with any ongoing completion progress represented
  * in a TaskProgress object. Specifically, sets any RubricRequirement.isComplete to true if the
  * same id is contained within the completedBlockIds in TaskProgress.
@@ -170,25 +140,9 @@ export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
    return task;
 }
 
-/**
- * Ensures that that all rubric requirements contained in a task have been recorded in task progress.
- * 
- * @param task The task the submission is meant for
- * @param taskProgress The progress towards the task
- * @returns True if the task is ready to be submitted. False if the rubric requirements are not yet complete.
- */
-function isEligibleForSubmission(task: Task, taskProgress: TaskProgress, questionProgress: QuestionAnswer[]) {
-   return (
-      areTaskProgressIdsValid(task, taskProgress) &&
-      task.requirements.length == taskProgress.finishedRequirementIds.length
-   );
-}
-
 const taskBusLogic = {
-   areTaskProgressIdsValid,
    applyTaskProgress,
    convertTaskInputToTaskItem,
-   isEligibleForSubmission
 };
 
 export default taskBusLogic;

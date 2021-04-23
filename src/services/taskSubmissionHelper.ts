@@ -1,3 +1,5 @@
+import { QuizBlock } from "../interfaces/taskblock";
+import { Task } from "../interfaces/taskInterfaces";
 import { FreeResponseAnswer, FreeResponseAnswerInput, FreeResponseAnswerItem, MultipleChoiceAnswer, MultipleChoiceAnswerInput, MultipleChoiceAnswerItem, QuestionAnswer, QuestionAnswerItem, TaskProgress, TaskProgressInput, TaskProgressItem } from "../interfaces/taskSubmission";
 
 // convert input from request to a item object that will be inserted into db
@@ -40,7 +42,7 @@ export function freeResponseAnswerInputToDBItem(input: FreeResponseAnswerInput, 
 export function dbItemToMultipleChoiceAnswer(input: MultipleChoiceAnswerItem) : QuestionAnswer {
    const questionAnswer: MultipleChoiceAnswer = {
       username: input.PK.replace("USER#", ""),
-      answerId: input.SK,
+      questionId: input.SK,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
       answerIndex: input.answerIndex
@@ -52,7 +54,7 @@ export function dbItemToMultipleChoiceAnswer(input: MultipleChoiceAnswerItem) : 
 export function dbItemToFreeResponseAnswer(input: FreeResponseAnswerItem) : QuestionAnswer {
    const questionAnswer: FreeResponseAnswer = {
       username: input.PK.replace("USER#", ""),
-      answerId: input.SK,
+      questionId: input.SK,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
       answer: input.answer
@@ -83,3 +85,68 @@ export function dbItemToTaskProgress(item: TaskProgressItem) : TaskProgress {
 
    return taskProgress
 }
+
+export function taskRubricRequirementsComplete(task: Task, taskProgress: TaskProgress) {
+   return (
+      areTaskProgressIdsValid(task, taskProgress) &&
+      task.requirements.length == taskProgress.finishedRequirementIds.length
+   );
+}
+
+export function taskQuestionsAllAnswered(task: Task, questionProgress: QuestionAnswer[]) {
+   for (var page of task.pages) {
+      for (var block of page.blocks) {
+         if("questions" in block) {
+            for (var question of (<QuizBlock>block).questions) {
+               if (!answersContainQuestionId(question.id, questionProgress)) {
+                  return false
+               }
+            }
+         }
+      }
+   }
+   
+   return true 
+}
+
+function answersContainQuestionId(questionId: string, questionProgress: QuestionAnswer[]) : boolean {
+   for (var questionAnswer of questionProgress) {
+      if (questionId == questionAnswer.questionId) {
+         return true
+      }
+   }
+   return false 
+}
+
+
+
+/**
+ *
+ * @param task The task to be compared to
+ * @param taskProgress The task progress to verify
+ * @returns True if the task progress is valid, false if not
+ * (such as containing taskBlock ids not associated with the task)
+ */
+export function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgressInput): boolean {
+   const ids: string[] = [];
+
+   // construct a list of requirement ids by extracting them from each block
+   for (var requirement of task.requirements) {
+      ids.push(requirement.id);
+   }
+
+   // check submission size is size of required task blocks or smaller
+   if (taskProgress.finishedRequirementIds.length > ids.length) {
+      return false;
+   }
+
+   // check that each id from submission is in the task
+   for (var id of taskProgress.finishedRequirementIds) {
+      if (!ids.includes(id)) {
+         return false;
+      }
+   }
+
+   return true;
+}
+
