@@ -3,7 +3,7 @@ import { TABLE_NAME } from "../environment";
 import {
    FreeResponseAnswerItem,
    MultipleChoiceAnswerItem,
-   QuestionAnswer,
+   Answer,
    QuestionAnswerItem,
    TaskProgress,
    TaskProgressItem
@@ -57,7 +57,7 @@ async function getTaskRubricProgress(taskId: string, username: string): Promise<
    throw new Error(`Task not found with id=${taskId}`);
 }
 
-async function getQuizProgressForTask(taskId: string, username: string): Promise<QuestionAnswer[]> {
+async function getQuizProgressForTask(taskId: string, username: string): Promise<Answer[]> {
    const params: QueryParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       keyConditionExpression: "PK = :pkVal",

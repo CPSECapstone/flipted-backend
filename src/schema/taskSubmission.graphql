@@ -94,37 +94,40 @@ type TaskSubmissionResult {
 
    """
    Information on the student result 
-   for each question that was graded (either automatically or manually)
+   for each question as well as the question itself 
    """
-   gradedAnswers: [GradedAnswer!] 
+   questionAndAnswers: [QuestionAndAnswer!] 
 
    teacherComment: String
+}
+
+interface Answer {
+   pointsAwarded: Int!
+}
+
+type MultipleChoiceAnswer implements Answer {
+   pointsAwarded: Int!
+   answerId: Int!
+}
+
+type FreeResponseAnswer implements Answer {
+   pointsAwarded: Int!
+   answer: String!
 }
 
 """
 An answer to a question that has been graded either automatically or by the teacher
 """
-type GradedAnswer {
+type QuestionAndAnswer {
    """
-   The question that was graded
+   The question, including its contents and point
    """
    question: Question! 
    
    """
-   The choice the student picked for this question. Will either be the index
-   or the free response. 
+   The students answer to the question, including how many points were awarded. 
    """
-   chosenAnswer: String!
-
-   """
-   The number of possible points the teacher assigned to this question
-   """
-   pointsPossible: Int!
-
-   """
-   The number of points awarded either manually or automatically to this question
-   """
-   pointsAwarded: Int!
+   questionAnswer: Answer
 }
 
 type Query {

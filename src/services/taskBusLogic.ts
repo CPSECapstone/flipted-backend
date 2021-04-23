@@ -17,7 +17,7 @@ import {
    TextBlock,
    VideoBlock
 } from "../interfaces/taskblock";
-import {QuestionAnswer, TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
+import {Answer, TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
 
 /**
  * Modifies a teacher specified default task with any ongoing completion progress represented

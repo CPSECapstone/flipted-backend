@@ -40,6 +40,7 @@ export interface QuestionAnswerItem {
    SK: string
    taskId: string
    questionBlockId: string
+   pointsAwarded: number
 }
 
 export interface MultipleChoiceAnswerItem extends QuestionAnswerItem {
@@ -51,33 +52,33 @@ export interface FreeResponseAnswerItem extends QuestionAnswerItem {
 }
 
 /***************** Internal Types ******************************/
-export interface QuestionAnswer {
+export interface Answer {
    username: string
    questionId: string
    taskId: string
    questionBlockId: string
+   pointsAwarded: number
 }
 
-export interface MultipleChoiceAnswer extends QuestionAnswer {
+export interface MultipleChoiceAnswer extends Answer {
    answerIndex: number
 }
 
-export interface FreeResponseAnswer extends QuestionAnswer {
+export interface FreeResponseAnswer extends Answer {
    answer: string
 }
 
 /** Mirrors GraphQL return type */
 export interface TaskSubmissionResult {
    graded: boolean
+   taskId: string
    pointsAwarded: number
    pointsPossible: number
    teacherComment?: string
-   gradedAnswers: GradedAnswer[]
+   questionAndAnswers?: QuestionAndAnswer[]
 }
 
-export interface GradedAnswer {
+export interface QuestionAndAnswer {
    question: Question
-   chosenAnswer: string
-   pointsAwarded: number
-   pointsPossible: number
+   answer: Answer
 }

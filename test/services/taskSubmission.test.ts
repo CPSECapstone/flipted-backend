@@ -52,7 +52,8 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
          PK: "USER#Google_114560337406279161954",
          SK: "MC_QUESTION#a9bfcb78e7d",
          taskId: "c5110abd8c4",
-         questionBlockId: "123"
+         questionBlockId: "123",
+         pointsAwarded: 3
        }
 
       const expectedOutput: MultipleChoiceAnswer = {
@@ -60,7 +61,8 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
          taskId: "c5110abd8c4",
          questionId: "MC_QUESTION#a9bfcb78e7d",
          answerIndex: 2,
-         questionBlockId: "123"
+         questionBlockId: "123",
+         pointsAwarded: 3
       }
 
       expect(dbItemToMultipleChoiceAnswer(input)).toEqual(expectedOutput);
@@ -73,7 +75,8 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
          PK: "USER#Google_114560337406279161954",
          SK: "MC_QUESTION#a9bfcb78e7d",
          taskId: "c5110abd8c4",
-         questionBlockId: "123"
+         questionBlockId: "123",
+         pointsAwarded: 0
        }
 
       const expectedOutput: FreeResponseAnswer = {
@@ -81,7 +84,8 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
          taskId: "c5110abd8c4",
          questionId: "MC_QUESTION#a9bfcb78e7d",
          answer: "Hello World!",
-         questionBlockId: "123"
+         questionBlockId: "123",
+         pointsAwarded: 0
       }
 
       expect(dbItemToFreeResponseAnswer(input)).toEqual(expectedOutput);
@@ -105,10 +109,11 @@ describe("converting a QuestionAnswerInput to a QuestionAnswerItem", () => {
          SK: "ABC",
          taskId: "TASK_ID#12345",
          questionBlockId: "123",
-         answerIndex: 2
+         answerIndex: 2,
+         pointsAwarded: 3
       }
 
-      expect(multipleChoiceAnswerInputToDBItem(input, username)).toEqual(expectedOutput);
+      expect(multipleChoiceAnswerInputToDBItem(input, username, 3)).toEqual(expectedOutput);
    });
 
    it("will convert a FreeResponseAnswerInput as expected without errors", async () => {
@@ -127,9 +132,17 @@ describe("converting a QuestionAnswerInput to a QuestionAnswerItem", () => {
          SK: "ABC",
          taskId: "TASK_ID#12345",
          questionBlockId: "123",
-         answer: "Hello, world!"
+         answer: "Hello, world!",
+         pointsAwarded: 0
       }
 
       expect(freeResponseAnswerInputToDBItem(input, username)).toEqual(expectedOutput);
+   });
+});
+
+describe("Creating a task submission result", () => {
+   it("will use information on the task, questions, and question answers to make a task submission", async () => {
+      
+      expect(false).toBeTruthy()
    });
 });

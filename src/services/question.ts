@@ -37,7 +37,7 @@ async function addMCQuestion(question: MCQuestionInput) {
    return addQuestion(dbItem);
 }
 
-async function getById(questionId: string, prefix: string, withAnswer: boolean = false) {
+async function getById(questionId: string, prefix: string, withAnswer: boolean = false) : Promise<Question> {
    const params: GetParams = {
       tableName: QUESTIONS_TABLE,
       key: prefix + questionId

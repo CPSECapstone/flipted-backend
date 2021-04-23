@@ -1,12 +1,13 @@
-import { FRQuestion, MCQuestion } from "../interfaces/question";
+import { FRQuestion, MCQuestion, Question } from "../interfaces/question";
 import {
    FreeResponseAnswerInput,
    MultipleChoiceAnswerInput,
-   QuestionAnswer,
+   Answer,
    QuestionAnswerItem,
    TaskProgress,
    TaskProgressInput,
-   TaskProgressItem
+   TaskProgressItem,
+   TaskSubmissionResult
 } from "../interfaces/taskSubmission";
 import { Task } from "../interfaces/taskInterfaces";
 import { validateToken } from "../jws-verifer";
@@ -21,7 +22,8 @@ import {
    multipleChoiceAnswerInputToDBItem,
    taskRubricRequirementsComplete,
    taskProgressInputToDBItem,
-   taskQuestionsAllAnswered
+   taskQuestionsAllAnswered,
+   createTaskSubmissionResult
 } from "../services/taskSubmissionHelper";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: any) {
@@ -34,7 +36,9 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    // TODO: Assert given task id exists
 
    // get the question as defined by the database
-   const question: MCQuestion = <MCQuestion>await questionService.getById(mcAnswerInput.questionId, "MC_QUESTION#");
+   const question: MCQuestion = <MCQuestion>(
+      await questionService.getById(mcAnswerInput.questionId, "")
+   );
 
    if (!question.id) {
       throw new Error("Could not find question with id: " + mcAnswerInput.questionId);
@@ -45,7 +49,7 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
 
    // store the grade for that quiz block and associate with the user
    taskSubmissionService.submitQuestionAnswer(
-      multipleChoiceAnswerInputToDBItem(mcAnswerInput, tokenPayload.username)
+      multipleChoiceAnswerInputToDBItem(mcAnswerInput, tokenPayload.username, pointsAwarded)
    );
 
    return true;
@@ -62,7 +66,7 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
 
    // get the question as defined by the database
    const question: FRQuestion = <FRQuestion>(
-      (<unknown>await questionService.getById(frAnswerInput.questionId, "FR_QUESTION#"))
+      await questionService.getById(frAnswerInput.questionId, "")
    );
 
    if (!question.id) {
@@ -98,14 +102,13 @@ async function submitTask(_: any, args: any, context: any, info: any) {
    const taskId: string = args.taskId;
    const task: Task = await taskService.getTaskById(taskId);
 
-   // This should fail if no task progress has been recorded
-   const questionAnswers: QuestionAnswer[] = await taskSubmissionService.getQuizProgressForTask(
+   // Get all submitted answers to the questions in this task by the user from the db
+   const questionAnswers: Answer[] = await taskSubmissionService.getQuizProgressForTask(
       taskId,
       username
    );
 
-   console.log(questionAnswers)
-
+   // Get the rubric progress of the student fromt the db
    const taskProgress: TaskProgress = await taskSubmissionService.getTaskRubricProgress(
       taskId,
       username
@@ -115,12 +118,28 @@ async function submitTask(_: any, args: any, context: any, info: any) {
       throw new Error("Task is ineligible for submission. Not all rubric requirements checked.");
    }
 
-   if(!taskQuestionsAllAnswered(task, questionAnswers)) {
+   if (!taskQuestionsAllAnswered(task, questionAnswers)) {
       throw new Error("Task is ineligible for submission. Not all quiz questions answered.");
    }
 
+   // Get all questions associated with the task (at this point, all questions were answered)
+   const questions: Question[] = await questionService.listByIds(
+      questionAnswers.map(qa => {
+         return qa.questionId;
+      }),
+      true
+   );
+   
+   console.log(questions)
+   console.log(questionAnswers)
+   // use the task, all questions, and all question answers to construct TaskSubmissionResult
+   const taskSubmissionResult: TaskSubmissionResult = createTaskSubmissionResult(task.points, task.id, questionAnswers, questions)
 
-   taskSubmissionService.submitTaskForGrading()
+   // save the constructed submission to the database for grading and retrieval
+   taskSubmissionService.submitTaskForGrading();
+
+   // return to user 
+   return taskSubmissionResult
 }
 
 async function retrieveTaskSubmission(_: any, args: any, context: any, info: any) {
@@ -131,7 +150,20 @@ async function retrieveTaskSubmission(_: any, args: any, context: any, info: any
    return taskSubmission;
 }
 
+async function resolveAnswerType(answer: any, context: any, info: any) {
+   if (answer.answerIndex) {
+      return "MultipleChoiceAnswer";
+   }
+   if (answer.answer) {
+      return "FreeResponseAnswer";
+   }
+   return null;
+}
+
 const resolvers = {
+   Answer: {
+      __resolveType: resolveAnswerType
+   },
    Query: {
       retrieveTaskSubmission: retrieveTaskSubmission
    },

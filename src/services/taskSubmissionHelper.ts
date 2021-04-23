@@ -1,10 +1,27 @@
+import { Question } from "../interfaces/question";
 import { QuizBlock } from "../interfaces/taskblock";
 import { Task } from "../interfaces/taskInterfaces";
-import { FreeResponseAnswer, FreeResponseAnswerInput, FreeResponseAnswerItem, MultipleChoiceAnswer, MultipleChoiceAnswerInput, MultipleChoiceAnswerItem, QuestionAnswer, QuestionAnswerItem, TaskProgress, TaskProgressInput, TaskProgressItem } from "../interfaces/taskSubmission";
+import {
+   FreeResponseAnswer,
+   FreeResponseAnswerInput,
+   FreeResponseAnswerItem,
+   QuestionAndAnswer,
+   MultipleChoiceAnswer,
+   MultipleChoiceAnswerInput,
+   MultipleChoiceAnswerItem,
+   Answer,
+   QuestionAnswerItem,
+   TaskProgress,
+   TaskProgressInput,
+   TaskProgressItem,
+   TaskSubmissionResult
+} from "../interfaces/taskSubmission";
 
 // convert input from request to a item object that will be inserted into db
-export function taskProgressInputToDBItem(input: TaskProgressInput, username: string): TaskProgressItem {
-
+export function taskProgressInputToDBItem(
+   input: TaskProgressInput,
+   username: string
+): TaskProgressItem {
    const taskProgressItem: TaskProgressItem = {
       PK: `TASK_PROGRESS#${username}`,
       SK: input.taskId,
@@ -15,75 +32,85 @@ export function taskProgressInputToDBItem(input: TaskProgressInput, username: st
    return taskProgressItem;
 }
 
-export function multipleChoiceAnswerInputToDBItem(input: MultipleChoiceAnswerInput, username: string) : MultipleChoiceAnswerItem {
+export function multipleChoiceAnswerInputToDBItem(
+   input: MultipleChoiceAnswerInput,
+   username: string, pointsAwarded: number
+): MultipleChoiceAnswerItem {
    const multipleChoiceAnswerItem: MultipleChoiceAnswerItem = {
       PK: `USER#${username}`,
       SK: input.questionId,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
-      answerIndex: input.answerId
-   }
+      answerIndex: input.answerId,
+      pointsAwarded: pointsAwarded
+   };
 
-   return multipleChoiceAnswerItem
+   return multipleChoiceAnswerItem;
 }
 
-export function freeResponseAnswerInputToDBItem(input: FreeResponseAnswerInput, username: string) : FreeResponseAnswerItem {
+export function freeResponseAnswerInputToDBItem(
+   input: FreeResponseAnswerInput,
+   username: string
+): FreeResponseAnswerItem {
    const freeResponseAnswerItem: FreeResponseAnswerItem = {
       PK: `USER#${username}`,
       SK: input.questionId,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
-      answer: input.answer
-   }
+      answer: input.answer,
+      pointsAwarded: 0 // not yet graded
+   };
 
-   return freeResponseAnswerItem
+   return freeResponseAnswerItem;
 }
 
-export function dbItemToMultipleChoiceAnswer(input: MultipleChoiceAnswerItem) : QuestionAnswer {
+export function dbItemToMultipleChoiceAnswer(input: MultipleChoiceAnswerItem): Answer {
    const questionAnswer: MultipleChoiceAnswer = {
       username: input.PK.replace("USER#", ""),
       questionId: input.SK,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
-      answerIndex: input.answerIndex
-   }
+      answerIndex: input.answerIndex,
+      pointsAwarded: input.pointsAwarded
+   };
 
-   return questionAnswer
+   return questionAnswer;
 }
 
-export function dbItemToFreeResponseAnswer(input: FreeResponseAnswerItem) : QuestionAnswer {
+export function dbItemToFreeResponseAnswer(input: FreeResponseAnswerItem): Answer {
    const questionAnswer: FreeResponseAnswer = {
       username: input.PK.replace("USER#", ""),
       questionId: input.SK,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
-      answer: input.answer
-   }
+      answer: input.answer,
+      pointsAwarded: input.pointsAwarded
+   };
 
-   return questionAnswer
+   return questionAnswer;
 }
 
-export function dbItemsToQuestionAnswerItems(input: QuestionAnswerItem[]) : QuestionAnswer[] {
+export function dbItemsToQuestionAnswerItems(input: QuestionAnswerItem[]): Answer[] {
    return input.map(element => {
       if ("answerIndex" in element) {
-         return dbItemToMultipleChoiceAnswer(element)
+         return dbItemToMultipleChoiceAnswer(element);
       }
 
       if ("answer" in element) {
-         return dbItemToFreeResponseAnswer(element)
+         return dbItemToFreeResponseAnswer(element);
       }
-      throw new Error("Type mismatch on question answer type")
+      throw new Error("Type mismatch on question answer type");
    });
 }
 
-export function dbItemToTaskProgress(item: TaskProgressItem) : TaskProgress {
+export function dbItemToTaskProgress(item: TaskProgressItem): TaskProgress {
    const taskProgress: TaskProgress = {
       username: item.PK.replace("TASK_PROGRESS#", ""),
       taskId: item.SK,
       finishedRequirementIds: item.finishedRequirementIds
-   }
+   };
 
-   return taskProgress
+   return taskProgress;
 }
 
 export function taskRubricRequirementsComplete(task: Task, taskProgress: TaskProgress) {
@@ -93,32 +120,30 @@ export function taskRubricRequirementsComplete(task: Task, taskProgress: TaskPro
    );
 }
 
-export function taskQuestionsAllAnswered(task: Task, questionProgress: QuestionAnswer[]) {
+export function taskQuestionsAllAnswered(task: Task, questionProgress: Answer[]) {
    for (var page of task.pages) {
       for (var block of page.blocks) {
-         if("questions" in block) {
+         if ("questions" in block) {
             for (var question of (<QuizBlock>block).questions) {
                if (!answersContainQuestionId(question.id, questionProgress)) {
-                  return false
+                  return false;
                }
             }
          }
       }
    }
-   
-   return true 
+
+   return true;
 }
 
-function answersContainQuestionId(questionId: string, questionProgress: QuestionAnswer[]) : boolean {
+function answersContainQuestionId(questionId: string, questionProgress: Answer[]): boolean {
    for (var questionAnswer of questionProgress) {
       if (questionId == questionAnswer.questionId) {
-         return true
+         return true;
       }
    }
-   return false 
+   return false;
 }
-
-
 
 /**
  *
@@ -149,4 +174,46 @@ export function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgressIn
 
    return true;
 }
+//TODO: Everything below needs a test
+export function createTaskSubmissionResult(
+   taskPointValue: number,
+   taskId: string,
+   questionAnswers: Answer[],
+   questions: Question[]
+): TaskSubmissionResult {
+   const submissionResult: TaskSubmissionResult = {
+      graded: false, // TODO "auto graded" setting in task should modify this
+      pointsAwarded: questionAnswers.reduce((a, b) => a + b.pointsAwarded, 0),
+      pointsPossible: taskPointValue,
+      taskId: taskId,
+      questionAndAnswers: associateQuestionWithAnswers(questions, questionAnswers)
+   }
 
+   return submissionResult
+}
+
+function associateQuestionWithAnswers(questions: Question[], questionAnswers: Answer[]) : QuestionAndAnswer[] {
+   const gradedAnswer: QuestionAndAnswer[] = []
+   
+   for (var answer of questionAnswers) {
+      gradedAnswer.push(createQuestionAnswerUnion(answer, questions))
+   }
+
+   return gradedAnswer
+}
+
+/** Need a function to find the associated question with an answer since mapping can't be garunteed */
+function createQuestionAnswerUnion(answer: Answer, questions: Question[]) : QuestionAndAnswer {
+  for (var question of questions) {
+     if (answer.questionId.includes(question.id)) {
+        const out: QuestionAndAnswer = {
+           question: question,
+           answer: answer
+        }
+
+        return out
+     }
+  }
+
+  throw new Error("Question associated with answer not found")
+}
