@@ -61,7 +61,7 @@ export interface Answer {
 }
 
 export interface MultipleChoiceAnswer extends Answer {
-   answerIndex: number
+   answerId: number
 }
 
 export interface FreeResponseAnswer extends Answer {
@@ -80,5 +80,10 @@ export interface TaskSubmissionResult {
 
 export interface QuestionAndAnswer {
    question: Question
-   answer: Answer
+   answer: AnswerOut
+}
+
+export interface AnswerOut {
+   pointsAwarded: number
+   answer: string
 }

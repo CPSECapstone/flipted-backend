@@ -150,20 +150,7 @@ async function retrieveTaskSubmission(_: any, args: any, context: any, info: any
    return taskSubmission;
 }
 
-async function resolveAnswerType(answer: any, context: any, info: any) {
-   if (answer.answerIndex) {
-      return "MultipleChoiceAnswer";
-   }
-   if (answer.answer) {
-      return "FreeResponseAnswer";
-   }
-   return null;
-}
-
 const resolvers = {
-   Answer: {
-      __resolveType: resolveAnswerType
-   },
    Query: {
       retrieveTaskSubmission: retrieveTaskSubmission
    },

@@ -60,7 +60,7 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
          username: "Google_114560337406279161954",
          taskId: "c5110abd8c4",
          questionId: "MC_QUESTION#a9bfcb78e7d",
-         answerIndex: 2,
+         answerId: 2,
          questionBlockId: "123",
          pointsAwarded: 3
       }

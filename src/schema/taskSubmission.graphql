@@ -101,18 +101,9 @@ type TaskSubmissionResult {
    teacherComment: String
 }
 
-interface Answer {
+type Answer {
    pointsAwarded: Int!
-}
-
-type MultipleChoiceAnswer implements Answer {
-   pointsAwarded: Int!
-   answerId: Int!
-}
-
-type FreeResponseAnswer implements Answer {
-   pointsAwarded: Int!
-   answer: String!
+   answer: String
 }
 
 """
@@ -127,7 +118,7 @@ type QuestionAndAnswer {
    """
    The students answer to the question, including how many points were awarded. 
    """
-   questionAnswer: Answer
+   answer: Answer
 }
 
 type Query {

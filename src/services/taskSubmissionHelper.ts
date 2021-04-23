@@ -70,7 +70,7 @@ export function dbItemToMultipleChoiceAnswer(input: MultipleChoiceAnswerItem): A
       questionId: input.SK,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
-      answerIndex: input.answerIndex,
+      answerId: input.answerIndex,
       pointsAwarded: input.pointsAwarded
    };
 
@@ -138,7 +138,7 @@ export function taskQuestionsAllAnswered(task: Task, questionProgress: Answer[])
 
 function answersContainQuestionId(questionId: string, questionProgress: Answer[]): boolean {
    for (var questionAnswer of questionProgress) {
-      if (questionId == questionAnswer.questionId) {
+      if (questionAnswer.questionId.includes(questionId)) {
          return true;
       }
    }
@@ -205,10 +205,25 @@ function associateQuestionWithAnswers(questions: Question[], questionAnswers: An
 /** Need a function to find the associated question with an answer since mapping can't be garunteed */
 function createQuestionAnswerUnion(answer: Answer, questions: Question[]) : QuestionAndAnswer {
   for (var question of questions) {
+
+    //TODO: this is terrible
+     var answerOut
+     if("answer" in <any>answer) {
+        answerOut = {
+           answer: (<any>answer).answer,
+           pointsAwarded: answer.pointsAwarded
+        }
+     }
+     else {
+      answerOut = {
+         answer: <string>(<any>answer).answerId,
+         pointsAwarded: answer.pointsAwarded
+      }
+   }
      if (answer.questionId.includes(question.id)) {
         const out: QuestionAndAnswer = {
            question: question,
-           answer: answer
+           answer: answerOut
         }
 
         return out
