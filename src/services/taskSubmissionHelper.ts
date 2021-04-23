@@ -21,7 +21,7 @@ export function multipleChoiceAnswerInputToDBItem(input: MultipleChoiceAnswerInp
       SK: input.questionId,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
-      answerIndex: input.answerIndex
+      answerIndex: input.answerId
    }
 
    return multipleChoiceAnswerItem

@@ -95,7 +95,7 @@ describe("converting a QuestionAnswerInput to a QuestionAnswerItem", () => {
          taskId: "TASK_ID#12345",
          questionBlockId: "123",
          questionId: "ABC",
-         answerIndex: 2
+         answerId: 2
       }
 
       const username = "fliptedEdRoXX"

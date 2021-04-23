@@ -1,4 +1,5 @@
 import { CompositeDBItem } from "../services/dynamodb";
+import { Question } from "./question";
 
 /***************** Input from Client *****************************/
 export interface QuestionAnswerInput {
@@ -8,7 +9,7 @@ export interface QuestionAnswerInput {
 }
 
 export interface MultipleChoiceAnswerInput extends QuestionAnswerInput {
-   answerIndex: number
+   answerId: number
 }
 
 export interface FreeResponseAnswerInput extends QuestionAnswerInput {
@@ -63,4 +64,20 @@ export interface MultipleChoiceAnswer extends QuestionAnswer {
 
 export interface FreeResponseAnswer extends QuestionAnswer {
    answer: string
+}
+
+/** Mirrors GraphQL return type */
+export interface TaskSubmissionResult {
+   graded: boolean
+   pointsAwarded: number
+   pointsPossible: number
+   teacherComment?: string
+   gradedAnswers: GradedAnswer[]
+}
+
+export interface GradedAnswer {
+   question: Question
+   chosenAnswer: string
+   pointsAwarded: number
+   pointsPossible: number
 }

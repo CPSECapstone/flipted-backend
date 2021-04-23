@@ -41,7 +41,7 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    }
 
    // grade the question against the students answer
-   const pointsAwarded: number = gradeMultipleChoiceQuestion(question, mcAnswerInput.answerIndex);
+   const pointsAwarded: number = gradeMultipleChoiceQuestion(question, mcAnswerInput.answerId);
 
    // store the grade for that quiz block and associate with the user
    taskSubmissionService.submitQuestionAnswer(

@@ -17,9 +17,9 @@ input MultipleChoiceAnswerInput {
    questionId: String!
    
    """
-   The index of the question option chosen by the student
+   The id of the question option chosen by the student
    """
-   answerIndex: Int! 
+   answerId: Int! 
 }
 
 """
@@ -88,13 +88,17 @@ type TaskSubmissionResult {
    May be different before and after graded is set based on a combination of
    automatic scoring and teacher grading
    """
-   awardedPoints: Int
+   pointsAwarded: Int
+
+   pointsPossible: Int
 
    """
    Information on the student result 
    for each question that was graded (either automatically or manually)
    """
    gradedAnswers: [GradedAnswer!] 
+
+   teacherComment: String
 }
 
 """
