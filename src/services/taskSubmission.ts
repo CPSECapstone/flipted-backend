@@ -63,7 +63,7 @@ async function getQuizProgressForTask(taskId: string, username: string): Promise
       keyConditionExpression: "PK = :pkVal",
       filterExpression: "taskId = :taskId",
       expressionAttributeValues: {
-         ":pkVal": `USER#${username}`,
+         ":pkVal": `QUESTION_ANSWER#${username}`,
          ":taskId": taskId
       }
    };

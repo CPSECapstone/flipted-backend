@@ -38,7 +38,7 @@ export function multipleChoiceAnswerInputToDBItem(
    username: string, pointsAwarded: number
 ): MultipleChoiceAnswerItem {
    const multipleChoiceAnswerItem: MultipleChoiceAnswerItem = {
-      PK: `USER#${username}`,
+      PK: `QUESTION_ANSWER#${username}`,
       SK: input.questionId,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
@@ -54,7 +54,7 @@ export function freeResponseAnswerInputToDBItem(
    username: string
 ): FreeResponseAnswerItem {
    const freeResponseAnswerItem: FreeResponseAnswerItem = {
-      PK: `USER#${username}`,
+      PK: `QUESTION_ANSWER#${username}`,
       SK: input.questionId,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
@@ -67,7 +67,7 @@ export function freeResponseAnswerInputToDBItem(
 
 export function dbItemToMultipleChoiceAnswer(input: MultipleChoiceAnswerItem): Answer {
    const questionAnswer: MultipleChoiceAnswer = {
-      username: input.PK.replace("USER#", ""),
+      username: input.PK.replace("QUESTION_ANSWER#", ""),
       questionId: input.SK,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
@@ -80,7 +80,7 @@ export function dbItemToMultipleChoiceAnswer(input: MultipleChoiceAnswerItem): A
 
 export function dbItemToFreeResponseAnswer(input: FreeResponseAnswerItem): Answer {
    const questionAnswer: FreeResponseAnswer = {
-      username: input.PK.replace("USER#", ""),
+      username: input.PK.replace("QUESTION_ANSWER#", ""),
       questionId: input.SK,
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,

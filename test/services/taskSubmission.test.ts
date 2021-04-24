@@ -66,7 +66,7 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
    it("will do so as expected for multiple choice without errors", async () => {
       const input: MultipleChoiceAnswerItem = {
          answerIndex: 2,
-         PK: "USER#Google_114560337406279161954",
+         PK: "QUESTION_ANSWER#Google_114560337406279161954",
          SK: "MC_QUESTION#a9bfcb78e7d",
          taskId: "c5110abd8c4",
          questionBlockId: "123",
@@ -88,8 +88,8 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
    it("will do so as expected for free response without errors", async () => {
       const input: FreeResponseAnswerItem = {
          answer: "Hello World!",
-         PK: "USER#Google_114560337406279161954",
-         SK: "MC_QUESTION#a9bfcb78e7d",
+         PK: "QUESTION_ANSWER#Google_114560337406279161954",
+         SK: "FR_QUESTION#a9bfcb78e7d",
          taskId: "c5110abd8c4",
          questionBlockId: "123",
          pointsAwarded: 0
@@ -98,7 +98,7 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
       const expectedOutput: FreeResponseAnswer = {
          username: "Google_114560337406279161954",
          taskId: "c5110abd8c4",
-         questionId: "MC_QUESTION#a9bfcb78e7d",
+         questionId: "FR_QUESTION#a9bfcb78e7d",
          answer: "Hello World!",
          questionBlockId: "123",
          pointsAwarded: 0
@@ -120,7 +120,7 @@ describe("converting a QuestionAnswerInput to a QuestionAnswerItem", () => {
       const username = "fliptedEdRoXX";
 
       const expectedOutput: MultipleChoiceAnswerItem = {
-         PK: "USER#" + username,
+         PK: "QUESTION_ANSWER#" + username,
          SK: "ABC",
          taskId: "TASK_ID#12345",
          questionBlockId: "123",
@@ -142,7 +142,7 @@ describe("converting a QuestionAnswerInput to a QuestionAnswerItem", () => {
       const username = "fliptedEdRoXX";
 
       const expectedOutput: FreeResponseAnswerItem = {
-         PK: "USER#" + username,
+         PK: "QUESTION_ANSWER#" + username,
          SK: "ABC",
          taskId: "TASK_ID#12345",
          questionBlockId: "123",
