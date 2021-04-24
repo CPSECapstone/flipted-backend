@@ -34,11 +34,7 @@ async function submitQuestionAnswer(answer: QuestionAnswerItem) {
 }
 
 async function getTaskSubmission(username: string, taskId: string) {
-   const params: PutCompositeParams = {
-      tableName: TASK_SUBMISSIONS_TABLE,
-      item: {}
-   };
-   return dynamodb.putComposite(params);
+  return new Error("Not yet implemented. Please call submit task for now or bug Destin on slack.")
 }
 
 async function getTaskRubricProgress(taskId: string, username: string): Promise<TaskProgress> {
