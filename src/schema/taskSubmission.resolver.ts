@@ -129,9 +129,7 @@ async function submitTask(_: any, args: any, context: any, info: any) {
       }),
       true
    );
-   
-   console.log(questions)
-   console.log(questionAnswers)
+
    // use the task, all questions, and all question answers to construct TaskSubmissionResult
    const taskSubmissionResult: TaskSubmissionResult = createTaskSubmissionResult(task.points, task.id, questionAnswers, questions)
 
