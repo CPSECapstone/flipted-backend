@@ -11,7 +11,8 @@ import {
    TaskProgress,
    TaskProgressInput,
    TaskProgressItem,
-   TaskSubmissionResult
+   TaskSubmissionResult,
+   TaskSubmissionResultItem
 } from "../../src/interfaces/taskSubmission";
 import {
    createTaskSubmissionResult,
@@ -20,8 +21,77 @@ import {
    dbItemToTaskProgress,
    freeResponseAnswerInputToDBItem,
    multipleChoiceAnswerInputToDBItem,
-   taskProgressInputToDBItem
+   taskProgressInputToDBItem,
+   taskSubResultToDBItem
 } from "../../src/services/taskSubmissionHelper";
+
+const mockMCAnswer: MultipleChoiceAnswer = {
+   username: "user",
+   questionId: "MC_QUESTION#456",
+   taskId: "abc",
+   questionBlockId: "xyz",
+   pointsAwarded: 2,
+   answerId: 3
+};
+
+const mockFRAnswer: FreeResponseAnswer = {
+   username: "user",
+   questionId: "FR_QUESTION#123",
+   taskId: "abc",
+   questionBlockId: "xyz",
+   pointsAwarded: 3,
+   answer: "I like BUBBLES!"
+};
+
+const mockFRQuestion: FRQuestion = {
+   id: "FR_QUESTION#123",
+   description: "",
+   points: 4,
+   answer: "hello!"
+};
+
+const mockMCQuestion: MCQuestion = {
+   id: "MC_QUESTION#456",
+   description: "",
+   points: 2,
+   answers: [],
+   options: []
+};
+
+// expected output
+const mockQuestionAndAnswers: QuestionAndAnswer[] = [
+   {
+      question: JSON.parse(JSON.stringify(mockMCQuestion)),
+      answer: { pointsAwarded: 2, answer: "3" }
+   },
+   {
+      question: JSON.parse(JSON.stringify(mockFRQuestion)),
+      answer: { pointsAwarded: 3, answer: "I like BUBBLES!" }
+   }
+];
+const mockTaskSubmissionResult: TaskSubmissionResult = {
+   graded: false,
+   taskId: "TASK#123",
+   pointsAwarded: 5,
+   pointsPossible: 6,
+   questionAndAnswers: mockQuestionAndAnswers,
+};
+
+describe("converting a TaskSubmission to a db item", () => {
+   it("will do so as expected without errors", async () => {
+      const username = "BUBBLES!"
+
+      const expectedOutput: TaskSubmissionResultItem = {
+         PK: "TASK_SUBMISSION#BUBBLES!",
+         SK: "TASK#123", 
+         graded: false,
+         pointsAwarded: 5,
+         pointsPossible: 6,
+         questionAndAnswers: JSON.parse(JSON.stringify(mockQuestionAndAnswers))
+      }
+      expect(taskSubResultToDBItem(mockTaskSubmissionResult, username)).toEqual(expectedOutput);
+   });
+});
 
 describe("converting a TaskProgressInput to a TaskProgressItem", () => {
    it("will do so as expected without errors", async () => {
@@ -156,62 +226,9 @@ describe("converting a QuestionAnswerInput to a QuestionAnswerItem", () => {
 
 describe("Creating a task submission result", () => {
    it("will use information on the task, questions, and question answers to make a task submission", async () => {
-      
-      // inputs
-      const mcAnswer: MultipleChoiceAnswer = {
-         username: "user",
-         questionId: "MC_QUESTION#456",
-         taskId: "abc",
-         questionBlockId: "xyz",
-         pointsAwarded: 2,
-         answerId: 3
-      };
+      const questions: Question[] = [mockFRQuestion, mockMCQuestion];
+      const answers: Answer[] = [mockMCAnswer, mockFRAnswer];
 
-      const frAnswer: FreeResponseAnswer = {
-         username: "user",
-         questionId: "FR_QUESTION#123",
-         taskId: "abc",
-         questionBlockId: "xyz",
-         pointsAwarded: 3,
-         answer: "I like BUBBLES!"
-      };
-
-      const frQ: FRQuestion = {
-         id: "FR_QUESTION#123",
-         description: "",
-         points: 4,
-         answer: "hello!"
-      };
-
-      const mcQ: MCQuestion = {
-         id: "MC_QUESTION#456",
-         description: "",
-         points: 2,
-         answers: [],
-         options: []
-      };
-      const questions: Question[] = [frQ, mcQ];
-
-      const answers: Answer[] = [mcAnswer, frAnswer];
-
-      // expected output
-      const expectedQuestionAndAnswers: QuestionAndAnswer[] = [
-         {
-            question: JSON.parse(JSON.stringify(mcQ)),
-            answer: { pointsAwarded: 2, answer: "3" }
-         },
-         {
-            question: JSON.parse(JSON.stringify(frQ)),
-            answer: {pointsAwarded: 3, answer: "I like BUBBLES!"}
-         }
-      ];
-      const expectedOutput: TaskSubmissionResult = {
-         graded: false,
-         taskId: "TASK#123",
-         pointsAwarded: 5,
-         pointsPossible: 6,
-         questionAndAnswers: expectedQuestionAndAnswers
-      };
-      expect(createTaskSubmissionResult(6, "TASK#123", answers, questions)).toEqual(expectedOutput)
+      expect(createTaskSubmissionResult(6, "TASK#123", answers, questions)).toEqual(mockTaskSubmissionResult);
    });
 });

@@ -134,7 +134,7 @@ async function submitTask(_: any, args: any, context: any, info: any) {
    const taskSubmissionResult: TaskSubmissionResult = createTaskSubmissionResult(task.points, task.id, questionAnswers, questions)
 
    // save the constructed submission to the database for grading and retrieval
-   taskSubmissionService.submitTaskForGrading();
+   taskSubmissionService.submitTaskForGrading(taskSubmissionResult, username);
 
    // return to user 
    return taskSubmissionResult

@@ -51,6 +51,16 @@ export interface FreeResponseAnswerItem extends QuestionAnswerItem {
    answer: string
 }
 
+export interface TaskSubmissionResultItem {
+   PK: string // #TASK_SUBMISSION + username
+   SK: string // task id
+   graded: boolean
+   pointsAwarded: number
+   pointsPossible: number
+   teacherComment?: string
+   questionAndAnswers?: QuestionAndAnswer[]
+}
+
 /***************** Internal Types ******************************/
 export interface Answer {
    username: string

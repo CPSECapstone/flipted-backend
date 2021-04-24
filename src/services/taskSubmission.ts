@@ -6,12 +6,14 @@ import {
    Answer,
    QuestionAnswerItem,
    TaskProgress,
-   TaskProgressItem
+   TaskProgressItem,
+   TaskSubmissionResult,
+   TaskSubmissionResultItem
 } from "../interfaces/taskSubmission";
 
 import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "./dynamodb";
 import { dbItemsToTaskItem } from "./taskBusLogic";
-import { dbItemsToQuestionAnswerItems, dbItemToTaskProgress } from "./taskSubmissionHelper";
+import { dbItemsToQuestionAnswerItems, dbItemToTaskProgress, taskSubResultToDBItem } from "./taskSubmissionHelper";
 
 const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
@@ -79,8 +81,14 @@ async function getQuizProgressForTask(taskId: string, username: string): Promise
    throw new Error(`Task not found with id=${taskId}`);
 }
 
-async function submitTaskForGrading() {
-   return false
+async function submitTaskForGrading(taskResult: TaskSubmissionResult, username: string) {
+   const dbItem: TaskSubmissionResultItem = taskSubResultToDBItem(taskResult, username)
+
+   const params: PutCompositeParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      item: dbItem
+   };
+   return dynamodb.putComposite(params);
 }
 
 const taskSubmissionService = {

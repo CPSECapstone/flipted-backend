@@ -15,8 +15,23 @@ import {
    TaskProgressInput,
    TaskProgressItem,
    TaskSubmissionResult,
-   AnswerOut
+   AnswerOut,
+   TaskSubmissionResultItem
 } from "../interfaces/taskSubmission";
+
+export function taskSubResultToDBItem(input: TaskSubmissionResult, username: string) : TaskSubmissionResultItem {
+   const output: TaskSubmissionResultItem = {
+      PK: "TASK_SUBMISSION#" + username,
+      SK: input.taskId, 
+      graded: false,
+      pointsAwarded: input.pointsAwarded,
+      pointsPossible: input.pointsPossible,
+      teacherComment: input.teacherComment,
+      questionAndAnswers: input.questionAndAnswers
+   }
+
+   return output
+}
 
 // convert input from request to a item object that will be inserted into db
 export function taskProgressInputToDBItem(
