@@ -14,7 +14,8 @@ import {
    TaskProgress,
    TaskProgressInput,
    TaskProgressItem,
-   TaskSubmissionResult
+   TaskSubmissionResult,
+   AnswerOut
 } from "../interfaces/taskSubmission";
 
 // convert input from request to a item object that will be inserted into db
@@ -206,8 +207,7 @@ function associateQuestionWithAnswers(questions: Question[], questionAnswers: An
 function createQuestionAnswerUnion(answer: Answer, questions: Question[]) : QuestionAndAnswer {
   for (var question of questions) {
 
-    //TODO: this is terrible
-     var answerOut
+     var answerOut: AnswerOut
      if("answer" in <any>answer) {
         answerOut = {
            answer: (<any>answer).answer,
@@ -216,7 +216,7 @@ function createQuestionAnswerUnion(answer: Answer, questions: Question[]) : Ques
      }
      else {
       answerOut = {
-         answer: <string>(<any>answer).answerId,
+         answer: String((<any>answer).answerId),
          pointsAwarded: answer.pointsAwarded
       }
    }
