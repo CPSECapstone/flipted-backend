@@ -8,12 +8,13 @@ const sampleTask = {
    startAt: mockDate,
    endAt: mockDate,
    dueDate: mockDate,
+   parentMissionId: "1234",
+   parentMissionIndex: 0,
    objectiveId: "0",
    id: "0",
    name: "Destin's Awesome Task",
    instructions:
       "If you're seeing these instructions, congrats! You've discovered my task! Message me on slack for a reward.",
-   subMissionId: "sub-mission 1",
    points: 10,
    requirements: [
       {
