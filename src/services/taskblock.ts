@@ -1,5 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { TABLE_NAME } from "../environment";
+import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import dynamodb, { PutCompositeParams, GetCompositeParams } from "./dynamodb";
 import questionService from "./question";
 import {
@@ -18,7 +18,7 @@ import {
    videoblockInputToDBItem
 } from "./taskblockHelper";
 
-const QUIZBLOCKS_TABLE = TABLE_NAME("QuizBlocks");
+const QUIZBLOCKS_TABLE = COURSE_CONTENT_TABLE_NAME;
 
 async function addTaskBlock(taskblockItem: TaskBlockItem) {
    const params: PutCompositeParams = {
@@ -74,7 +74,7 @@ async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
             title: quizblockItem.title,
             points: quizblockItem.points,
             requiredScore: quizblockItem.requiredScore,
-            questions
+            questions: questions
          };
       }
       throw new Error(`QuizBlock not found with blockId=${blockId}`);

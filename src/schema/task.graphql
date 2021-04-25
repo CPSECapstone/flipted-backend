@@ -3,10 +3,11 @@ type Task {
    name: String!
    instructions: String!
    points: Int!
+   parentMissionId: String!
+   parentMissionIndex: Int!
    startAt: Date
    endAt: Date
    dueDate: Date
-   subMissionId: String
    objectiveId: String
    pages: [Page!]!
    requirements: [RubricRequirement!]!
@@ -16,10 +17,11 @@ input TaskInput {
    name: String!
    instructions: String!
    points: Int!
+   parentMissionId: String!
+   parentMissionIndex: Int!
    startAt: Date
    endAt: Date
    dueDate: Date
-   subMissionId: String
    objectiveId: String
    pages: [PageInput]!
    requirements: [RubricRequirementInput]!

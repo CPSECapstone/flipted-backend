@@ -3,35 +3,39 @@
 ### APIs
 
 - Add SubMission
-- List SubMissions By MissionId
+- Query SubMission
 
 ### Examples
 
 #### Add SubMission
 
 ```
-mutation {
-  addSubMission(
-    subMission: {
-      missionId: "mission 1"
-      objectiveId: "objective 1"
-      name: "sub-mission 1"
-      description: "sub-mission 1 description"
-    }
-  )
+mutation{
+  addSubMission(subMission: {
+    name: "Chemical Bonds 2"
+    description: "SubMission that focuses on saturated hydrocarbons 2"
+    parentMissionId: "4c40b1d2a39"
+    parentMissionIndex: 2
+  })
 }
 ```
 
-#### List SubMissions By MissionId
+#### Query Submission
 
 ```
 query {
-  subMissions(missionId: "mission 1") {
+  subMission(subMissionId){
     id
     name
     description
-    missionId
-    objectiveId
+    missionContent{
+      ... on Task{
+        name
+        requirements{
+          description
+        }
+      }
+    }
   }
 }
 ```

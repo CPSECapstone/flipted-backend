@@ -169,6 +169,7 @@ async function query(params: QueryParams): Promise<QueryCommandOutput> {
    const command = new QueryCommand({
       TableName: params.tableName,
       FilterExpression: params.filterExpression,
+      IndexName: params.indexName,
       KeyConditionExpression: params.keyConditionExpression,
       ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts)
    });
@@ -243,6 +244,7 @@ export interface QueryParams {
    keyConditionExpression: string;
    expressionAttributeValues: { [key: string]: any };
    filterExpression?: string
+   indexName?: string;
 }
 
 export interface DBItem {

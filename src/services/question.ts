@@ -72,11 +72,20 @@ async function listByIds(questionIds: string[], withAnswer: boolean = false): Pr
    }
 }
 
+function resolveQuestionType(question: any){
+   if(!question.id) return null;
+   const [type, id] = question.id.split('#');
+   if(type == 'MC_QUESTION') return 'MCQuestion'
+   if(type == 'FR_QUESTION') return 'FRQuestion'
+   return null;
+}
+
 const questionService = {
    addFRQuestion,
    addMCQuestion,
    listByIds,
-   getById
+   getById,
+   resolveQuestionType
 };
 
 export default questionService;

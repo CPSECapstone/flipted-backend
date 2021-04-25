@@ -1,41 +1,52 @@
-import { MissionInput, SubMissionInput } from "../interfaces";
 import missionService from '../services/mission';
 import subMissionService from '../services/subMission';
 
 async function addMission(_: any, args: any, context: any, info: any) {
-  const mission: MissionInput = args.mission;
-  return missionService.add(mission);
+  return missionService.addMission(args.mission);
 }
 
 async function addSubMission(_: any, args: any, context: any, info: any) {
-  const subMission: SubMissionInput = args.subMission;
-  return subMissionService.add(subMission);
+  return subMissionService.addSubMission(args.subMission);
 }
 
 async function getMissionById(_: any, args: any, context: any, info: any) {
-  const missionId = args.missionId;
-  return missionService.getById(missionId);
+  return await missionService.getMissionById(args.missionId);
+}
+
+async function getSubMissionById(_: any, args: any, context: any, info: any) {
+  return await subMissionService.getSubMissionById(args.subMissionId);
 }
 
 async function listMissionsByCourse(_: any, args: any, context: any, info: any) {
-  const course: string = args.course;
-  return missionService.listByCourse(course);
+  return await missionService.listByCourse(args.course);
 }
 
-async function listSubMissionByMission(_: any, args: any, context: any, info: any) {
-  const missionId: string = args.missionId;
-  return subMissionService.listByMissionId(missionId);
+async function resolveMissionContentType(missionContent: any, context: any, info: any) {
+  return missionService.resolveMissionContentType(missionContent);
+}
+
+async function getMissionContent(parent: any){
+  return missionService.getMissionContent(parent.id);
 }
 
 const resolvers = {
   Query: {
     mission: getMissionById,
     missions: listMissionsByCourse,
-    subMissions: listSubMissionByMission
+    subMission: getSubMissionById
   },
   Mutation: {
     addMission: addMission,
     addSubMission: addSubMission
+  },
+  Mission: {
+    missionContent: getMissionContent
+  },
+  SubMission: {
+    missionContent: getMissionContent
+  },
+  MissionContent: {
+    __resolveType: resolveMissionContentType
   }
 };
 

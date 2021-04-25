@@ -16,6 +16,10 @@ async function listQuestionsByIds(_: any, args: any, context: any) {
    return questionService.listByIds(questionIds);
 }
 
+async function resolveQuestionType(question: any, context: any, info: any){
+   return questionService.resolveQuestionType(question);
+}
+
 const resolvers = {
    Query: {
       questions: listQuestionsByIds
@@ -23,6 +27,9 @@ const resolvers = {
    Mutation: {
       addFRQuestion,
       addMCQuestion
+   },
+   Question: {
+      __resolveType: resolveQuestionType
    }
 };
 
