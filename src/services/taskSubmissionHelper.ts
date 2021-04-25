@@ -190,7 +190,7 @@ export function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgressIn
 
    return true;
 }
-//TODO: Everything below needs a test
+
 export function createTaskSubmissionResult(
    taskPointValue: number,
    taskId: string,
