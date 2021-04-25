@@ -7,6 +7,10 @@
 - Submit Multiple Choice question
 - Submit Free Response question
 
+- Retrieve Progress Towards a Task
+- Retrieve Answers To Questions
+- Retrieve Task Submissions
+
 ### Examples
 
 #### Submit Multiple Choice Question
@@ -76,3 +80,25 @@ mutation submitTask {
   }
 }
 ```
+#### Retrieve Progress Towards a Task
+query retrieveTaskProgress {
+  retrieveTaskProgress(taskId: "4f681550ba9") {
+    finishedRequirementIds
+    taskId
+  }
+}
+
+#### Retrieve Answers To Questions
+query retrieveQuestionProgress {
+  retrieveQuestionProgress(taskId: "4f681550ba9") {
+    answers {
+      questionId
+      answer
+    }
+  }
+}
+
+#### Retrieve Task Submission
+query retrieveTaskSubmission {
+  retrieveTaskSubmission(taskId: "4f681550ba9") {} // return type identical to submitting task above
+}

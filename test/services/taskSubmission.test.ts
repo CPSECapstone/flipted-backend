@@ -1,6 +1,7 @@
 import { FRQuestion, MCQuestion, Question } from "../../src/interfaces/question";
 import {
    Answer,
+   AnswerOut,
    FreeResponseAnswer,
    FreeResponseAnswerInput,
    FreeResponseAnswerItem,
@@ -8,6 +9,7 @@ import {
    MultipleChoiceAnswerInput,
    MultipleChoiceAnswerItem,
    QuestionAndAnswer,
+   QuestionProgress,
    TaskProgress,
    TaskProgressInput,
    TaskProgressItem,
@@ -15,10 +17,13 @@ import {
    TaskSubmissionResultItem
 } from "../../src/interfaces/taskSubmission";
 import {
+   answerToAnswerOut,
+   createQuestionProgressOutput,
    createTaskSubmissionResult,
    dbItemToFreeResponseAnswer,
    dbItemToMultipleChoiceAnswer,
    dbItemToTaskProgress,
+   dbItemToTaskSubmissionResult,
    freeResponseAnswerInputToDBItem,
    multipleChoiceAnswerInputToDBItem,
    taskProgressInputToDBItem,
@@ -58,15 +63,17 @@ const mockMCQuestion: MCQuestion = {
    options: []
 };
 
+const username = "BUBBLES!";
+
 // expected output
 const mockQuestionAndAnswers: QuestionAndAnswer[] = [
    {
       question: JSON.parse(JSON.stringify(mockMCQuestion)),
-      answer: { pointsAwarded: 2, answer: "3" }
+      answer: { pointsAwarded: 2, answer: "3", questionId: "MC_QUESTION#456" }
    },
    {
       question: JSON.parse(JSON.stringify(mockFRQuestion)),
-      answer: { pointsAwarded: 3, answer: "I like BUBBLES!" }
+      answer: { pointsAwarded: 3, answer: "I like BUBBLES!", questionId: "FR_QUESTION#123" }
    }
 ];
 const mockTaskSubmissionResult: TaskSubmissionResult = {
@@ -74,22 +81,26 @@ const mockTaskSubmissionResult: TaskSubmissionResult = {
    taskId: "TASK#123",
    pointsAwarded: 5,
    pointsPossible: 6,
-   questionAndAnswers: mockQuestionAndAnswers,
+   questionAndAnswers: mockQuestionAndAnswers
 };
 
-describe("converting a TaskSubmission to a db item", () => {
-   it("will do so as expected without errors", async () => {
-      const username = "BUBBLES!"
+const mockTaskSubmissionResultItem: TaskSubmissionResultItem = {
+   PK: "TASK_SUBMISSION#BUBBLES!",
+   SK: "TASK#123",
+   graded: false,
+   pointsAwarded: 5,
+   pointsPossible: 6,
+   questionAndAnswers: JSON.parse(JSON.stringify(mockQuestionAndAnswers))
+};
 
-      const expectedOutput: TaskSubmissionResultItem = {
-         PK: "TASK_SUBMISSION#BUBBLES!",
-         SK: "TASK#123", 
-         graded: false,
-         pointsAwarded: 5,
-         pointsPossible: 6,
-         questionAndAnswers: JSON.parse(JSON.stringify(mockQuestionAndAnswers))
-      }
-      expect(taskSubResultToDBItem(mockTaskSubmissionResult, username)).toEqual(expectedOutput);
+
+describe("converting TaskSubmission types", () => {
+   it("will convert from a TaskSubmissionResult to a TaskSubmissionResultItem", async () => {
+      expect(taskSubResultToDBItem(mockTaskSubmissionResult, username)).toEqual(mockTaskSubmissionResultItem);
+   });
+
+   it("will convert from a TaskSubmissionResultItem to a TaskSubmissionResult", async () => {
+      expect(dbItemToTaskSubmissionResult(mockTaskSubmissionResultItem)).toEqual(mockTaskSubmissionResult);
    });
 });
 
@@ -178,8 +189,8 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
    });
 });
 
-describe("converting a QuestionAnswerInput to a QuestionAnswerItem", () => {
-   it("will convert a MultipleChoiceAnswerInput as expected without errors", async () => {
+describe("converting question Answer types", () => {
+   it("will convert a MultipleChoiceAnswerInput to a db item as expected without errors", async () => {
       const input: MultipleChoiceAnswerInput = {
          taskId: "TASK_ID#12345",
          questionBlockId: "123",
@@ -201,7 +212,7 @@ describe("converting a QuestionAnswerInput to a QuestionAnswerItem", () => {
       expect(multipleChoiceAnswerInputToDBItem(input, username, 3)).toEqual(expectedOutput);
    });
 
-   it("will convert a FreeResponseAnswerInput as expected without errors", async () => {
+   it("will convert a FreeResponseAnswerInput to a db item as expected without errors", async () => {
       const input: FreeResponseAnswerInput = {
          taskId: "TASK_ID#12345",
          questionBlockId: "123",
@@ -222,6 +233,44 @@ describe("converting a QuestionAnswerInput to a QuestionAnswerItem", () => {
 
       expect(freeResponseAnswerInputToDBItem(input, username)).toEqual(expectedOutput);
    });
+
+   it("will convert a MultipleChoiceAnswer to an AnswerOut as expected without errors", async () => {
+      const input: MultipleChoiceAnswer = {
+         taskId: "TASK_ID#12345",
+         questionBlockId: "123",
+         questionId: "ABC",
+         answerId: 2,
+         username: "fliptedEdRoXX",
+         pointsAwarded: 10
+      };
+
+      const expectedOutput: AnswerOut = {
+         questionId: "ABC",
+         answer: "2",
+         pointsAwarded: 10
+      };
+
+      expect(answerToAnswerOut(input)).toEqual(expectedOutput);
+   });
+
+   it("will convert a FreeResponseAnswer to an AnswerOut as expected without errors", async () => {
+      const input: FreeResponseAnswer = {
+         taskId: "TASK_ID#12345",
+         questionBlockId: "123",
+         questionId: "ABC",
+         answer: "Bubbles!",
+         username: "fliptedEdRoXX",
+         pointsAwarded: 10
+      };
+
+      const expectedOutput: AnswerOut = {
+         questionId: "ABC",
+         answer: "Bubbles!",
+         pointsAwarded: 10
+      };
+
+      expect(answerToAnswerOut(input)).toEqual(expectedOutput);
+   });
 });
 
 describe("Creating a task submission result", () => {
@@ -229,6 +278,25 @@ describe("Creating a task submission result", () => {
       const questions: Question[] = [mockFRQuestion, mockMCQuestion];
       const answers: Answer[] = [mockMCAnswer, mockFRAnswer];
 
-      expect(createTaskSubmissionResult(6, "TASK#123", answers, questions)).toEqual(mockTaskSubmissionResult);
+      expect(createTaskSubmissionResult(6, "TASK#123", answers, questions)).toEqual(
+         mockTaskSubmissionResult
+      );
+   });
+});
+
+describe("Creating a question progress object", () => {
+   it("will create the output with no errors", async () => {
+      const answers: Answer[] = [mockMCAnswer, mockFRAnswer];
+      const taskId: string = "TASKID#123";
+
+      const expectedOut: QuestionProgress = {
+         taskId: "TASKID#123",
+         answers: [
+            { answer: "3", questionId: "MC_QUESTION#456" },
+            { answer: "I like BUBBLES!", questionId: "FR_QUESTION#123" }
+         ]
+      };
+
+      expect(createQuestionProgressOutput(taskId, answers)).toEqual(expectedOut);
    });
 });

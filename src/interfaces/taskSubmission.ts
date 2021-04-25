@@ -94,6 +94,12 @@ export interface QuestionAndAnswer {
 }
 
 export interface AnswerOut {
-   pointsAwarded: number
+   questionId: string
+   pointsAwarded?: number
    answer: string
+}
+
+export interface QuestionProgress {
+   taskId: string
+   answers: AnswerOut[]
 }

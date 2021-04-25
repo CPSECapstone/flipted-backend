@@ -73,6 +73,30 @@ input TaskProgressInput {
    finishedRequirementIds: [String!]!
 }
 
+type TaskProgress {
+   """
+   The id of the task the user submitted progress towards.
+   """ 
+   taskId: String!
+
+   """
+   The ids of each requirement
+   """ 
+   finishedRequirementIds: [String!]!
+}
+
+type QuestionProgress {
+   """
+   The id of the task the user submitted progress towards.
+   """ 
+   taskId: String!
+
+   """
+   Each recorded answer to the questions contained in the task. The points awarded will be null. 
+   """
+   answers: [Answer!]!
+}
+
 """
 Created when all requirements for a task have been satisfied and a task has
 been submitted. Many fields may be null pending grading by the teacher
@@ -102,7 +126,9 @@ type TaskSubmissionResult {
 }
 
 type Answer {
-   pointsAwarded: Int!
+   questionId: String
+
+   pointsAwarded: Int
 
    """ 
    Either the id of the chosen answer id or the provided free response
@@ -130,7 +156,17 @@ type Query {
    Returns an existing task submission or errors if it does not exist.
    May be useful as a TaskSubmissionResult can change as a result of instructor actions. 
    """
-   retrieveTaskSubmission(taskId: String) : TaskSubmissionResult!
+   retrieveTaskSubmission(taskId: String) : TaskSubmissionResult
+
+   """
+   Returns student's progress on the rubric requirements for the task if it exists.
+   """
+   retrieveTaskProgress(taskId: String) : TaskProgress
+
+      """
+   Returns student's task progress on the rubric requirements if it exists.
+   """
+   retrieveQuestionProgress(taskId: String) : QuestionProgress!
 }
 
 type Mutation {
@@ -143,7 +179,7 @@ type Mutation {
   Even on a successful submission, many fields may be null 
   as a Task may require manual grading by an instructor.
   """
-  submitTask(taskId: String) : TaskSubmissionResult #MAKE NULLABLE
+  submitTask(taskId: String) : TaskSubmissionResult
 
   """
   Saves completed rubric requirements linked to this task for the user

@@ -16,20 +16,36 @@ import {
    TaskProgressItem,
    TaskSubmissionResult,
    AnswerOut,
-   TaskSubmissionResultItem
+   TaskSubmissionResultItem,
+   QuestionProgress
 } from "../interfaces/taskSubmission";
 
-export function taskSubResultToDBItem(input: TaskSubmissionResult, username: string) : TaskSubmissionResultItem {
+export function taskSubResultToDBItem(
+   input: TaskSubmissionResult,
+   username: string
+): TaskSubmissionResultItem {
    const output: TaskSubmissionResultItem = {
       PK: "TASK_SUBMISSION#" + username,
-      SK: input.taskId, 
+      SK: input.taskId,
       graded: false,
       pointsAwarded: input.pointsAwarded,
       pointsPossible: input.pointsPossible,
       teacherComment: input.teacherComment,
       questionAndAnswers: input.questionAndAnswers
-   }
+   };
 
+   return output;
+}
+
+export function dbItemToTaskSubmissionResult(item: TaskSubmissionResultItem) {
+   const output: TaskSubmissionResult = {
+      graded: item.graded,
+      pointsAwarded: item.pointsAwarded,
+      pointsPossible: item.pointsPossible,
+      teacherComment: item.teacherComment,
+      questionAndAnswers: item.questionAndAnswers,
+      taskId: item.SK
+   }
    return output
 }
 
@@ -50,7 +66,8 @@ export function taskProgressInputToDBItem(
 
 export function multipleChoiceAnswerInputToDBItem(
    input: MultipleChoiceAnswerInput,
-   username: string, pointsAwarded: number
+   username: string,
+   pointsAwarded: number
 ): MultipleChoiceAnswerItem {
    const multipleChoiceAnswerItem: MultipleChoiceAnswerItem = {
       PK: `QUESTION_ANSWER#${username}`,
@@ -203,47 +220,68 @@ export function createTaskSubmissionResult(
       pointsPossible: taskPointValue,
       taskId: taskId,
       questionAndAnswers: associateQuestionWithAnswers(questions, questionAnswers)
-   }
+   };
 
-   return submissionResult
+   return submissionResult;
 }
 
-function associateQuestionWithAnswers(questions: Question[], questionAnswers: Answer[]) : QuestionAndAnswer[] {
-   const gradedAnswer: QuestionAndAnswer[] = []
-   
+function associateQuestionWithAnswers(
+   questions: Question[],
+   questionAnswers: Answer[]
+): QuestionAndAnswer[] {
+   const gradedAnswer: QuestionAndAnswer[] = [];
+
    for (var answer of questionAnswers) {
-      gradedAnswer.push(createQuestionAnswerUnion(answer, questions))
+      gradedAnswer.push(createQuestionAnswerUnion(answer, questions));
    }
 
-   return gradedAnswer
+   return gradedAnswer;
+}
+
+export function answerToAnswerOut(answer: Answer): AnswerOut {
+   var answerOut: AnswerOut;
+   if ("answer" in <any>answer) {
+      answerOut = {
+         questionId: answer.questionId,
+         answer: (<any>answer).answer,
+         pointsAwarded: answer.pointsAwarded
+      };
+   } else {
+      answerOut = {
+         questionId: answer.questionId,
+         answer: String((<any>answer).answerId),
+         pointsAwarded: answer.pointsAwarded
+      };
+   }
+   return answerOut
+}
+
+export function createQuestionProgressOutput(taskId: string, answers: Answer[]) : QuestionProgress {
+   return {
+      taskId: taskId,
+      answers: answers.map(answer => {
+         const answerOut = answerToAnswerOut(answer)
+
+         // dont want students getting their grade before task is submitted
+         answerOut.pointsAwarded = undefined
+
+         return answerOut
+      })
+   }
 }
 
 /** Need a function to find the associated question with an answer since mapping can't be garunteed */
-function createQuestionAnswerUnion(answer: Answer, questions: Question[]) : QuestionAndAnswer {
-  for (var question of questions) {
+function createQuestionAnswerUnion(answer: Answer, questions: Question[]): QuestionAndAnswer {
+   for (var question of questions) {
+      if (answer.questionId.includes(question.id)) {
+         const out: QuestionAndAnswer = {
+            question: question,
+            answer: answerToAnswerOut(answer)
+         };
 
-     var answerOut: AnswerOut
-     if("answer" in <any>answer) {
-        answerOut = {
-           answer: (<any>answer).answer,
-           pointsAwarded: answer.pointsAwarded
-        }
-     }
-     else {
-      answerOut = {
-         answer: String((<any>answer).answerId),
-         pointsAwarded: answer.pointsAwarded
+         return out;
       }
    }
-     if (answer.questionId.includes(question.id)) {
-        const out: QuestionAndAnswer = {
-           question: question,
-           answer: answerOut
-        }
 
-        return out
-     }
-  }
-
-  throw new Error("Question associated with answer not found")
+   throw new Error("Question associated with answer not found");
 }

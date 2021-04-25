@@ -13,7 +13,7 @@ import {
 
 import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "./dynamodb";
 import { dbItemsToTaskItem } from "./taskBusLogic";
-import { dbItemsToQuestionAnswerItems, dbItemToTaskProgress, taskSubResultToDBItem } from "./taskSubmissionHelper";
+import { dbItemsToQuestionAnswerItems, dbItemToTaskProgress, dbItemToTaskSubmissionResult, taskSubResultToDBItem } from "./taskSubmissionHelper";
 
 const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
@@ -34,8 +34,23 @@ async function submitQuestionAnswer(answer: QuestionAnswerItem) {
 }
 
 async function getTaskSubmission(username: string, taskId: string) {
-  return new Error("Not yet implemented. Please call submit task for now or bug Destin on slack.")
+   const params: GetCompositeParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      key: {
+         PK: "TASK_SUBMISSION#" + username,
+         SK: taskId
+      }
+   };
+
+   const output = await dynamodb.getComposite(params);
+   if (output.Item) {
+      const taskProgress = <TaskSubmissionResultItem>unmarshall(output.Item);
+      return dbItemToTaskSubmissionResult(taskProgress);
+   }
+
+   throw new Error(`Task Submission not found with id=${taskId}`);
 }
+
 
 async function getTaskRubricProgress(taskId: string, username: string): Promise<TaskProgress> {
    const params: GetCompositeParams = {
@@ -52,7 +67,7 @@ async function getTaskRubricProgress(taskId: string, username: string): Promise<
       return dbItemToTaskProgress(taskProgress);
    }
 
-   throw new Error(`Task not found with id=${taskId}`);
+   throw new Error(`Task Progress not found with id=${taskId}`);
 }
 
 async function getQuizProgressForTask(taskId: string, username: string): Promise<Answer[]> {

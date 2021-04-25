@@ -23,7 +23,9 @@ import {
    taskRubricRequirementsComplete,
    taskProgressInputToDBItem,
    taskQuestionsAllAnswered,
-   createTaskSubmissionResult
+   createTaskSubmissionResult,
+   answerToAnswerOut,
+   createQuestionProgressOutput
 } from "../services/taskSubmissionHelper";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: any) {
@@ -131,26 +133,59 @@ async function submitTask(_: any, args: any, context: any, info: any) {
    );
 
    // use the task, all questions, and all question answers to construct TaskSubmissionResult
-   const taskSubmissionResult: TaskSubmissionResult = createTaskSubmissionResult(task.points, task.id, questionAnswers, questions)
+   const taskSubmissionResult: TaskSubmissionResult = createTaskSubmissionResult(
+      task.points,
+      task.id,
+      questionAnswers,
+      questions
+   );
 
    // save the constructed submission to the database for grading and retrieval
    taskSubmissionService.submitTaskForGrading(taskSubmissionResult, username);
 
-   // return to user 
-   return taskSubmissionResult
+   // return to user
+   return taskSubmissionResult;
 }
 
 async function retrieveTaskSubmission(_: any, args: any, context: any, info: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
    const username: string = tokenPayload.username;
 
-   const taskSubmission = await taskSubmissionService.getTaskSubmission(args.taskId, username);
-   return taskSubmission;
+   try {
+      const taskSubmission = await taskSubmissionService.getTaskSubmission(username, args.taskId);
+      return taskSubmission;
+   } catch (err) {
+      // don't error: just return null if it doesn't exist
+      return null;
+   }
+}
+
+async function retrieveTaskProgress(_: any, args: any, context: any, info: any) {
+   const tokenPayload = await validateToken(context.headers.Authorization);
+   const username: string = tokenPayload.username;
+
+   try {
+      const taskProgress = await taskSubmissionService.getTaskRubricProgress(args.taskId, username);
+      return taskProgress;
+   } catch (err) {
+      // don't error: just return null if it doesn't exist
+      return null;
+   }
+}
+
+async function retrieveQuestionProgress(_: any, args: any, context: any, info: any) {
+   const tokenPayload = await validateToken(context.headers.Authorization);
+   const username: string = tokenPayload.username;
+
+   const answers = await taskSubmissionService.getQuizProgressForTask(args.taskId, username);
+   return createQuestionProgressOutput(args.taskId, answers);
 }
 
 const resolvers = {
    Query: {
-      retrieveTaskSubmission: retrieveTaskSubmission
+      retrieveTaskSubmission: retrieveTaskSubmission,
+      retrieveTaskProgress: retrieveTaskProgress,
+      retrieveQuestionProgress: retrieveQuestionProgress
    },
    Mutation: {
       saveMultipleChoiceProgress: submitMultChoiceQuestion,
