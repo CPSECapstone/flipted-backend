@@ -1,20 +1,22 @@
 import dynamodbMock from "../__mocks__/dynamodb";
 import taskBusLogic from "../../src/services/taskBusLogic";
-import { TaskProgress, TaskProgressInput } from "../../src/interfaces/taskSubmission";
 import { Task } from "../../src/interfaces/taskInterfaces";
-
+import { Answer, TaskProgress, TaskProgressInput } from "../../src/interfaces/taskSubmission";
+import { areTaskProgressIdsValid, taskQuestionsAllAnswered, taskRubricRequirementsComplete } from "../../src/services/taskSubmissionHelper";
+import taskSubmission from "../../src/services/taskSubmission";
 
 const mockDate: Date = new Date(0);
 const sampleTask = {
    startAt: mockDate,
    endAt: mockDate,
    dueDate: mockDate,
+   parentMissionId: "1234",
+   parentMissionIndex: 0,
    objectiveId: "0",
    id: "0",
    name: "Destin's Awesome Task",
    instructions:
       "If you're seeing these instructions, congrats! You've discovered my task! Message me on slack for a reward.",
-   subMissionId: "sub-mission 1",
    points: 10,
    requirements: [
       {
@@ -77,6 +79,21 @@ const sampleTask = {
                title: "Welcome to the second page",
                contents: "I appreciate you for reading this far. Have a nice day.",
                fontSize: 14
+            },
+            {
+               blockId: "5",
+               pageIndex: 1,
+               blockIndex: 1,
+               title: "Quiz",
+               points: 4,
+               requiredScore: 4,
+               questions: [
+                  {
+                     id: "questionId123",
+                     description: "Color of sky?",
+                     points: 2
+                  }
+               ]
             }
          ]
       }
@@ -130,7 +147,7 @@ describe("Verifying a task progress submission", () => {
          taskId: "0"
       };
 
-      expect(taskBusLogic.areTaskProgressIdsValid(sampleTask, taskSubmission)).toBeTruthy();
+      expect(areTaskProgressIdsValid(sampleTask, taskSubmission)).toBeTruthy();
    });
 
    it("will fail to verify task progress if not all submission ids match", async () => {
@@ -139,7 +156,7 @@ describe("Verifying a task progress submission", () => {
          taskId: "0"
       };
 
-      expect(taskBusLogic.areTaskProgressIdsValid(sampleTask, taskSubmission)).toBeFalsy();
+      expect(areTaskProgressIdsValid(sampleTask, taskSubmission)).toBeFalsy();
    });
 
    it("will fail to verify task progress if there are too many ids attached to the submission", async () => {
@@ -148,6 +165,46 @@ describe("Verifying a task progress submission", () => {
          taskId: "0"
       };
 
-      expect(taskBusLogic.areTaskProgressIdsValid(sampleTask, taskSubmission)).toBeFalsy();
+      expect(areTaskProgressIdsValid(sampleTask, taskSubmission)).toBeFalsy();
+   });
+});
+
+describe("Verifying a task submission", () => {
+   it("Will have all rubric requirements match", async () => {
+      
+      var taskSubmission: TaskProgress = {
+         finishedRequirementIds: ["0", "1", "2", "3"],
+         taskId: "0",
+         username: "Bubbles!"
+      };
+
+      expect(taskRubricRequirementsComplete(sampleTask, taskSubmission)).toBeTruthy();
+
+      taskSubmission = {
+         finishedRequirementIds: ["1", "2", "3"],
+         taskId: "0",
+         username: "Bubbles!"
+      };
+
+      expect(taskRubricRequirementsComplete(sampleTask, taskSubmission)).toBeFalsy();
+
+   });
+
+   it("Will make sure all questions in the task are answered", async () => {
+      
+      var questionAnswer: Answer[] = [
+         {
+            username: "Bubbles!",
+            questionId: "questionId123",
+            taskId: "0",
+            questionBlockId: "5",
+            pointsAwarded: 3
+         }
+      ]
+      expect(taskQuestionsAllAnswered(sampleTask, questionAnswer)).toBeTruthy();
+
+      questionAnswer = []
+
+      expect(taskQuestionsAllAnswered(sampleTask, questionAnswer)).toBeFalsy();
    });
 });

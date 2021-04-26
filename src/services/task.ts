@@ -1,7 +1,7 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import taskBusLogic, { dbItemsToTaskItem } from "./taskBusLogic";
 
-import { TABLE_NAME } from "../environment";
+import { TABLE_NAME, COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { TaskInput, TaskItem, Task } from "../interfaces/taskInterfaces";
 import dynamodb, {
    GetCompositeParams,
@@ -11,7 +11,7 @@ import dynamodb, {
 } from "./dynamodb";
 import { TaskProgress } from "../interfaces/taskSubmission";
 
-const TASKS_TABLE = TABLE_NAME("QuizBlocks");
+const TASKS_TABLE = COURSE_CONTENT_TABLE_NAME;
 const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
 async function add(input: TaskInput) {
@@ -72,29 +72,10 @@ async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
    return [];
 }
 
-async function getTaskProgress(taskId: string, username: string): Promise<TaskProgress> {
-   const params: GetCompositeParams = {
-      tableName: TASKS_SUBMISSIONS_TABLE,
-      key: {
-         username: username,
-         taskId: taskId
-      }
-   };
-
-   const output = await dynamodb.getComposite(params);
-   if (output.Item) {
-      const taskProgress = <TaskProgress>unmarshall(output.Item);
-      return taskProgress;
-   }
-
-   throw new Error(`Task not found with id=${taskId}`);
-}
-
 const taskService = {
    add,
    getTaskById,
    listBySubMissionId,
-   getTaskProgress
 };
 
 export default taskService;

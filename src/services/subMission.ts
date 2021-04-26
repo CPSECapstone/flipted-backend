@@ -1,65 +1,57 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import {
+  SubMission,
+  SubMissionItem,
+  SubMissionInput
+} from "../interfaces/mission";
+import { dbItemToSubMission, convertSubMissionInputToItem } from '../services/missionLogic';
+import { COURSE_CONTENT_TABLE_NAME } from "../environment";
+import dynamodb, { GetCompositeParams, PutCompositeParams, ScanParams } from "./dynamodb";
 
-import { TABLE_NAME } from "../environment";
-import { SubMission, SubMissionInput } from "../interfaces";
-import taskService from "./task";
-import dynamodb, { GetParams, PutParams, ScanParams } from "./dynamodb";
+const SUBMISSIONS_TABLE = COURSE_CONTENT_TABLE_NAME;
 
-const SUBMISSIONS_TABLE = TABLE_NAME("SubMissions");
+async function addSubMission(subMissionInput: SubMissionInput) {
 
-async function add(input: SubMissionInput) {
-  const params: PutParams = {
-    tableName: SUBMISSIONS_TABLE,
-    item: input
+  const subMissionItem: SubMissionItem = convertSubMissionInputToItem(subMissionInput);
+  
+  const params: PutCompositeParams = {
+     tableName: SUBMISSIONS_TABLE,
+     item: subMissionItem
   };
 
-  return dynamodb.put(params);
-}
-
-async function getById(subMissionId: string): Promise<SubMission> {
-  const params: GetParams = {
-    tableName: SUBMISSIONS_TABLE,
-    key: subMissionId
-  };
-
-  const output = await dynamodb.get(params);
-  if (output.Item) {
-    const subMission = <SubMission>unmarshall(output.Item);
-    const tasks = await taskService.listBySubMissionId(subMission.id);
-    subMission.tasks = tasks;
-    return subMission;
+  try {
+     await dynamodb.putComposite(params);
+     const [type, id] = subMissionItem.PK.split('#');
+     return id;
+  } catch (err) {
+     return err;
   }
-
-  throw new Error(`SubMission not found with id=${subMissionId}`);
 }
 
-async function listByMissionId(missionId: string): Promise<SubMission[]> {
-  const params: ScanParams = {
+async function getSubMissionById(subMissionId: string): Promise<SubMission> {
+
+  const getparams: GetCompositeParams = {
     tableName: SUBMISSIONS_TABLE,
-    filterExpression: 'missionId = :missionId',
-    expressionAttributeValues: {
-      ":missionId": missionId
+    key: {
+      PK: `SUBMISSION#${subMissionId}`,
+      SK: `SUBMISSION#${subMissionId}`
     }
   };
 
-  const output = await dynamodb.scan(params);
-  if (output.Items) {
-    const subMissions = output.Items.map((item: any) => {
-      return <SubMission>unmarshall(item);
-    });
-    return subMissions;
+  try {
+     const output = await dynamodb.getComposite(getparams);
+     if (!output.Item) {
+        throw new Error(`SubMission not found with id=${subMissionId}`);
+     }
+     return dbItemToSubMission(<SubMissionItem>unmarshall(output.Item));
+  } catch (err) {
+     return err;
   }
-
-  return [];
 }
 
-/*
-  Sub-Mission in mission
-*/
 const subMissionService = {
-  add,
-  getById,
-  listByMissionId
+  addSubMission,
+  getSubMissionById
 }
 
 export default subMissionService;

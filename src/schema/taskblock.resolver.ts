@@ -26,20 +26,7 @@ async function addQuizBlock(_: any, args: any, context: any) {
    return taskblockService.addQuizBlock(quizblock);
 }
 
-async function resolveQuestionType(question: any, context: any, info: any) {
-   if (question.answers) {
-      return "MCQuestion";
-   }
-   if (question.answer) {
-      return "FRQuestion";
-   }
-   return null;
-}
-
 const resolvers = {
-   Question: {
-      __resolveType: resolveQuestionType
-   },
    Mutation: {
       addTextBlock,
       addImageBlock,

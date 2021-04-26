@@ -1,36 +1,76 @@
-import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { COURSE_CONTENT_TABLE_NAME } from "../environment";
+import { 
+  Mission,
+  MissionInput,
+  MissionItem,
+  MissionContent
+} from "../interfaces/mission";
+import dynamodb, { PutCompositeParams, ScanParams, GetCompositeParams, QueryParams } from "./dynamodb";
+import { 
+  dbItemsToMissionContent,
+  dbMissionItemToMission,
+  convertMissionInputToItem,
+} from "./missionLogic";
 
-import { TABLE_NAME } from "../environment";
-import { Mission, MissionInput } from "../interfaces";
-import subMissionService from "./subMission";
-import dynamodb, { PutParams, ScanParams } from "./dynamodb";
+const MISSIONS_TABLE = COURSE_CONTENT_TABLE_NAME;
 
-const MISSIONS_TABLE = TABLE_NAME("Missions");
+async function addMission(missionInput: MissionInput) {
 
-async function add(input: MissionInput) {
-   const params: PutParams = {
-      tableName: MISSIONS_TABLE,
-      item: input
-   };
+  const missionItem = convertMissionInputToItem(missionInput);
+  
+  const params: PutCompositeParams = {
+     tableName: MISSIONS_TABLE,
+     item: missionItem
+  };
 
-   return dynamodb.put(params);
+  try {
+     await dynamodb.putComposite(params);
+     const [type, id] = missionItem.PK.split('#');
+     return id;
+  } catch (err) {
+     return err;
+  }
 }
 
-async function getById(missionId: string): Promise<Mission> {
-   const params = {
-      tableName: MISSIONS_TABLE,
-      key: missionId
-   };
+async function getMissionContent(missionId: string): Promise<MissionContent[]> {
+  const params: QueryParams = {
+     tableName: MISSIONS_TABLE,
+     keyConditionExpression: "parentMissionId = :missionId",
+     expressionAttributeValues: {
+        ":missionId": missionId
+     },
+    indexName: "parentMissionId-index"
+  };
 
-   const output = await dynamodb.get(params);
-   if (output.Item) {
-      const mission = <Mission>unmarshall(output.Item);
-      const subMissions = await subMissionService.listByMissionId(mission.id);
-      mission.subMissions = subMissions;
-      return mission;
-   }
+  try {
+     const output = await dynamodb.query(params);
+     console.log(output);
+     return await dbItemsToMissionContent(output.Items);;
+  } catch (err) {
+     return err;
+  }
+}
 
-   throw new Error(`Mission not found with id=${missionId}`);
+async function getMissionById(missionId: string): Promise<Mission> {
+
+  const getparams: GetCompositeParams = {
+    tableName: MISSIONS_TABLE,
+    key: {
+      PK: `MISSION#${missionId}`,
+      SK: `MISSION#${missionId}`
+    }
+  };
+
+  try {
+     const output = await dynamodb.getComposite(getparams);
+     if (!output.Item) {
+        throw new Error(`Mission not found with id=${missionId}`);
+     }
+     return dbMissionItemToMission(<MissionItem>unmarshall(output.Item));
+  } catch (err) {
+     return err;
+  }
 }
 
 async function listByCourse(course: string): Promise<Mission[]> {
@@ -45,7 +85,7 @@ async function listByCourse(course: string): Promise<Mission[]> {
    const output = await dynamodb.scan(params);
    if (output.Items) {
       const objectives = output.Items.map((item: any) => {
-         return <Mission>unmarshall(item);
+         return dbMissionItemToMission(<MissionItem>unmarshall(item));
       });
       return objectives;
    }
@@ -53,10 +93,19 @@ async function listByCourse(course: string): Promise<Mission[]> {
    return [];
 }
 
+function resolveMissionContentType(missionContent: any){
+  if(missionContent.pages){
+    return "Task";
+  }
+  return "SubMission";
+}
+
 const missionService = {
-   add,
-   getById,
-   listByCourse
+  addMission,
+  getMissionById,
+  listByCourse,
+  getMissionContent,
+  resolveMissionContentType
 };
 
 export default missionService;

@@ -1,7 +1,7 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import dynamodb from "./dynamodb";
-import { User, UpdateUserInput } from "../interfaces";
 import { USERS_TABLE_NAME } from "../environment";
+import { User, UpdateUserInput } from "../interfaces";
+import dynamodb from "./dynamodb";
 
 
 async function get(userId: string): Promise<User> {

@@ -37,10 +37,10 @@ async function addMCQuestion(question: MCQuestionInput) {
    return addQuestion(dbItem);
 }
 
-async function getById(questionId: string, withAnswer: boolean = false) {
+async function getById(questionId: string, prefix: string, withAnswer: boolean = false) : Promise<Question> {
    const params: GetParams = {
       tableName: QUESTIONS_TABLE,
-      key: questionId
+      key: prefix + questionId
     };
   
     const output = await dynamodb.get(params);
@@ -72,11 +72,20 @@ async function listByIds(questionIds: string[], withAnswer: boolean = false): Pr
    }
 }
 
+function resolveQuestionType(question: any){
+   if(!question.id) return null;
+   const [type, id] = question.id.split('#');
+   if(type == 'MC_QUESTION') return 'MCQuestion'
+   if(type == 'FR_QUESTION') return 'FRQuestion'
+   return null;
+}
+
 const questionService = {
    addFRQuestion,
    addMCQuestion,
    listByIds,
-   getById
+   getById,
+   resolveQuestionType
 };
 
 export default questionService;

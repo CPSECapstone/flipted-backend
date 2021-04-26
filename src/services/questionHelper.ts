@@ -58,10 +58,9 @@ export function dbResponsesToQuestions(items: any[]): Question[] {
       const questionItem = unmarshall(item);
       const splits = questionItem.id.split("#");
       const type = splits[0];
-      const id = splits[1];
       if (type === "MC_QUESTION") {
          return <MCQuestion>{
-            id,
+            id: questionItem.id,
             description: questionItem.description,
             points: questionItem.points,
             options: questionItem.options,
@@ -69,7 +68,7 @@ export function dbResponsesToQuestions(items: any[]): Question[] {
          };
       } else if (type === "FR_QUESTION") {
          return <FRQuestion>{
-            id,
+            id: questionItem.id,
             description: questionItem.description,
             points: questionItem.points,
             answer: questionItem.answer

@@ -5,7 +5,7 @@ import { CourseInput } from "../interfaces";
 import { uid } from "uid/secure";
 
 const client = new DynamoDBClient({ region: "us-east-1" });
-const COURSE_TABLE = "Courses-" + environment.stage;
+const COURSE_TABLE = "flipted-" + environment.stage;
 
 const marshallOpts: marshallOptions = {
   removeUndefinedValues: true,
