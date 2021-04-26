@@ -20,14 +20,7 @@ async function getTaskById(_: any, args: any, context: any, info: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
    const task: Task = await taskService.getTaskById(args.taskId);
 
-   try {
-      // apply any existing task progress
-      const taskProgress = await taskService.getTaskProgress(task.id, tokenPayload.username);
-      return taskBusLogic.applyTaskProgress(task, taskProgress);
-   } catch (err) {
-      // no existing task progress, return task in its current form
-      return task;
-   }
+   return task;
 }
 
 async function listTasksBySubmissionId(_: any, args: any, context: any, info: any) {
@@ -61,7 +54,7 @@ const resolvers = {
       tasks: listTasksBySubmissionId
    },
    Mutation: {
-      addTask: addTask,
+      addTask: addTask
    }
 };
 

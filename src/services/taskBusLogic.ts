@@ -4,10 +4,10 @@ import questionService from "./question";
 import {
    Task,
    TaskInput,
-   TaskItem,
    RubricRequirementInput,
-   RubricRequirementItem,
    Page,
+   TaskItem,
+   RubricRequirementItem,
 } from "../interfaces/taskInterfaces";
 import {
    QuizBlockItem,
@@ -17,37 +17,7 @@ import {
    TextBlock,
    VideoBlock
 } from "../interfaces/taskblock";
-import { TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
-
-/**
- *
- * @param task The task to be compared to
- * @param taskProgress The task progress to verify
- * @returns True if the task progress is valid, false if not
- * (such as containing taskBlock ids not associated with the task)
- */
-function areTaskProgressIdsValid(task: Task, taskProgress: TaskProgressInput): boolean {
-   const ids: string[] = [];
-
-   // construct a list of requirement ids by extracting them from each block
-   for (var requirement of task.requirements) {
-      ids.push(requirement.id);
-   }
-
-   // check submission size is size of required task blocks or smaller
-   if (taskProgress.finishedRequirementIds.length > ids.length) {
-      return false;
-   }
-
-   // check that each id from submission is in the task
-   for (var id of taskProgress.finishedRequirementIds) {
-      if (!ids.includes(id)) {
-         return false;
-      }
-   }
-
-   return true;
-}
+import {Answer, TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
 
 /**
  * Modifies a teacher specified default task with any ongoing completion progress represented
@@ -172,9 +142,8 @@ export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
 }
 
 const taskBusLogic = {
-   areTaskProgressIdsValid,
    applyTaskProgress,
-   convertTaskInputToTaskItem
+   convertTaskInputToTaskItem,
 };
 
 export default taskBusLogic;

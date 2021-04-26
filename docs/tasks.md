@@ -9,7 +9,6 @@
 -  Add Quiz Block To Task
 -  Get Task By Id
 
--  Submit Progress Towards a Task
 -  List Tasks By SubMission Id
 
 ### Examples
@@ -156,16 +155,7 @@ query {
 }
 ```
 
-#### Submit Progress Towards a Task
 
-```
-mutation submitTaskProgress {
-  submitTaskProgress(taskProgress: {
-    taskId: "f11589920bf"
-    finishedBlockIds: ["8e1abeb0b94", "bf30375842a", "33c7eb99d37"]
-  })
-}
-```
 
 #### List Tasks By SubMission Id
 
