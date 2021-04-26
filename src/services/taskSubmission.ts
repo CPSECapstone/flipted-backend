@@ -13,7 +13,12 @@ import {
 
 import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "./dynamodb";
 import { dbItemsToTaskItem } from "./taskBusLogic";
-import { dbItemsToQuestionAnswerItems, dbItemToTaskProgress, dbItemToTaskSubmissionResult, taskSubResultToDBItem } from "./taskSubmissionHelper";
+import {
+   dbItemsToQuestionAnswerItems,
+   dbItemToTaskProgress,
+   dbItemToTaskSubmissionResult,
+   taskSubResultToDBItem
+} from "./taskSubmissionHelper";
 
 const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
@@ -22,7 +27,12 @@ async function submitTaskProgress(taskProgress: TaskProgressItem) {
       tableName: TASK_SUBMISSIONS_TABLE,
       item: taskProgress
    };
-   return dynamodb.putComposite(params);
+
+   try {
+      return dynamodb.putComposite(params);
+   } catch (err) {
+      return err;
+   }
 }
 
 async function submitQuestionAnswer(answer: QuestionAnswerItem) {
@@ -30,7 +40,11 @@ async function submitQuestionAnswer(answer: QuestionAnswerItem) {
       tableName: TASK_SUBMISSIONS_TABLE,
       item: answer
    };
-   return dynamodb.putComposite(params);
+   try {
+      return dynamodb.putComposite(params);
+   } catch (err) {
+      return err;
+   }
 }
 
 async function getTaskSubmission(username: string, taskId: string) {
@@ -50,7 +64,6 @@ async function getTaskSubmission(username: string, taskId: string) {
 
    throw new Error(`Task Submission not found with id=${taskId}`);
 }
-
 
 async function getTaskRubricProgress(taskId: string, username: string): Promise<TaskProgress> {
    const params: GetCompositeParams = {
@@ -82,7 +95,7 @@ async function getQuizProgressForTask(taskId: string, username: string): Promise
    };
 
    const output = await dynamodb.query(params);
-   if(output.Items) {
+   if (output.Items) {
       const questionAnswerItems = output.Items.map((item: any) => {
          return <QuestionAnswerItem>unmarshall(item);
       });
@@ -93,13 +106,17 @@ async function getQuizProgressForTask(taskId: string, username: string): Promise
 }
 
 async function submitTaskForGrading(taskResult: TaskSubmissionResult, username: string) {
-   const dbItem: TaskSubmissionResultItem = taskSubResultToDBItem(taskResult, username)
+   const dbItem: TaskSubmissionResultItem = taskSubResultToDBItem(taskResult, username);
 
    const params: PutCompositeParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       item: dbItem
    };
-   return dynamodb.putComposite(params);
+   try {
+      return dynamodb.putComposite(params);
+   } catch (err) {
+      return err;
+   }
 }
 
 const taskSubmissionService = {
@@ -112,5 +129,3 @@ const taskSubmissionService = {
 };
 
 export default taskSubmissionService;
-
-
