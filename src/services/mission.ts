@@ -1,6 +1,7 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { MissionItem } from "../interfaces/mission";
+
 import dynamodb, {
    PutCompositeParams,
    ScanParams,

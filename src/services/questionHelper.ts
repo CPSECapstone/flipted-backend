@@ -1,6 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-
 import { FrQuestionItem, McQuestionItem, QuestionItem } from "../interfaces/question";
 
 export function gradeMultipleChoiceQuestion(question: McQuestion, answerIndex: number): number {

@@ -1,7 +1,6 @@
 import dynamodbMock from "../__mocks__/dynamodb";
 import dynamodb from "../../src/services/dynamodb";
 import { mocked } from "ts-jest/utils";
-
 import learningObjectiveService from "../../src/services/learningObjective";
 
 jest.mock("../../src/services/dynamodb", () => {

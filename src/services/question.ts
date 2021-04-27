@@ -81,6 +81,7 @@ function resolveQuestionType(question: any) {
    const [type, id] = question.id.split("#");
    if (type == "MC_QUESTION") return "McQuestion";
    if (type == "FR_QUESTION") return "FrQuestion";
+
    return null;
 }
 
