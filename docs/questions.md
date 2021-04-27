@@ -11,7 +11,7 @@
 
 ```
 mutation {
-  addFRQuestion(
+  addFrQuestion(
     question: {
       points: 2
       description: "A disturbance that transfers energy from place to place"
@@ -25,7 +25,7 @@ mutation {
 
 ```
 mutation {
-  addMCQuestion(
+  addMcQuestion(
     question: {
       points: 2
       description: "Ginger is a stem and not a root because"

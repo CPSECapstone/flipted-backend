@@ -1,10 +1,4 @@
 import taskblockService from "../services/taskblock";
-import {
-   QuizBlockInput,
-   TextBlockInput,
-   ImageBlockInput,
-   VideoBlockInput
-} from "../interfaces/taskblock";
 
 async function addTextBlock(_: any, args: any, context: any) {
    const textblock: TextBlockInput = args.textblock;

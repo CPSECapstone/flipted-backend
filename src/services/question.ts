@@ -1,6 +1,6 @@
 import { TABLE_NAME } from "../environment";
 import dynamodb, { BatchGetParams, GetParams, PutParams } from "./dynamodb";
-import { FRQuestionInput, MCQuestionInput, Question, QuestionItem } from "../interfaces/question";
+import { QuestionItem } from "../interfaces/question";
 
 import {
    dbResponsesToQuestions,
@@ -26,13 +26,13 @@ async function addQuestion(dbItem: QuestionItem) {
 }
 
 // add free response question to question bank
-async function addFRQuestion(question: FRQuestionInput) {
+async function addFrQuestion(question: FrQuestionInput) {
    const dbItem = frQuestionInputToDBItem(question);
    return addQuestion(dbItem);
 }
 
 // add multiple choice question to question bank
-async function addMCQuestion(question: MCQuestionInput) {
+async function addMcQuestion(question: McQuestionInput) {
    const dbItem = mcQuestionInputToDBItem(question);
    return addQuestion(dbItem);
 }
@@ -79,14 +79,14 @@ async function listByIds(questionIds: string[], withAnswer: boolean = false): Pr
 function resolveQuestionType(question: any) {
    if (!question.id) return null;
    const [type, id] = question.id.split("#");
-   if (type == "MC_QUESTION") return "MCQuestion";
-   if (type == "FR_QUESTION") return "FRQuestion";
+   if (type == "MC_QUESTION") return "McQuestion";
+   if (type == "FR_QUESTION") return "FrQuestion";
    return null;
 }
 
 const questionService = {
-   addFRQuestion,
-   addMCQuestion,
+   addFrQuestion,
+   addMcQuestion,
    listByIds,
    getById,
    resolveQuestionType

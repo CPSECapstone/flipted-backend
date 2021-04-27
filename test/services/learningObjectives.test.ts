@@ -3,7 +3,6 @@ import dynamodb from "../../src/services/dynamodb";
 import { mocked } from "ts-jest/utils";
 
 import learningObjectiveService from "../../src/services/learningObjective";
-import { LearningObjectiveInput } from "../../src/interfaces";
 
 jest.mock("../../src/services/dynamodb", () => {
    return dynamodbMock;

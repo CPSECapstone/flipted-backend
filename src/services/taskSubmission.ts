@@ -1,18 +1,14 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TABLE_NAME } from "../environment";
 import {
-   FreeResponseAnswerItem,
-   MultipleChoiceAnswerItem,
    Answer,
    QuestionAnswerItem,
-   TaskProgress,
    TaskProgressItem,
    TaskSubmissionResult,
    TaskSubmissionResultItem
 } from "../interfaces/taskSubmission";
 
 import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "./dynamodb";
-import { dbItemsToTaskItem } from "./taskBusLogic";
 import {
    dbItemsToQuestionAnswerItems,
    dbItemToTaskProgress,

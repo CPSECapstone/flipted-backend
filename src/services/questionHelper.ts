@@ -1,26 +1,17 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
 
-import {
-   FRQuestionInput,
-   FRQuestionItem,
-   MCQuestionInput,
-   MCQuestionItem,
-   Question,
-   QuestionItem,
-   FRQuestion,
-   MCQuestion
-} from "../interfaces/question";
+import { FrQuestionItem, McQuestionItem, QuestionItem } from "../interfaces/question";
 
-export function gradeMultipleChoiceQuestion(question: MCQuestion, answerIndex: number): number {
+export function gradeMultipleChoiceQuestion(question: McQuestion, answerIndex: number): number {
    return question.answers.includes(answerIndex) ? question.points : 0;
 }
 
 // convert input from request to a item object that will be inserted into db
-export function frQuestionInputToDBItem(question: FRQuestionInput): QuestionItem {
+export function frQuestionInputToDBItem(question: FrQuestionInput): QuestionItem {
    const questionId = uid();
 
-   const questionItem: FRQuestionItem = {
+   const questionItem: FrQuestionItem = {
       id: `FR_QUESTION#${questionId}`,
       description: question.description,
       points: question.points,
@@ -31,7 +22,7 @@ export function frQuestionInputToDBItem(question: FRQuestionInput): QuestionItem
 }
 
 // convert input from request to a item object that will be inserted into db
-export function mcQuestionInputToDBItem(question: MCQuestionInput): QuestionItem {
+export function mcQuestionInputToDBItem(question: McQuestionInput): QuestionItem {
    const options = question.options.map((option: string, index: number) => {
       return {
          id: index,
@@ -41,7 +32,7 @@ export function mcQuestionInputToDBItem(question: MCQuestionInput): QuestionItem
 
    const questionId = uid();
 
-   const questionItem: MCQuestionItem = {
+   const questionItem: McQuestionItem = {
       id: `MC_QUESTION#${questionId}`,
       description: question.description,
       points: question.points,
@@ -59,7 +50,7 @@ export function dbResponsesToQuestions(items: any[]): Question[] {
       const splits = questionItem.id.split("#");
       const type = splits[0];
       if (type === "MC_QUESTION") {
-         return <MCQuestion>{
+         return <McQuestion>{
             id: questionItem.id,
             description: questionItem.description,
             points: questionItem.points,
@@ -67,7 +58,7 @@ export function dbResponsesToQuestions(items: any[]): Question[] {
             answers: questionItem.answers
          };
       } else if (type === "FR_QUESTION") {
-         return <FRQuestion>{
+         return <FrQuestion>{
             id: questionItem.id,
             description: questionItem.description,
             points: questionItem.points,

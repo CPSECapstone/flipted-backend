@@ -3,7 +3,7 @@ const data = require("./freeResponseQuestions.json");
 function generatePayload(question) {
    let query = `
     mutation {
-      addFRQuestion(
+      addFrQuestion(
         question: {
           description: "${question.description}"
           points: ${question.points}

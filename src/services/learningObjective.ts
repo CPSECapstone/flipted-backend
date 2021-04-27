@@ -1,7 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-
 import { TABLE_NAME } from "../environment";
-import { LearningObjective, LearningObjectiveInput } from "../interfaces";
 import dynamodb, { PutParams, ScanParams } from "./dynamodb";
 
 const LEARNING_OBJECTIVES_TABLE = TABLE_NAME("LearningObjectives");

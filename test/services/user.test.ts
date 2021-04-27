@@ -1,7 +1,6 @@
 import dynamodb from "../../src/services/dynamodb";
 import { mocked } from "ts-jest/utils";
 import userService from "../../src/services/user";
-import { User } from "../../src/interfaces";
 import { marshall } from "@aws-sdk/util-dynamodb";
 
 const TEST_USER_ID = "1234";

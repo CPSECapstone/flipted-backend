@@ -2,15 +2,7 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import dynamodb, { PutCompositeParams, GetCompositeParams } from "./dynamodb";
 import questionService from "./question";
-import {
-   TextBlockInput,
-   ImageBlockInput,
-   VideoBlockInput,
-   QuizBlockInput,
-   QuizBlock,
-   TaskBlockItem,
-   QuizBlockItem
-} from "../interfaces/taskblock";
+import { TaskBlockItem, QuizBlockItem } from "../interfaces/taskblock";
 import {
    imageblockInputToDBItem,
    quizblockInputToDBItem,

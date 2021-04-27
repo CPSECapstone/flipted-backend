@@ -79,6 +79,8 @@ type TaskProgress {
    """
    taskId: String!
 
+   username: String!
+
    """
    The ids of each requirement
    """

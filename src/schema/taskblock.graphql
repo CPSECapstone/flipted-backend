@@ -1,29 +1,27 @@
 interface TaskBlock {
    title: String
+   blockId: String!
+   blockIndex: Int!
+   pageIndex: Int!
 }
 
 type TextBlock implements TaskBlock {
-   title: String
    contents: String!
    fontSize: Int!
 }
 
 type ImageBlock implements TaskBlock {
-   title: String
    imageUrl: String!
 }
 
 type VideoBlock implements TaskBlock {
-   title: String
    videoUrl: String!
 }
 
 type QuizBlock implements TaskBlock {
-   title: String
-   blockId: String
    requiredScore: Int
    points: Int
-   questions: [Question]
+   questions: [Question!]!
 }
 
 input ImageBlockInput {

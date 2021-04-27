@@ -4,6 +4,7 @@
    "description": "LMS for K-12, Senior Capstone Project.",
    "main": "apollo-server.ts",
    "scripts": {
+      "generate": "graphql-codegen --config codegen.yml",
       "format": "prettier --write .",
       "test": "NODE_ENV=development jest",
       "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
@@ -28,6 +29,9 @@
       "uid": "^2.0.0"
    },
    "devDependencies": {
+      "@graphql-codegen/cli": "1.21.4",
+      "@graphql-codegen/introspection": "1.18.2",
+      "@graphql-codegen/typescript": "^1.22.0",
       "@types/chai": "^4.2.15",
       "@types/jest": "^26.0.22",
       "chai": "^4.3.1",

@@ -1,5 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { SubMission, SubMissionItem, SubMissionInput } from "../interfaces/mission";
+import { SubMissionItem } from "../interfaces/mission";
 import { dbItemToSubMission, convertSubMissionInputToItem } from "../services/missionLogic";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import dynamodb, { GetCompositeParams, PutCompositeParams, ScanParams } from "./dynamodb";

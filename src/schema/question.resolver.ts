@@ -1,14 +1,13 @@
-import { FRQuestionInput, MCQuestionInput } from "../interfaces/question";
 import questionService from "../services/question";
 
-async function addFRQuestion(_: any, args: any, context: any, info: any) {
-   const question: FRQuestionInput = args.question;
-   return questionService.addFRQuestion(question);
+async function addFrQuestion(_: any, args: any, context: any, info: any) {
+   const question: FrQuestionInput = args.question;
+   return questionService.addFrQuestion(question);
 }
 
-async function addMCQuestion(_: any, args: any, context: any, info: any) {
-   const question: MCQuestionInput = args.question;
-   return questionService.addMCQuestion(question);
+async function addMcQuestion(_: any, args: any, context: any, info: any) {
+   const question: McQuestionInput = args.question;
+   return questionService.addMcQuestion(question);
 }
 
 async function listQuestionsByIds(_: any, args: any, context: any) {
@@ -25,8 +24,8 @@ const resolvers = {
       questions: listQuestionsByIds
    },
    Mutation: {
-      addFRQuestion,
-      addMCQuestion
+      addFrQuestion,
+      addMcQuestion
    },
    Question: {
       __resolveType: resolveQuestionType

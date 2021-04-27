@@ -1,4 +1,3 @@
-import { LearningObjectiveInput } from "../interfaces";
 import learningObjectiveService from "../services/learningObjective";
 
 async function addLearningObjective(_: any, args: any, context: any, info: any) {

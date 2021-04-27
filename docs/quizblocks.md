@@ -32,13 +32,13 @@ query {
     requiredScore,
     questions{
       __typename
-      ... on FRQuestion {
+      ... on FrQuestion {
         id
         description
         points
         answer
       }
-      ... on MCQuestion {
+      ... on McQuestion {
         id
         description
         points
