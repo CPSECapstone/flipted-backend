@@ -3,7 +3,7 @@ Represents a students answer to a multiple choice question
 """
 input MultipleChoiceAnswerInput {
    """
-   The id of the task the quiz block is contained in 
+   The id of the task the quiz block is contained in
    """
    taskId: String!
 
@@ -15,11 +15,11 @@ input MultipleChoiceAnswerInput {
    The id of the question the student is answering
    """
    questionId: String!
-   
+
    """
    The id of the question option chosen by the student
    """
-   answerId: Int! 
+   answerId: Int!
 }
 
 """
@@ -27,7 +27,7 @@ Represents a students answer to a free response question
 """
 input FreeResponseAnswerInput {
    """
-   The id of the task the question block is contained in 
+   The id of the task the question block is contained in
    """
    taskId: String!
 
@@ -63,36 +63,36 @@ input TaskProgressInput {
 input TaskProgressInput {
    """
    The id of the task the user is submitting progress towards.
-   """ 
+   """
    taskId: String!
 
    """
    The id if each requirement contained within each
    completed block
-   """ 
+   """
    finishedRequirementIds: [String!]!
 }
 
 type TaskProgress {
    """
    The id of the task the user submitted progress towards.
-   """ 
+   """
    taskId: String!
 
    """
    The ids of each requirement
-   """ 
+   """
    finishedRequirementIds: [String!]!
 }
 
 type QuestionProgress {
    """
    The id of the task the user submitted progress towards.
-   """ 
+   """
    taskId: String!
 
    """
-   Each recorded answer to the questions contained in the task. The points awarded will be null. 
+   Each recorded answer to the questions contained in the task. The points awarded will be null.
    """
    answers: [Answer!]!
 }
@@ -107,7 +107,7 @@ type TaskSubmissionResult {
    """
    graded: Boolean!
 
-   """ 
+   """
    The current amount of points awarded for completing this task.
    May be different before and after graded is set based on a combination of
    automatic scoring and teacher grading
@@ -117,10 +117,10 @@ type TaskSubmissionResult {
    pointsPossible: Int
 
    """
-   Information on the student result 
-   for each question as well as the question itself 
+   Information on the student result
+   for each question as well as the question itself
    """
-   questionAndAnswers: [QuestionAndAnswer!] 
+   questionAndAnswers: [QuestionAndAnswer!]
 
    teacherComment: String
 }
@@ -130,7 +130,7 @@ type Answer {
 
    pointsAwarded: Int
 
-   """ 
+   """
    Either the id of the chosen answer id or the provided free response
    """
    answer: String
@@ -143,10 +143,10 @@ type QuestionAndAnswer {
    """
    The question, including its contents and point value
    """
-   question: Question! 
-   
+   question: Question!
+
    """
-   The students answer to the question, including how many points were awarded. 
+   The students answer to the question, including how many points were awarded.
    """
    answer: Answer
 }
@@ -154,46 +154,45 @@ type QuestionAndAnswer {
 type Query {
    """
    Returns an existing task submission or errors if it does not exist.
-   May be useful as a TaskSubmissionResult can change as a result of instructor actions. 
+   May be useful as a TaskSubmissionResult can change as a result of instructor actions.
    """
-   retrieveTaskSubmission(taskId: String) : TaskSubmissionResult
+   retrieveTaskSubmission(taskId: String): TaskSubmissionResult
 
    """
    Returns student's progress on the rubric requirements for the task if it exists.
    """
-   retrieveTaskProgress(taskId: String) : TaskProgress
+   retrieveTaskProgress(taskId: String): TaskProgress
 
-      """
+   """
    Returns student's task progress on the rubric requirements if it exists.
    """
-   retrieveQuestionProgress(taskId: String) : QuestionProgress!
+   retrieveQuestionProgress(taskId: String): QuestionProgress!
 }
 
 type Mutation {
+   """
+   Should be called when a student has completed all rubric requirements and answered
+   all questions in the task. If the above requirements are not satisfied, this will return
+   an error. Tells the system that the task is ready for grading.
 
-  """
-  Should be called when a student has completed all rubric requirements and answered
-  all questions in the task. If the above requirements are not satisfied, this will return 
-  an error. Tells the system that the task is ready for grading.
+   Even on a successful submission, many fields may be null
+   as a Task may require manual grading by an instructor.
+   """
+   submitTask(taskId: String): TaskSubmissionResult
 
-  Even on a successful submission, many fields may be null 
-  as a Task may require manual grading by an instructor.
-  """
-  submitTask(taskId: String) : TaskSubmissionResult
-
-  """
-  Saves completed rubric requirements linked to this task for the user
-  calling this function
-  """
-  submitTaskProgress(taskProgress: TaskProgressInput) : String
+   """
+   Saves completed rubric requirements linked to this task for the user
+   calling this function
+   """
+   submitTaskProgress(taskProgress: TaskProgressInput): String
 
    """
    Saves a students answer to a multiple choice question quiz block
    """
-   saveMultipleChoiceProgress(mcBlockInput: MultipleChoiceAnswerInput) : Boolean
+   saveMultipleChoiceProgress(mcBlockInput: MultipleChoiceAnswerInput): Boolean
 
    """
    Saves and a students answer to a free response question quiz block
    """
-   saveFreeResponseProgress(frBlockInput: FreeResponseAnswerInput) : Boolean 
+   saveFreeResponseProgress(frBlockInput: FreeResponseAnswerInput): Boolean
 }

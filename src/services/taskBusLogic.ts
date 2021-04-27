@@ -7,7 +7,7 @@ import {
    RubricRequirementInput,
    Page,
    TaskItem,
-   RubricRequirementItem,
+   RubricRequirementItem
 } from "../interfaces/taskInterfaces";
 import {
    QuizBlockItem,
@@ -17,7 +17,7 @@ import {
    TextBlock,
    VideoBlock
 } from "../interfaces/taskblock";
-import {Answer, TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
+import { Answer, TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
 
 /**
  * Modifies a teacher specified default task with any ongoing completion progress represented
@@ -143,7 +143,7 @@ export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
 
 const taskBusLogic = {
    applyTaskProgress,
-   convertTaskInputToTaskItem,
+   convertTaskInputToTaskItem
 };
 
 export default taskBusLogic;

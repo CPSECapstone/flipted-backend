@@ -1,24 +1,24 @@
 {
-  "missions": [
-    {
-      "course": "Biology",
-      "name": "mission 1",
-      "description": "Descriptions on mission 1"
-    },
-    {
-      "course": "Biology",
-      "name": "mission 2",
-      "description": "Descriptions on mission 2"
-    },
-    {
-      "course": "Biology",
-      "name": "mission 3",
-      "description": "Descriptions on mission 3"
-    },
-    {
-      "course": "Biology",
-      "name": "mission 4",
-      "description": "Descriptions on mission 4"
-    }
-  ]
+   "missions": [
+      {
+         "course": "Biology",
+         "name": "mission 1",
+         "description": "Descriptions on mission 1"
+      },
+      {
+         "course": "Biology",
+         "name": "mission 2",
+         "description": "Descriptions on mission 2"
+      },
+      {
+         "course": "Biology",
+         "name": "mission 3",
+         "description": "Descriptions on mission 3"
+      },
+      {
+         "course": "Biology",
+         "name": "mission 4",
+         "description": "Descriptions on mission 4"
+      }
+   ]
 }

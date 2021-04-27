@@ -155,8 +155,6 @@ query {
 }
 ```
 
-
-
 #### List Tasks By SubMission Id
 
 ```

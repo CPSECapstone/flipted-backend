@@ -1,6 +1,6 @@
 import { CompositeDBItem } from "../services/dynamodb";
 import { TaskBlock } from "./taskblock";
-import { MissionContent } from "./mission"
+import { MissionContent } from "./mission";
 
 /***************** Input from Client *****************************/
 export interface TaskInput {
@@ -27,7 +27,7 @@ export interface RubricRequirementInput {
 
 /***************** Output to Client *****************************/
 
-export interface Task extends MissionContent{
+export interface Task extends MissionContent {
    id: string;
    name: string;
    points: number;

@@ -3,17 +3,17 @@ import { Question } from "./question";
 
 /***************** Input from Client *****************************/
 export interface QuestionAnswerInput {
-   taskId: string
-   questionBlockId: string
-   questionId: string
+   taskId: string;
+   questionBlockId: string;
+   questionId: string;
 }
 
 export interface MultipleChoiceAnswerInput extends QuestionAnswerInput {
-   answerId: number
+   answerId: number;
 }
 
 export interface FreeResponseAnswerInput extends QuestionAnswerInput {
-   answer: string
+   answer: string;
 }
 
 export interface TaskProgressInput {
@@ -32,74 +32,74 @@ export interface TaskProgressItem extends CompositeDBItem {
    PK: string; //username
    SK: string; //taskid
    finishedRequirementIds: string[];
-   username: string
+   username: string;
 }
 
 export interface QuestionAnswerItem {
-   PK: string
-   SK: string
-   taskId: string
-   questionBlockId: string
-   pointsAwarded: number
+   PK: string;
+   SK: string;
+   taskId: string;
+   questionBlockId: string;
+   pointsAwarded: number;
 }
 
 export interface MultipleChoiceAnswerItem extends QuestionAnswerItem {
-   answerIndex: number
+   answerIndex: number;
 }
 
 export interface FreeResponseAnswerItem extends QuestionAnswerItem {
-   answer: string
+   answer: string;
 }
 
 export interface TaskSubmissionResultItem {
-   PK: string // #TASK_SUBMISSION + username
-   SK: string // task id
-   graded: boolean
-   pointsAwarded: number
-   pointsPossible: number
-   teacherComment?: string
-   questionAndAnswers?: QuestionAndAnswer[]
+   PK: string; // #TASK_SUBMISSION + username
+   SK: string; // task id
+   graded: boolean;
+   pointsAwarded: number;
+   pointsPossible: number;
+   teacherComment?: string;
+   questionAndAnswers?: QuestionAndAnswer[];
 }
 
 /***************** Internal Types ******************************/
 export interface Answer {
-   username: string
-   questionId: string
-   taskId: string
-   questionBlockId: string
-   pointsAwarded: number
+   username: string;
+   questionId: string;
+   taskId: string;
+   questionBlockId: string;
+   pointsAwarded: number;
 }
 
 export interface MultipleChoiceAnswer extends Answer {
-   answerId: number
+   answerId: number;
 }
 
 export interface FreeResponseAnswer extends Answer {
-   answer: string
+   answer: string;
 }
 
 /** Mirrors GraphQL return type */
 export interface TaskSubmissionResult {
-   graded: boolean
-   taskId: string
-   pointsAwarded: number
-   pointsPossible: number
-   teacherComment?: string
-   questionAndAnswers?: QuestionAndAnswer[]
+   graded: boolean;
+   taskId: string;
+   pointsAwarded: number;
+   pointsPossible: number;
+   teacherComment?: string;
+   questionAndAnswers?: QuestionAndAnswer[];
 }
 
 export interface QuestionAndAnswer {
-   question: Question
-   answer: AnswerOut
+   question: Question;
+   answer: AnswerOut;
 }
 
 export interface AnswerOut {
-   questionId: string
-   pointsAwarded?: number
-   answer: string
+   questionId: string;
+   pointsAwarded?: number;
+   answer: string;
 }
 
 export interface QuestionProgress {
-   taskId: string
-   answers: AnswerOut[]
+   taskId: string;
+   answers: AnswerOut[];
 }
