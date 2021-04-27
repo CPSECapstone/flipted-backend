@@ -2,18 +2,19 @@
 
 ### APIs
 
-- Submit Task
-- Submit Progress Towards a Task
-- Submit Multiple Choice question
-- Submit Free Response question
+-  Submit Task
+-  Submit Progress Towards a Task
+-  Submit Multiple Choice question
+-  Submit Free Response question
 
-- Retrieve Progress Towards a Task
-- Retrieve Answers To Questions
-- Retrieve Task Submissions
+-  Retrieve Progress Towards a Task
+-  Retrieve Answers To Questions
+-  Retrieve Task Submissions
 
 ### Examples
 
 #### Submit Multiple Choice Question
+
 ```
 mutation saveMultipleChoiceProgress {
   saveMultipleChoiceProgress(mcBlockInput: {
@@ -26,6 +27,7 @@ mutation saveMultipleChoiceProgress {
 ```
 
 #### Submit Free Response Question
+
 ```
 mutation saveFreeResponseProgress {
   saveFreeResponseProgress(frBlockInput: {
@@ -38,6 +40,7 @@ mutation saveFreeResponseProgress {
 ```
 
 #### Submit Progress Towards a Task
+
 ```
 mutation submitTaskProgress {
   submitTaskProgress(taskProgress: {
@@ -48,6 +51,7 @@ mutation submitTaskProgress {
 ```
 
 #### Submit Task
+
 ```
 mutation submitTask {
   submitTask(taskId: "c5110abd8c4"){
@@ -80,25 +84,29 @@ mutation submitTask {
   }
 }
 ```
+
 #### Retrieve Progress Towards a Task
+
 query retrieveTaskProgress {
-  retrieveTaskProgress(taskId: "4f681550ba9") {
-    finishedRequirementIds
-    taskId
-  }
+retrieveTaskProgress(taskId: "4f681550ba9") {
+finishedRequirementIds
+taskId
+}
 }
 
 #### Retrieve Answers To Questions
+
 query retrieveQuestionProgress {
-  retrieveQuestionProgress(taskId: "4f681550ba9") {
-    answers {
-      questionId
-      answer
-    }
-  }
+retrieveQuestionProgress(taskId: "4f681550ba9") {
+answers {
+questionId
+answer
+}
+}
 }
 
 #### Retrieve Task Submission
+
 query retrieveTaskSubmission {
-  retrieveTaskSubmission(taskId: "4f681550ba9") {} // return type identical to submitting task above
+retrieveTaskSubmission(taskId: "4f681550ba9") {} // return type identical to submitting task above
 }

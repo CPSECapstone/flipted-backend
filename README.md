@@ -16,7 +16,6 @@ npm install
 
 3. Now you can start to play around with the **resolvers, typedefs, and queries** that our Apollo Server is working with (I use Postman to test queries).
 
-
 ## Development
 
 ### Resolvers
@@ -45,5 +44,5 @@ npm run deploy
 
 ### Code Linting
 
-+ [Getting Started - Linting your TypeScript Codebase](https://github.com/typescript-eslint/typescript-eslint/blob/HEAD/docs/getting-started/linting/README.md)
-+ [The future of TypeScript on ESLint](https://eslint.org/blog/2019/01/future-typescript-eslint)
+-  [Getting Started - Linting your TypeScript Codebase](https://github.com/typescript-eslint/typescript-eslint/blob/HEAD/docs/getting-started/linting/README.md)
+-  [The future of TypeScript on ESLint](https://eslint.org/blog/2019/01/future-typescript-eslint)

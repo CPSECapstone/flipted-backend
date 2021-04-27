@@ -2,7 +2,11 @@ import dynamodbMock from "../__mocks__/dynamodb";
 import taskBusLogic from "../../src/services/taskBusLogic";
 import { Task } from "../../src/interfaces/taskInterfaces";
 import { Answer, TaskProgress, TaskProgressInput } from "../../src/interfaces/taskSubmission";
-import { areTaskProgressIdsValid, taskQuestionsAllAnswered, taskRubricRequirementsComplete } from "../../src/services/taskSubmissionHelper";
+import {
+   areTaskProgressIdsValid,
+   taskQuestionsAllAnswered,
+   taskRubricRequirementsComplete
+} from "../../src/services/taskSubmissionHelper";
 import taskSubmission from "../../src/services/taskSubmission";
 
 const mockDate: Date = new Date(0);
@@ -171,7 +175,6 @@ describe("Verifying a task progress submission", () => {
 
 describe("Verifying a task submission", () => {
    it("Will have all rubric requirements match", async () => {
-      
       var taskSubmission: TaskProgress = {
          finishedRequirementIds: ["0", "1", "2", "3"],
          taskId: "0",
@@ -187,11 +190,9 @@ describe("Verifying a task submission", () => {
       };
 
       expect(taskRubricRequirementsComplete(sampleTask, taskSubmission)).toBeFalsy();
-
    });
 
    it("Will make sure all questions in the task are answered", async () => {
-      
       var questionAnswer: Answer[] = [
          {
             username: "Bubbles!",
@@ -200,10 +201,10 @@ describe("Verifying a task submission", () => {
             questionBlockId: "5",
             pointsAwarded: 3
          }
-      ]
+      ];
       expect(taskQuestionsAllAnswered(sampleTask, questionAnswer)).toBeTruthy();
 
-      questionAnswer = []
+      questionAnswer = [];
 
       expect(taskQuestionsAllAnswered(sampleTask, questionAnswer)).toBeFalsy();
    });

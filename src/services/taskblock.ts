@@ -55,12 +55,11 @@ async function addQuizBlock(quizblock: QuizBlockInput) {
 }
 
 async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
-   
    const params: GetCompositeParams = {
       tableName: QUIZBLOCKS_TABLE,
       key: {
          PK: blockId,
-         SK: blockId,
+         SK: blockId
       }
    };
 
@@ -88,7 +87,7 @@ const quizblockService = {
    addImageBlock,
    addVideoBlock,
    addQuizBlock,
-   getQuizBlockById,
+   getQuizBlockById
 };
 
 export default quizblockService;

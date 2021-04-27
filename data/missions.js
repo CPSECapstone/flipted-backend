@@ -1,7 +1,7 @@
-const data = require('./missions.json');
+const data = require("./missions.json");
 
 function generatePayload(mission) {
-  let query = `
+   let query = `
     mutation {
       addMission(
         mission: {
@@ -13,17 +13,13 @@ function generatePayload(mission) {
     }
   `;
 
-  const payload = {
-    operationName: null,
-    query,
-    variables: {}
-  };
+   const payload = {
+      operationName: null,
+      query,
+      variables: {}
+   };
 
-  return payload;
+   return payload;
 }
 
 module.exports = data.missions.map(generatePayload);
-
-
-
-

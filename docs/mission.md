@@ -2,9 +2,9 @@
 
 ### APIs
 
-- Add Mission
-- Query Mission
-- Query Missions By Course
+-  Add Mission
+-  Query Mission
+-  Query Missions By Course
 
 ### Examples
 

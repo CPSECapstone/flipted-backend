@@ -1,43 +1,43 @@
 union MissionContent = Task | SubMission
 
 type Mission {
-  id: String!
-  course: String!
-  name: String!
-  description: String!
-  missionContent: [MissionContent]
+   id: String!
+   course: String!
+   name: String!
+   description: String!
+   missionContent: [MissionContent]
 }
 
 type SubMission {
-  id: String!
-  name: String!
-  description: String!
-  parentMissionId: String!
-  parentMissionIndex: Int!
-  objectiveId: String
-  missionContent: [MissionContent]
+   id: String!
+   name: String!
+   description: String!
+   parentMissionId: String!
+   parentMissionIndex: Int!
+   objectiveId: String
+   missionContent: [MissionContent]
 }
 
 type Query {
-  mission(missionId: String): Mission
-  missions(course: String): [Mission]
-  subMission(subMissionId: String): SubMission
+   mission(missionId: String): Mission
+   missions(course: String): [Mission]
+   subMission(subMissionId: String): SubMission
 }
 
 input MissionInput {
-  course: String!
-  name: String!
-  description: String!
+   course: String!
+   name: String!
+   description: String!
 }
 
 input SubMissionInput {
-  name: String!
-  description: String!
-  parentMissionId: String!
-  parentMissionIndex: Int!
+   name: String!
+   description: String!
+   parentMissionId: String!
+   parentMissionIndex: Int!
 }
 
 type Mutation {
-  addMission(mission: MissionInput): String
-  addSubMission(subMission: SubMissionInput): String
+   addMission(mission: MissionInput): String
+   addSubMission(subMission: SubMissionInput): String
 }

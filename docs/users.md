@@ -2,8 +2,8 @@
 
 ### API
 
-- Get User based on Current Access Token
-- Update User attributes such as firstName, lastName
+-  Get User based on Current Access Token
+-  Update User attributes such as firstName, lastName
 
 ### Examples
 
