@@ -54,9 +54,9 @@ input QuizBlockInput {
    title: String
    pageIndex: Int!
    blockIndex: Int!
-   requiredScore: Int
-   points: Int
-   questionIds: [String]
+   requiredScore: Int!
+   points: Int!
+   questionIds: [String!]!
 }
 
 type QuizBlock implements TaskBlock {

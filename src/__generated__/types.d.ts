@@ -374,9 +374,9 @@ type QuizBlockInput = {
   title?: Maybe<Scalars['String']>;
   pageIndex: Scalars['Int'];
   blockIndex: Scalars['Int'];
-  requiredScore?: Maybe<Scalars['Int']>;
-  points?: Maybe<Scalars['Int']>;
-  questionIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  requiredScore: Scalars['Int'];
+  points: Scalars['Int'];
+  questionIds: Array<Scalars['String']>;
 };
 
 enum Role {
