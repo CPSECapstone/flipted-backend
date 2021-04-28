@@ -1,10 +1,10 @@
-const superagent = require('superagent');
-const data = require('./subMissions.json');
+const superagent = require("superagent");
+const data = require("./subMissions.json");
 
-const END_POINT = 'http://localhost:3000/dev/graphql';
+const END_POINT = "http://localhost:3000/dev/graphql";
 
 function generatePayload(subMission) {
-  let query = `
+   let query = `
     mutation {
       addSubMission(
         subMission: {
@@ -17,17 +17,13 @@ function generatePayload(subMission) {
     }
   `;
 
-  const payload = {
-    operationName: null,
-    query,
-    variables: {}
-  };
+   const payload = {
+      operationName: null,
+      query,
+      variables: {}
+   };
 
-  return payload;
+   return payload;
 }
 
-module.exports = data.subMissions.map(generatePayload);;
-
-
-
-
+module.exports = data.subMissions.map(generatePayload);

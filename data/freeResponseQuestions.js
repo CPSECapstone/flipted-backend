@@ -1,7 +1,7 @@
-const data = require('./freeResponseQuestions.json');
+const data = require("./freeResponseQuestions.json");
 
 function generatePayload(question) {
-  let query = `
+   let query = `
     mutation {
       addFRQuestion(
         question: {
@@ -13,14 +13,13 @@ function generatePayload(question) {
     }
   `;
 
-  const payload = {
-    operationName: null,
-    query,
-    variables: {}
-  };
+   const payload = {
+      operationName: null,
+      query,
+      variables: {}
+   };
 
-  return payload;
+   return payload;
 }
 
 module.exports = data.questions.map(generatePayload);
-

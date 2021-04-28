@@ -75,7 +75,7 @@ async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
 const taskService = {
    add,
    getTaskById,
-   listBySubMissionId,
+   listBySubMissionId
 };
 
 export default taskService;

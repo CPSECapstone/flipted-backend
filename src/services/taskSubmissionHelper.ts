@@ -45,8 +45,8 @@ export function dbItemToTaskSubmissionResult(item: TaskSubmissionResultItem) {
       teacherComment: item.teacherComment,
       questionAndAnswers: item.questionAndAnswers,
       taskId: item.SK
-   }
-   return output
+   };
+   return output;
 }
 
 // convert input from request to a item object that will be inserted into db
@@ -253,21 +253,21 @@ export function answerToAnswerOut(answer: Answer): AnswerOut {
          pointsAwarded: answer.pointsAwarded
       };
    }
-   return answerOut
+   return answerOut;
 }
 
-export function createQuestionProgressOutput(taskId: string, answers: Answer[]) : QuestionProgress {
+export function createQuestionProgressOutput(taskId: string, answers: Answer[]): QuestionProgress {
    return {
       taskId: taskId,
       answers: answers.map(answer => {
-         const answerOut = answerToAnswerOut(answer)
+         const answerOut = answerToAnswerOut(answer);
 
          // dont want students getting their grade before task is submitted
-         answerOut.pointsAwarded = undefined
+         answerOut.pointsAwarded = undefined;
 
-         return answerOut
+         return answerOut;
       })
-   }
+   };
 }
 
 /** Need a function to find the associated question with an answer since mapping can't be garunteed */

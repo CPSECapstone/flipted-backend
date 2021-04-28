@@ -93,14 +93,17 @@ const mockTaskSubmissionResultItem: TaskSubmissionResultItem = {
    questionAndAnswers: JSON.parse(JSON.stringify(mockQuestionAndAnswers))
 };
 
-
 describe("converting TaskSubmission types", () => {
    it("will convert from a TaskSubmissionResult to a TaskSubmissionResultItem", async () => {
-      expect(taskSubResultToDBItem(mockTaskSubmissionResult, username)).toEqual(mockTaskSubmissionResultItem);
+      expect(taskSubResultToDBItem(mockTaskSubmissionResult, username)).toEqual(
+         mockTaskSubmissionResultItem
+      );
    });
 
    it("will convert from a TaskSubmissionResultItem to a TaskSubmissionResult", async () => {
-      expect(dbItemToTaskSubmissionResult(mockTaskSubmissionResultItem)).toEqual(mockTaskSubmissionResult);
+      expect(dbItemToTaskSubmissionResult(mockTaskSubmissionResultItem)).toEqual(
+         mockTaskSubmissionResult
+      );
    });
 });
 

@@ -243,7 +243,7 @@ export interface QueryParams {
    tableName: string;
    keyConditionExpression: string;
    expressionAttributeValues: { [key: string]: any };
-   filterExpression?: string
+   filterExpression?: string;
    indexName?: string;
 }
 

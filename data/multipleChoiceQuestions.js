@@ -1,11 +1,13 @@
-const data = require('./multipleChoiceQuestions.json');
+const data = require("./multipleChoiceQuestions.json");
 
 function generatePayload(question) {
-  let options = question.options.map((option) => {
-    return `"${option}"`;
-  }).join(", ");
+   let options = question.options
+      .map(option => {
+         return `"${option}"`;
+      })
+      .join(", ");
 
-  let query = `
+   let query = `
     mutation {
       addMCQuestion(
         question: {
@@ -18,14 +20,13 @@ function generatePayload(question) {
     }
   `;
 
-  const payload = {
-    operationName: null,
-    query,
-    variables: {}
-  };
+   const payload = {
+      operationName: null,
+      query,
+      variables: {}
+   };
 
-  return payload;
+   return payload;
 }
 
 module.exports = data.questions.map(generatePayload);
-

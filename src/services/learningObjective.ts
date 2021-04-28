@@ -7,37 +7,37 @@ import dynamodb, { PutParams, ScanParams } from "./dynamodb";
 const LEARNING_OBJECTIVES_TABLE = TABLE_NAME("LearningObjectives");
 
 async function add(input: LearningObjectiveInput) {
-  const params: PutParams = {
-    tableName: LEARNING_OBJECTIVES_TABLE,
-    item: input
-  };
+   const params: PutParams = {
+      tableName: LEARNING_OBJECTIVES_TABLE,
+      item: input
+   };
 
-  return dynamodb.put(params);
+   return dynamodb.put(params);
 }
 
 async function listByCourse(course: string): Promise<LearningObjective[]> {
-  const params: ScanParams = {
-    tableName: LEARNING_OBJECTIVES_TABLE,
-    filterExpression: 'course = :course',
-    expressionAttributeValues: {
-      ":course": course
-    }
-  };
+   const params: ScanParams = {
+      tableName: LEARNING_OBJECTIVES_TABLE,
+      filterExpression: "course = :course",
+      expressionAttributeValues: {
+         ":course": course
+      }
+   };
 
-  const output = await dynamodb.scan(params);
-  if (output.Items) {
-    const objectives = output.Items.map((item: any) => {
-      return <LearningObjective>unmarshall(item);
-    });
-    return objectives;
-  }
+   const output = await dynamodb.scan(params);
+   if (output.Items) {
+      const objectives = output.Items.map((item: any) => {
+         return <LearningObjective>unmarshall(item);
+      });
+      return objectives;
+   }
 
-  return [];
+   return [];
 }
 
 const learningObjectiveService = {
-  add,
-  listByCourse
-}
+   add,
+   listByCourse
+};
 
 export default learningObjectiveService;

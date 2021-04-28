@@ -1,35 +1,35 @@
 service: apollo-lambda
 provider:
-  name: aws
-  runtime: nodejs12.x
-  iamRoleStatements:
-    - Effect:
-        "Allow"
-        #This specifies the actions allowed on your resource, * is all
-      Action:
-        - "dynamodb:*"
-        #This specifies the ARN of your resources
-      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+   name: aws
+   runtime: nodejs12.x
+   iamRoleStatements:
+      - Effect:
+           "Allow"
+           #This specifies the actions allowed on your resource, * is all
+        Action:
+           - "dynamodb:*"
+           #This specifies the ARN of your resources
+        Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
 functions:
-  graphql:
-    handler: src/apollo-server.graphqlHandler
-    events:
-      - http:
-          path: graphql
-          method: post
-          cors: true
-          authorizor: arn:userpool-${env:STAGE}
-      - http:
-          path: graphql
-          method: get
-          cors: true
+   graphql:
+      handler: src/apollo-server.graphqlHandler
+      events:
+         - http:
+              path: graphql
+              method: post
+              cors: true
+              authorizor: arn:userpool-${env:STAGE}
+         - http:
+              path: graphql
+              method: get
+              cors: true
 
 plugins:
-  - serverless-webpack
-  - serverless-offline
-  - serverless-dotenv-plugin
+   - serverless-webpack
+   - serverless-offline
+   - serverless-dotenv-plugin
 
 custom:
-  webpack:
-    includeModules: true
+   webpack:
+      includeModules: true

@@ -2,8 +2,8 @@
 
 ### APIs
 
-- Add SubMission
-- Query SubMission
+-  Add SubMission
+-  Query SubMission
 
 ### Examples
 
