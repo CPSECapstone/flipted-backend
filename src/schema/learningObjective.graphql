@@ -7,10 +7,11 @@ type LearningObjective {
    name: String!
    course: String!
    description: String!
+   tasks: [Task!]!
 }
 
 type Query {
-   learningObjectives(course: String): [LearningObjective]
+   learningObjectives(course: String!): [LearningObjective!]!
 }
 
 input LearningObjectiveInput {
@@ -20,5 +21,5 @@ input LearningObjectiveInput {
 }
 
 type Mutation {
-   addLearningObjective(objective: LearningObjectiveInput): String
+   addLearningObjective(objective: LearningObjectiveInput!): String!
 }

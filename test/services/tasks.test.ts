@@ -95,7 +95,8 @@ const sampleTask = {
                   {
                      id: "questionId123",
                      description: "Color of sky?",
-                     points: 2
+                     points: 2,
+                     answer: "blue"
                   }
                ]
             }

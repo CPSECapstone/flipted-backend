@@ -5,6 +5,16 @@ generates:
       plugins:
          - typescript
       config:
+         declarationKind:
+           union: type
+           type: type
+           input: type
+           scalar: type
+           arguments: type
+           interface: interface
+         scalars:
+            Date: Date
+         avoidOptionals: false
          constEnums: false
          enumsAsTypes: false
          numericEnums: false
@@ -12,7 +22,7 @@ generates:
          enumsAsConst: false
          onlyOperationTypes: false
          immutableTypes: false
-         maybeValue: T | null
+         maybeValue: T | null | undefined
          noExport: true
          enumPrefix: true
          fieldWrapperValue: T
@@ -21,3 +31,4 @@ generates:
          skipTypename: false
          nonOptionalTypename: false
          useTypeImports: false
+         useImplementingTypes: false

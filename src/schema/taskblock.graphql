@@ -6,19 +6,35 @@ interface TaskBlock {
 }
 
 type TextBlock implements TaskBlock {
-   contents: String!
-   fontSize: Int!
+   title: String
+   blockId: String!
+   blockIndex: Int!
+   pageIndex: Int!
+   contents: String
+   fontSize: Int
 }
 
 type ImageBlock implements TaskBlock {
+   title: String
+   blockId: String!
+   blockIndex: Int!
+   pageIndex: Int!
    imageUrl: String!
 }
 
 type VideoBlock implements TaskBlock {
+   title: String
+   blockId: String!
+   blockIndex: Int!
+   pageIndex: Int!
    videoUrl: String!
 }
 
 type QuizBlock implements TaskBlock {
+   title: String
+   blockId: String!
+   blockIndex: Int!
+   pageIndex: Int!
    requiredScore: Int
    points: Int
    questions: [Question!]!
@@ -59,17 +75,13 @@ input QuizBlockInput {
    questionIds: [String!]!
 }
 
-type QuizBlock implements TaskBlock {
-   title: String
-   blockId: String
-   requiredScore: Int
-   points: Int
-   questions: [Question]
+type Query {
+   quizblock(taskId: String!, blockId: String!): QuizBlock!
 }
 
 type Mutation {
-   addTextBlock(textblock: TextBlockInput): String
-   addImageBlock(imageblock: ImageBlockInput): String
-   addVideoBlock(videoblock: VideoBlockInput): String
-   addQuizBlock(quizblock: QuizBlockInput): String
+   addTextBlock(textblock: TextBlockInput!): String!
+   addImageBlock(imageblock: ImageBlockInput!): String!
+   addVideoBlock(videoblock: VideoBlockInput!): String!
+   addQuizBlock(quizblock: QuizBlockInput!): String!
 }

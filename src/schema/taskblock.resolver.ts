@@ -20,7 +20,14 @@ async function addQuizBlock(_: any, args: any, context: any) {
    return taskblockService.addQuizBlock(quizblock);
 }
 
+async function getQuizBlockById(_: any, args: any, context: any) {
+   return taskblockService.getQuizBlockById(args.taskId, args.blockId);
+}
+
 const resolvers = {
+   Query: {
+      quizblock: getQuizBlockById
+   },
    Mutation: {
       addTextBlock,
       addImageBlock,

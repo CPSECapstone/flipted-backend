@@ -1,4 +1,4 @@
-type Maybe<T> = T | null;
+type Maybe<T> = T | null | undefined;
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -9,7 +9,7 @@ type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: any;
+  Date: Date;
 };
 
 type Answer = {
@@ -42,6 +42,7 @@ type FrQuestion = Question & {
   description: Scalars['String'];
   points: Scalars['Int'];
   answer: Scalars['String'];
+  feedback?: Maybe<Scalars['String']>;
 };
 
 type FrQuestionInput = {
@@ -64,6 +65,10 @@ type FreeResponseAnswerInput = {
 
 type ImageBlock = TaskBlock & {
   __typename?: 'ImageBlock';
+  title?: Maybe<Scalars['String']>;
+  blockId: Scalars['String'];
+  blockIndex: Scalars['Int'];
+  pageIndex: Scalars['Int'];
   imageUrl: Scalars['String'];
 };
 
@@ -81,6 +86,7 @@ type LearningObjective = {
   name: Scalars['String'];
   course: Scalars['String'];
   description: Scalars['String'];
+  tasks: Array<Task>;
 };
 
 type LearningObjectiveInput = {
@@ -96,6 +102,7 @@ type McQuestion = Question & {
   points: Scalars['Int'];
   options: Array<QuestionOption>;
   answers: Array<Scalars['Int']>;
+  feedback?: Maybe<Scalars['String']>;
 };
 
 type McQuestionInput = {
@@ -137,16 +144,16 @@ type MultipleChoiceAnswerInput = {
 type Mutation = {
   __typename?: 'Mutation';
   addCourse?: Maybe<Course>;
-  addFrQuestion?: Maybe<Scalars['String']>;
-  addImageBlock?: Maybe<Scalars['String']>;
-  addLearningObjective?: Maybe<Scalars['String']>;
-  addMcQuestion?: Maybe<Scalars['String']>;
+  addFrQuestion: Scalars['String'];
+  addImageBlock: Scalars['String'];
+  addLearningObjective: Scalars['String'];
+  addMcQuestion: Scalars['String'];
   addMission?: Maybe<Scalars['String']>;
-  addQuizBlock?: Maybe<Scalars['String']>;
+  addQuizBlock: Scalars['String'];
   addSubMission?: Maybe<Scalars['String']>;
   addTask?: Maybe<Scalars['String']>;
-  addTextBlock?: Maybe<Scalars['String']>;
-  addVideoBlock?: Maybe<Scalars['String']>;
+  addTextBlock: Scalars['String'];
+  addVideoBlock: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress?: Maybe<Scalars['Boolean']>;
   /** Saves a students answer to a multiple choice question quiz block */
@@ -175,22 +182,22 @@ type MutationAddCourseArgs = {
 
 
 type MutationAddFrQuestionArgs = {
-  question?: Maybe<FrQuestionInput>;
+  question: FrQuestionInput;
 };
 
 
 type MutationAddImageBlockArgs = {
-  imageblock?: Maybe<ImageBlockInput>;
+  imageblock: ImageBlockInput;
 };
 
 
 type MutationAddLearningObjectiveArgs = {
-  objective?: Maybe<LearningObjectiveInput>;
+  objective: LearningObjectiveInput;
 };
 
 
 type MutationAddMcQuestionArgs = {
-  question?: Maybe<McQuestionInput>;
+  question: McQuestionInput;
 };
 
 
@@ -200,7 +207,7 @@ type MutationAddMissionArgs = {
 
 
 type MutationAddQuizBlockArgs = {
-  quizblock?: Maybe<QuizBlockInput>;
+  quizblock: QuizBlockInput;
 };
 
 
@@ -215,12 +222,12 @@ type MutationAddTaskArgs = {
 
 
 type MutationAddTextBlockArgs = {
-  textblock?: Maybe<TextBlockInput>;
+  textblock: TextBlockInput;
 };
 
 
 type MutationAddVideoBlockArgs = {
-  videoblock?: Maybe<VideoBlockInput>;
+  videoblock: VideoBlockInput;
 };
 
 
@@ -263,10 +270,11 @@ type Query = {
   _empty?: Maybe<Scalars['String']>;
   courses?: Maybe<Array<Maybe<Course>>>;
   getUser?: Maybe<User>;
-  learningObjectives?: Maybe<Array<Maybe<LearningObjective>>>;
+  learningObjectives: Array<LearningObjective>;
   mission?: Maybe<Mission>;
   missions?: Maybe<Array<Maybe<Mission>>>;
-  questions?: Maybe<Array<Maybe<Question>>>;
+  questions: Array<Question>;
+  quizblock: QuizBlock;
   /** Returns student's task progress on the rubric requirements if it exists. */
   retrieveQuestionProgress: QuestionProgress;
   /** Returns student's progress on the rubric requirements for the task if it exists. */
@@ -283,7 +291,7 @@ type Query = {
 
 
 type QueryLearningObjectivesArgs = {
-  course?: Maybe<Scalars['String']>;
+  course: Scalars['String'];
 };
 
 
@@ -299,6 +307,12 @@ type QueryMissionsArgs = {
 
 type QueryQuestionsArgs = {
   questionIds: Array<Scalars['String']>;
+};
+
+
+type QueryQuizblockArgs = {
+  taskId: Scalars['String'];
+  blockId: Scalars['String'];
 };
 
 
@@ -331,11 +345,12 @@ type QueryTasksArgs = {
   subMissionId?: Maybe<Scalars['String']>;
 };
 
-type Question = {
+interface Question {
   id: Scalars['String'];
   description: Scalars['String'];
   points: Scalars['Int'];
-};
+  feedback?: Maybe<Scalars['String']>;
+}
 
 /** An answer to a question that has been graded either automatically or by the teacher */
 type QuestionAndAnswer = {
@@ -362,11 +377,13 @@ type QuestionProgress = {
 
 type QuizBlock = TaskBlock & {
   __typename?: 'QuizBlock';
-  blockId?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  blockId: Scalars['String'];
+  blockIndex: Scalars['Int'];
+  pageIndex: Scalars['Int'];
+  requiredScore?: Maybe<Scalars['Int']>;
   points?: Maybe<Scalars['Int']>;
   questions: Array<Question>;
-  requiredScore?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
 };
 
 type QuizBlockInput = {
@@ -429,12 +446,12 @@ type Task = {
   requirements: Array<RubricRequirement>;
 };
 
-type TaskBlock = {
+interface TaskBlock {
   title?: Maybe<Scalars['String']>;
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
-};
+}
 
 type TaskInput = {
   name: Scalars['String'];
@@ -494,8 +511,12 @@ type TaskSubmissionResult = {
 
 type TextBlock = TaskBlock & {
   __typename?: 'TextBlock';
-  contents: Scalars['String'];
-  fontSize: Scalars['Int'];
+  title?: Maybe<Scalars['String']>;
+  blockId: Scalars['String'];
+  blockIndex: Scalars['Int'];
+  pageIndex: Scalars['Int'];
+  contents?: Maybe<Scalars['String']>;
+  fontSize?: Maybe<Scalars['Int']>;
 };
 
 type TextBlockInput = {
@@ -529,6 +550,10 @@ type User = {
 
 type VideoBlock = TaskBlock & {
   __typename?: 'VideoBlock';
+  title?: Maybe<Scalars['String']>;
+  blockId: Scalars['String'];
+  blockIndex: Scalars['Int'];
+  pageIndex: Scalars['Int'];
   videoUrl: Scalars['String'];
 };
 
