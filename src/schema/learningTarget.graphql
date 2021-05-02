@@ -1,0 +1,30 @@
+type LearningTarget {
+   id: String!
+   name: String!
+   description: String!
+   subject: String!
+   gradeLevel: Int!
+   icon: String!
+   standards: String!
+   course: String!
+   objectives: [LearningObjective!]!
+}
+
+type Query {
+   learningTarget(targetId: String!): LearningTarget!
+   learningTargets(course: String!): [LearningTarget!]!
+}
+
+input LearningTargetInput {
+   name: String!
+   description: String!
+   subject: String!
+   gradeLevel: Int!
+   icon: String!
+   standards: String!
+   course: String!
+}
+
+type Mutation {
+   addLearningTarget(target: LearningTargetInput!): String!
+}
