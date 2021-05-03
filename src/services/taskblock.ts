@@ -70,9 +70,10 @@ async function getQuizBlockById(taskId: string, blockId: string): Promise<QuizBl
             questions: questions
          };
       }
-      throw new Error(`QuizBlock not found with blockId=${blockId}`);
+      throw new Error(`QuizBlock not found with blockId=${blockId} within taskId=${taskId}`);
    } catch (err) {
-      return err;
+      console.log("Errored like it should in getQuizBlockById")
+      throw err;
    }
 }
 
