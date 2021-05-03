@@ -1,7 +1,7 @@
 const superagent = require("superagent");
 const END_POINT = "http://localhost:3000/dev/graphql";
 
-function sendRequest(payload) {
+module.exports = function sendRequest(payload) {
    superagent
       .post(END_POINT)
       .send(payload)
@@ -13,7 +13,7 @@ function sendRequest(payload) {
             console.dir(res.body.data, { depth: null, colors: true });
          }
       });
-}
+};
 
 // const missionPayloads = require("./missions");
 // missionPayloads.forEach(sendRequest);

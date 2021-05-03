@@ -1,6 +1,6 @@
 type Target {
    targetId: String!
-   name: String!
+   targetName: String!
    description: String!
    subject: String!
    gradeLevel: Int!
@@ -11,12 +11,12 @@ type Target {
 }
 
 type Query {
-   target(course: String!, targetId: String!): Target!
+   target(targetId: String!): Target!
    targets(course: String!): [Target!]!
 }
 
 input TargetInput {
-   name: String!
+   targetName: String!
    description: String!
    subject: String!
    gradeLevel: Int!
