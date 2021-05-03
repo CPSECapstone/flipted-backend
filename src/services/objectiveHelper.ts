@@ -5,8 +5,8 @@ import { ObjectiveItem, ObjectivePK, ObjectiveSK } from "../interfaces/objective
 export function objectiveInputToDBItem(input: ObjectiveInput): ObjectiveItem {
    const objectiveId = uid();
    const item: ObjectiveItem = {
-      PK: ObjectivePK(input.course),
-      SK: ObjectiveSK(objectiveId),
+      PK: ObjectivePK(input.courseName),
+      SK: ObjectiveSK(input.name),
       objectiveId,
       ...input
    };
@@ -21,7 +21,7 @@ export function dbItemToObjective(item: ObjectiveItem): Objective {
       description: item.description,
       targetId: item.targetId,
       targetName: item.targetName,
-      course: item.course
+      courseName: item.courseName
    };
 }
 

@@ -253,7 +253,7 @@ type Objective = {
   description: Scalars['String'];
   targetId: Scalars['String'];
   targetName: Scalars['String'];
-  course: Scalars['String'];
+  courseName: Scalars['String'];
   tasks: Array<Task>;
 };
 
@@ -262,7 +262,7 @@ type ObjectiveInput = {
   description: Scalars['String'];
   targetId: Scalars['String'];
   targetName: Scalars['String'];
-  course: Scalars['String'];
+  courseName: Scalars['String'];
 };
 
 type Page = {
@@ -314,13 +314,13 @@ type QueryMissionsArgs = {
 
 
 type QueryObjectiveArgs = {
-  course: Scalars['String'];
-  objectiveId: Scalars['String'];
+  courseName: Scalars['String'];
+  objectiveName: Scalars['String'];
 };
 
 
 type QueryObjectivesArgs = {
-  course: Scalars['String'];
+  courseName: Scalars['String'];
 };
 
 

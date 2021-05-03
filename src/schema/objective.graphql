@@ -8,13 +8,13 @@ type Objective {
    description: String!
    targetId: String!
    targetName: String!
-   course: String!
+   courseName: String!
    tasks: [Task!]!
 }
 
 type Query {
-   objective(course: String!, objectiveId: String!): Objective!
-   objectives(course: String!): [Objective!]!
+   objective(courseName: String!, objectiveName: String!): Objective!
+   objectives(courseName: String!): [Objective!]!
 }
 
 input ObjectiveInput {
@@ -22,7 +22,7 @@ input ObjectiveInput {
    description: String!
    targetId: String!
    targetName: String!
-   course: String!
+   courseName: String!
 }
 
 type Mutation {

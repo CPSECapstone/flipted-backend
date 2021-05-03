@@ -2,10 +2,12 @@ import { CompositeDBItem } from "../services/dynamodb";
 
 export type ObjectiveItem = CompositeDBItem & Omit<Objective, "__typename" | "tasks">;
 
-export function ObjectivePK(course: string): string {
-   return `COURSE#${course}`;
+export const ObjectiveSKPrefix = "OBJECTIVE";
+
+export function ObjectivePK(courseName: string): string {
+   return `COURSE#${courseName}`;
 }
 
-export function ObjectiveSK(objectiveId: string): string {
-   return `OBJECTIVE#${objectiveId}`;
+export function ObjectiveSK(objectiveName: string): string {
+   return `${ObjectiveSKPrefix}#${objectiveName}`;
 }

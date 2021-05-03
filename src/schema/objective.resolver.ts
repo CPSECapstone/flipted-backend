@@ -5,11 +5,11 @@ async function addObjective(_: any, args: MutationAddObjectiveArgs, context: any
 }
 
 async function getObjective(_: any, args: QueryObjectiveArgs, context: any, info: any) {
-   return service.getObjective(args.course, args.objectiveId);
+   return service.getObjective(args.courseName, args.objectiveName);
 }
 
 async function listObjectivesByCourse(_: any, args: QueryObjectivesArgs, context: any, info: any) {
-   return service.listObjectivesByCourse(args.course);
+   return service.listObjectivesByCourse(args.courseName);
 }
 
 const resolvers = {

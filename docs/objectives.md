@@ -18,7 +18,7 @@ mutation {
       description: "Develop a model that predicts and describes changes in particle motion, temperature, and state of a pure substance when thermal energy is added or removed."
       targetId: "targetId",
       targetName: "TE",
-      course: "Integrated Science"
+      courseName: "Integrated Science"
     }
   )
 }
@@ -28,13 +28,13 @@ mutation {
 
 ```
 query {
-  objective(course: "Integrated Science", objectiveId: "241a5a69f38") {
+  objective(courseName: "Integrated Science", objectiveName: "TE 1") {
     objectiveId
     name
     description
     targetId
     targetName
-    course
+    courseName
   }
 }
 ```
@@ -43,13 +43,13 @@ query {
 
 ```
 query {
-  objectives(course: "Integrated Science") {
+  objectives(courseName: "Integrated Science") {
     objectiveId
     name
     description
     targetId
     targetName
-    course
+    courseName
   }
 }
 ```

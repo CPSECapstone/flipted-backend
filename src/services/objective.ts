@@ -1,6 +1,11 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TABLE_NAME } from "../environment";
-import { ObjectiveItem, ObjectivePK, ObjectiveSK } from "../interfaces/objective";
+import {
+   ObjectiveItem,
+   ObjectivePK,
+   ObjectiveSK,
+   ObjectiveSKPrefix
+} from "../interfaces/objective";
 import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "./dynamodb";
 import * as helper from "./objectiveHelper";
 
@@ -22,12 +27,12 @@ export async function addObjective(input: ObjectiveInput) {
    }
 }
 
-export async function getObjective(course: string, objectiveId: string): Promise<Objective> {
+export async function getObjective(courseName: string, objectiveName: string): Promise<Objective> {
    const params: GetCompositeParams = {
       tableName: OBJECTIVES_TABLE,
       key: {
-         PK: ObjectivePK(course),
-         SK: ObjectiveSK(objectiveId)
+         PK: ObjectivePK(courseName),
+         SK: ObjectiveSK(objectiveName)
       }
    };
    try {
@@ -38,19 +43,21 @@ export async function getObjective(course: string, objectiveId: string): Promise
          return objective;
       }
 
-      throw new Error(`Objective not found with objectiveId=${objectiveId}`);
+      throw new Error(
+         `Objective not found with courseName=${courseName}, objectiveName=${objectiveName}`
+      );
    } catch (err) {
       return err;
    }
 }
 
-export async function listObjectivesByCourse(course: string): Promise<Objective[]> {
+export async function listObjectivesByCourse(courseName: string): Promise<Objective[]> {
    const params: QueryParams = {
       tableName: OBJECTIVES_TABLE,
       keyConditionExpression: "PK = :pkVal and begins_with(SK, :skPrefix) ",
       expressionAttributeValues: {
-         ":pkVal": ObjectivePK(course),
-         ":skPrefix": "OBJECTIVE"
+         ":pkVal": ObjectivePK(courseName),
+         ":skPrefix": ObjectiveSKPrefix
       }
    };
 
