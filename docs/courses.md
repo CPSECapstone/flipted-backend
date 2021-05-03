@@ -40,7 +40,7 @@ query GetCourseInfo {
 
 ```graphql
 query GetCourseInfos {
-  courseInfos(instructor: "Christian") {
+  courseInfos(instructor: "Mr. Butcher") {
     courseId
     name
     description
