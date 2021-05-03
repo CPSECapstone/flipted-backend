@@ -4,25 +4,25 @@ type Query {
 
 type Objective {
    objectiveId: String!
-   name: String!
+   objectiveName: String!
    description: String!
    targetId: String!
    targetName: String!
-   courseName: String!
+   course: String!
    tasks: [Task!]!
 }
 
 type Query {
-   objective(courseName: String!, objectiveName: String!): Objective!
-   objectives(courseName: String!): [Objective!]!
+   objective(objectiveId: String!): Objective!
+   objectives(course: String!): [Objective!]!
 }
 
 input ObjectiveInput {
-   name: String!
+   objectiveName: String!
    description: String!
    targetId: String!
    targetName: String!
-   courseName: String!
+   course: String!
 }
 
 type Mutation {

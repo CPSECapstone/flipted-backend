@@ -1,38 +1,32 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { TABLE_NAME } from "../environment";
-import {
-   ObjectiveItem,
-   ObjectivePK,
-   ObjectiveSK,
-   ObjectiveSKPrefix
-} from "../interfaces/objective";
+import { COURSE_CONTENT_TABLE_NAME } from "../environment";
+import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "../interfaces/objective";
 import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "./dynamodb";
 import * as helper from "./objectiveHelper";
-
-const OBJECTIVES_TABLE = TABLE_NAME("CourseContent");
+import * as targetService from "./target";
 
 export async function addObjective(input: ObjectiveInput) {
-   const objectiveItem = helper.objectiveInputToDBItem(input);
-
-   const params: PutCompositeParams = {
-      tableName: OBJECTIVES_TABLE,
-      item: objectiveItem
-   };
-
    try {
+      const objectiveItem = helper.objectiveInputToDBItem(input);
+
+      const params: PutCompositeParams = {
+         tableName: COURSE_CONTENT_TABLE_NAME,
+         item: objectiveItem
+      };
+
       const output = dynamodb.putComposite(params);
-      return objectiveItem.SK;
+      return objectiveItem.PK;
    } catch (err) {
       return err;
    }
 }
 
-export async function getObjective(courseName: string, objectiveName: string): Promise<Objective> {
+export async function getObjectiveById(objectiveId: string): Promise<Objective> {
    const params: GetCompositeParams = {
-      tableName: OBJECTIVES_TABLE,
+      tableName: COURSE_CONTENT_TABLE_NAME,
       key: {
-         PK: ObjectivePK(courseName),
-         SK: ObjectiveSK(objectiveName)
+         PK: ObjectiveKey(objectiveId),
+         SK: ObjectiveKey(objectiveId)
       }
    };
    try {
@@ -43,21 +37,20 @@ export async function getObjective(courseName: string, objectiveName: string): P
          return objective;
       }
 
-      throw new Error(
-         `Objective not found with courseName=${courseName}, objectiveName=${objectiveName}`
-      );
+      throw new Error(`Objective not found with objectiveId=${objectiveId}`);
    } catch (err) {
       return err;
    }
 }
 
-export async function listObjectivesByCourse(courseName: string): Promise<Objective[]> {
+export async function listObjectivesByCourse(course: string): Promise<Objective[]> {
    const params: QueryParams = {
-      tableName: OBJECTIVES_TABLE,
-      keyConditionExpression: "PK = :pkVal and begins_with(SK, :skPrefix) ",
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      indexName: "course-PK-index",
+      keyConditionExpression: "course = :courseVal and begins_with(PK, :pkPrefix) ",
       expressionAttributeValues: {
-         ":pkVal": ObjectivePK(courseName),
-         ":skPrefix": ObjectiveSKPrefix
+         ":courseVal": course,
+         ":pkPrefix": ObjectivePrefix
       }
    };
 

@@ -1,12 +1,13 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-import { ObjectiveItem, ObjectivePK, ObjectiveSK } from "../interfaces/objective";
+import { ObjectiveItem, ObjectiveKey } from "../interfaces/objective";
 
 export function objectiveInputToDBItem(input: ObjectiveInput): ObjectiveItem {
    const objectiveId = uid();
+
    const item: ObjectiveItem = {
-      PK: ObjectivePK(input.courseName),
-      SK: ObjectiveSK(input.name),
+      PK: ObjectiveKey(objectiveId),
+      SK: ObjectiveKey(objectiveId),
       objectiveId,
       ...input
    };
@@ -17,11 +18,11 @@ export function objectiveInputToDBItem(input: ObjectiveInput): ObjectiveItem {
 export function dbItemToObjective(item: ObjectiveItem): Objective {
    return <Objective>{
       objectiveId: item.objectiveId,
-      name: item.name,
+      objectiveName: item.objectiveName,
       description: item.description,
       targetId: item.targetId,
       targetName: item.targetName,
-      courseName: item.courseName
+      course: item.course
    };
 }
 

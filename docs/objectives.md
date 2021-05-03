@@ -3,7 +3,7 @@
 ### APIs
 
 -  Add Objective
--  Get Objective By Course and Objective Id
+-  Get Objective By Objective Id
 -  List Objectives By Course
 
 ### Examples
@@ -14,11 +14,11 @@
 mutation {
   addObjective(
     objective: {
-      name: "TE 1"
+      objectiveName: "TE 1"
       description: "Develop a model that predicts and describes changes in particle motion, temperature, and state of a pure substance when thermal energy is added or removed."
-      targetId: "targetId",
+      targetId: "target Id"
       targetName: "TE",
-      courseName: "Integrated Science"
+      course: "Integrated Science"
     }
   )
 }
@@ -28,13 +28,13 @@ mutation {
 
 ```
 query {
-  objective(courseName: "Integrated Science", objectiveName: "TE 1") {
+  objective(objectiveId: "e6f4ac0363a") {
     objectiveId
-    name
+    objectiveName
     description
     targetId
     targetName
-    courseName
+    course
   }
 }
 ```
@@ -43,13 +43,13 @@ query {
 
 ```
 query {
-  objectives(courseName: "Integrated Science") {
+  objectives(course: "Integrated Science") {
     objectiveId
-    name
+    objectiveName
     description
     targetId
     targetName
-    courseName
+    course
   }
 }
 ```

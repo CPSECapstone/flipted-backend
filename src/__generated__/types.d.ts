@@ -249,20 +249,20 @@ type MutationUpdateUserArgs = {
 type Objective = {
   __typename?: 'Objective';
   objectiveId: Scalars['String'];
-  name: Scalars['String'];
+  objectiveName: Scalars['String'];
   description: Scalars['String'];
   targetId: Scalars['String'];
   targetName: Scalars['String'];
-  courseName: Scalars['String'];
+  course: Scalars['String'];
   tasks: Array<Task>;
 };
 
 type ObjectiveInput = {
-  name: Scalars['String'];
+  objectiveName: Scalars['String'];
   description: Scalars['String'];
   targetId: Scalars['String'];
   targetName: Scalars['String'];
-  courseName: Scalars['String'];
+  course: Scalars['String'];
 };
 
 type Page = {
@@ -314,13 +314,12 @@ type QueryMissionsArgs = {
 
 
 type QueryObjectiveArgs = {
-  courseName: Scalars['String'];
-  objectiveName: Scalars['String'];
+  objectiveId: Scalars['String'];
 };
 
 
 type QueryObjectivesArgs = {
-  courseName: Scalars['String'];
+  course: Scalars['String'];
 };
 
 
