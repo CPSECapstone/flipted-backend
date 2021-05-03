@@ -1,33 +1,31 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { TABLE_NAME } from "../environment";
-import { TargetItem, TargetPK, TargetSK, TargetSKPrefix } from "../interfaces/target";
+import { COURSE_CONTENT_TABLE_NAME } from "../environment";
+import { TargetItem, TargetKey, TargetPrefix } from "../interfaces/target";
 import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "./dynamodb";
 import * as helper from "./targetHelper";
-
-const TARGETS_TABLE = TABLE_NAME("CourseContent");
 
 export async function addTarget(input: TargetInput) {
    const targetItem: TargetItem = helper.targetInputToDBItem(input);
 
    const params: PutCompositeParams = {
-      tableName: TARGETS_TABLE,
+      tableName: COURSE_CONTENT_TABLE_NAME,
       item: targetItem
    };
 
    try {
       const output = dynamodb.putComposite(params);
-      return targetItem.SK;
+      return targetItem.PK;
    } catch (err) {
       return err;
    }
 }
 
-export async function getTarget(course: string, targetId: string): Promise<Target> {
+export async function getTargetById(targetId: string): Promise<Target> {
    const params: GetCompositeParams = {
-      tableName: TARGETS_TABLE,
+      tableName: COURSE_CONTENT_TABLE_NAME,
       key: {
-         PK: TargetPK(course),
-         SK: TargetSK(targetId)
+         PK: TargetKey(targetId),
+         SK: TargetKey(targetId)
       }
    };
    try {
@@ -44,13 +42,15 @@ export async function getTarget(course: string, targetId: string): Promise<Targe
    }
 }
 
+// query GSI. partition key - course, sort key - PK
 export async function listTargetsByCourse(course: string): Promise<Target[]> {
    const params: QueryParams = {
-      tableName: TARGETS_TABLE,
-      keyConditionExpression: "PK = :pkVal and begins_with(SK, :skPrefix) ",
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      indexName: "course-PK-index",
+      keyConditionExpression: "course = :courseVal and begins_with(PK, :skPrefix)",
       expressionAttributeValues: {
-         ":pkVal": TargetPK(course),
-         ":skPrefix": TargetSKPrefix
+         ":courseVal": course,
+         ":skPrefix": TargetPrefix
       }
    };
 

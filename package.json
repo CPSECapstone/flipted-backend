@@ -5,6 +5,8 @@
    "main": "apollo-server.ts",
    "scripts": {
       "generate": "graphql-codegen --config codegen.yml",
+      "data:targets": "node data/targets.js",
+      "data:objectives": "node data/objectives.js",
       "format": "prettier --write .",
       "test": "NODE_ENV=development jest",
       "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
@@ -23,6 +25,7 @@
       "@types/graphql-iso-date": "^3.4.0",
       "apollo-server": "^2.19.1",
       "apollo-server-lambda": "^2.21.0",
+      "concurrently": "^6.0.2",
       "csv-parser": "^3.0.0",
       "graphql": "^15.4.0",
       "graphql-iso-date": "^3.6.1",

@@ -257,7 +257,7 @@ type MutationUpdateUserArgs = {
 type Objective = {
   __typename?: 'Objective';
   objectiveId: Scalars['String'];
-  name: Scalars['String'];
+  objectiveName: Scalars['String'];
   description: Scalars['String'];
   targetId: Scalars['String'];
   targetName: Scalars['String'];
@@ -266,7 +266,7 @@ type Objective = {
 };
 
 type ObjectiveInput = {
-  name: Scalars['String'];
+  objectiveName: Scalars['String'];
   description: Scalars['String'];
   targetId: Scalars['String'];
   targetName: Scalars['String'];
@@ -340,7 +340,6 @@ type QueryMissionsArgs = {
 
 
 type QueryObjectiveArgs = {
-  course: Scalars['String'];
   objectiveId: Scalars['String'];
 };
 
@@ -382,7 +381,6 @@ type QuerySubMissionArgs = {
 
 
 type QueryTargetArgs = {
-  course: Scalars['String'];
   targetId: Scalars['String'];
 };
 
@@ -489,7 +487,7 @@ type SubMissionInput = {
 type Target = {
   __typename?: 'Target';
   targetId: Scalars['String'];
-  name: Scalars['String'];
+  targetName: Scalars['String'];
   description: Scalars['String'];
   subject: Scalars['String'];
   gradeLevel: Scalars['Int'];
@@ -500,7 +498,7 @@ type Target = {
 };
 
 type TargetInput = {
-  name: Scalars['String'];
+  targetName: Scalars['String'];
   description: Scalars['String'];
   subject: Scalars['String'];
   gradeLevel: Scalars['Int'];

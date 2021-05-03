@@ -4,7 +4,7 @@ type Query {
 
 type Objective {
    objectiveId: String!
-   name: String!
+   objectiveName: String!
    description: String!
    targetId: String!
    targetName: String!
@@ -13,12 +13,12 @@ type Objective {
 }
 
 type Query {
-   objective(course: String!, objectiveId: String!): Objective!
+   objective(objectiveId: String!): Objective!
    objectives(course: String!): [Objective!]!
 }
 
 input ObjectiveInput {
-   name: String!
+   objectiveName: String!
    description: String!
    targetId: String!
    targetName: String!

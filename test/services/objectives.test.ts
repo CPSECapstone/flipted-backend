@@ -10,9 +10,8 @@ jest.mock("../../src/services/dynamodb", () => {
 describe("add method", () => {
    test("add learning objective", async () => {
       const objective: ObjectiveInput = {
-         name: "obj 1",
+         objectiveName: "obj 1",
          description: "obj 1 description",
-         targetId: "target id 1",
          targetName: "target name 1",
          course: "Biology"
       };
