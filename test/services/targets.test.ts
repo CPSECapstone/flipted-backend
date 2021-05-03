@@ -8,13 +8,13 @@ jest.mock("../../src/services/dynamodb", () => {
 describe("addTarget method", () => {
    test("add target", async () => {
       const target: TargetInput = {
-         name: "TE 1",
+         targetName: "TE 1",
          description: "Learning Target 1 Description",
          subject: "Science",
          gradeLevel: 6,
          icon: "",
          standards: "",
-         courseName: "Integrated Science"
+         course: "Integrated Science"
       };
 
       await service.addTarget(target);
