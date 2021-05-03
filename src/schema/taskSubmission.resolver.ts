@@ -1,7 +1,11 @@
 import { Answer, TaskSubmissionResult } from "../interfaces/taskSubmission";
 import { validateToken } from "../jws-verifer";
 import questionService from "../services/question";
-import { gradeMultipleChoiceQuestion } from "../services/questionHelper";
+import {
+   gradeMultipleChoiceQuestion,
+   isValidMultipleChoiceAnswer,
+   quizBlockContainsQuestionIdWithPrefix
+} from "../services/questionHelper";
 import taskService from "../services/task";
 import taskSubmissionService from "../services/taskSubmission";
 import {
@@ -14,23 +18,30 @@ import {
    createTaskSubmissionResult,
    createQuestionProgressOutput
 } from "../services/taskSubmissionHelper";
+import quizblockService from "../services/taskblock";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
-
    const mcAnswerInput: MultipleChoiceAnswerInput = args.mcBlockInput;
 
-   // TODO: Assert given question id is contained in given quizblock
-   // TODO: Assert given block id is contained in given task
-   // TODO: Assert given task id exists
-
-   // get the question as defined by the database
    const question: McQuestion = <McQuestion>(
       await questionService.getById(mcAnswerInput.questionId, "")
    );
 
-   if (!question.id) {
-      throw new Error("Could not find question with id: " + mcAnswerInput.questionId);
+   // this asserts both the existence of the task, and the quizblock being within that task
+   const quizBlock: QuizBlock = await quizblockService.getQuizBlockById(
+      mcAnswerInput.taskId,
+      mcAnswerInput.questionBlockId
+   );
+
+   if (!quizBlockContainsQuestionIdWithPrefix(quizBlock, mcAnswerInput.questionId, "MC_QUESTION")) {
+      throw new Error(
+         "Provided multiple choice question could not be found in the provided quiz block"
+      );
+   }
+
+   if (!isValidMultipleChoiceAnswer(question, mcAnswerInput.answerId)) {
+      throw new Error("Provided answer id not a choice for this multiple choice question");
    }
 
    // grade the question against the students answer
@@ -49,10 +60,6 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
 
    const frAnswerInput: FreeResponseAnswerInput = args.frBlockInput;
 
-   // TODO: Assert given question id is contained in given quizblock
-   // TODO: Assert given block id is contained in given task
-   // TODO: Assert given task id exists
-
    // get the question as defined by the database
    const question: FrQuestion = <FrQuestion>(
       await questionService.getById(frAnswerInput.questionId, "")
@@ -60,6 +67,18 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
 
    if (!question.id) {
       throw new Error("Could not find question with id: " + frAnswerInput.questionId);
+   }
+
+   // this asserts both the existence of the task, and the quizblock being within that task
+   const quizBlock: QuizBlock = await quizblockService.getQuizBlockById(
+      frAnswerInput.taskId,
+      frAnswerInput.questionBlockId
+   );
+
+   if (!quizBlockContainsQuestionIdWithPrefix(quizBlock, frAnswerInput.questionId, "FR_QUESTION")) {
+      throw new Error(
+         "Provided free response question could not be found in the provided quiz block"
+      );
    }
 
    // store the grade for that quiz block and associate with the user

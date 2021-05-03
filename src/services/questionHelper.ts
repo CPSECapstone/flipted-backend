@@ -70,3 +70,11 @@ export function dbResponsesToQuestions(items: any[]): Question[] {
 
    return questions;
 }
+
+export function quizBlockContainsQuestionIdWithPrefix(quizBlock: QuizBlock, id: String, prefix: String): boolean {
+  return (quizBlock.questions.filter(q => q.id == id && id.split('#')[0] == prefix).length === 1)
+}
+
+export function isValidMultipleChoiceAnswer(mcQuestion: McQuestion, answerId: number) {
+   return (mcQuestion.options.filter(choice => choice.id === answerId).length === 1)
+}
