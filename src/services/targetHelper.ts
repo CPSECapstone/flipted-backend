@@ -1,12 +1,13 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-import { TargetItem, TargetPK, TargetSK } from "../interfaces/target";
+import { TargetItem, TargetKey } from "../interfaces/target";
 
 export function targetInputToDBItem(input: TargetInput): TargetItem {
    const targetId = uid();
+
    const item: TargetItem = {
-      PK: TargetPK(input.courseName),
-      SK: TargetSK(input.name),
+      PK: TargetKey(targetId),
+      SK: TargetKey(targetId),
       targetId,
       ...input
    };
@@ -17,13 +18,13 @@ export function targetInputToDBItem(input: TargetInput): TargetItem {
 export function dbItemToTarget(item: TargetItem): Target {
    return <Target>{
       targetId: item.targetId,
-      name: item.name,
+      targetName: item.targetName,
       description: item.description,
       gradeLevel: item.gradeLevel,
       subject: item.subject,
       icon: item.icon,
       standards: item.standards,
-      courseName: item.courseName
+      course: item.course
    };
 }
 

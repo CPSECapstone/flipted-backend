@@ -5,6 +5,7 @@
    "main": "apollo-server.ts",
    "scripts": {
       "generate": "graphql-codegen --config codegen.yml",
+      "data:targets": "node data/targets.js",
       "format": "prettier --write .",
       "test": "NODE_ENV=development jest",
       "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

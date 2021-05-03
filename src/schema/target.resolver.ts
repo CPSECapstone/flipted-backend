@@ -4,17 +4,17 @@ async function addTarget(_: any, args: MutationAddTargetArgs, context: any, info
    return service.addTarget(args.target);
 }
 
-async function getTarget(_: any, args: QueryTargetArgs, context: any, info: any) {
-   return service.getTarget(args.courseName, args.targetName);
+async function getTargetById(_: any, args: QueryTargetArgs, context: any, info: any) {
+   return service.getTargetById(args.targetId);
 }
 
 async function listTargetsByCourse(_: any, args: QueryTargetsArgs, context: any, info: any) {
-   return service.listTargetsByCourse(args.courseName);
+   return service.listTargetsByCourse(args.course);
 }
 
 const resolvers = {
    Query: {
-      target: getTarget,
+      target: getTargetById,
       targets: listTargetsByCourse
    },
    Mutation: {

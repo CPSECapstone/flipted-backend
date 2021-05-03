@@ -7,13 +7,13 @@ function generatePayload(target) {
    let query = `
     mutation {
       addTarget(target: {
-          courseName: "${target.CourseName}"
-          name: "${target.TargetName}"
-          description: "${target.Description}"
-          subject: "${target.Subject}"
-          gradeLevel: ${target.GradeLevel}
-          icon: "${target.Icon}"
-          standards: "${target.Standards}"
+         targetName: "${target.TargetName}"
+         description: "${target.Description}"
+         subject: "${target.Subject}"
+         gradeLevel: ${target.GradeLevel}
+         icon: "${target.Icon}"
+         standards: "${target.Standards}"
+         course: "${target.Course}"
         }
       )
     }

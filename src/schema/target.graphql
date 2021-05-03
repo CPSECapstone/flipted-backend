@@ -1,28 +1,28 @@
 type Target {
    targetId: String!
-   name: String!
+   targetName: String!
    description: String!
    subject: String!
    gradeLevel: Int!
    icon: String!
    standards: String!
-   courseName: String!
+   course: String!
    objectives: [LearningObjective!]
 }
 
 type Query {
-   target(courseName: String!, targetName: String!): Target!
-   targets(courseName: String!): [Target!]!
+   target(targetId: String!): Target!
+   targets(course: String!): [Target!]!
 }
 
 input TargetInput {
-   name: String!
+   targetName: String!
    description: String!
    subject: String!
    gradeLevel: Int!
    icon: String!
    standards: String!
-   courseName: String!
+   course: String!
 }
 
 type Mutation {

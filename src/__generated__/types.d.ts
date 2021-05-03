@@ -345,13 +345,12 @@ type QuerySubMissionArgs = {
 
 
 type QueryTargetArgs = {
-  courseName: Scalars['String'];
-  targetName: Scalars['String'];
+  targetId: Scalars['String'];
 };
 
 
 type QueryTargetsArgs = {
-  courseName: Scalars['String'];
+  course: Scalars['String'];
 };
 
 
@@ -452,24 +451,24 @@ type SubMissionInput = {
 type Target = {
   __typename?: 'Target';
   targetId: Scalars['String'];
-  name: Scalars['String'];
+  targetName: Scalars['String'];
   description: Scalars['String'];
   subject: Scalars['String'];
   gradeLevel: Scalars['Int'];
   icon: Scalars['String'];
   standards: Scalars['String'];
-  courseName: Scalars['String'];
+  course: Scalars['String'];
   objectives?: Maybe<Array<LearningObjective>>;
 };
 
 type TargetInput = {
-  name: Scalars['String'];
+  targetName: Scalars['String'];
   description: Scalars['String'];
   subject: Scalars['String'];
   gradeLevel: Scalars['Int'];
   icon: Scalars['String'];
   standards: Scalars['String'];
-  courseName: Scalars['String'];
+  course: Scalars['String'];
 };
 
 type Task = {

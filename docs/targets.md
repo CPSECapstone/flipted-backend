@@ -3,7 +3,7 @@
 ### APIs
 
 -  Add Target
--  Get Target
+-  Get Target By Target Id
 -  List Targets By Course
 
 ### Examples
@@ -14,13 +14,13 @@
 mutation AddTarget {
   addTarget(
     target: {
-      name: "TE"
+      targetName: "TE"
       description: " Target 1 Description"
       subject: "Science"
       gradeLevel: 6
       icon: ""
       standards: ""
-      courseName: "Integrated Science"
+      course: "Integrated Science"
     }
   )
 }
@@ -30,15 +30,15 @@ mutation AddTarget {
 
 ```graphql
 query GetTarget {
-  target(courseName: "Integrated Science", targetName: "TE") {
+  target(targetId: "eaf7ce60c44") {
     targetId
-    name
+    targetName
     description
     subject
     gradeLevel
     icon
     standards
-    courseName
+    course
   }
 }
 ```
@@ -47,15 +47,15 @@ query GetTarget {
 
 ```graphql
 query ListTargetsByCourse {
-  targets(courseName: "Integrated Science") {
+  targets(course: "Integrated Science") {
     targetId
-    name
+    targetName
     description
     subject
     gradeLevel
     icon
     standards
-    courseName
+    course
   }
 }
 ```
