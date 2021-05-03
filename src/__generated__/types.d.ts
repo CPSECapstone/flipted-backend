@@ -20,13 +20,21 @@ type Answer = {
   answer?: Maybe<Scalars['String']>;
 };
 
-type Course = {
-  __typename?: 'Course';
-  id: Scalars['String'];
+type CourseContent = {
+  __typename?: 'CourseContent';
+  course?: Maybe<CourseInfo>;
+  missions: Array<Mission>;
+  targets: Array<Target>;
+  objectives: Array<Objective>;
+  task: Array<Task>;
+};
+
+type CourseInfo = {
+  __typename?: 'CourseInfo';
+  courseId: Scalars['String'];
   name: Scalars['String'];
   instructor: Scalars['String'];
   description: Scalars['String'];
-  missions?: Maybe<Array<Maybe<Mission>>>;
 };
 
 type CourseInput = {
@@ -128,7 +136,7 @@ type MultipleChoiceAnswerInput = {
 
 type Mutation = {
   __typename?: 'Mutation';
-  addCourse?: Maybe<Course>;
+  addCourse?: Maybe<Scalars['String']>;
   addFrQuestion: Scalars['String'];
   addImageBlock: Scalars['String'];
   addMcQuestion: Scalars['String'];
@@ -163,7 +171,7 @@ type Mutation = {
 
 
 type MutationAddCourseArgs = {
-  course?: Maybe<CourseInput>;
+  course: CourseInput;
 };
 
 
@@ -278,7 +286,9 @@ type PageInput = {
 type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']>;
-  courses?: Maybe<Array<Maybe<Course>>>;
+  courseContent?: Maybe<CourseContent>;
+  courseInfo: CourseInfo;
+  courseInfos: Array<CourseInfo>;
   getUser?: Maybe<User>;
   mission?: Maybe<Mission>;
   missions?: Maybe<Array<Maybe<Mission>>>;
@@ -300,6 +310,22 @@ type Query = {
   targets: Array<Target>;
   task?: Maybe<Task>;
   tasks: Array<Task>;
+};
+
+
+type QueryCourseContentArgs = {
+  courseName: Scalars['String'];
+};
+
+
+type QueryCourseInfoArgs = {
+  courseName: Scalars['String'];
+  courseId: Scalars['String'];
+};
+
+
+type QueryCourseInfosArgs = {
+  instructor: Scalars['String'];
 };
 
 
