@@ -6,13 +6,13 @@ type Target {
    gradeLevel: Int!
    icon: String!
    standards: String!
-   course: String!
+   courseName: String!
    objectives: [LearningObjective!]
 }
 
 type Query {
-   target(course: String!, targetId: String!): Target!
-   targets(course: String!): [Target!]!
+   target(courseName: String!, targetName: String!): Target!
+   targets(courseName: String!): [Target!]!
 }
 
 input TargetInput {
@@ -22,7 +22,7 @@ input TargetInput {
    gradeLevel: Int!
    icon: String!
    standards: String!
-   course: String!
+   courseName: String!
 }
 
 type Mutation {

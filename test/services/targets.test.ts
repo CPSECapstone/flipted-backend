@@ -14,7 +14,7 @@ describe("addTarget method", () => {
          gradeLevel: 6,
          icon: "",
          standards: "",
-         course: "Integrated Science"
+         courseName: "Integrated Science"
       };
 
       await service.addTarget(target);

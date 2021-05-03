@@ -4,10 +4,10 @@ export type TargetItem = CompositeDBItem & Omit<Target, "__typename" | "objectiv
 
 export const TargetSKPrefix = "TARGET";
 
-export function TargetPK(course: string) {
-   return `COURSE#${course}`;
+export function TargetPK(courseName: string) {
+   return `COURSE#${courseName}`;
 }
 
-export function TargetSK(targetId: string) {
-   return `${TargetSKPrefix}#${targetId}`;
+export function TargetSK(targetName: string) {
+   return `${TargetSKPrefix}#${targetName}`;
 }

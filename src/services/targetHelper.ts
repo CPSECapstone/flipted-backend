@@ -5,8 +5,8 @@ import { TargetItem, TargetPK, TargetSK } from "../interfaces/target";
 export function targetInputToDBItem(input: TargetInput): TargetItem {
    const targetId = uid();
    const item: TargetItem = {
-      PK: TargetPK(input.course),
-      SK: TargetSK(targetId),
+      PK: TargetPK(input.courseName),
+      SK: TargetSK(input.name),
       targetId,
       ...input
    };
@@ -20,10 +20,10 @@ export function dbItemToTarget(item: TargetItem): Target {
       name: item.name,
       description: item.description,
       gradeLevel: item.gradeLevel,
-      course: item.course,
       subject: item.subject,
       icon: item.icon,
-      standards: item.standards
+      standards: item.standards,
+      courseName: item.courseName
    };
 }
 

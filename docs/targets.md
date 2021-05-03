@@ -14,13 +14,13 @@
 mutation AddTarget {
   addTarget(
     target: {
-      name: "TE 1"
+      name: "TE"
       description: " Target 1 Description"
       subject: "Science"
       gradeLevel: 6
       icon: ""
       standards: ""
-      course: "Integrated Science"
+      courseName: "Integrated Science"
     }
   )
 }
@@ -30,7 +30,7 @@ mutation AddTarget {
 
 ```graphql
 query GetTarget {
-  target(course: "Integrated Science", targetId: "3ea0ef40e4c") {
+  target(courseName: "Integrated Science", targetName: "TE") {
     targetId
     name
     description
@@ -38,7 +38,7 @@ query GetTarget {
     gradeLevel
     icon
     standards
-    course
+    courseName
   }
 }
 ```
@@ -47,7 +47,7 @@ query GetTarget {
 
 ```graphql
 query ListTargetsByCourse {
-  targets(course: "Integrated Science") {
+  targets(courseName: "Integrated Science") {
     targetId
     name
     description
@@ -55,7 +55,7 @@ query ListTargetsByCourse {
     gradeLevel
     icon
     standards
-    course
+    courseName
   }
 }
 ```

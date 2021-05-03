@@ -22,12 +22,12 @@ export async function addTarget(input: TargetInput) {
    }
 }
 
-export async function getTarget(course: string, targetId: string): Promise<Target> {
+export async function getTarget(courseName: string, targetName: string): Promise<Target> {
    const params: GetCompositeParams = {
       tableName: TARGETS_TABLE,
       key: {
-         PK: TargetPK(course),
-         SK: TargetSK(targetId)
+         PK: TargetPK(courseName),
+         SK: TargetSK(targetName)
       }
    };
    try {
@@ -38,18 +38,18 @@ export async function getTarget(course: string, targetId: string): Promise<Targe
          return target;
       }
 
-      throw new Error(`Target not found with targetId=${targetId}`);
+      throw new Error(`Target not found with courseName=${courseName}, targetName=${targetName}`);
    } catch (err) {
       return err;
    }
 }
 
-export async function listTargetsByCourse(course: string): Promise<Target[]> {
+export async function listTargetsByCourse(courseName: string): Promise<Target[]> {
    const params: QueryParams = {
       tableName: TARGETS_TABLE,
       keyConditionExpression: "PK = :pkVal and begins_with(SK, :skPrefix) ",
       expressionAttributeValues: {
-         ":pkVal": TargetPK(course),
+         ":pkVal": TargetPK(courseName),
          ":skPrefix": TargetSKPrefix
       }
    };
