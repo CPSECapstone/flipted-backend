@@ -1,9 +1,8 @@
-import { MCQuestion } from "../../src/interfaces/question";
 import { gradeMultipleChoiceQuestion } from "../../src/services/questionHelper";
 
 describe("grading a multiple choice question", () => {
    it("will award full credit if the question is correct", async () => {
-      const question: MCQuestion = {
+      const question: McQuestion = {
          id: "0",
          description: "",
          points: 4,
@@ -17,7 +16,7 @@ describe("grading a multiple choice question", () => {
    });
 
    it("will give no credit if incorrect", async () => {
-      const question: MCQuestion = {
+      const question: McQuestion = {
          id: "0",
          description: "",
          points: 4,

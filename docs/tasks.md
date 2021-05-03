@@ -133,12 +133,12 @@ query {
           requiredScore
           questions {
             __typename
-            ...on FRQuestion {
+            ...on FrQuestion {
               id
               description
               answer
             }
-            ...on MCQuestion {
+            ...on McQuestion {
               id
               description
               options {

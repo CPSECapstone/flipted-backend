@@ -1,0 +1,34 @@
+overwrite: true
+schema: src/**/*.graphql
+generates:
+   src/__generated__/types.d.ts:
+      plugins:
+         - typescript
+      config:
+         declarationKind:
+           union: type
+           type: type
+           input: type
+           scalar: type
+           arguments: type
+           interface: interface
+         scalars:
+            Date: Date
+         avoidOptionals: false
+         constEnums: false
+         enumsAsTypes: false
+         numericEnums: false
+         futureProofEnums: false
+         enumsAsConst: false
+         onlyOperationTypes: false
+         immutableTypes: false
+         maybeValue: T | null | undefined
+         noExport: true
+         enumPrefix: true
+         fieldWrapperValue: T
+         wrapFieldDefinitions: false
+         typesPrefix: ""
+         skipTypename: false
+         nonOptionalTypename: false
+         useTypeImports: false
+         useImplementingTypes: false

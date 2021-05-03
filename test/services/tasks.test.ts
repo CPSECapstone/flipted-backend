@@ -1,7 +1,7 @@
 import dynamodbMock from "../__mocks__/dynamodb";
 import taskBusLogic from "../../src/services/taskBusLogic";
-import { Task } from "../../src/interfaces/taskInterfaces";
-import { Answer, TaskProgress, TaskProgressInput } from "../../src/interfaces/taskSubmission";
+import { Answer } from "../../src/interfaces/taskSubmission";
+
 import {
    areTaskProgressIdsValid,
    taskQuestionsAllAnswered,
@@ -95,7 +95,8 @@ const sampleTask = {
                   {
                      id: "questionId123",
                      description: "Color of sky?",
-                     points: 2
+                     points: 2,
+                     answer: "blue"
                   }
                ]
             }

@@ -1,7 +1,6 @@
 import { marshall, unmarshall, marshallOptions } from "@aws-sdk/util-dynamodb";
 import { DynamoDBClient, ScanCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { environment } from "../environment";
-import { CourseInput } from "../interfaces";
 import { uid } from "uid/secure";
 
 const client = new DynamoDBClient({ region: "us-east-1" });

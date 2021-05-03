@@ -24,11 +24,11 @@ input TaskInput {
    dueDate: Date
    objectiveId: String
    pages: [PageInput]!
-   requirements: [RubricRequirementInput]!
+   requirements: [RubricRequirementInput!]!
 }
 
 type Page {
-   blocks: [TaskBlock]
+   blocks: [TaskBlock!]!
    skippable: Boolean
 }
 

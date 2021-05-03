@@ -1,20 +1,8 @@
-import { FRQuestion, MCQuestion, Question } from "../interfaces/question";
-import {
-   FreeResponseAnswerInput,
-   MultipleChoiceAnswerInput,
-   Answer,
-   QuestionAnswerItem,
-   TaskProgress,
-   TaskProgressInput,
-   TaskProgressItem,
-   TaskSubmissionResult
-} from "../interfaces/taskSubmission";
-import { Task } from "../interfaces/taskInterfaces";
+import { Answer, TaskSubmissionResult } from "../interfaces/taskSubmission";
 import { validateToken } from "../jws-verifer";
 import questionService from "../services/question";
 import { gradeMultipleChoiceQuestion } from "../services/questionHelper";
 import taskService from "../services/task";
-import taskBusLogic from "../services/taskBusLogic";
 import taskSubmissionService from "../services/taskSubmission";
 import {
    areTaskProgressIdsValid,
@@ -24,7 +12,6 @@ import {
    taskProgressInputToDBItem,
    taskQuestionsAllAnswered,
    createTaskSubmissionResult,
-   answerToAnswerOut,
    createQuestionProgressOutput
 } from "../services/taskSubmissionHelper";
 
@@ -38,7 +25,7 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    // TODO: Assert given task id exists
 
    // get the question as defined by the database
-   const question: MCQuestion = <MCQuestion>(
+   const question: McQuestion = <McQuestion>(
       await questionService.getById(mcAnswerInput.questionId, "")
    );
 
@@ -67,7 +54,7 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
    // TODO: Assert given task id exists
 
    // get the question as defined by the database
-   const question: FRQuestion = <FRQuestion>(
+   const question: FrQuestion = <FrQuestion>(
       await questionService.getById(frAnswerInput.questionId, "")
    );
 
