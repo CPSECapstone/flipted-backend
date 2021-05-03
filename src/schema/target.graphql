@@ -1,5 +1,5 @@
-type LearningTarget {
-   id: String!
+type Target {
+   targetId: String!
    name: String!
    description: String!
    subject: String!
@@ -7,14 +7,15 @@ type LearningTarget {
    icon: String!
    standards: String!
    course: String!
+   objectives: [Objective!]
 }
 
 type Query {
-   learningTarget(targetId: String!): LearningTarget!
-   learningTargets(course: String!): [LearningTarget!]!
+   target(course: String!, targetId: String!): Target!
+   targets(course: String!): [Target!]!
 }
 
-input LearningTargetInput {
+input TargetInput {
    name: String!
    description: String!
    subject: String!
@@ -25,5 +26,5 @@ input LearningTargetInput {
 }
 
 type Mutation {
-   addLearningTarget(target: LearningTargetInput!): String!
+   addTarget(target: TargetInput!): String!
 }

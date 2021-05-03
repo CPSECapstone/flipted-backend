@@ -1,13 +1,13 @@
 import dynamodbMock from "../__mocks__/dynamodb";
-import * as service from "../../src/services/learningTarget";
+import * as service from "../../src/services/target";
 
 jest.mock("../../src/services/dynamodb", () => {
    return dynamodbMock;
 });
 
-describe("addLearningTarget method", () => {
-   test("add learning target", async () => {
-      const target: LearningTargetInput = {
+describe("addTarget method", () => {
+   test("add target", async () => {
+      const target: TargetInput = {
          name: "TE 1",
          description: "Learning Target 1 Description",
          subject: "Science",
@@ -17,7 +17,7 @@ describe("addLearningTarget method", () => {
          course: "Integrated Science"
       };
 
-      await service.addLearningTarget(target);
+      await service.addTarget(target);
       expect(dynamodbMock.putComposite).toHaveBeenCalledTimes(1);
    });
 });
