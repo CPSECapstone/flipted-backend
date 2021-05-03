@@ -5,7 +5,7 @@ async function addCourse(_: any, args: MutationAddCourseArgs, context: any, info
 }
 
 async function getCourseInfo(_: any, args: QueryCourseInfoArgs, context: any, info: any) {
-   return service.getCourseInfo(args.courseName, args.courseId);
+   return service.getCourseInfo(args.courseId);
 }
 
 async function listCourseInfos(_: any, args: QueryCourseInfosArgs, context: any, info: any) {

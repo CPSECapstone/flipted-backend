@@ -4,7 +4,7 @@ type Query {
 
 type CourseInfo {
    courseId: String!
-   name: String!
+   course: String!
    instructor: String!
    description: String!
 }
@@ -18,15 +18,15 @@ type CourseContent {
 }
 
 input CourseInput {
-   name: String!
+   course: String!
    instructor: String!
    description: String!
 }
 
 type Query {
-   courseInfo(courseName: String!, courseId: String!): CourseInfo!
+   courseInfo(courseId: String!): CourseInfo!
    courseInfos(instructor: String!): [CourseInfo!]!
-   courseContent(courseName: String!): CourseContent
+   courseContent(course: String!): CourseContent
 }
 
 type Mutation {

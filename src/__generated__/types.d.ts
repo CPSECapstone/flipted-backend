@@ -32,13 +32,13 @@ type CourseContent = {
 type CourseInfo = {
   __typename?: 'CourseInfo';
   courseId: Scalars['String'];
-  name: Scalars['String'];
+  course: Scalars['String'];
   instructor: Scalars['String'];
   description: Scalars['String'];
 };
 
 type CourseInput = {
-  name: Scalars['String'];
+  course: Scalars['String'];
   instructor: Scalars['String'];
   description: Scalars['String'];
 };
@@ -314,12 +314,11 @@ type Query = {
 
 
 type QueryCourseContentArgs = {
-  courseName: Scalars['String'];
+  course: Scalars['String'];
 };
 
 
 type QueryCourseInfoArgs = {
-  courseName: Scalars['String'];
   courseId: Scalars['String'];
 };
 

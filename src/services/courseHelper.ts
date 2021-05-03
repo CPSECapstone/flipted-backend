@@ -1,12 +1,13 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-import { CourseInfoItem, CoursePK, CourseSK } from "../interfaces/course";
+import { CourseInfoItem, CourseKey } from "../interfaces/course";
 
 export function courseInputToDBItem(input: CourseInput): CourseInfoItem {
    const courseId = uid();
+
    const item: CourseInfoItem = {
-      PK: CoursePK(input.name),
-      SK: CourseSK(courseId),
+      PK: CourseKey(courseId),
+      SK: CourseKey(courseId),
       courseId: courseId,
       ...input
    };
@@ -18,7 +19,7 @@ export function dbItemToCourseInfo(rawItem: any): CourseInfo {
    const item = <CourseInfoItem>unmarshall(rawItem);
    return <CourseInfo>{
       courseId: item.courseId,
-      name: item.name,
+      course: item.course,
       description: item.description,
       instructor: item.instructor
    };

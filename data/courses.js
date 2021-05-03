@@ -7,9 +7,9 @@ function generatePayload(course) {
    let query = `
     mutation {
       addCourse(course: {
-          name: "${course.name}",
-          description: "${course.description}",
-          instructor: "${course.instructor}"
+          course: "${course.Course}",
+          description: "${course.Description}",
+          instructor: "${course.Instructor}"
         }
       )
     }

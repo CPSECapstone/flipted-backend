@@ -6,7 +6,7 @@ import dynamodb, {
    QueryParams
 } from "./dynamodb";
 import * as helper from "./courseHelper";
-import { CoursePK, CourseSK, CourseSKPrefix } from "../interfaces/course";
+import { CourseKey, CoursePrefix } from "../interfaces/course";
 
 export async function addCourse(input: CourseInput) {
    const courseItem = helper.courseInputToDBItem(input);
@@ -24,12 +24,12 @@ export async function addCourse(input: CourseInput) {
    }
 }
 
-export async function getCourseInfo(courseName: string, courseId: string): Promise<CourseInfo> {
+export async function getCourseInfo(courseId: string): Promise<CourseInfo> {
    const params: GetCompositeParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       key: {
-         PK: CoursePK(courseName),
-         SK: CourseSK(courseId)
+         PK: CourseKey(courseId),
+         SK: CourseKey(courseId)
       }
    };
    try {
@@ -50,7 +50,7 @@ export async function listCourseInfos(instructor: string): Promise<CourseInfo[]>
       tableName: COURSE_CONTENT_TABLE_NAME,
       filterExpression: "begins_with(SK, :skPrefix) And instructor = :instructorVal",
       expressionAttributeValues: {
-         ":skPrefix": CourseSKPrefix,
+         ":skPrefix": CoursePrefix,
          ":instructorVal": instructor
       }
    };
@@ -74,7 +74,7 @@ export async function getCourseContent(courseName: string): Promise<CourseConten
       tableName: COURSE_CONTENT_TABLE_NAME,
       keyConditionExpression: "PK = :pkVal",
       expressionAttributeValues: {
-         ":pkVal": CoursePK(courseName)
+         ":pkVal": CourseKey(courseName)
       }
    };
 

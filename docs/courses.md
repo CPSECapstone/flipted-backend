@@ -15,7 +15,7 @@
 mutation AddCourse {
   addCourse(
     course: {
-      name: "Integrated Science"
+      courseName: "Integrated Science"
       description: "Our first ever course"
       instructor: "Christian"
     }
@@ -27,9 +27,9 @@ mutation AddCourse {
 
 ```graphql
 query GetCourseInfo {
-  courseInfo(courseName: "Integrated Science", courseId: "15dfe43a702") {
+  courseInfo(courseId: "e510f27e125") {
     courseId
-    name
+    course
     description
     instructor
   }
@@ -42,7 +42,7 @@ query GetCourseInfo {
 query GetCourseInfos {
   courseInfos(instructor: "Mr. Butcher") {
     courseId
-    name
+    course
     description
     instructor
   }
