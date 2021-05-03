@@ -1,16 +1,19 @@
-export const awsSkdPromiseResponse = jest.fn().mockReturnValue(Promise.resolve(true));
+export const awsSdkPromiseResponse = jest.fn().mockReturnValue(Promise.resolve(true));
 
 const putFn = jest.fn().mockImplementation(() => {
-   promise: awsSkdPromiseResponse;
+   promise: awsSdkPromiseResponse;
 });
 
 const getFn = jest.fn().mockImplementation(() => {
-   promise: awsSkdPromiseResponse;
+   promise: awsSdkPromiseResponse;
 });
 
 const dynamodbMock = {
    put: putFn,
-   get: getFn
+   get: getFn,
+   putComposite: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
+   })
 };
 
 export default dynamodbMock;

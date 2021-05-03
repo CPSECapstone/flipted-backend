@@ -1,0 +1,30 @@
+type Target {
+   targetId: String!
+   targetName: String!
+   description: String!
+   subject: String!
+   gradeLevel: Int!
+   icon: String!
+   standards: String!
+   course: String!
+   objectives: [Objective!]
+}
+
+type Query {
+   target(targetId: String!): Target!
+   targets(course: String!): [Target!]!
+}
+
+input TargetInput {
+   targetName: String!
+   description: String!
+   subject: String!
+   gradeLevel: Int!
+   icon: String!
+   standards: String!
+   course: String!
+}
+
+type Mutation {
+   addTarget(target: TargetInput!): String!
+}

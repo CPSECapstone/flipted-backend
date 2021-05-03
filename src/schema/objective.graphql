@@ -1,0 +1,30 @@
+type Query {
+   _empty: String
+}
+
+type Objective {
+   objectiveId: String!
+   objectiveName: String!
+   description: String!
+   targetId: String!
+   targetName: String!
+   course: String!
+   tasks: [Task!]!
+}
+
+type Query {
+   objective(objectiveId: String!): Objective!
+   objectives(course: String!): [Objective!]!
+}
+
+input ObjectiveInput {
+   objectiveName: String!
+   description: String!
+   targetId: String!
+   targetName: String!
+   course: String!
+}
+
+type Mutation {
+   addObjective(objective: ObjectiveInput!): String!
+}
