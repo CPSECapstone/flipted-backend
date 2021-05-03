@@ -54,12 +54,12 @@ async function addQuizBlock(quizblock: QuizBlockInput) {
    return addTaskBlock(dbItem);
 }
 
-async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
+async function getQuizBlockById(taskId: String, blockId: string): Promise<QuizBlock> {
    const params: GetCompositeParams = {
       tableName: QUIZBLOCKS_TABLE,
       key: {
-         PK: blockId,
-         SK: blockId
+         PK: "TASK#" + taskId,
+         SK: "QUIZ_BLOCK#" + blockId
       }
    };
 
@@ -76,9 +76,10 @@ async function getQuizBlockById(blockId: string): Promise<QuizBlock> {
             questions: questions
          };
       }
-      throw new Error(`QuizBlock not found with blockId=${blockId}`);
+      throw new Error(`QuizBlock not found with blockId=${blockId} within taskId=${taskId}`);
    } catch (err) {
-      return err;
+      console.log("Errored like it should in getQuizBlockById")
+      throw err;
    }
 }
 

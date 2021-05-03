@@ -12,7 +12,7 @@ import {
 import { Task } from "../interfaces/taskInterfaces";
 import { validateToken } from "../jws-verifer";
 import questionService from "../services/question";
-import { gradeMultipleChoiceQuestion } from "../services/questionHelper";
+import { gradeMultipleChoiceQuestion, quizBlockContainsQuestionId } from "../services/questionHelper";
 import taskService from "../services/task";
 import taskBusLogic from "../services/taskBusLogic";
 import taskSubmissionService from "../services/taskSubmission";
@@ -27,23 +27,23 @@ import {
    answerToAnswerOut,
    createQuestionProgressOutput
 } from "../services/taskSubmissionHelper";
+import { QuizBlock } from "../interfaces/taskblock";
+import quizblockService from "../services/taskblock";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
-
+   var quizBlock: QuizBlock
    const mcAnswerInput: MultipleChoiceAnswerInput = args.mcBlockInput;
 
-   // TODO: Assert given question id is contained in given quizblock
-   // TODO: Assert given block id is contained in given task
-   // TODO: Assert given task id exists
-
-   // get the question as defined by the database
    const question: MCQuestion = <MCQuestion>(
       await questionService.getById(mcAnswerInput.questionId, "")
    );
 
-   if (!question.id) {
-      throw new Error("Could not find question with id: " + mcAnswerInput.questionId);
+   // this asserts both the existence of the task, and the quizblock being within that task
+   quizBlock = await quizblockService.getQuizBlockById(mcAnswerInput.taskId, mcAnswerInput.questionBlockId)
+   
+   if (!quizBlockContainsQuestionId(quizBlock, mcAnswerInput.questionId)) {
+      throw new Error("Provided question id could not be found in the provided quiz block")
    }
 
    // grade the question against the students answer

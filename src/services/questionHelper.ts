@@ -11,6 +11,7 @@ import {
    FRQuestion,
    MCQuestion
 } from "../interfaces/question";
+import { QuizBlock } from "../interfaces/taskblock";
 
 export function gradeMultipleChoiceQuestion(question: MCQuestion, answerIndex: number): number {
    return question.answers.includes(answerIndex) ? question.points : 0;
@@ -79,4 +80,13 @@ export function dbResponsesToQuestions(items: any[]): Question[] {
    });
 
    return questions;
+}
+
+export function quizBlockContainsQuestionId(quizBlock: QuizBlock, id: String): boolean {
+  for(var question of quizBlock.questions) {
+     if (question.id == id) {
+        return true 
+     }
+  }
+  return false 
 }
