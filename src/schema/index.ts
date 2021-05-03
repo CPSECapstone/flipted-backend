@@ -35,8 +35,8 @@ const typesArray = [
    questionType,
    quizTaskSubmission,
    taskblockType,
-   objectiveType,
-   targetType
+   targetType,
+   objectiveType
 ];
 
 const resolversArray = [
@@ -48,7 +48,8 @@ const resolversArray = [
    questionResolvers,
    quizTaskSubmissionResolvers,
    taskblockResolvers,
-   targetResolvers
+   targetResolvers,
+   objectiveResolvers
 ];
 
 export const typeDefs = mergeTypeDefs(typesArray);

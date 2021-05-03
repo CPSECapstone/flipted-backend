@@ -1,17 +1,15 @@
 import * as service from "../services/objective";
 
-async function addObjective(_: any, args: any, context: any, info: any) {
-   const objective: ObjectiveInput = args.objective;
-   return service.addObjective(objective);
+async function addObjective(_: any, args: MutationAddObjectiveArgs, context: any, info: any) {
+   return service.addObjective(args.objective);
 }
 
 async function getObjective(_: any, args: QueryObjectiveArgs, context: any, info: any) {
    return service.getObjective(args.course, args.objectiveId);
 }
 
-async function listObjectivesByCourse(_: any, args: any, context: any, info: any) {
-   const course: string = args.course;
-   return service.listObjectivesByCourse(course);
+async function listObjectivesByCourse(_: any, args: QueryObjectivesArgs, context: any, info: any) {
+   return service.listObjectivesByCourse(args.course);
 }
 
 const resolvers = {
@@ -20,7 +18,7 @@ const resolvers = {
       objectives: listObjectivesByCourse
    },
    Mutation: {
-      addObjective: addObjective
+      addObjective
    }
 };
 

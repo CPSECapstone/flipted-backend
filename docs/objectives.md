@@ -53,12 +53,3 @@ query {
   }
 }
 ```
-
-
-student
-  learning target1
-    task1 - progress
-    task2 - progress
-  learning target2
-    task21 - progress
-    task22 - progress
