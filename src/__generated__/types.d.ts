@@ -80,21 +80,6 @@ type ImageBlockInput = {
   imageUrl: Scalars['String'];
 };
 
-type LearningObjective = {
-  __typename?: 'LearningObjective';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  course: Scalars['String'];
-  description: Scalars['String'];
-  tasks: Array<Task>;
-};
-
-type LearningObjectiveInput = {
-  name: Scalars['String'];
-  course: Scalars['String'];
-  description: Scalars['String'];
-};
-
 type LearningTarget = {
   __typename?: 'LearningTarget';
   id: Scalars['String'];
@@ -105,7 +90,6 @@ type LearningTarget = {
   icon: Scalars['String'];
   standards: Scalars['String'];
   course: Scalars['String'];
-  objectives: Array<LearningObjective>;
 };
 
 type LearningTargetInput = {
@@ -169,10 +153,10 @@ type Mutation = {
   addCourse?: Maybe<Course>;
   addFrQuestion: Scalars['String'];
   addImageBlock: Scalars['String'];
-  addLearningObjective: Scalars['String'];
   addLearningTarget: Scalars['String'];
   addMcQuestion: Scalars['String'];
   addMission?: Maybe<Scalars['String']>;
+  addObjective: Scalars['String'];
   addQuizBlock: Scalars['String'];
   addSubMission?: Maybe<Scalars['String']>;
   addTask?: Maybe<Scalars['String']>;
@@ -215,11 +199,6 @@ type MutationAddImageBlockArgs = {
 };
 
 
-type MutationAddLearningObjectiveArgs = {
-  objective: LearningObjectiveInput;
-};
-
-
 type MutationAddLearningTargetArgs = {
   target: LearningTargetInput;
 };
@@ -232,6 +211,11 @@ type MutationAddMcQuestionArgs = {
 
 type MutationAddMissionArgs = {
   mission?: Maybe<MissionInput>;
+};
+
+
+type MutationAddObjectiveArgs = {
+  objective: ObjectiveInput;
 };
 
 
@@ -284,6 +268,25 @@ type MutationUpdateUserArgs = {
   updateUserInput?: Maybe<UpdateUserInput>;
 };
 
+type Objective = {
+  __typename?: 'Objective';
+  objectiveId: Scalars['String'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  targetId: Scalars['String'];
+  targetName: Scalars['String'];
+  course: Scalars['String'];
+  tasks: Array<Task>;
+};
+
+type ObjectiveInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  targetId: Scalars['String'];
+  targetName: Scalars['String'];
+  course: Scalars['String'];
+};
+
 type Page = {
   __typename?: 'Page';
   blocks: Array<TaskBlock>;
@@ -299,11 +302,12 @@ type Query = {
   _empty?: Maybe<Scalars['String']>;
   courses?: Maybe<Array<Maybe<Course>>>;
   getUser?: Maybe<User>;
-  learningObjectives: Array<LearningObjective>;
   learningTarget: LearningTarget;
   learningTargets: Array<LearningTarget>;
   mission?: Maybe<Mission>;
   missions?: Maybe<Array<Maybe<Mission>>>;
+  objective: Objective;
+  objectives: Array<Objective>;
   questions: Array<Question>;
   quizblock: QuizBlock;
   /** Returns student's task progress on the rubric requirements if it exists. */
@@ -318,11 +322,6 @@ type Query = {
   subMission?: Maybe<SubMission>;
   task?: Maybe<Task>;
   tasks: Array<Task>;
-};
-
-
-type QueryLearningObjectivesArgs = {
-  course: Scalars['String'];
 };
 
 
@@ -343,6 +342,17 @@ type QueryMissionArgs = {
 
 type QueryMissionsArgs = {
   course?: Maybe<Scalars['String']>;
+};
+
+
+type QueryObjectiveArgs = {
+  course: Scalars['String'];
+  objectiveId: Scalars['String'];
+};
+
+
+type QueryObjectivesArgs = {
+  course: Scalars['String'];
 };
 
 

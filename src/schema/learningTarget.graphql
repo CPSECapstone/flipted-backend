@@ -7,7 +7,6 @@ type LearningTarget {
    icon: String!
    standards: String!
    course: String!
-   objectives: [LearningObjective!]!
 }
 
 type Query {

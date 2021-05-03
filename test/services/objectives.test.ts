@@ -1,7 +1,7 @@
 import dynamodbMock from "../__mocks__/dynamodb";
 import dynamodb from "../../src/services/dynamodb";
 import { mocked } from "ts-jest/utils";
-import learningObjectiveService from "../../src/services/learningObjective";
+import * as services from "../../src/services/objective";
 
 jest.mock("../../src/services/dynamodb", () => {
    return dynamodbMock;
@@ -9,15 +9,17 @@ jest.mock("../../src/services/dynamodb", () => {
 
 describe("add method", () => {
    test("add learning objective", async () => {
-      const objective: LearningObjectiveInput = {
+      const objective: ObjectiveInput = {
          name: "obj 1",
-         course: "Biology",
-         description: "obj 1 description"
+         description: "obj 1 description",
+         targetId: "target id 1",
+         targetName: "target name 1",
+         course: "Biology"
       };
 
       const MockedDynamoDB = mocked(dynamodb, true);
 
-      await learningObjectiveService.add(objective);
-      expect(MockedDynamoDB.put).toHaveBeenCalledTimes(1);
+      await services.addObjective(objective);
+      expect(MockedDynamoDB.putComposite).toHaveBeenCalledTimes(1);
    });
 });

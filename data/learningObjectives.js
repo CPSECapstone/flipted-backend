@@ -1,9 +1,9 @@
-const data = require("./learningObjectives.json");
+const data = require("./objectives.json");
 
-function generateLearningObjectivePayload(course, name) {
+function generateObjectivePayload(course, name) {
    let query = `
     mutation {
-      addLearningObjective(
+      addObjective(
         objective: {
           course: "${course}",
           name: "${name}",
@@ -22,12 +22,12 @@ function generateLearningObjectivePayload(course, name) {
    return payload;
 }
 
-const objectives = data.learningObjectives;
+const objectives = data.objectives;
 
 const payloads = objectives.map(objective => {
    const course = data.course;
    const name = objective;
-   return generateLearningObjectivePayload(course, name);
+   return generateObjectivePayload(course, name);
 });
 
 module.exports = payloads;

@@ -9,7 +9,7 @@ import taskType from "./task.graphql";
 import quizTaskSubmission from "./taskSubmission.graphql";
 import questionType from "./question.graphql";
 import taskblockType from "./taskblock.graphql";
-import learningObjectiveType from "./learningObjective.graphql";
+import objectiveType from "./objective.graphql";
 import learningTargetType from "./learningTarget.graphql";
 
 import userResolvers from "./user.resolver";
@@ -19,7 +19,7 @@ import questionResolvers from "./question.resolver";
 import quizTaskSubmissionResolvers from "./taskSubmission.resolver";
 import missionResolvers from "./mission.resolver";
 import taskblockResolvers from "./taskblock.resolver";
-import learningObjectiveResolvers from "./learningObjective.resolver";
+import objectiveResolvers from "./objective.resolver";
 import learningTargetResolvers from "./learningTarget.resolver";
 
 const customScalarResolver = {
@@ -35,7 +35,7 @@ const typesArray = [
    questionType,
    quizTaskSubmission,
    taskblockType,
-   learningObjectiveType,
+   objectiveType,
    learningTargetType
 ];
 
@@ -48,7 +48,7 @@ const resolversArray = [
    questionResolvers,
    quizTaskSubmissionResolvers,
    taskblockResolvers,
-   learningObjectiveResolvers,
+   objectiveResolvers,
    learningTargetResolvers
 ];
 
