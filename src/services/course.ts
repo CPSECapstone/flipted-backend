@@ -69,12 +69,13 @@ export async function listCourseInfos(instructor: string): Promise<CourseInfo[]>
    }
 }
 
-export async function getCourseContent(courseName: string): Promise<CourseContent> {
+export async function getCourseContent(course: string): Promise<CourseContent> {
    const params: QueryParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
-      keyConditionExpression: "PK = :pkVal",
+      indexName: "course-PK-index",
+      keyConditionExpression: "course = :courseVal",
       expressionAttributeValues: {
-         ":pkVal": CourseKey(courseName)
+         ":courseVal": course
       }
    };
 
@@ -85,7 +86,7 @@ export async function getCourseContent(courseName: string): Promise<CourseConten
          return courseContent;
       }
 
-      throw new Error(`Course not found with courseName=${courseName}`);
+      throw new Error(`Course not found with courseName=${course}`);
    } catch (err) {
       return err;
    }

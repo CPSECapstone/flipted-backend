@@ -12,6 +12,7 @@ describe("add method", () => {
       const objective: ObjectiveInput = {
          objectiveName: "obj 1",
          description: "obj 1 description",
+         targetId: "target id 1",
          targetName: "target name 1",
          course: "Biology"
       };

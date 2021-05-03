@@ -52,5 +52,47 @@ query GetCourseInfos {
 #### Get Course Content
 
 ```
-// todo
+query GetCourseContent{
+  courseContent(course: "Integrated Science") {
+    courseInfo {
+      courseId
+      course
+      description
+      instructor
+    }
+    missions {
+      id
+      course
+      name
+      description
+    }
+    targets {
+      targetId
+      targetName
+      description
+      subject
+      gradeLevel
+      icon
+      standards
+      course
+    }
+    objectives {
+      objectiveId
+      objectiveName
+      description
+      targetId
+      targetName
+      course
+    }
+    taskInfos {
+      taskInfoId
+      taskName
+      course
+      targetId
+      objectiveId
+      missionId
+      subMissionId
+    }
+  }
+}
 ```

@@ -22,11 +22,11 @@ type Answer = {
 
 type CourseContent = {
   __typename?: 'CourseContent';
-  course?: Maybe<CourseInfo>;
-  missions: Array<Mission>;
-  targets: Array<Target>;
-  objectives: Array<Objective>;
-  task: Array<Task>;
+  courseInfo: CourseInfo;
+  missions?: Maybe<Array<Mission>>;
+  targets?: Maybe<Array<Target>>;
+  objectives?: Maybe<Array<Objective>>;
+  taskInfos?: Maybe<Array<TaskInfo>>;
 };
 
 type CourseInfo = {
@@ -146,6 +146,7 @@ type Mutation = {
   addSubMission?: Maybe<Scalars['String']>;
   addTarget: Scalars['String'];
   addTask?: Maybe<Scalars['String']>;
+  addTaskInfo?: Maybe<Scalars['String']>;
   addTextBlock: Scalars['String'];
   addVideoBlock: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
@@ -220,6 +221,11 @@ type MutationAddTaskArgs = {
 };
 
 
+type MutationAddTaskInfoArgs = {
+  taskInfo: TaskInfoInput;
+};
+
+
 type MutationAddTextBlockArgs = {
   textblock: TextBlockInput;
 };
@@ -262,7 +268,7 @@ type Objective = {
   targetId: Scalars['String'];
   targetName: Scalars['String'];
   course: Scalars['String'];
-  tasks: Array<Task>;
+  tasks?: Maybe<Array<Task>>;
 };
 
 type ObjectiveInput = {
@@ -309,6 +315,8 @@ type Query = {
   target: Target;
   targets: Array<Target>;
   task?: Maybe<Task>;
+  taskInfo: TaskInfo;
+  taskInfos: Array<TaskInfo>;
   tasks: Array<Task>;
 };
 
@@ -391,6 +399,16 @@ type QueryTargetsArgs = {
 
 type QueryTaskArgs = {
   taskId?: Maybe<Scalars['String']>;
+};
+
+
+type QueryTaskInfoArgs = {
+  taskInfoId: Scalars['String'];
+};
+
+
+type QueryTaskInfosArgs = {
+  course: Scalars['String'];
 };
 
 
@@ -528,6 +546,26 @@ interface TaskBlock {
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
 }
+
+type TaskInfo = {
+  __typename?: 'TaskInfo';
+  taskInfoId: Scalars['String'];
+  taskName: Scalars['String'];
+  course: Scalars['String'];
+  targetId?: Maybe<Scalars['String']>;
+  objectiveId?: Maybe<Scalars['String']>;
+  missionId?: Maybe<Scalars['String']>;
+  subMissionId?: Maybe<Scalars['String']>;
+};
+
+type TaskInfoInput = {
+  taskName: Scalars['String'];
+  course: Scalars['String'];
+  targetId?: Maybe<Scalars['String']>;
+  objectiveId?: Maybe<Scalars['String']>;
+  missionId?: Maybe<Scalars['String']>;
+  subMissionId?: Maybe<Scalars['String']>;
+};
 
 type TaskInput = {
   name: Scalars['String'];

@@ -1,0 +1,27 @@
+type TaskInfo {
+   taskInfoId: String!
+   taskName: String!
+   course: String!
+   targetId: String
+   objectiveId: String
+   missionId: String
+   subMissionId: String
+}
+
+type Query {
+   taskInfo(taskInfoId: String!): TaskInfo!
+   taskInfos(course: String!): [TaskInfo!]!
+}
+
+input TaskInfoInput {
+   taskName: String!
+   course: String!
+   targetId: String
+   objectiveId: String
+   missionId: String
+   subMissionId: String
+}
+
+type Mutation {
+   addTaskInfo(taskInfo: TaskInfoInput!): String
+}
