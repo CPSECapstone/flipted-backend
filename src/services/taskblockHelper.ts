@@ -1,10 +1,6 @@
 import { uid } from "uid/secure";
 
 import {
-   QuizBlockInput,
-   TextBlockInput,
-   ImageBlockInput,
-   VideoBlockInput,
    TaskBlockItem,
    TextBlockItem,
    ImageBlockItem,

@@ -1,0 +1,7 @@
+build
+.vscode
+*.md
+.serverless
+package-lock.json
+.webpack
+src/__generated__/*

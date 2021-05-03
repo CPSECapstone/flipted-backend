@@ -1,18 +1,11 @@
-import { Question } from "../interfaces/question";
-import { QuizBlock } from "../interfaces/taskblock";
-import { Task } from "../interfaces/taskInterfaces";
 import {
    FreeResponseAnswer,
-   FreeResponseAnswerInput,
    FreeResponseAnswerItem,
    QuestionAndAnswer,
    MultipleChoiceAnswer,
-   MultipleChoiceAnswerInput,
    MultipleChoiceAnswerItem,
    Answer,
    QuestionAnswerItem,
-   TaskProgress,
-   TaskProgressInput,
    TaskProgressItem,
    TaskSubmissionResult,
    AnswerOut,

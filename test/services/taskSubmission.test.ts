@@ -1,17 +1,12 @@
-import { FRQuestion, MCQuestion, Question } from "../../src/interfaces/question";
 import {
    Answer,
    AnswerOut,
    FreeResponseAnswer,
-   FreeResponseAnswerInput,
    FreeResponseAnswerItem,
    MultipleChoiceAnswer,
-   MultipleChoiceAnswerInput,
    MultipleChoiceAnswerItem,
    QuestionAndAnswer,
    QuestionProgress,
-   TaskProgress,
-   TaskProgressInput,
    TaskProgressItem,
    TaskSubmissionResult,
    TaskSubmissionResultItem
@@ -48,14 +43,14 @@ const mockFRAnswer: FreeResponseAnswer = {
    answer: "I like BUBBLES!"
 };
 
-const mockFRQuestion: FRQuestion = {
+const mockFrQuestion: FrQuestion = {
    id: "FR_QUESTION#123",
    description: "",
    points: 4,
    answer: "hello!"
 };
 
-const mockMCQuestion: MCQuestion = {
+const mockMcQuestion: McQuestion = {
    id: "MC_QUESTION#456",
    description: "",
    points: 2,
@@ -68,11 +63,11 @@ const username = "BUBBLES!";
 // expected output
 const mockQuestionAndAnswers: QuestionAndAnswer[] = [
    {
-      question: JSON.parse(JSON.stringify(mockMCQuestion)),
+      question: JSON.parse(JSON.stringify(mockMcQuestion)),
       answer: { pointsAwarded: 2, answer: "3", questionId: "MC_QUESTION#456" }
    },
    {
-      question: JSON.parse(JSON.stringify(mockFRQuestion)),
+      question: JSON.parse(JSON.stringify(mockFrQuestion)),
       answer: { pointsAwarded: 3, answer: "I like BUBBLES!", questionId: "FR_QUESTION#123" }
    }
 ];
@@ -278,7 +273,7 @@ describe("converting question Answer types", () => {
 
 describe("Creating a task submission result", () => {
    it("will use information on the task, questions, and question answers to make a task submission", async () => {
-      const questions: Question[] = [mockFRQuestion, mockMCQuestion];
+      const questions: Question[] = [mockFrQuestion, mockMcQuestion];
       const answers: Answer[] = [mockMCAnswer, mockFRAnswer];
 
       expect(createTaskSubmissionResult(6, "TASK#123", answers, questions)).toEqual(

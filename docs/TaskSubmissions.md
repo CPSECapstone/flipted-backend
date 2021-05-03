@@ -67,11 +67,11 @@ mutation submitTask {
       question {
         id
         points
-        ... on FRQuestion {
+        ... on FrQuestion {
           description
           id
         }
-        ... on MCQuestion {
+        ... on McQuestion {
           description
           options {
             description

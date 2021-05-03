@@ -1,23 +1,8 @@
 import { uid } from "uid";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import questionService from "./question";
-import {
-   Task,
-   TaskInput,
-   RubricRequirementInput,
-   Page,
-   TaskItem,
-   RubricRequirementItem
-} from "../interfaces/taskInterfaces";
-import {
-   QuizBlockItem,
-   ImageBlock,
-   QuizBlock,
-   TaskBlock,
-   TextBlock,
-   VideoBlock
-} from "../interfaces/taskblock";
-import { Answer, TaskProgress, TaskProgressInput } from "../interfaces/taskSubmission";
+import { TaskItem, RubricRequirementItem } from "../interfaces/task";
+import { QuizBlockItem } from "../interfaces/taskblock";
 
 /**
  * Modifies a teacher specified default task with any ongoing completion progress represented

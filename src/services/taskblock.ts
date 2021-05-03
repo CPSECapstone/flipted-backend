@@ -2,15 +2,7 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import dynamodb, { PutCompositeParams, GetCompositeParams } from "./dynamodb";
 import questionService from "./question";
-import {
-   TextBlockInput,
-   ImageBlockInput,
-   VideoBlockInput,
-   QuizBlockInput,
-   QuizBlock,
-   TaskBlockItem,
-   QuizBlockItem
-} from "../interfaces/taskblock";
+import { TaskBlockItem, QuizBlockItem } from "../interfaces/taskblock";
 import {
    imageblockInputToDBItem,
    quizblockInputToDBItem,
@@ -54,12 +46,12 @@ async function addQuizBlock(quizblock: QuizBlockInput) {
    return addTaskBlock(dbItem);
 }
 
-async function getQuizBlockById(taskId: String, blockId: string): Promise<QuizBlock> {
+async function getQuizBlockById(taskId: string, blockId: string): Promise<QuizBlock> {
    const params: GetCompositeParams = {
       tableName: QUIZBLOCKS_TABLE,
       key: {
-         PK: "TASK#" + taskId,
-         SK: "QUIZ_BLOCK#" + blockId
+         PK: `TASK#${taskId}`,
+         SK: `QUIZ_BLOCK#${blockId}`
       }
    };
 
@@ -72,6 +64,8 @@ async function getQuizBlockById(taskId: String, blockId: string): Promise<QuizBl
             blockId,
             title: quizblockItem.title,
             points: quizblockItem.points,
+            blockIndex: quizblockItem.blockIndex,
+            pageIndex: quizblockItem.pageIndex,
             requiredScore: quizblockItem.requiredScore,
             questions: questions
          };

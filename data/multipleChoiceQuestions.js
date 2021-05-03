@@ -9,7 +9,7 @@ function generatePayload(question) {
 
    let query = `
     mutation {
-      addMCQuestion(
+      addMcQuestion(
         question: {
           description: "${question.description}"
           points: ${question.points}

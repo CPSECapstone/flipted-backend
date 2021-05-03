@@ -2,14 +2,8 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import taskBusLogic, { dbItemsToTaskItem } from "./taskBusLogic";
 
 import { TABLE_NAME, COURSE_CONTENT_TABLE_NAME } from "../environment";
-import { TaskInput, TaskItem, Task } from "../interfaces/taskInterfaces";
-import dynamodb, {
-   GetCompositeParams,
-   PutCompositeParams,
-   QueryParams,
-   ScanParams
-} from "./dynamodb";
-import { TaskProgress } from "../interfaces/taskSubmission";
+import { TaskItem } from "../interfaces/task";
+import dynamodb, { PutCompositeParams, QueryParams, ScanParams } from "./dynamodb";
 
 const TASKS_TABLE = COURSE_CONTENT_TABLE_NAME;
 const TASKS_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
