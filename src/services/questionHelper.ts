@@ -82,11 +82,10 @@ export function dbResponsesToQuestions(items: any[]): Question[] {
    return questions;
 }
 
-export function quizBlockContainsQuestionId(quizBlock: QuizBlock, id: String): boolean {
-  for(var question of quizBlock.questions) {
-     if (question.id == id) {
-        return true 
-     }
-  }
-  return false 
+export function quizBlockContainsQuestionIdWithPrefix(quizBlock: QuizBlock, id: String, prefix: String): boolean {
+  return (quizBlock.questions.filter(q => q.id == id && id.split('#')[0] == prefix).length === 1)
+}
+
+export function isValidMultipleChoiceAnswer(mcQuestion: MCQuestion, answerId: number) {
+   return (mcQuestion.options.filter(choice => choice.id === answerId).length === 1)
 }
