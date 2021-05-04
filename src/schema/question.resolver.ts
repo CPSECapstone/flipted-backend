@@ -1,4 +1,7 @@
+import { RoleInternal } from "../interfaces/role";
+import { validateToken } from "../jws-verifer";
 import questionService from "../services/question";
+import userService from "../services/user";
 
 async function addFrQuestion(_: any, args: any, context: any, info: any) {
    const question: FrQuestionInput = args.question;
@@ -12,7 +15,10 @@ async function addMcQuestion(_: any, args: any, context: any, info: any) {
 
 async function listQuestionsByIds(_: any, args: any, context: any) {
    const questionIds: string[] = args.questionIds;
-   return questionService.listByIds(questionIds);
+   const tokenPayload = await validateToken(context.headers.Authorization);
+   const userRole = await userService.getUserRole(tokenPayload.username); // then get the user role
+
+   return questionService.listByIds(questionIds, userRole == RoleInternal.Instructor)
 }
 
 async function resolveQuestionType(question: any, context: any, info: any) {
