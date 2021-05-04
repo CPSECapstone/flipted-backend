@@ -1,8 +1,11 @@
 type Progress {
-   userName: String!
-   course: String!
    taskId: String!
    status: Boolean!
+}
+
+type UserProgress {
+   userName: String!
+   progress: [Progress!]!
 }
 
 input ProgressInput {
@@ -12,9 +15,17 @@ input ProgressInput {
    status: Boolean!
 }
 
+type ProgressOverview {
+   userProgress: [UserProgress!]!
+   courseInfo: CourseInfo!
+   missions: [Mission!]!
+   targets: [Target!]!
+}
+
 type Query {
-   progressByUserAndCourse(userName: String!, course: String!): [Progress!]!
-   progressByCourse(course: String!): [Progress!]!
+   progressByCourse(course: String!): [UserProgress!]!
+   userProgress(userName: String!, course: String!): UserProgress!
+   progressOverview(course: String!): ProgressOverview!
 }
 
 type Mutation {

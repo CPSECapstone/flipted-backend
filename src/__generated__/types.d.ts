@@ -23,8 +23,8 @@ type Answer = {
 type CourseContent = {
   __typename?: 'CourseContent';
   courseInfo: CourseInfo;
-  missions?: Maybe<Array<Mission>>;
-  targets?: Maybe<Array<Target>>;
+  missions: Array<Mission>;
+  targets: Array<Target>;
 };
 
 type CourseInfo = {
@@ -289,8 +289,6 @@ type PageInput = {
 
 type Progress = {
   __typename?: 'Progress';
-  userName: Scalars['String'];
-  course: Scalars['String'];
   taskId: Scalars['String'];
   status: Scalars['Boolean'];
 };
@@ -302,10 +300,18 @@ type ProgressInput = {
   status: Scalars['Boolean'];
 };
 
+type ProgressOverview = {
+  __typename?: 'ProgressOverview';
+  userProgress: Array<UserProgress>;
+  courseInfo: CourseInfo;
+  missions: Array<Mission>;
+  targets: Array<Target>;
+};
+
 type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']>;
-  courseContent?: Maybe<CourseContent>;
+  courseContent: CourseContent;
   courseInfo: CourseInfo;
   courseInfos: Array<CourseInfo>;
   getUser?: Maybe<User>;
@@ -313,8 +319,8 @@ type Query = {
   missions?: Maybe<Array<Maybe<Mission>>>;
   objective: Objective;
   objectives: Array<Objective>;
-  progressByCourse: Array<Progress>;
-  progressByUserAndCourse: Array<Progress>;
+  progressByCourse: Array<UserProgress>;
+  progressOverview: ProgressOverview;
   questions: Array<Question>;
   quizblock: QuizBlock;
   /** Returns student's task progress on the rubric requirements if it exists. */
@@ -333,6 +339,7 @@ type Query = {
   taskInfo: Task;
   tasks: Array<Task>;
   tasksByCourse: Array<Task>;
+  userProgress: UserProgress;
 };
 
 
@@ -376,8 +383,7 @@ type QueryProgressByCourseArgs = {
 };
 
 
-type QueryProgressByUserAndCourseArgs = {
-  userName: Scalars['String'];
+type QueryProgressOverviewArgs = {
   course: Scalars['String'];
 };
 
@@ -439,6 +445,12 @@ type QueryTasksArgs = {
 
 
 type QueryTasksByCourseArgs = {
+  course: Scalars['String'];
+};
+
+
+type QueryUserProgressArgs = {
+  userName: Scalars['String'];
   course: Scalars['String'];
 };
 
@@ -672,6 +684,12 @@ type User = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
+};
+
+type UserProgress = {
+  __typename?: 'UserProgress';
+  userName: Scalars['String'];
+  progress: Array<Progress>;
 };
 
 type VideoBlock = TaskBlock & {

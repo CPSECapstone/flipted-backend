@@ -1,8 +1,12 @@
 import { CompositeDBItem } from "../services/dynamodb";
 
-export type ProgressItem = CompositeDBItem & Omit<Progress, "__typename">;
+export type ProgressItem = CompositeDBItem & {
+   userName: string;
+   taskId: string;
+   status: boolean;
+};
 
-export function ProgressPK(userName: String, course: String): string {
+export function ProgressPK(userName: string, course: string): string {
    return `${userName}#${course}`;
 }
 

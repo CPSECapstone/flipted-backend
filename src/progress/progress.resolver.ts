@@ -4,18 +4,23 @@ async function addProgress(_: any, args: MutationAddProgressArgs, context: any, 
    return service.addProgress(args.progress);
 }
 
-async function progressByUserAndCourse(_: any, args: QueryProgressByUserAndCourseArgs) {
-   return service.progressByUserAndCourse(args.userName, args.course);
-}
-
 async function progressByCourse(_: any, args: QueryProgressByCourseArgs) {
    return service.progressByCourse(args.course);
 }
 
+async function userProgress(_: any, args: QueryUserProgressArgs) {
+   return service.userProgress(args.userName, args.course);
+}
+
+async function progressOverview(_: any, args: QueryProgressOverviewArgs) {
+   return service.progressOverview(args.course);
+}
+
 const resolvers = {
    Query: {
-      progressByUserAndCourse,
-      progressByCourse
+      progressByCourse,
+      userProgress,
+      progressOverview
    },
    Mutation: {
       addProgress
