@@ -140,6 +140,7 @@ type Mutation = {
   addMcQuestion: Scalars['String'];
   addMission?: Maybe<Scalars['String']>;
   addObjective: Scalars['String'];
+  addProgress: Scalars['String'];
   addQuizBlock: Scalars['String'];
   addSubMission?: Maybe<Scalars['String']>;
   addTarget: Scalars['String'];
@@ -195,6 +196,11 @@ type MutationAddMissionArgs = {
 
 type MutationAddObjectiveArgs = {
   objective: ObjectiveInput;
+};
+
+
+type MutationAddProgressArgs = {
+  progress: ProgressInput;
 };
 
 
@@ -281,6 +287,21 @@ type PageInput = {
   skippable?: Maybe<Scalars['Boolean']>;
 };
 
+type Progress = {
+  __typename?: 'Progress';
+  userName: Scalars['String'];
+  course: Scalars['String'];
+  taskId: Scalars['String'];
+  status: Scalars['Boolean'];
+};
+
+type ProgressInput = {
+  userName: Scalars['String'];
+  course: Scalars['String'];
+  taskId: Scalars['String'];
+  status: Scalars['Boolean'];
+};
+
 type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']>;
@@ -292,6 +313,8 @@ type Query = {
   missions?: Maybe<Array<Maybe<Mission>>>;
   objective: Objective;
   objectives: Array<Objective>;
+  progressByCourse: Array<Progress>;
+  progressByUserAndCourse: Array<Progress>;
   questions: Array<Question>;
   quizblock: QuizBlock;
   /** Returns student's task progress on the rubric requirements if it exists. */
@@ -344,6 +367,17 @@ type QueryObjectiveArgs = {
 
 
 type QueryObjectivesArgs = {
+  course: Scalars['String'];
+};
+
+
+type QueryProgressByCourseArgs = {
+  course: Scalars['String'];
+};
+
+
+type QueryProgressByUserAndCourseArgs = {
+  userName: Scalars['String'];
   course: Scalars['String'];
 };
 

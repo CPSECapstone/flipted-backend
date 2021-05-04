@@ -1,0 +1,22 @@
+type Progress {
+   userName: String!
+   course: String!
+   taskId: String!
+   status: Boolean!
+}
+
+input ProgressInput {
+   userName: String!
+   course: String!
+   taskId: String!
+   status: Boolean!
+}
+
+type Query {
+   progressByUserAndCourse(userName: String!, course: String!): [Progress!]!
+   progressByCourse(course: String!): [Progress!]!
+}
+
+type Mutation {
+   addProgress(progress: ProgressInput!): String!
+}

@@ -174,9 +174,10 @@ query {
 
 
 #### List Tasks By Course
+
 ```
 query {
-  taskInfosByCourse(course: "Integrated Science") {
+  tasksByCourse(course: "Integrated Science") {
     id
     name
   }
