@@ -52,22 +52,11 @@ input RubricRequirementInput {
    description: String
 }
 
-type TaskInfo {
-   id: String!
-   name: String!
-   course: String!
-   missionId: String!
-   missionIndex: Int!
-   subMissionId: String
-   objectiveId: String
-   targetId: String
-}
-
 type Query {
    task(taskId: String): Task!
    tasks(subMissionId: String): [Task!]!
-   taskInfo(taskId: String!): TaskInfo!
-   taskInfosByCourse(course: String!): [TaskInfo!]!
+   taskInfo(taskId: String!): Task!
+   tasksByCourse(course: String!): [Task!]!
 }
 
 type Mutation {

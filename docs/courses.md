@@ -65,33 +65,30 @@ query GetCourseContent{
       course
       name
       description
+      missionContent {
+        __typename
+        ...on Task {
+          id
+          name
+        }
+        ...on SubMission {
+          id
+          name
+        }
+      }
     }
     targets {
       targetId
       targetName
       description
-      subject
-      gradeLevel
-      icon
-      standards
-      course
-    }
-    objectives {
-      objectiveId
-      objectiveName
-      description
-      targetId
-      targetName
-      course
-    }
-    taskInfos {
-      taskInfoId
-      taskName
-      course
-      targetId
-      objectiveId
-      missionId
-      subMissionId
+      objectives {
+        objectiveId
+        objectiveName
+        tasks {
+          id
+          name
+        }
+      }
     }
   }
 }

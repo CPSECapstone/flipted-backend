@@ -13,8 +13,6 @@ type CourseContent {
    courseInfo: CourseInfo!
    missions: [Mission!]
    targets: [Target!]
-   objectives: [Objective!]
-   taskInfos: [TaskInfo!]
 }
 
 input CourseInput {

@@ -130,10 +130,10 @@ export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
    return task;
 }
 
-export function dbItemToTaskInfo(rawItem: any): TaskInfo {
+export function dbItemToTask(rawItem: any): Task {
    const item = <TaskItem>unmarshall(rawItem);
 
-   return <TaskInfo>{
+   return <Task>{
       id: item.id,
       name: item.name,
       course: item.course,

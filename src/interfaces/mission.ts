@@ -13,3 +13,7 @@ export interface SubMissionItem extends CompositeDBItem {
    name: string;
    description: string;
 }
+
+export const MissionPrefix = "MISSION";
+
+export const SubMissionPrefix = "SUBMISSION";

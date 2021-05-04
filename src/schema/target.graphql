@@ -7,7 +7,7 @@ type Target {
    icon: String!
    standards: String!
    course: String!
-   objectives: [Objective!]
+   objectives: [Objective!]!
 }
 
 type Query {
