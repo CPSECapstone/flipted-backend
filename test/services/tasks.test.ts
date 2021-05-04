@@ -11,11 +11,12 @@ import taskSubmission from "../../src/services/taskSubmission";
 
 const mockDate: Date = new Date(0);
 const sampleTask = {
+   course: "Integrated Science",
    startAt: mockDate,
    endAt: mockDate,
    dueDate: mockDate,
-   parentMissionId: "1234",
-   parentMissionIndex: 0,
+   missionId: "1234",
+   missionIndex: 0,
    objectiveId: "0",
    id: "0",
    name: "Destin's Awesome Task",

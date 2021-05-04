@@ -22,8 +22,6 @@ mutation {
       name: "A song of fire and ice"
       instructions: "Follow these instructions"
       points: 3
-      subMissionId: "0"
-      objectiveId: "0"
       pages: [
         {skippable: true},
         {skippable: true}
@@ -33,6 +31,12 @@ mutation {
         { description: "Do this other thing" }
         { description: "Finally, do this last thing" }
       ]
+      course: "Integrated Science"
+      missionId: "mission id 1"
+      missionIdex: 0
+      subMissionId: "subMission id 1"
+      objectiveId: "mission id 1"
+      targetId: "target  id 1"
     }
   )
 }
@@ -164,6 +168,17 @@ query {
     name
     instructions
     subMissionId
+  }
+}
+```
+
+
+#### List Tasks By Course
+```
+query {
+  taskInfosByCourse(course: "Integrated Science") {
+    id
+    name
   }
 }
 ```

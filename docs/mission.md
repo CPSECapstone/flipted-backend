@@ -33,8 +33,8 @@ query {
       ... on Task{
         id
         name
-        parentMissionId
-        parentMissionIndex
+        missionId
+        missionIndex
         pages{
           blocks{
             title
@@ -88,7 +88,7 @@ query {
       ... on SubMission{
         id
         name
-        parentMissionId
+        missionId
       }
     }
   }

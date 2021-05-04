@@ -36,11 +36,11 @@ async function addMission(missionInput: MissionInput) {
 async function getMissionContent(missionId: string): Promise<MissionContent[]> {
    const params: QueryParams = {
       tableName: MISSIONS_TABLE,
-      keyConditionExpression: "parentMissionId = :missionId",
+      keyConditionExpression: "missionId = :missionId",
       expressionAttributeValues: {
          ":missionId": missionId
       },
-      indexName: "parentMissionId-index"
+      indexName: "missionId-index"
    };
 
    try {

@@ -4,11 +4,9 @@ import { CourseInfoItem, CourseKey, CoursePrefix } from "../interfaces/course";
 import { MissionItem } from "../interfaces/mission";
 import { ObjectiveItem, ObjectivePrefix } from "../interfaces/objective";
 import { TargetItem, TargetPrefix } from "../interfaces/target";
-import { TaskInfoItem, TaskInfoPrefix } from "../interfaces/taskInfo";
 import { dbMissionItemToMission } from "./missionLogic";
 import { dbItemToObjective } from "./objectiveHelper";
 import { dbItemToTarget } from "./targetHelper";
-import { dbItemToTaskInfo } from "./taskInfoHelper";
 
 export function courseInputToDBItem(input: CourseInput): CourseInfoItem {
    const courseId = uid();
@@ -64,12 +62,11 @@ export function dbItemsToCourseContent(items: any[]): CourseContent {
       } else if (type == TargetPrefix) {
          const target = dbItemToTarget(<TargetItem>item);
          targets.push(target);
-      } else if (type == TaskInfoPrefix) {
-         const taskInfo = dbItemToTaskInfo(<TaskInfoItem>item);
-         taskInfos.push(taskInfo);
       } else if (type == "MISSION") {
          const mission = dbMissionItemToMission(<MissionItem>item);
          missions.push(mission);
+      } else if (type == "TASK") {
+         // TODO
       }
    });
 

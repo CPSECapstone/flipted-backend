@@ -18,9 +18,12 @@ export interface TaskItem extends CompositeDBItem {
    startAt: Date;
    endAt: Date;
    dueDate: Date;
-   parentMissionId: string;
-   parentMissionIndex: number;
-   objectiveId: string;
    pages: PageItem[];
    requirements: RubricRequirementItem[];
+   course: string;
+   missionId: string;
+   missionIndex: number;
+   subMissionId: string;
+   objectiveId: string;
+   targetId: string;
 }

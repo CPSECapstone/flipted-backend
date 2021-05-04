@@ -2,7 +2,7 @@ import { validateToken } from "../jws-verifer";
 import taskService from "../services/task";
 import userService from "../services/user";
 
-async function addTask(_: any, args: any, context: any, info: any) {
+async function addTask(_: any, args: MutationAddTaskArgs, context: any, info: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
    const userRole = await userService.getUserRole(tokenPayload.username); // then get the user role
 
@@ -24,6 +24,14 @@ async function getTaskById(_: any, args: any, context: any, info: any) {
 async function listTasksBySubmissionId(_: any, args: any, context: any, info: any) {
    const subMissionId: string = args.subMissionId;
    return taskService.listBySubMissionId(subMissionId);
+}
+
+async function getTaskInfoById(_: any, args: QueryTaskInfoArgs, context: any, info: any) {
+   return taskService.getTaskInfoById(args.taskId);
+}
+
+async function ListTasksByCourse(_: any, args: QueryTaskInfosByCourseArgs) {
+   return taskService.listTasksByCourse(args.course);
 }
 
 // TODO: QuizBlock
@@ -49,7 +57,9 @@ const resolvers = {
    },
    Query: {
       task: getTaskById,
-      tasks: listTasksBySubmissionId
+      tasks: listTasksBySubmissionId,
+      taskInfo: getTaskInfoById,
+      taskInfosByCourse: ListTasksByCourse
    },
    Mutation: {
       addTask: addTask
