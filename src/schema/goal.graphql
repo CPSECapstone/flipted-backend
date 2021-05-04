@@ -1,0 +1,83 @@
+"""
+Represents input for a goal set by a teacher for a student or a student for themself
+"""
+input NewGoalInput {
+    """
+    Title of the goal
+    """
+    title: String!
+
+    """
+    Date the goal is due
+    """
+    dueDate: Date!
+
+    """
+    List of sub goals that contribute to completion of parent goal
+    """
+    subGoals: [SubGoalInput]!
+
+    """
+    Category of the goal as defined by the teacher
+    """
+    category: String!
+
+    """
+    Whether or not the goal is favorited, to allow for better filtering
+    """
+    favorited: Boolean!
+
+    """
+    If goal is being created by teacher, the assignee of the goal
+    """
+    assignee: User
+
+    """
+    If goal is being created by teacher, point value associated with goal
+    """
+    pointValue: Int
+}
+
+input SubGoalInput {
+    """
+    Title of the sub-goal
+    """
+    title: String!
+
+    """
+    Date the sub-goal is due
+    """
+    dueDate: Date!
+}
+
+type Goal {
+    id: String!
+    title: String!
+    dueDate: Date!
+    completed: Boolean!
+    completedDate: Date
+    subGoals: [SubGoal]!
+    category: String!
+    favorited: Boolean!
+    owner: User!
+    assignee: User!
+    pointValue: Int
+}
+
+type SubGoal {
+    id: String!
+    title: String!
+    dueDate: Date!
+    completed: Boolean!
+    completedDate: Date
+}
+
+type Query {
+    GetAllGoals(): [Goal]
+    GetGoalById(id: String): Goal
+}
+
+type Mutation {
+    SaveNewGoal(goal: NewGoalInput): Goal
+    EditGoal(id: String): Goal
+}
