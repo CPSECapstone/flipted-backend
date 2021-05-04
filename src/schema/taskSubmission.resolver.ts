@@ -1,7 +1,11 @@
 import { Answer, TaskSubmissionResult } from "../interfaces/taskSubmission";
 import { validateToken } from "../jws-verifer";
 import questionService from "../services/question";
-import { gradeMultipleChoiceQuestion, isValidMultipleChoiceAnswer, quizBlockContainsQuestionIdWithPrefix } from "../services/questionHelper";
+import {
+   gradeMultipleChoiceQuestion,
+   isValidMultipleChoiceAnswer,
+   quizBlockContainsQuestionIdWithPrefix
+} from "../services/questionHelper";
 import taskService from "../services/task";
 import taskSubmissionService from "../services/taskSubmission";
 import {
@@ -25,14 +29,19 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    );
 
    // this asserts both the existence of the task, and the quizblock being within that task
-   const quizBlock: QuizBlock = await quizblockService.getQuizBlockById(mcAnswerInput.taskId, mcAnswerInput.questionBlockId)
+   const quizBlock: QuizBlock = await quizblockService.getQuizBlockById(
+      mcAnswerInput.taskId,
+      mcAnswerInput.questionBlockId
+   );
 
    if (!quizBlockContainsQuestionIdWithPrefix(quizBlock, mcAnswerInput.questionId, "MC_QUESTION")) {
-      throw new Error("Provided multiple choice question could not be found in the provided quiz block")
+      throw new Error(
+         "Provided multiple choice question could not be found in the provided quiz block"
+      );
    }
 
-   if(!isValidMultipleChoiceAnswer(question, mcAnswerInput.answerId)) {
-      throw new Error("Provided answer id not a choice for this multiple choice question")
+   if (!isValidMultipleChoiceAnswer(question, mcAnswerInput.answerId)) {
+      throw new Error("Provided answer id not a choice for this multiple choice question");
    }
 
    // grade the question against the students answer
@@ -60,12 +69,17 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
       throw new Error("Could not find question with id: " + frAnswerInput.questionId);
    }
 
-    // this asserts both the existence of the task, and the quizblock being within that task
-    const quizBlock: QuizBlock = await quizblockService.getQuizBlockById(frAnswerInput.taskId, frAnswerInput.questionBlockId)
+   // this asserts both the existence of the task, and the quizblock being within that task
+   const quizBlock: QuizBlock = await quizblockService.getQuizBlockById(
+      frAnswerInput.taskId,
+      frAnswerInput.questionBlockId
+   );
 
-    if (!quizBlockContainsQuestionIdWithPrefix(quizBlock, frAnswerInput.questionId, "FR_QUESTION")) {
-       throw new Error("Provided free response question could not be found in the provided quiz block")
-    }
+   if (!quizBlockContainsQuestionIdWithPrefix(quizBlock, frAnswerInput.questionId, "FR_QUESTION")) {
+      throw new Error(
+         "Provided free response question could not be found in the provided quiz block"
+      );
+   }
 
    // store the grade for that quiz block and associate with the user
    taskSubmissionService.submitQuestionAnswer(

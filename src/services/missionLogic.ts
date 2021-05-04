@@ -26,7 +26,7 @@ export async function dbItemsToMissionContent(items?: any[]): Promise<MissionCon
 
    let tasks = await Promise.all(promises);
    missionContent = missionContent.concat(tasks);
-   missionContent.sort((a, b) => a.parentMissionIndex - b.parentMissionIndex);
+   missionContent.sort((a, b) => a.missionIndex - b.missionIndex);
    return missionContent;
 }
 
@@ -57,8 +57,8 @@ export function convertSubMissionInputToItem(subMissionInput: SubMissionInput): 
    return {
       PK: `SUBMISSION#${sub_uid}`,
       SK: `SUBMISSION#${sub_uid}`,
-      parentMissionId: subMissionInput.parentMissionId,
-      parentMissionIndex: subMissionInput.parentMissionIndex,
+      missionId: subMissionInput.missionId,
+      missionIndex: subMissionInput.missionIndex,
       name: subMissionInput.name,
       description: subMissionInput.description
    };
@@ -68,8 +68,8 @@ export function dbItemToSubMission(subMissionItem: SubMissionItem): SubMission {
    const [type, id] = subMissionItem.PK.split("#");
    return {
       id: id,
-      parentMissionId: subMissionItem.parentMissionId,
-      parentMissionIndex: subMissionItem.parentMissionIndex,
+      missionId: subMissionItem.missionId,
+      missionIndex: subMissionItem.missionIndex,
       name: subMissionItem.name,
       description: subMissionItem.description
    };

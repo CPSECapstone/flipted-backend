@@ -20,17 +20,25 @@ type Answer = {
   answer?: Maybe<Scalars['String']>;
 };
 
-type Course = {
-  __typename?: 'Course';
-  id: Scalars['String'];
-  name: Scalars['String'];
+type CourseContent = {
+  __typename?: 'CourseContent';
+  courseInfo: CourseInfo;
+  missions?: Maybe<Array<Mission>>;
+  targets?: Maybe<Array<Target>>;
+  objectives?: Maybe<Array<Objective>>;
+  taskInfos?: Maybe<Array<TaskInfo>>;
+};
+
+type CourseInfo = {
+  __typename?: 'CourseInfo';
+  courseId: Scalars['String'];
+  course: Scalars['String'];
   instructor: Scalars['String'];
   description: Scalars['String'];
-  missions?: Maybe<Array<Maybe<Mission>>>;
 };
 
 type CourseInput = {
-  name: Scalars['String'];
+  course: Scalars['String'];
   instructor: Scalars['String'];
   description: Scalars['String'];
 };
@@ -128,7 +136,7 @@ type MultipleChoiceAnswerInput = {
 
 type Mutation = {
   __typename?: 'Mutation';
-  addCourse?: Maybe<Course>;
+  addCourse?: Maybe<Scalars['String']>;
   addFrQuestion: Scalars['String'];
   addImageBlock: Scalars['String'];
   addMcQuestion: Scalars['String'];
@@ -163,7 +171,7 @@ type Mutation = {
 
 
 type MutationAddCourseArgs = {
-  course?: Maybe<CourseInput>;
+  course: CourseInput;
 };
 
 
@@ -208,7 +216,7 @@ type MutationAddTargetArgs = {
 
 
 type MutationAddTaskArgs = {
-  task?: Maybe<TaskInput>;
+  task: TaskInput;
 };
 
 
@@ -254,7 +262,7 @@ type Objective = {
   targetId: Scalars['String'];
   targetName: Scalars['String'];
   course: Scalars['String'];
-  tasks: Array<Task>;
+  tasks?: Maybe<Array<Task>>;
 };
 
 type ObjectiveInput = {
@@ -278,7 +286,9 @@ type PageInput = {
 type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']>;
-  courses?: Maybe<Array<Maybe<Course>>>;
+  courseContent?: Maybe<CourseContent>;
+  courseInfo: CourseInfo;
+  courseInfos: Array<CourseInfo>;
   getUser?: Maybe<User>;
   mission?: Maybe<Mission>;
   missions?: Maybe<Array<Maybe<Mission>>>;
@@ -298,8 +308,25 @@ type Query = {
   subMission?: Maybe<SubMission>;
   target: Target;
   targets: Array<Target>;
-  task?: Maybe<Task>;
+  task: Task;
+  taskInfo: TaskInfo;
+  taskInfosByCourse: Array<TaskInfo>;
   tasks: Array<Task>;
+};
+
+
+type QueryCourseContentArgs = {
+  course: Scalars['String'];
+};
+
+
+type QueryCourseInfoArgs = {
+  courseId: Scalars['String'];
+};
+
+
+type QueryCourseInfosArgs = {
+  instructor: Scalars['String'];
 };
 
 
@@ -366,6 +393,16 @@ type QueryTargetsArgs = {
 
 type QueryTaskArgs = {
   taskId?: Maybe<Scalars['String']>;
+};
+
+
+type QueryTaskInfoArgs = {
+  taskId: Scalars['String'];
+};
+
+
+type QueryTaskInfosByCourseArgs = {
+  course: Scalars['String'];
 };
 
 
@@ -445,8 +482,8 @@ type SubMission = {
   id: Scalars['String'];
   name: Scalars['String'];
   description: Scalars['String'];
-  parentMissionId: Scalars['String'];
-  parentMissionIndex: Scalars['Int'];
+  missionId: Scalars['String'];
+  missionIndex: Scalars['Int'];
   objectiveId?: Maybe<Scalars['String']>;
   missionContent?: Maybe<Array<Maybe<MissionContent>>>;
 };
@@ -454,8 +491,8 @@ type SubMission = {
 type SubMissionInput = {
   name: Scalars['String'];
   description: Scalars['String'];
-  parentMissionId: Scalars['String'];
-  parentMissionIndex: Scalars['Int'];
+  missionId: Scalars['String'];
+  missionIndex: Scalars['Int'];
 };
 
 type Target = {
@@ -487,14 +524,17 @@ type Task = {
   name: Scalars['String'];
   instructions: Scalars['String'];
   points: Scalars['Int'];
-  parentMissionId: Scalars['String'];
-  parentMissionIndex: Scalars['Int'];
   startAt?: Maybe<Scalars['Date']>;
   endAt?: Maybe<Scalars['Date']>;
   dueDate?: Maybe<Scalars['Date']>;
-  objectiveId?: Maybe<Scalars['String']>;
   pages: Array<Page>;
   requirements: Array<RubricRequirement>;
+  course: Scalars['String'];
+  missionId: Scalars['String'];
+  missionIndex: Scalars['Int'];
+  subMissionId?: Maybe<Scalars['String']>;
+  objectiveId?: Maybe<Scalars['String']>;
+  targetId?: Maybe<Scalars['String']>;
 };
 
 interface TaskBlock {
@@ -504,18 +544,33 @@ interface TaskBlock {
   pageIndex: Scalars['Int'];
 }
 
+type TaskInfo = {
+  __typename?: 'TaskInfo';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  course: Scalars['String'];
+  missionId: Scalars['String'];
+  missionIndex: Scalars['Int'];
+  subMissionId?: Maybe<Scalars['String']>;
+  objectiveId?: Maybe<Scalars['String']>;
+  targetId?: Maybe<Scalars['String']>;
+};
+
 type TaskInput = {
   name: Scalars['String'];
   instructions: Scalars['String'];
   points: Scalars['Int'];
-  parentMissionId: Scalars['String'];
-  parentMissionIndex: Scalars['Int'];
   startAt?: Maybe<Scalars['Date']>;
   endAt?: Maybe<Scalars['Date']>;
   dueDate?: Maybe<Scalars['Date']>;
-  objectiveId?: Maybe<Scalars['String']>;
   pages: Array<Maybe<PageInput>>;
   requirements: Array<RubricRequirementInput>;
+  course: Scalars['String'];
+  missionId: Scalars['String'];
+  missionIndex: Scalars['Int'];
+  subMissionId?: Maybe<Scalars['String']>;
+  objectiveId?: Maybe<Scalars['String']>;
+  targetId?: Maybe<Scalars['String']>;
 };
 
 type TaskProgress = {

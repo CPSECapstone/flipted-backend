@@ -3,28 +3,34 @@ type Task {
    name: String!
    instructions: String!
    points: Int!
-   parentMissionId: String!
-   parentMissionIndex: Int!
    startAt: Date
    endAt: Date
    dueDate: Date
-   objectiveId: String
    pages: [Page!]!
    requirements: [RubricRequirement!]!
+   course: String!
+   missionId: String!
+   missionIndex: Int!
+   subMissionId: String
+   objectiveId: String
+   targetId: String
 }
 
 input TaskInput {
    name: String!
    instructions: String!
    points: Int!
-   parentMissionId: String!
-   parentMissionIndex: Int!
    startAt: Date
    endAt: Date
    dueDate: Date
-   objectiveId: String
    pages: [PageInput]!
    requirements: [RubricRequirementInput!]!
+   course: String!
+   missionId: String!
+   missionIndex: Int!
+   subMissionId: String
+   objectiveId: String
+   targetId: String
 }
 
 type Page {
@@ -46,11 +52,24 @@ input RubricRequirementInput {
    description: String
 }
 
+type TaskInfo {
+   id: String!
+   name: String!
+   course: String!
+   missionId: String!
+   missionIndex: Int!
+   subMissionId: String
+   objectiveId: String
+   targetId: String
+}
+
 type Query {
-   task(taskId: String): Task
+   task(taskId: String): Task!
    tasks(subMissionId: String): [Task!]!
+   taskInfo(taskId: String!): TaskInfo!
+   taskInfosByCourse(course: String!): [TaskInfo!]!
 }
 
 type Mutation {
-   addTask(task: TaskInput): String
+   addTask(task: TaskInput!): String
 }

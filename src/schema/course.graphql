@@ -2,24 +2,33 @@ type Query {
    _empty: String
 }
 
-type Course {
-   id: String!
-   name: String!
+type CourseInfo {
+   courseId: String!
+   course: String!
    instructor: String!
    description: String!
-   missions: [Mission]
+}
+
+type CourseContent {
+   courseInfo: CourseInfo!
+   missions: [Mission!]
+   targets: [Target!]
+   objectives: [Objective!]
+   taskInfos: [TaskInfo!]
 }
 
 input CourseInput {
-   name: String!
+   course: String!
    instructor: String!
    description: String!
 }
 
 type Query {
-   courses: [Course]
+   courseInfo(courseId: String!): CourseInfo!
+   courseInfos(instructor: String!): [CourseInfo!]!
+   courseContent(course: String!): CourseContent
 }
 
 type Mutation {
-   addCourse(course: CourseInput): Course
+   addCourse(course: CourseInput!): String
 }

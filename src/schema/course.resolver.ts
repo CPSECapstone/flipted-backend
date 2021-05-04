@@ -1,61 +1,29 @@
-import { marshall, unmarshall, marshallOptions } from "@aws-sdk/util-dynamodb";
-import { DynamoDBClient, ScanCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
-import { environment } from "../environment";
-import { uid } from "uid/secure";
+import * as service from "../services/course";
 
-const client = new DynamoDBClient({ region: "us-east-1" });
-const COURSE_TABLE = "Courses-" + environment.stage;
+async function addCourse(_: any, args: MutationAddCourseArgs, context: any, info: any) {
+   return service.addCourse(args.course);
+}
 
-const marshallOpts: marshallOptions = {
-   removeUndefinedValues: true,
-   convertEmptyValues: false,
-   convertClassInstanceToMap: true
-};
+async function getCourseInfo(_: any, args: QueryCourseInfoArgs, context: any, info: any) {
+   return service.getCourseInfo(args.courseId);
+}
+
+async function listCourseInfos(_: any, args: QueryCourseInfosArgs, context: any, info: any) {
+   return service.listCourseInfos(args.instructor);
+}
+
+async function getCourseContent(_: any, args: QueryCourseContentArgs, context: any, info: any) {
+   return service.getCourseContent(args.course);
+}
 
 const resolvers = {
    Query: {
-      courses: async () => {
-         const command = new ScanCommand({ TableName: COURSE_TABLE });
-         try {
-            const results = await client.send(command);
-            const courses: any[] = [];
-            if (results.Items) {
-               results.Items.forEach((item: any) => {
-                  courses.push(unmarshall(item));
-               });
-            }
-            return courses;
-         } catch (err) {
-            console.error(err);
-            return err;
-         }
-      }
+      courseInfo: getCourseInfo,
+      courseInfos: listCourseInfos,
+      courseContent: getCourseContent
    },
    Mutation: {
-      addCourse: async (_: any, args: any, context: any, info: any) => {
-         const course: CourseInput = args.course;
-         const params = {
-            TableName: COURSE_TABLE,
-            Item: marshall(
-               {
-                  id: uid(),
-                  name: course.name,
-                  description: course.description,
-                  instructor: course.instructor
-               },
-               marshallOpts
-            ),
-            ReturnValues: "ALL_OLD"
-         };
-         const command = new PutItemCommand(params);
-         try {
-            const result = client.send(command);
-            return unmarshall(params.Item);
-         } catch (err) {
-            console.log(err);
-            return err;
-         }
-      }
+      addCourse
    }
 };
 

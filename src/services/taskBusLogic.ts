@@ -46,11 +46,13 @@ function convertTaskInputToTaskItem(input: TaskInput): TaskItem {
       startAt: input.startAt,
       endAt: input.endAt,
       dueDate: input.dueDate,
-      parentMissionId: input.parentMissionId,
-      parentMissionIndex: input.parentMissionIndex,
-      objectiveId: input.objectiveId,
       pages: input.pages,
-      requirements
+      requirements,
+      course: input.course,
+      missionId: input.missionId,
+      subMissionId: input.subMissionId,
+      objectiveId: input.objectiveId,
+      targetId: input.targetId
    };
 
    return taskItem;
@@ -91,6 +93,8 @@ export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
 
       if (type === "TASK") {
          task = <Task>item;
+         task.missionId = task.missionId ? task.missionId : "0";
+         task.missionIndex = task.missionIndex ? task.missionIndex : 0;
       } else if (type == "IMAGE_BLOCK") {
          blocks.push(<ImageBlock>item);
       } else if (type == "VIDEO_BLOCK") {
@@ -124,6 +128,21 @@ export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
    task.pages = pages;
 
    return task;
+}
+
+export function dbItemToTaskInfo(rawItem: any): TaskInfo {
+   const item = <TaskItem>unmarshall(rawItem);
+
+   return <TaskInfo>{
+      id: item.id,
+      name: item.name,
+      course: item.course,
+      missionId: item.missionId,
+      missionIndex: item.missionIndex,
+      subMissionId: item.subMissionId,
+      objectiveId: item.objectiveId,
+      targetId: item.targetId
+   };
 }
 
 const taskBusLogic = {

@@ -7,6 +7,8 @@
       "generate": "graphql-codegen --config codegen.yml",
       "data:targets": "node data/targets.js",
       "data:objectives": "node data/objectives.js",
+      "data:courses": "node data/courses.js",
+      "data:tasks": "node data/tasks.js",
       "format": "prettier --write .",
       "test": "NODE_ENV=development jest",
       "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

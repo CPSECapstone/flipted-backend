@@ -8,8 +8,8 @@ export interface MissionItem extends CompositeDBItem {
 }
 
 export interface SubMissionItem extends CompositeDBItem {
-   parentMissionId: string;
-   parentMissionIndex: number;
+   missionId: string;
+   missionIndex: number;
    name: string;
    description: string;
 }

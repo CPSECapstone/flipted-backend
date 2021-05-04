@@ -36,11 +36,11 @@ async function addMission(missionInput: MissionInput) {
 async function getMissionContent(missionId: string): Promise<MissionContent[]> {
    const params: QueryParams = {
       tableName: MISSIONS_TABLE,
-      keyConditionExpression: "parentMissionId = :missionId",
+      keyConditionExpression: "missionId = :missionId",
       expressionAttributeValues: {
          ":missionId": missionId
       },
-      indexName: "parentMissionId-index"
+      indexName: "missionId-index"
    };
 
    try {
@@ -73,23 +73,29 @@ async function getMissionById(missionId: string): Promise<Mission> {
 }
 
 async function listByCourse(course: string): Promise<Mission[]> {
-   const params: ScanParams = {
+   const params: QueryParams = {
       tableName: MISSIONS_TABLE,
-      filterExpression: "course = :course",
+      indexName: "course-PK-index",
+      keyConditionExpression: "course = :courseVal and begins_with(PK, :pkVal)",
       expressionAttributeValues: {
-         ":course": course
+         ":courseVal": course,
+         ":pkVal": "MISSION"
       }
    };
 
-   const output = await dynamodb.scan(params);
-   if (output.Items) {
-      const objectives = output.Items.map((item: any) => {
-         return dbMissionItemToMission(<MissionItem>unmarshall(item));
-      });
-      return objectives;
-   }
+   try {
+      const output = await dynamodb.query(params);
+      if (output.Items) {
+         const missions = output.Items.map((item: any) => {
+            return dbMissionItemToMission(<MissionItem>unmarshall(item));
+         });
+         return missions;
+      }
 
-   return [];
+      return [];
+   } catch (err) {
+      return err;
+   }
 }
 
 function resolveMissionContentType(missionContent: any) {

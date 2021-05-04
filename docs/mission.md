@@ -13,7 +13,7 @@
 ```
 mutation {
   addMission(mission: {
-    course: "0"
+    course: "Integrated Science"
     name: "Chemical Bonds"
     description: "This mission will teach..."
   })
@@ -33,8 +33,8 @@ query {
       ... on Task{
         id
         name
-        parentMissionId
-        parentMissionIndex
+        missionId
+        missionIndex
         pages{
           blocks{
             title
@@ -76,7 +76,7 @@ query {
 
 ```
 query {
-  missions(course: "0"){
+  missions(course: "Integrated Science"){
     id
     course
     name
@@ -88,7 +88,7 @@ query {
       ... on SubMission{
         id
         name
-        parentMissionId
+        missionId
       }
     }
   }
