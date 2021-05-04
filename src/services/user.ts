@@ -1,5 +1,6 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { USERS_TABLE_NAME } from "../environment";
+import { RoleInternal } from "../interfaces/role";
 import dynamodb from "./dynamodb";
 
 async function get(userId: string): Promise<User> {
@@ -19,8 +20,8 @@ async function get(userId: string): Promise<User> {
  * Returns the role of the user given the user id contained in the JWT access token
  * Should be either "instructor" or "student"
  */
-async function getUserRole(userId: string) {
-   return (await get(userId)).role;
+async function getUserRole(userId: string) : Promise<RoleInternal> {
+   return (await get(userId)).role.toString() as RoleInternal;
 }
 
 async function update(userId: string, input: UpdateUserInput) {
