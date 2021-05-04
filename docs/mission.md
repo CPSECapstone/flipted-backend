@@ -13,7 +13,7 @@
 ```
 mutation {
   addMission(mission: {
-    course: "0"
+    course: "Integrated Science"
     name: "Chemical Bonds"
     description: "This mission will teach..."
   })
@@ -76,7 +76,7 @@ query {
 
 ```
 query {
-  missions(course: "0"){
+  missions(course: "Integrated Science"){
     id
     course
     name
