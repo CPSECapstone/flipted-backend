@@ -1,7 +1,6 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { ProgressPK, ProgressSK } from "./progressInterface";
 import { ProgressItem } from "./progressInterface";
-import { userProgress } from "./progressService";
 
 export function progressInputToDBItem(input: ProgressInput): ProgressItem {
    const item: ProgressItem = {
