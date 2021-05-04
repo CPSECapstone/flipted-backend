@@ -14,7 +14,9 @@ import {
    ScanCommand,
    ScanCommandOutput,
    QueryCommandOutput,
-   QueryCommand
+   QueryCommand,
+   DeleteItemCommandOutput,
+   DeleteItemCommand
 } from "@aws-sdk/client-dynamodb";
 import { uid } from "uid/secure";
 
@@ -177,6 +179,17 @@ async function query(params: QueryParams): Promise<QueryCommandOutput> {
    return client.send(command);
 }
 
+async function deleteItem(params: DeleteParam): Promise<DeleteItemCommandOutput> {
+   const command = new DeleteItemCommand({
+      TableName: params.tableName,
+      Key: marshall(params.key, marshallOpts),
+      ReturnValues: "ALL_OLD",
+      ReturnConsumedCapacity: "TOTAL"
+   });
+
+   return client.send(command);
+}
+
 const dynamodb = {
    put,
    get,
@@ -186,7 +199,8 @@ const dynamodb = {
    update,
    batchGet,
    batchWrite,
-   query
+   query,
+   deleteItem
 };
 
 export default dynamodb;
@@ -245,6 +259,11 @@ export interface QueryParams {
    expressionAttributeValues: { [key: string]: any };
    filterExpression?: string;
    indexName?: string;
+}
+
+export interface DeleteParam {
+   tableName: string;
+   key: { [key: string]: any };
 }
 
 export interface DBItem {

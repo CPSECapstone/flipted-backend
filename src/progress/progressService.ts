@@ -1,10 +1,14 @@
 import { USER_PROGRESS_TABLE_NAME } from "../environment";
-import dynamodb, { PutCompositeParams, ScanParams, QueryParams } from "../services/dynamodb";
+import dynamodb, {
+   PutCompositeParams,
+   ScanParams,
+   QueryParams,
+   DeleteParam
+} from "../services/dynamodb";
 import * as helper from "./progressHelper";
-import { ProgressItem, ProgressPK } from "./progressInterface";
+import { ProgressPK } from "./progressInterface";
 import * as courseService from "../services/course";
 import usersData from "./users.json";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 export async function addProgress(input: ProgressInput) {
    const courseItem = helper.progressInputToDBItem(input);
@@ -22,7 +26,7 @@ export async function addProgress(input: ProgressInput) {
    }
 }
 
-export async function userProgress(userName: string, course: string): Promise<UserProgress> {
+export async function getUserProgress(userName: string, course: string): Promise<UserProgress> {
    const params: QueryParams = {
       tableName: USER_PROGRESS_TABLE_NAME,
       keyConditionExpression: "PK = :pkVal",
@@ -40,7 +44,7 @@ export async function userProgress(userName: string, course: string): Promise<Us
    }
 }
 
-export async function progressByCourse(course: string): Promise<UserProgress[]> {
+export async function getProgressByCourse(course: string): Promise<UserProgress[]> {
    const params: ScanParams = {
       tableName: USER_PROGRESS_TABLE_NAME,
       filterExpression: "course = :courseVal",
@@ -63,17 +67,16 @@ export async function progressByCourse(course: string): Promise<UserProgress[]> 
    }
 }
 
-export async function progressOverview(course: string): Promise<ProgressOverview> {
+export async function getProgressOverview(course: string): Promise<ProgressOverview> {
    try {
-      const progress: UserProgress[] = await progressByCourse(course);
+      const progress: UserProgress[] = await getProgressByCourse(course);
       const progressMap = new Map<string, UserProgress>();
       progress.forEach(element => {
          progressMap.set(element.userName, element);
       });
 
       // userData is read from local json file, contaiing a list of username
-      // TOFIX
-
+      // FIXME
       const userProgress = usersData.users.map((userName: any) => {
          if (progressMap.has(userName)) {
             return progressMap.get(userName);
@@ -93,6 +96,23 @@ export async function progressOverview(course: string): Promise<ProgressOverview
          missions: courseContent.missions,
          targets: courseContent.targets
       };
+   } catch (err) {
+      console.error(err);
+      return err;
+   }
+}
+
+export async function deleteProgress(input: ProgresssDeletionInput): Promise<number> {
+   const params: DeleteParam = {
+      tableName: USER_PROGRESS_TABLE_NAME,
+      key: {
+         PK: ProgressPK(input.userName, input.course),
+         SK: input.taskId
+      }
+   };
+   try {
+      const output = await dynamodb.deleteItem(params);
+      return output.ConsumedCapacity?.CapacityUnits || 0;
    } catch (err) {
       console.error(err);
       return err;

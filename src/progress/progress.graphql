@@ -15,6 +15,12 @@ input ProgressInput {
    status: Boolean!
 }
 
+input ProgresssDeletionInput {
+   userName: String!
+   course: String!
+   taskId: String!
+}
+
 type ProgressOverview {
    userProgress: [UserProgress!]!
    courseInfo: CourseInfo!

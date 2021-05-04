@@ -266,7 +266,7 @@ type Objective = {
   targetId: Scalars['String'];
   targetName: Scalars['String'];
   course: Scalars['String'];
-  tasks?: Maybe<Array<Task>>;
+  tasks: Array<Task>;
 };
 
 type ObjectiveInput = {
@@ -306,6 +306,12 @@ type ProgressOverview = {
   courseInfo: CourseInfo;
   missions: Array<Mission>;
   targets: Array<Target>;
+};
+
+type ProgresssDeletionInput = {
+  userName: Scalars['String'];
+  course: Scalars['String'];
+  taskId: Scalars['String'];
 };
 
 type Query = {

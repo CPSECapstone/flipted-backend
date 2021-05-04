@@ -12,6 +12,7 @@
       "data:progress": "node data/progress.js",
       "format": "prettier --write .",
       "test": "NODE_ENV=development jest",
+      "test:watch": "NODE_ENV=development jest --watchAll=true",
       "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
       "build": "NODE_ENV=development sls package",
       "deploy": "NODE_ENV=development sls deploy",

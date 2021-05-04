@@ -5,15 +5,15 @@ async function addProgress(_: any, args: MutationAddProgressArgs, context: any, 
 }
 
 async function progressByCourse(_: any, args: QueryProgressByCourseArgs) {
-   return service.progressByCourse(args.course);
+   return service.getProgressByCourse(args.course);
 }
 
 async function userProgress(_: any, args: QueryUserProgressArgs) {
-   return service.userProgress(args.userName, args.course);
+   return service.getUserProgress(args.userName, args.course);
 }
 
 async function progressOverview(_: any, args: QueryProgressOverviewArgs) {
-   return service.progressOverview(args.course);
+   return service.getProgressOverview(args.course);
 }
 
 const resolvers = {
