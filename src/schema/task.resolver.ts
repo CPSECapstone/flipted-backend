@@ -1,3 +1,4 @@
+import { RoleInternal } from "../interfaces/role";
 import { validateToken } from "../jws-verifer";
 import taskService from "../services/task";
 import userService from "../services/user";
@@ -5,8 +6,7 @@ import userService from "../services/user";
 async function addTask(_: any, args: any, context: any, info: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
    const userRole = await userService.getUserRole(tokenPayload.username); // then get the user role
-
-   if (userRole == Role.Instructor) {
+   if (userRole == RoleInternal.Instructor) {
       const task: TaskInput = args.task;
       return taskService.add(task);
    } else {

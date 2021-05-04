@@ -43,7 +43,7 @@ export function mcQuestionInputToDBItem(question: McQuestionInput): QuestionItem
 }
 
 // convert row database item result to Question array
-export function dbResponsesToQuestions(items: any[]): Question[] {
+export function dbResponsesToQuestions(items: any[], withAnswer: boolean): Question[] {
    const questions: Question[] = items.map((item: any) => {
       const questionItem = unmarshall(item);
       const splits = questionItem.id.split("#");
@@ -54,14 +54,14 @@ export function dbResponsesToQuestions(items: any[]): Question[] {
             description: questionItem.description,
             points: questionItem.points,
             options: questionItem.options,
-            answers: questionItem.answers
+            answers: withAnswer ? questionItem.answers : undefined
          };
       } else if (type === "FR_QUESTION") {
          return <FrQuestion>{
             id: questionItem.id,
             description: questionItem.description,
             points: questionItem.points,
-            answer: questionItem.answer
+            answer: withAnswer? questionItem.answer : undefined
          };
       } else {
          throw new Error("Unknown Question Type");
