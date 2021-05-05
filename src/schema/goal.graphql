@@ -43,7 +43,10 @@ input SubGoalInput {
 
 type Query {
     getAllGoals: [Goal!]!
-    getGoalById(id: String!): Goal!
+    """
+    Instructor only: get a user's goal given the user and the goal id
+    """
+    getGoalById(id: String!, user: String!): Goal!
 }
 
 type Mutation {

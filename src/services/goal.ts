@@ -25,11 +25,11 @@ async function addGoal(goalInput: GoalInput, username: string, role: RoleInterna
      }
 }
 
-async function getGoalById(username: string, goalId: string): Promise<Goal> {
+async function getGoalById(goalId: string, assignee: string): Promise<Goal> {
     const getparams: GetCompositeParams = {
         tableName: GOAL_TABLE,
         key: {
-            PK: `GOAL#${username}`,
+            PK: `GOAL#${assignee}`,
             SK: `GOAL#${goalId}`
         }
     }
