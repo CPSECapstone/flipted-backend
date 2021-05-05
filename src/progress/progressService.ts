@@ -77,15 +77,13 @@ export async function getProgressOverview(course: string): Promise<ProgressOverv
 
       // userData is read from local json file, contaiing a list of username
       // FIXME
-      const userProgress = usersData.users.map((userName: any) => {
-         if (progressMap.has(userName)) {
-            return progressMap.get(userName);
-         } else {
-            return {
+      const userProgress: UserProgress[] = usersData.users.map((userName: any) => {
+         return (
+            progressMap.get(userName) || {
                userName,
                progress: []
-            };
-         }
+            }
+         );
       });
 
       const courseContent = await courseService.getCourseContent(course);

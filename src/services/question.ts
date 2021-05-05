@@ -1,8 +1,9 @@
 import { TABLE_NAME } from "../environment";
-import dynamodb, { BatchGetParams, GetParams, PutParams } from "./dynamodb";
+import dynamodb, { BatchGetParams, BatchWriteParams, GetParams, PutParams } from "./dynamodb";
 import { QuestionItem } from "../interfaces/question";
 import * as helper from "./questionHelper";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { BatchWriteItemCommandOutput } from "@aws-sdk/client-dynamodb";
 
 const QUESTIONS_TABLE = TABLE_NAME("Questions");
 
@@ -81,4 +82,20 @@ export function resolveQuestionType(question: any) {
    if (type == "FR_QUESTION") return "FrQuestion";
 
    return null;
+}
+
+export async function batchWriteFrQuestions(
+   questions: FrQuestionInput[]
+): Promise<BatchWriteItemCommandOutput> {
+   const items = questions.map(helper.frQuestionInputToDBItem);
+   const params: BatchWriteParams = {
+      tableName: TABLE_NAME("Questions"),
+      items
+   };
+   try {
+      const output = await dynamodb.batchWrite(params);
+      return output;
+   } catch (err) {
+      return err;
+   }
 }
