@@ -38,6 +38,6 @@ input SubMissionInput {
 }
 
 type Mutation {
-   addMission(mission: MissionInput): String
-   addSubMission(subMission: SubMissionInput): String
+   addMission(mission: MissionInput!): String!
+   addSubMission(subMission: SubMissionInput!): String!
 }

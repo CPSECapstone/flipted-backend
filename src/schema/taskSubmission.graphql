@@ -180,21 +180,21 @@ type Mutation {
    Even on a successful submission, many fields may be null
    as a Task may require manual grading by an instructor.
    """
-   submitTask(taskId: String): TaskSubmissionResult
+   submitTask(taskId: String): TaskSubmissionResult!
 
    """
    Saves completed rubric requirements linked to this task for the user
    calling this function
    """
-   submitTaskProgress(taskProgress: TaskProgressInput): String
+   submitTaskProgress(taskProgress: TaskProgressInput): String!
 
    """
    Saves a students answer to a multiple choice question quiz block
    """
-   saveMultipleChoiceProgress(mcBlockInput: MultipleChoiceAnswerInput): Boolean
+   saveMultipleChoiceProgress(mcBlockInput: MultipleChoiceAnswerInput): Boolean!
 
    """
    Saves and a students answer to a free response question quiz block
    """
-   saveFreeResponseProgress(frBlockInput: FreeResponseAnswerInput): Boolean
+   saveFreeResponseProgress(frBlockInput: FreeResponseAnswerInput): Boolean!
 }

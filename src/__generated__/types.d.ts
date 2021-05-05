@@ -47,7 +47,7 @@ type FrQuestion = Question & {
   id: Scalars['String'];
   description: Scalars['String'];
   points: Scalars['Int'];
-  answer: Scalars['String'];
+  answer?: Maybe<Scalars['String']>;
   feedback?: Maybe<Scalars['String']>;
 };
 
@@ -92,7 +92,7 @@ type McQuestion = Question & {
   description: Scalars['String'];
   points: Scalars['Int'];
   options: Array<QuestionOption>;
-  answers: Array<Scalars['Int']>;
+  answers?: Maybe<Array<Scalars['Int']>>;
   feedback?: Maybe<Scalars['String']>;
 };
 
@@ -134,23 +134,23 @@ type MultipleChoiceAnswerInput = {
 
 type Mutation = {
   __typename?: 'Mutation';
-  addCourse?: Maybe<Scalars['String']>;
+  addCourse: Scalars['String'];
   addFrQuestion: Scalars['String'];
   addImageBlock: Scalars['String'];
   addMcQuestion: Scalars['String'];
-  addMission?: Maybe<Scalars['String']>;
+  addMission: Scalars['String'];
   addObjective: Scalars['String'];
   addProgress: Scalars['String'];
   addQuizBlock: Scalars['String'];
-  addSubMission?: Maybe<Scalars['String']>;
+  addSubMission: Scalars['String'];
   addTarget: Scalars['String'];
-  addTask?: Maybe<Scalars['String']>;
+  addTask: Scalars['String'];
   addTextBlock: Scalars['String'];
   addVideoBlock: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
-  saveFreeResponseProgress?: Maybe<Scalars['Boolean']>;
+  saveFreeResponseProgress: Scalars['Boolean'];
   /** Saves a students answer to a multiple choice question quiz block */
-  saveMultipleChoiceProgress?: Maybe<Scalars['Boolean']>;
+  saveMultipleChoiceProgress: Scalars['Boolean'];
   /**
    * Should be called when a student has completed all rubric requirements and answered
    * all questions in the task. If the above requirements are not satisfied, this will return
@@ -159,12 +159,12 @@ type Mutation = {
    * Even on a successful submission, many fields may be null
    * as a Task may require manual grading by an instructor.
    */
-  submitTask?: Maybe<TaskSubmissionResult>;
+  submitTask: TaskSubmissionResult;
   /**
    * Saves completed rubric requirements linked to this task for the user
    * calling this function
    */
-  submitTaskProgress?: Maybe<Scalars['String']>;
+  submitTaskProgress: Scalars['String'];
   updateUser?: Maybe<UpdateUserOutput>;
 };
 
@@ -190,7 +190,7 @@ type MutationAddMcQuestionArgs = {
 
 
 type MutationAddMissionArgs = {
-  mission?: Maybe<MissionInput>;
+  mission: MissionInput;
 };
 
 
@@ -210,7 +210,7 @@ type MutationAddQuizBlockArgs = {
 
 
 type MutationAddSubMissionArgs = {
-  subMission?: Maybe<SubMissionInput>;
+  subMission: SubMissionInput;
 };
 
 
