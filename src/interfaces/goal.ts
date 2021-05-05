@@ -1,67 +1,24 @@
-import { User } from "../interfaces";
 import { CompositeDBItem } from "../services/dynamodb"
 
-
-/***************** Input from Client *****************************/
-
-export interface NewGoalInput {
-    title: string;
-    dueDate: Date;
-    category: string;
-    favorited: Boolean;
-    assignee?: string;
-    pointValue?: number;
-}
-
-export interface SubGoalInput {
-    title: string;
-    dueDate: Date;
-}
-
-
-/***************** Output to Client *****************************/
-
-export interface Goal {
-    id: string;
-    title: string;
-    dueDate: Date;
-    completed: Boolean;
-    completedDate?: Date;
-    subGoals?: [SubGoal];
-    category: string;
-    favorited: Boolean;
-    owner: string;
-    assignee: string;
-    pointValue?: number;
-}
-
-export interface SubGoal {
-    id: string;
-    title: string;
-    dueDate: Date;
-    completed: Boolean;
-    completedDate?: Date;
-}
-
-/***************** Database item ******************************/
-
 export interface GoalItem extends CompositeDBItem {
+    PK: string // GOAL#<username>
+    SK: string // GOAL#<goalid>
     id: string;
     title: string;
-    dueDate: Date;
-    completed: Boolean;
-    completedDate?: Date;
-    subGoals: [];
+    dueDate: string;
+    completed: boolean;
+    completedDate?: string;
+    subGoals: SubGoalItem[];
     category: string;
-    favorited: Boolean;
+    favorited: boolean;
     owner: string;
     assignee: string;
-    pointValue?: number;
+    pointValue: number;
 }
 
-export interface SubGoalItem extends CompositeDBItem {
+export interface SubGoalItem {
     title: string;
-    dueDate: Date;
-    completed: Boolean;
-    completedDate?: Date;
+    dueDate: string;
+    completed: boolean;
+    completedDate?: string;
 }

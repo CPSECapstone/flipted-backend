@@ -11,6 +11,8 @@ import questionType from "./question.graphql";
 import taskblockType from "./taskblock.graphql";
 import objectiveType from "./objective.graphql";
 import targetType from "./target.graphql";
+import goalsType from "./goal.graphql";
+
 
 import userResolvers from "./user.resolver";
 import courseResolvers from "./course.resolver";
@@ -21,6 +23,7 @@ import missionResolvers from "./mission.resolver";
 import taskblockResolvers from "./taskblock.resolver";
 import objectiveResolvers from "./objective.resolver";
 import targetResolvers from "./target.resolver";
+import goalsResolvers from "./goal.resolver"
 
 const customScalarResolver = {
    Date: GraphQLDate
@@ -36,7 +39,8 @@ const typesArray = [
    quizTaskSubmission,
    taskblockType,
    targetType,
-   objectiveType
+   objectiveType,
+   goalsType
 ];
 
 const resolversArray = [
@@ -49,7 +53,8 @@ const resolversArray = [
    quizTaskSubmissionResolvers,
    taskblockResolvers,
    targetResolvers,
-   objectiveResolvers
+   objectiveResolvers,
+   goalsResolvers
 ];
 
 export const typeDefs = mergeTypeDefs(typesArray);

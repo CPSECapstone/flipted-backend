@@ -1,27 +1,45 @@
-import { NewGoalInput } from "../interfaces/goal";
 import { validateToken } from "../jws-verifer";
 import userService from "../services/user";
 import goalService from "../services/goal"
+import { convertGoalInputToItem } from "../services/goalLogic";
+import { uid } from "uid";
 
-async function addGoal(_: any, args: any, context: any, info: any) {
+async function editOrCreateGoal(_: any, args: any, context: any, info: any) {
     const tokenPayload = await validateToken(context.headers.Authorization)
     const username = tokenPayload.username
     const userRole = await userService.getUserRole(username)
     
-    const goal: NewGoalInput = args.goal
-    return goalService.addGoal(goal, username, userRole)
+    const goalInput: GoalInput = args.goal
+    console.log(username)
+
+    // id a uid if this is a new goal
+    if(!("id" in goalInput)){
+       goalInput.id = uid()
+    }
+    return goalService.addGoal(goalInput, username, userRole)
 }
 
 async function getGoalById(_: any, args: any, context: any, info: any) {
-    return await goalService.getGoalById(args.goalId)
+   const tokenPayload = await validateToken(context.headers.Authorization)
+   const username = tokenPayload.username
+   
+   return await goalService.getGoalById(username, args.id)
+}
+
+async function getAllGoals(_: any, args: any, context: any, info: any) {
+   const tokenPayload = await validateToken(context.headers.Authorization)
+   const username = tokenPayload.username
+   
+   return await goalService.getAllUserGoals(username)
 }
 
 const resolvers = {
     Query: {
-        goal: getGoalById
+        getGoalById: getGoalById,
+        getAllGoals: getAllGoals
     },
     Mutation: {
-        addGoal: addGoal
+        editOrCreateGoal: editOrCreateGoal
     }
 }
 

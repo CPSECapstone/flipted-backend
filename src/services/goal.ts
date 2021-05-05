@@ -1,14 +1,17 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { GOALS_TABLE_NAME } from "../environment";
-import { Goal, GoalItem, NewGoalInput } from "../interfaces/goal";
-import dynamodb, { GetCompositeParams, PutCompositeParams } from "./dynamodb";
+import { GoalItem } from "../interfaces/goal";
+import { RoleInternal } from "../interfaces/role";
+import { QuestionAnswerItem } from "../interfaces/taskSubmission";
+import dynamodb, { GetCompositeParams, GetParams, PutCompositeParams, QueryParams } from "./dynamodb";
 import { convertGoalInputToItem, dbGoalItemToGoal } from "./goalLogic";
+import { dbItemsToQuestionAnswerItems } from "./taskSubmissionHelper";
 
 const GOAL_TABLE = GOALS_TABLE_NAME
 
-async function addGoal(goalInput: NewGoalInput, username: string, role: string) {
-    const goalItem = convertGoalInputToItem(goalInput, username, role);
-
+async function addGoal(goalInput: GoalInput, username: string, role: RoleInternal) {
+    const goalItem: GoalItem = convertGoalInputToItem(goalInput, role, username);
+   
     const params: PutCompositeParams = {
         tableName: GOAL_TABLE,
         item: goalItem
@@ -16,18 +19,17 @@ async function addGoal(goalInput: NewGoalInput, username: string, role: string) 
 
     try {
         await dynamodb.putComposite(params);
-        const [type, id] = goalItem.PK.split("#");
-        return id;
+        return goalInput.id;
      } catch (err) {
-        return err;
+        throw err;
      }
 }
 
-async function getGoalById(goalId: string): Promise<Goal> {
+async function getGoalById(username: string, goalId: string): Promise<Goal> {
     const getparams: GetCompositeParams = {
         tableName: GOAL_TABLE,
         key: {
-            PK: `GOAL#${goalId}`,
+            PK: `GOAL#${username}`,
             SK: `GOAL#${goalId}`
         }
     }
@@ -43,9 +45,32 @@ async function getGoalById(goalId: string): Promise<Goal> {
      }
 }
 
+async function getAllUserGoals(username: string): Promise<Goal[]> {
+   const params: QueryParams = {
+      tableName: GOAL_TABLE,
+      keyConditionExpression: "PK = :pkVal",
+      expressionAttributeValues: {
+         ":pkVal": `GOAL#${username}`,
+      }
+   };
+
+   const output = await dynamodb.query(params);
+   if (output.Items) {
+      const goalItems = output.Items.map((item: any) => {
+         return <GoalItem>unmarshall(item);
+      });
+
+      return goalItems.map(goalItem => {
+         return dbGoalItemToGoal(goalItem)
+      });
+   }
+   throw new Error(`Error fetching goals for username=${username}`);
+}
+
 const goalService = {
     addGoal,
-    getGoalById
+    getGoalById,
+    getAllUserGoals
 }
 
 export default goalService
