@@ -54,14 +54,14 @@ export function dbResponsesToQuestions(items: any[], withAnswer: boolean): Quest
             description: questionItem.description,
             points: questionItem.points,
             options: questionItem.options,
-            answers: withAnswer ? questionItem.answers : undefined
+            answers: withAnswer ? questionItem.answers : []
          };
       } else if (type === "FR_QUESTION") {
          return <FrQuestion>{
             id: questionItem.id,
             description: questionItem.description,
             points: questionItem.points,
-            answer: withAnswer ? questionItem.answer : undefined
+            answer: withAnswer ? questionItem.answer : ""
          };
       } else {
          throw new Error("Unknown Question Type");

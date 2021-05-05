@@ -26,14 +26,16 @@ type McQuestion implements Question {
    description: String!
    points: Int!
    options: [QuestionOption!]!
-   answers: [Int!] # nullable to prevent students from cheating
+   answers: [Int!]!
+   # nullable to prevent students from cheating
+   # let's make it an empty array, rather than null.
    feedback: String
 }
 
 input FrQuestionInput {
    description: String!
    points: Int!
-   answer: String! 
+   answer: String!
 }
 
 input McQuestionInput {
