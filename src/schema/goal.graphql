@@ -1,0 +1,54 @@
+
+type Goal {
+    id: String!
+    title: String!
+    dueDate: Date!
+    completed: Boolean!
+    completedDate: Date
+    subGoals: [SubGoal!]!
+    category: String!
+    favorited: Boolean!
+    owner: String!
+    assignee: String!
+    pointValue: Int
+}
+
+input GoalInput {
+    id: String # null indicates new goal, not null indicates editing existing
+    title: String!
+    dueDate: Date!
+    completed: Boolean!
+    completedDate: Date
+    subGoals: [SubGoalInput!]!
+    category: String!
+    favorited: Boolean!
+    owner: String # only teacher clients can use this, user id
+    assignee: String # only teacher clients can use this, user id
+    pointValue: Int # only teacher clients can use this
+}
+
+type SubGoal {
+    title: String!
+    dueDate: Date!
+    completed: Boolean!
+    completedDate: Date
+}
+
+input SubGoalInput {
+    title: String!
+    dueDate: Date!
+    completed: Boolean!
+    completedDate: Date
+}
+
+type Query {
+    getAllGoals: [Goal!]!
+    """
+    Instructor only: get a user's goal given the user and the goal id
+    """
+    getGoalById(id: String!, user: String!): Goal!
+}
+
+type Mutation {
+   editOrCreateGoal(goal: GoalInput!): String! # returns id of goal
+}
