@@ -1,18 +1,15 @@
-import questionService from "../services/question";
+import * as questionService from "../services/question";
 
-async function addFrQuestion(_: any, args: any, context: any, info: any) {
-   const question: FrQuestionInput = args.question;
-   return questionService.addFrQuestion(question);
+async function addFrQuestion(_: any, args: MutationAddFrQuestionArgs) {
+   return questionService.addFrQuestion(args.question);
 }
 
-async function addMcQuestion(_: any, args: any, context: any, info: any) {
-   const question: McQuestionInput = args.question;
-   return questionService.addMcQuestion(question);
+async function addMcQuestion(_: any, args: MutationAddMcQuestionArgs) {
+   return questionService.addMcQuestion(args.question);
 }
 
-async function listQuestionsByIds(_: any, args: any, context: any) {
-   const questionIds: string[] = args.questionIds;
-   return questionService.listByIds(questionIds);
+async function listQuestionsByIds(_: any, args: QueryQuestionsArgs) {
+   return questionService.listByIds(args.questionIds);
 }
 
 async function resolveQuestionType(question: any, context: any, info: any) {

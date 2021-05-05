@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "types": [
+      "node",
+      "@types/jest"
+    ],
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -22,10 +26,13 @@
     "src/@types/graphql.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".serverless",
+    ".webpack"
   ],
   "include": [
     "src/**/*",
-    "test"
+    "test/**/*",
+    "data/**/*"
   ]
 }

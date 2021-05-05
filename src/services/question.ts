@@ -1,17 +1,12 @@
 import { TABLE_NAME } from "../environment";
 import dynamodb, { BatchGetParams, GetParams, PutParams } from "./dynamodb";
 import { QuestionItem } from "../interfaces/question";
-
-import {
-   dbResponsesToQuestions,
-   frQuestionInputToDBItem,
-   mcQuestionInputToDBItem
-} from "./questionHelper";
+import * as helper from "./questionHelper";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 const QUESTIONS_TABLE = TABLE_NAME("Questions");
 
-async function addQuestion(dbItem: QuestionItem) {
+export async function addQuestion(dbItem: QuestionItem) {
    const params: PutParams = {
       tableName: QUESTIONS_TABLE,
       item: dbItem
@@ -26,18 +21,18 @@ async function addQuestion(dbItem: QuestionItem) {
 }
 
 // add free response question to question bank
-async function addFrQuestion(question: FrQuestionInput) {
-   const dbItem = frQuestionInputToDBItem(question);
+export async function addFrQuestion(question: FrQuestionInput) {
+   const dbItem = helper.frQuestionInputToDBItem(question);
    return addQuestion(dbItem);
 }
 
 // add multiple choice question to question bank
-async function addMcQuestion(question: McQuestionInput) {
-   const dbItem = mcQuestionInputToDBItem(question);
+export async function addMcQuestion(question: McQuestionInput) {
+   const dbItem = helper.mcQuestionInputToDBItem(question);
    return addQuestion(dbItem);
 }
 
-async function getById(
+export async function getById(
    questionId: string,
    prefix: string,
    withAnswer: boolean = false
@@ -56,7 +51,10 @@ async function getById(
    throw new Error(`Question not found with id=${questionId}`);
 }
 
-async function listByIds(questionIds: string[], withAnswer: boolean = false): Promise<Question[]> {
+export async function listByIds(
+   questionIds: string[],
+   withAnswer: boolean = false
+): Promise<Question[]> {
    const params: BatchGetParams = {
       tableName: QUESTIONS_TABLE,
       keyName: "id",
@@ -66,7 +64,7 @@ async function listByIds(questionIds: string[], withAnswer: boolean = false): Pr
    try {
       const output = await dynamodb.batchGet(params);
       if (output.Responses) {
-         const questions = dbResponsesToQuestions(output.Responses[QUESTIONS_TABLE]);
+         const questions = helper.dbResponsesToQuestions(output.Responses[QUESTIONS_TABLE]);
          return questions;
       }
 
@@ -76,7 +74,7 @@ async function listByIds(questionIds: string[], withAnswer: boolean = false): Pr
    }
 }
 
-function resolveQuestionType(question: any) {
+export function resolveQuestionType(question: any) {
    if (!question.id) return null;
    const [type, id] = question.id.split("#");
    if (type == "MC_QUESTION") return "McQuestion";
@@ -84,13 +82,3 @@ function resolveQuestionType(question: any) {
 
    return null;
 }
-
-const questionService = {
-   addFrQuestion,
-   addMcQuestion,
-   listByIds,
-   getById,
-   resolveQuestionType
-};
-
-export default questionService;

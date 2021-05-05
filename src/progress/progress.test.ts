@@ -9,7 +9,6 @@ describe("addProgress method", () => {
          taskId: "test taskId",
          status: false
       };
-      await service.addProgress(progress);
 
       const expected: UserProgress = {
          userName: "Test User",
@@ -21,15 +20,18 @@ describe("addProgress method", () => {
          ]
       };
 
-      const actual = await service.getUserProgress("Test User", "Test Course");
-
-      expect(expected).toEqual(actual);
-
       const input: ProgresssDeletionInput = {
          userName: "Test User",
          course: "Test Course",
          taskId: "test taskId"
       };
-      await service.deleteProgress(input);
+
+      return service.addProgress(progress).then((result: string) => {
+         expect(result).toEqual(progress.taskId);
+         return service.getUserProgress("Test User", "Test Course").then(actual => {
+            expect(expected).toEqual(actual);
+            return service.deleteProgress(input);
+         });
+      });
    });
 });

@@ -10,7 +10,7 @@ import { ProgressPK } from "./progressInterface";
 import * as courseService from "../services/course";
 import usersData from "./users.json";
 
-export async function addProgress(input: ProgressInput) {
+export async function addProgress(input: ProgressInput): Promise<string> {
    const courseItem = helper.progressInputToDBItem(input);
 
    const params: PutCompositeParams = {

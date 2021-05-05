@@ -37,7 +37,6 @@ query {
     }
   }
 }
-
 ```
 
 #### Get Progress Overview By Course

@@ -4,4 +4,4 @@ build
 .serverless
 package-lock.json
 .webpack
-src/__generated__/*
+src/__generated__/*.d.ts
