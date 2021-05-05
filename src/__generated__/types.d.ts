@@ -92,7 +92,7 @@ type McQuestion = Question & {
   description: Scalars['String'];
   points: Scalars['Int'];
   options: Array<QuestionOption>;
-  answers?: Maybe<Array<Scalars['Int']>>;
+  answers: Array<Scalars['Int']>;
   feedback?: Maybe<Scalars['String']>;
 };
 
