@@ -3,7 +3,7 @@ import { uid } from "uid/secure";
 import { FrQuestionItem, McQuestionItem, QuestionItem } from "../interfaces/question";
 
 export function gradeMultipleChoiceQuestion(question: McQuestion, answerIndex: number): number {
-   return question.answers.includes(answerIndex) ? question.points : 0;
+   return question.answers!.includes(answerIndex) ? question.points : 0;
 }
 
 // convert input from request to a item object that will be inserted into db

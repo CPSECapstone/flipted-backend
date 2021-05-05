@@ -69,6 +69,35 @@ type FreeResponseAnswerInput = {
   answer: Scalars['String'];
 };
 
+type Goal = {
+  __typename?: 'Goal';
+  id: Scalars['String'];
+  title: Scalars['String'];
+  dueDate: Scalars['Date'];
+  completed: Scalars['Boolean'];
+  completedDate?: Maybe<Scalars['Date']>;
+  subGoals: Array<SubGoal>;
+  category: Scalars['String'];
+  favorited: Scalars['Boolean'];
+  owner: Scalars['String'];
+  assignee: Scalars['String'];
+  pointValue?: Maybe<Scalars['Int']>;
+};
+
+type GoalInput = {
+  id?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+  dueDate: Scalars['Date'];
+  completed: Scalars['Boolean'];
+  completedDate?: Maybe<Scalars['Date']>;
+  subGoals: Array<SubGoalInput>;
+  category: Scalars['String'];
+  favorited: Scalars['Boolean'];
+  owner?: Maybe<Scalars['String']>;
+  assignee?: Maybe<Scalars['String']>;
+  pointValue?: Maybe<Scalars['Int']>;
+};
+
 type ImageBlock = TaskBlock & {
   __typename?: 'ImageBlock';
   title: Scalars['String'];
@@ -147,6 +176,7 @@ type Mutation = {
   addTask: Scalars['String'];
   addTextBlock: Scalars['String'];
   addVideoBlock: Scalars['String'];
+  editOrCreateGoal: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress: Scalars['Boolean'];
   /** Saves a students answer to a multiple choice question quiz block */
@@ -231,6 +261,11 @@ type MutationAddTextBlockArgs = {
 
 type MutationAddVideoBlockArgs = {
   videoblock: VideoBlockInput;
+};
+
+
+type MutationEditOrCreateGoalArgs = {
+  goal: GoalInput;
 };
 
 
@@ -320,6 +355,9 @@ type Query = {
   courseContent: CourseContent;
   courseInfo: CourseInfo;
   courseInfos: Array<CourseInfo>;
+  getAllGoals: Array<Goal>;
+  /** Instructor only: get a user's goal given the user and the goal id */
+  getGoalById: Goal;
   getUser?: Maybe<User>;
   mission?: Maybe<Mission>;
   missions?: Maybe<Array<Maybe<Mission>>>;
@@ -361,6 +399,12 @@ type QueryCourseInfoArgs = {
 
 type QueryCourseInfosArgs = {
   instructor: Scalars['String'];
+};
+
+
+type QueryGetGoalByIdArgs = {
+  id: Scalars['String'];
+  user: Scalars['String'];
 };
 
 
@@ -525,6 +569,21 @@ type RubricRequirement = {
 
 type RubricRequirementInput = {
   description?: Maybe<Scalars['String']>;
+};
+
+type SubGoal = {
+  __typename?: 'SubGoal';
+  title: Scalars['String'];
+  dueDate: Scalars['Date'];
+  completed: Scalars['Boolean'];
+  completedDate?: Maybe<Scalars['Date']>;
+};
+
+type SubGoalInput = {
+  title: Scalars['String'];
+  dueDate: Scalars['Date'];
+  completed: Scalars['Boolean'];
+  completedDate?: Maybe<Scalars['Date']>;
 };
 
 type SubMission = {
