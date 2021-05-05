@@ -65,7 +65,7 @@ export async function listByIds(
    try {
       const output = await dynamodb.batchGet(params);
       if (output.Responses) {
-         const questions = helper.dbResponsesToQuestions(output.Responses[QUESTIONS_TABLE]);
+         const questions = helper.dbResponsesToQuestions(output.Responses[QUESTIONS_TABLE], withAnswer);
          return questions;
       }
 
