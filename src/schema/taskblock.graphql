@@ -1,12 +1,12 @@
 interface TaskBlock {
-   title: String
+   title: String!
    blockId: String!
    blockIndex: Int!
    pageIndex: Int!
 }
 
 type TextBlock implements TaskBlock {
-   title: String
+   title: String!
    blockId: String!
    blockIndex: Int!
    pageIndex: Int!
@@ -15,7 +15,7 @@ type TextBlock implements TaskBlock {
 }
 
 type ImageBlock implements TaskBlock {
-   title: String
+   title: String!
    blockId: String!
    blockIndex: Int!
    pageIndex: Int!
@@ -23,7 +23,7 @@ type ImageBlock implements TaskBlock {
 }
 
 type VideoBlock implements TaskBlock {
-   title: String
+   title: String!
    blockId: String!
    blockIndex: Int!
    pageIndex: Int!
@@ -31,18 +31,18 @@ type VideoBlock implements TaskBlock {
 }
 
 type QuizBlock implements TaskBlock {
-   title: String
+   title: String!
    blockId: String!
    blockIndex: Int!
    pageIndex: Int!
-   requiredScore: Int
-   points: Int
+   requiredScore: Int!
+   points: Int!
    questions: [Question!]!
 }
 
 input ImageBlockInput {
    taskId: String!
-   title: String
+   title: String!
    pageIndex: Int!
    blockIndex: Int!
    imageUrl: String!
@@ -67,7 +67,7 @@ input VideoBlockInput {
 
 input QuizBlockInput {
    taskId: String!
-   title: String
+   title: String!
    pageIndex: Int!
    blockIndex: Int!
    requiredScore: Int!

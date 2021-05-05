@@ -71,7 +71,7 @@ type FreeResponseAnswerInput = {
 
 type ImageBlock = TaskBlock & {
   __typename?: 'ImageBlock';
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
@@ -80,7 +80,7 @@ type ImageBlock = TaskBlock & {
 
 type ImageBlockInput = {
   taskId: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   pageIndex: Scalars['Int'];
   blockIndex: Scalars['Int'];
   imageUrl: Scalars['String'];
@@ -492,18 +492,18 @@ type QuestionProgress = {
 
 type QuizBlock = TaskBlock & {
   __typename?: 'QuizBlock';
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
-  requiredScore?: Maybe<Scalars['Int']>;
-  points?: Maybe<Scalars['Int']>;
+  requiredScore: Scalars['Int'];
+  points: Scalars['Int'];
   questions: Array<Question>;
 };
 
 type QuizBlockInput = {
   taskId: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   pageIndex: Scalars['Int'];
   blockIndex: Scalars['Int'];
   requiredScore: Scalars['Int'];
@@ -588,7 +588,7 @@ type Task = {
 };
 
 interface TaskBlock {
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
@@ -655,7 +655,7 @@ type TaskSubmissionResult = {
 
 type TextBlock = TaskBlock & {
   __typename?: 'TextBlock';
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
@@ -700,7 +700,7 @@ type UserProgress = {
 
 type VideoBlock = TaskBlock & {
   __typename?: 'VideoBlock';
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
