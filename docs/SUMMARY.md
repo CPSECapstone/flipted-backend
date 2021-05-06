@@ -2,7 +2,7 @@
 
 ## How To Guide
 
-* [Setup](./setup.md)
+* [Getting Started](./getting_started.md)
 * [Development Workflow](./development_workflow.md)
 * [Best Practice](./best_practice.md)
 
@@ -14,15 +14,15 @@
 ## API
 
 * [Users](./users.md)
-* [Courses](./course.md)
+* [Courses](./courses.md)
 * [Missions](./missions.md)
-* [SubMissions](./subMissions.md)
+   * [SubMissions](./subMissions.md)
 * [Targets](./targets.md)
-* [Objectives](./objectives.md)
+   * [Objectives](./objectives.md)
 * [Tasks](./tasks.md)
-* [Quiz Block](./tasks.md)
-* [Task Submission](./taskSubmissions.md)
-* [Questions](./questions.md)
+   * [Quiz Blocks](./quizblocks.md)
+   * [Questions](./questions.md)
+* [Task Submissions](./taskSubmissions.md)
 * [Goals](./goals.md)
 
 ## Support
