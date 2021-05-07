@@ -1,6 +1,6 @@
 import { uid } from "uid";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import questionService from "./question";
+import * as questionService from "./question";
 import { TaskItem, RubricRequirementItem } from "../interfaces/task";
 import { QuizBlockItem } from "../interfaces/taskblock";
 
@@ -130,10 +130,10 @@ export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
    return task;
 }
 
-export function dbItemToTaskInfo(rawItem: any): TaskInfo {
+export function dbItemToTask(rawItem: any): Task {
    const item = <TaskItem>unmarshall(rawItem);
 
-   return <TaskInfo>{
+   return <Task>{
       id: item.id,
       name: item.name,
       course: item.course,

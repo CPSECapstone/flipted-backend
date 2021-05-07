@@ -54,14 +54,14 @@ export function dbResponsesToQuestions(items: any[], withAnswer: boolean): Quest
             description: questionItem.description,
             points: questionItem.points,
             options: questionItem.options,
-            answers: withAnswer ? questionItem.answers : undefined
+            answers: withAnswer ? questionItem.answers : []
          };
       } else if (type === "FR_QUESTION") {
          return <FrQuestion>{
             id: questionItem.id,
             description: questionItem.description,
             points: questionItem.points,
-            answer: withAnswer? questionItem.answer : undefined
+            answer: withAnswer ? questionItem.answer : ""
          };
       } else {
          throw new Error("Unknown Question Type");
@@ -71,10 +71,14 @@ export function dbResponsesToQuestions(items: any[], withAnswer: boolean): Quest
    return questions;
 }
 
-export function quizBlockContainsQuestionIdWithPrefix(quizBlock: QuizBlock, id: String, prefix: String): boolean {
-  return (quizBlock.questions.filter(q => q.id == id && id.split('#')[0] == prefix).length === 1)
+export function quizBlockContainsQuestionIdWithPrefix(
+   quizBlock: QuizBlock,
+   id: String,
+   prefix: String
+): boolean {
+   return quizBlock.questions.filter(q => q.id == id && id.split("#")[0] == prefix).length === 1;
 }
 
 export function isValidMultipleChoiceAnswer(mcQuestion: McQuestion, answerId: number) {
-   return (mcQuestion.options.filter(choice => choice.id === answerId).length === 1)
+   return mcQuestion.options.filter(choice => choice.id === answerId).length === 1;
 }

@@ -1,6 +1,6 @@
 import { Answer, TaskSubmissionResult } from "../interfaces/taskSubmission";
 import { validateToken } from "../jws-verifer";
-import questionService from "../services/question";
+import * as questionService from "../services/question";
 import {
    gradeMultipleChoiceQuestion,
    isValidMultipleChoiceAnswer,

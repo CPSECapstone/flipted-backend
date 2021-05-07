@@ -30,7 +30,7 @@ async function getTaskInfoById(_: any, args: QueryTaskInfoArgs, context: any, in
    return taskService.getTaskInfoById(args.taskId);
 }
 
-async function ListTasksByCourse(_: any, args: QueryTaskInfosByCourseArgs) {
+async function listTasksByCourse(_: any, args: QueryTasksByCourseArgs) {
    return taskService.listTasksByCourse(args.course);
 }
 
@@ -59,7 +59,7 @@ const resolvers = {
       task: getTaskById,
       tasks: listTasksBySubmissionId,
       taskInfo: getTaskInfoById,
-      taskInfosByCourse: ListTasksByCourse
+      tasksByCourse: listTasksByCourse
    },
    Mutation: {
       addTask: addTask

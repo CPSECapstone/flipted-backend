@@ -9,7 +9,7 @@ type Objective {
    targetId: String!
    targetName: String!
    course: String!
-   tasks: [Task!]
+   tasks: [Task!]!
 }
 
 type Query {

@@ -24,7 +24,8 @@ export function dbItemToTarget(item: TargetItem): Target {
       subject: item.subject,
       icon: item.icon,
       standards: item.standards,
-      course: item.course
+      course: item.course,
+      objectives: []
    };
 }
 

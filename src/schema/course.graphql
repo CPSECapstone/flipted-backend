@@ -11,10 +11,8 @@ type CourseInfo {
 
 type CourseContent {
    courseInfo: CourseInfo!
-   missions: [Mission!]
-   targets: [Target!]
-   objectives: [Objective!]
-   taskInfos: [TaskInfo!]
+   missions: [Mission!]!
+   targets: [Target!]!
 }
 
 input CourseInput {
@@ -26,9 +24,9 @@ input CourseInput {
 type Query {
    courseInfo(courseId: String!): CourseInfo!
    courseInfos(instructor: String!): [CourseInfo!]!
-   courseContent(course: String!): CourseContent
+   courseContent(course: String!): CourseContent!
 }
 
 type Mutation {
-   addCourse(course: CourseInput!): String
+   addCourse(course: CourseInput!): String!
 }

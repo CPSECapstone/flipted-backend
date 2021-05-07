@@ -1,5 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import taskBusLogic, { dbItemsToTaskItem, dbItemToTaskInfo } from "./taskBusLogic";
+import taskBusLogic, { dbItemsToTaskItem, dbItemToTask } from "./taskBusLogic";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { TaskItem } from "../interfaces/task";
 import dynamodb, {
@@ -68,7 +68,7 @@ async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
 }
 
 // simplified version of task, not including pages nor blocks
-async function getTaskInfoById(taskId: string): Promise<TaskInfo> {
+async function getTaskInfoById(taskId: string): Promise<Task> {
    const params: GetCompositeParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       key: {
@@ -80,8 +80,8 @@ async function getTaskInfoById(taskId: string): Promise<TaskInfo> {
    try {
       const output = await dynamodb.getComposite(params);
       if (output.Item) {
-         const taskInfo = dbItemToTaskInfo(output.Item);
-         return taskInfo;
+         const task = dbItemToTask(output.Item);
+         return task;
       }
 
       throw new Error(`Task not found with id=${taskId}`);
@@ -91,7 +91,7 @@ async function getTaskInfoById(taskId: string): Promise<TaskInfo> {
 }
 
 // simplified version of task, not including pages nor blocks
-async function listTasksByCourse(course: string): Promise<TaskInfo[]> {
+async function listTasksByCourse(course: string): Promise<Task[]> {
    const params: QueryParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       indexName: "course-PK-index",
@@ -105,10 +105,10 @@ async function listTasksByCourse(course: string): Promise<TaskInfo[]> {
    try {
       const output = await dynamodb.query(params);
       if (output.Items) {
-         const taskInfos = output.Items.map(rawItem => {
-            return dbItemToTaskInfo(rawItem);
+         const tasks = output.Items.map(rawItem => {
+            return dbItemToTask(rawItem);
          });
-         return taskInfos;
+         return tasks;
       }
 
       return [];

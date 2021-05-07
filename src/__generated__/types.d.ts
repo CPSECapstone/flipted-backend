@@ -23,10 +23,8 @@ type Answer = {
 type CourseContent = {
   __typename?: 'CourseContent';
   courseInfo: CourseInfo;
-  missions?: Maybe<Array<Mission>>;
-  targets?: Maybe<Array<Target>>;
-  objectives?: Maybe<Array<Objective>>;
-  taskInfos?: Maybe<Array<TaskInfo>>;
+  missions: Array<Mission>;
+  targets: Array<Target>;
 };
 
 type CourseInfo = {
@@ -102,7 +100,7 @@ type GoalInput = {
 
 type ImageBlock = TaskBlock & {
   __typename?: 'ImageBlock';
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
@@ -111,7 +109,7 @@ type ImageBlock = TaskBlock & {
 
 type ImageBlockInput = {
   taskId: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   pageIndex: Scalars['Int'];
   blockIndex: Scalars['Int'];
   imageUrl: Scalars['String'];
@@ -123,7 +121,7 @@ type McQuestion = Question & {
   description: Scalars['String'];
   points: Scalars['Int'];
   options: Array<QuestionOption>;
-  answers?: Maybe<Array<Scalars['Int']>>;
+  answers: Array<Scalars['Int']>;
   feedback?: Maybe<Scalars['String']>;
 };
 
@@ -165,23 +163,24 @@ type MultipleChoiceAnswerInput = {
 
 type Mutation = {
   __typename?: 'Mutation';
-  addCourse?: Maybe<Scalars['String']>;
+  addCourse: Scalars['String'];
   addFrQuestion: Scalars['String'];
   addImageBlock: Scalars['String'];
   addMcQuestion: Scalars['String'];
-  addMission?: Maybe<Scalars['String']>;
+  addMission: Scalars['String'];
   addObjective: Scalars['String'];
+  addProgress: Scalars['String'];
   addQuizBlock: Scalars['String'];
-  addSubMission?: Maybe<Scalars['String']>;
+  addSubMission: Scalars['String'];
   addTarget: Scalars['String'];
-  addTask?: Maybe<Scalars['String']>;
+  addTask: Scalars['String'];
   addTextBlock: Scalars['String'];
   addVideoBlock: Scalars['String'];
   editOrCreateGoal: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
-  saveFreeResponseProgress?: Maybe<Scalars['Boolean']>;
+  saveFreeResponseProgress: Scalars['Boolean'];
   /** Saves a students answer to a multiple choice question quiz block */
-  saveMultipleChoiceProgress?: Maybe<Scalars['Boolean']>;
+  saveMultipleChoiceProgress: Scalars['Boolean'];
   /**
    * Should be called when a student has completed all rubric requirements and answered
    * all questions in the task. If the above requirements are not satisfied, this will return
@@ -190,12 +189,12 @@ type Mutation = {
    * Even on a successful submission, many fields may be null
    * as a Task may require manual grading by an instructor.
    */
-  submitTask?: Maybe<TaskSubmissionResult>;
+  submitTask: TaskSubmissionResult;
   /**
    * Saves completed rubric requirements linked to this task for the user
    * calling this function
    */
-  submitTaskProgress?: Maybe<Scalars['String']>;
+  submitTaskProgress: Scalars['String'];
   updateUser?: Maybe<UpdateUserOutput>;
 };
 
@@ -221,12 +220,17 @@ type MutationAddMcQuestionArgs = {
 
 
 type MutationAddMissionArgs = {
-  mission?: Maybe<MissionInput>;
+  mission: MissionInput;
 };
 
 
 type MutationAddObjectiveArgs = {
   objective: ObjectiveInput;
+};
+
+
+type MutationAddProgressArgs = {
+  progress: ProgressInput;
 };
 
 
@@ -236,7 +240,7 @@ type MutationAddQuizBlockArgs = {
 
 
 type MutationAddSubMissionArgs = {
-  subMission?: Maybe<SubMissionInput>;
+  subMission: SubMissionInput;
 };
 
 
@@ -297,7 +301,7 @@ type Objective = {
   targetId: Scalars['String'];
   targetName: Scalars['String'];
   course: Scalars['String'];
-  tasks?: Maybe<Array<Task>>;
+  tasks: Array<Task>;
 };
 
 type ObjectiveInput = {
@@ -318,19 +322,49 @@ type PageInput = {
   skippable?: Maybe<Scalars['Boolean']>;
 };
 
+type Progress = {
+  __typename?: 'Progress';
+  taskId: Scalars['String'];
+  status: Scalars['Boolean'];
+};
+
+type ProgressInput = {
+  userName: Scalars['String'];
+  course: Scalars['String'];
+  taskId: Scalars['String'];
+  status: Scalars['Boolean'];
+};
+
+type ProgressOverview = {
+  __typename?: 'ProgressOverview';
+  userProgress: Array<UserProgress>;
+  courseInfo: CourseInfo;
+  missions: Array<Mission>;
+  targets: Array<Target>;
+};
+
+type ProgresssDeletionInput = {
+  userName: Scalars['String'];
+  course: Scalars['String'];
+  taskId: Scalars['String'];
+};
+
 type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']>;
-  courseContent?: Maybe<CourseContent>;
+  courseContent: CourseContent;
   courseInfo: CourseInfo;
   courseInfos: Array<CourseInfo>;
   getAllGoals: Array<Goal>;
+  /** Instructor only: get a user's goal given the user and the goal id */
   getGoalById: Goal;
   getUser?: Maybe<User>;
   mission?: Maybe<Mission>;
   missions?: Maybe<Array<Maybe<Mission>>>;
   objective: Objective;
   objectives: Array<Objective>;
+  progressByCourse: Array<UserProgress>;
+  progressOverview: ProgressOverview;
   questions: Array<Question>;
   quizblock: QuizBlock;
   /** Returns student's task progress on the rubric requirements if it exists. */
@@ -346,9 +380,10 @@ type Query = {
   target: Target;
   targets: Array<Target>;
   task: Task;
-  taskInfo: TaskInfo;
-  taskInfosByCourse: Array<TaskInfo>;
+  taskInfo: Task;
   tasks: Array<Task>;
+  tasksByCourse: Array<Task>;
+  userProgress: UserProgress;
 };
 
 
@@ -369,6 +404,7 @@ type QueryCourseInfosArgs = {
 
 type QueryGetGoalByIdArgs = {
   id: Scalars['String'];
+  user: Scalars['String'];
 };
 
 
@@ -388,6 +424,16 @@ type QueryObjectiveArgs = {
 
 
 type QueryObjectivesArgs = {
+  course: Scalars['String'];
+};
+
+
+type QueryProgressByCourseArgs = {
+  course: Scalars['String'];
+};
+
+
+type QueryProgressOverviewArgs = {
   course: Scalars['String'];
 };
 
@@ -443,13 +489,19 @@ type QueryTaskInfoArgs = {
 };
 
 
-type QueryTaskInfosByCourseArgs = {
+type QueryTasksArgs = {
+  subMissionId?: Maybe<Scalars['String']>;
+};
+
+
+type QueryTasksByCourseArgs = {
   course: Scalars['String'];
 };
 
 
-type QueryTasksArgs = {
-  subMissionId?: Maybe<Scalars['String']>;
+type QueryUserProgressArgs = {
+  userName: Scalars['String'];
+  course: Scalars['String'];
 };
 
 interface Question {
@@ -484,18 +536,18 @@ type QuestionProgress = {
 
 type QuizBlock = TaskBlock & {
   __typename?: 'QuizBlock';
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
-  requiredScore?: Maybe<Scalars['Int']>;
-  points?: Maybe<Scalars['Int']>;
+  requiredScore: Scalars['Int'];
+  points: Scalars['Int'];
   questions: Array<Question>;
 };
 
 type QuizBlockInput = {
   taskId: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   pageIndex: Scalars['Int'];
   blockIndex: Scalars['Int'];
   requiredScore: Scalars['Int'];
@@ -562,7 +614,7 @@ type Target = {
   icon: Scalars['String'];
   standards: Scalars['String'];
   course: Scalars['String'];
-  objectives?: Maybe<Array<Objective>>;
+  objectives: Array<Objective>;
 };
 
 type TargetInput = {
@@ -595,23 +647,11 @@ type Task = {
 };
 
 interface TaskBlock {
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
 }
-
-type TaskInfo = {
-  __typename?: 'TaskInfo';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  course: Scalars['String'];
-  missionId: Scalars['String'];
-  missionIndex: Scalars['Int'];
-  subMissionId?: Maybe<Scalars['String']>;
-  objectiveId?: Maybe<Scalars['String']>;
-  targetId?: Maybe<Scalars['String']>;
-};
 
 type TaskInput = {
   name: Scalars['String'];
@@ -674,7 +714,7 @@ type TaskSubmissionResult = {
 
 type TextBlock = TaskBlock & {
   __typename?: 'TextBlock';
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
@@ -684,7 +724,7 @@ type TextBlock = TaskBlock & {
 
 type TextBlockInput = {
   taskId: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   pageIndex: Scalars['Int'];
   blockIndex: Scalars['Int'];
   contents: Scalars['String'];
@@ -711,9 +751,15 @@ type User = {
   email?: Maybe<Scalars['String']>;
 };
 
+type UserProgress = {
+  __typename?: 'UserProgress';
+  userName: Scalars['String'];
+  progress: Array<Progress>;
+};
+
 type VideoBlock = TaskBlock & {
   __typename?: 'VideoBlock';
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   blockId: Scalars['String'];
   blockIndex: Scalars['Int'];
   pageIndex: Scalars['Int'];
@@ -722,7 +768,7 @@ type VideoBlock = TaskBlock & {
 
 type VideoBlockInput = {
   taskId: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
   pageIndex: Scalars['Int'];
   blockIndex: Scalars['Int'];
   videoUrl: Scalars['String'];

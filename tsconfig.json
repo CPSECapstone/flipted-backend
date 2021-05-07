@@ -1,5 +1,7 @@
 {
    "compilerOptions": {
+      "types": ["node", "@types/jest"],
+      "resolveJsonModule": true,
       "emitDecoratorMetadata": true,
       "esModuleInterop": true,
       "experimentalDecorators": true,
@@ -17,6 +19,6 @@
       "strict": true
    },
    "files": ["src/@types/graphql.d.ts"],
-   "exclude": ["node_modules", "src/**/*.test.ts"],
-   "include": ["src/**/*", "test"]
+   "exclude": ["node_modules", ".serverless", ".webpack"],
+   "include": ["src/**/*", "test/**/*", "data/**/*"]
 }

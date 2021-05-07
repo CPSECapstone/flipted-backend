@@ -1,0 +1,39 @@
+type Progress {
+   taskId: String!
+   status: Boolean!
+}
+
+type UserProgress {
+   userName: String!
+   progress: [Progress!]!
+}
+
+input ProgressInput {
+   userName: String!
+   course: String!
+   taskId: String!
+   status: Boolean!
+}
+
+input ProgresssDeletionInput {
+   userName: String!
+   course: String!
+   taskId: String!
+}
+
+type ProgressOverview {
+   userProgress: [UserProgress!]!
+   courseInfo: CourseInfo!
+   missions: [Mission!]!
+   targets: [Target!]!
+}
+
+type Query {
+   progressByCourse(course: String!): [UserProgress!]!
+   userProgress(userName: String!, course: String!): UserProgress!
+   progressOverview(course: String!): ProgressOverview!
+}
+
+type Mutation {
+   addProgress(progress: ProgressInput!): String!
+}

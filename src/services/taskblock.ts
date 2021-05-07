@@ -1,20 +1,13 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import dynamodb, { PutCompositeParams, GetCompositeParams } from "./dynamodb";
-import questionService from "./question";
 import { TaskBlockItem, QuizBlockItem } from "../interfaces/taskblock";
-import {
-   imageblockInputToDBItem,
-   quizblockInputToDBItem,
-   textblockInputToDBItem,
-   videoblockInputToDBItem
-} from "./taskblockHelper";
-
-const QUIZBLOCKS_TABLE = COURSE_CONTENT_TABLE_NAME;
+import * as questionService from "./question";
+import * as helper from "./taskblockHelper";
 
 async function addTaskBlock(taskblockItem: TaskBlockItem) {
    const params: PutCompositeParams = {
-      tableName: QUIZBLOCKS_TABLE,
+      tableName: COURSE_CONTENT_TABLE_NAME,
       item: taskblockItem
    };
 
@@ -27,28 +20,28 @@ async function addTaskBlock(taskblockItem: TaskBlockItem) {
 }
 
 async function addTextBlock(textblock: TextBlockInput) {
-   const dbItem = textblockInputToDBItem(textblock);
+   const dbItem = helper.textblockInputToDBItem(textblock);
    return addTaskBlock(dbItem);
 }
 
 async function addImageBlock(imageblock: ImageBlockInput) {
-   const dbItem = imageblockInputToDBItem(imageblock);
+   const dbItem = helper.imageblockInputToDBItem(imageblock);
    return addTaskBlock(dbItem);
 }
 
 async function addVideoBlock(videoblock: VideoBlockInput) {
-   const dbItem = videoblockInputToDBItem(videoblock);
+   const dbItem = helper.videoblockInputToDBItem(videoblock);
    return addTaskBlock(dbItem);
 }
 
 async function addQuizBlock(quizblock: QuizBlockInput) {
-   const dbItem = quizblockInputToDBItem(quizblock);
+   const dbItem = helper.quizblockInputToDBItem(quizblock);
    return addTaskBlock(dbItem);
 }
 
 async function getQuizBlockById(taskId: string, blockId: string): Promise<QuizBlock> {
    const params: GetCompositeParams = {
-      tableName: QUIZBLOCKS_TABLE,
+      tableName: COURSE_CONTENT_TABLE_NAME,
       key: {
          PK: `TASK#${taskId}`,
          SK: `QUIZ_BLOCK#${blockId}`
@@ -72,7 +65,7 @@ async function getQuizBlockById(taskId: string, blockId: string): Promise<QuizBl
       }
       throw new Error(`QuizBlock not found with blockId=${blockId} within taskId=${taskId}`);
    } catch (err) {
-      console.log("Errored like it should in getQuizBlockById")
+      console.log("Errored like it should in getQuizBlockById");
       throw err;
    }
 }

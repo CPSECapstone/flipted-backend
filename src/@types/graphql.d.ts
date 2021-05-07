@@ -4,3 +4,8 @@ declare module "*.graphql" {
 
    export = Schema;
 }
+
+declare module "*.json" {
+   const value: any;
+   export default value;
+}

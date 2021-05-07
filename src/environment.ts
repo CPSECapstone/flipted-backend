@@ -13,4 +13,5 @@ export function TABLE_NAME(name: string): string {
 
 export const USERS_TABLE_NAME: string = "flipted-dev-Users";
 export const COURSE_CONTENT_TABLE_NAME: string = "flipted-dev-CourseContent";
+export const USER_PROGRESS_TABLE_NAME: string = "flipted-dev-UserProgress";
 export const GOALS_TABLE_NAME: string = "flipted-dev-Goals";

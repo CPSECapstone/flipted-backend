@@ -27,3 +27,5 @@ export interface TaskItem extends CompositeDBItem {
    objectiveId: string;
    targetId: string;
 }
+
+export const TaskPrefix = "TASK";
