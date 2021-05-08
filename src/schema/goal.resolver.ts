@@ -17,7 +17,7 @@ async function editOrCreateGoal(_: any, args: any, context: any, info: any) {
     if(!("id" in goalInput)){
        goalInput.id = uid()
     }
-    return goalService.addGoal(goalInput, username, userRole)
+    return await goalService.addGoal(goalInput, username, userRole)
 }
 
 async function getGoalById(_: any, args: any, context: any, info: any) {

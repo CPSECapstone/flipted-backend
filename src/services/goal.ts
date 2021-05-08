@@ -9,7 +9,7 @@ import { dbItemsToQuestionAnswerItems } from "./taskSubmissionHelper";
 
 const GOAL_TABLE = GOALS_TABLE_NAME
 
-async function addGoal(goalInput: GoalInput, username: string, role: RoleInternal) {
+async function addGoal(goalInput: GoalInput, username: string, role: RoleInternal): Promise<Goal> {
     const goalItem: GoalItem = convertGoalInputToItem(goalInput, role, username);
    
     const params: PutCompositeParams = {
@@ -19,7 +19,7 @@ async function addGoal(goalInput: GoalInput, username: string, role: RoleInterna
 
     try {
         await dynamodb.putComposite(params);
-        return goalInput.id;
+        return dbGoalItemToGoal(goalItem);
      } catch (err) {
         throw err;
      }
