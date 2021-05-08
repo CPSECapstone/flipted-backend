@@ -30,7 +30,7 @@ mutation AddTarget {
 
 ```graphql
 query GetTarget {
-  target(targetId: "eaf7ce60c44") {
+  target(targetId: "27871da36e7") {
     targetId
     targetName
     description

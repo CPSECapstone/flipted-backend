@@ -1,4 +1,4 @@
-import { ObjectiveKey } from "../../src/interfaces/objective";
+import { ObjectiveKey } from "./objectiveInterface";
 
 describe("Test Objective Interfaces", () => {
    it("will produce right parition key format", () => {

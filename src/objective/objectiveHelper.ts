@@ -1,6 +1,6 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-import { ObjectiveItem, ObjectiveKey } from "../interfaces/objective";
+import { ObjectiveItem, ObjectiveKey } from "./objectiveInterface";
 
 export function objectiveInputToDBItem(input: ObjectiveInput): ObjectiveItem {
    const objectiveId = uid();
