@@ -106,10 +106,6 @@ export function dbItemsToCourseContent(items: any[]): CourseContent {
    ] = parseCourseItems(items);
 
    for (let [, task] of taskMap) {
-      if (task.objectiveId && objectiveMap.has(task.objectiveId)) {
-         objectiveMap.get(task.objectiveId)?.tasks?.push(task);
-      }
-
       if (task.subMissionId && missionMap.has(task.subMissionId)) {
          subMissionMap.get(task.subMissionId)?.missionContent?.push(task);
       }

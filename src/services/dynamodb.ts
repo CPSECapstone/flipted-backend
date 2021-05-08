@@ -132,8 +132,8 @@ async function scan(params: any): Promise<ScanCommandOutput> {
 }
 
 async function batchGet(params: BatchGetParams): Promise<BatchGetItemCommandOutput> {
-   const keys = params.keyValues.map((value: string) => {
-      return marshall({ [params.keyName]: value });
+   const keys = params.keys.map(key => {
+      return marshall(key);
    });
 
    const command = new BatchGetItemCommand({
@@ -243,8 +243,7 @@ export interface ScanParams {
 
 export interface BatchGetParams {
    tableName: string;
-   keyName: string;
-   keyValues: string[];
+   keys: { [key: string]: string }[];
    projectionExpression?: string;
 }
 

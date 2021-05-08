@@ -301,6 +301,7 @@ type Objective = {
   targetId: Scalars['String'];
   targetName: Scalars['String'];
   course: Scalars['String'];
+  taskIds: Array<Scalars['String']>;
   tasks: Array<Task>;
 };
 
@@ -310,6 +311,7 @@ type ObjectiveInput = {
   targetId: Scalars['String'];
   targetName: Scalars['String'];
   course: Scalars['String'];
+  taskIds: Array<Scalars['String']>;
 };
 
 type Page = {
@@ -642,8 +644,6 @@ type Task = {
   missionId: Scalars['String'];
   missionIndex: Scalars['Int'];
   subMissionId?: Maybe<Scalars['String']>;
-  objectiveId?: Maybe<Scalars['String']>;
-  targetId?: Maybe<Scalars['String']>;
 };
 
 interface TaskBlock {
@@ -666,8 +666,6 @@ type TaskInput = {
   missionId: Scalars['String'];
   missionIndex: Scalars['Int'];
   subMissionId?: Maybe<Scalars['String']>;
-  objectiveId?: Maybe<Scalars['String']>;
-  targetId?: Maybe<Scalars['String']>;
 };
 
 type TaskProgress = {

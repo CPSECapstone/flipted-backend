@@ -1,3 +1,4 @@
+import taskService from "../services/task";
 import * as service from "./objectiveService";
 
 async function addObjective(_: any, args: MutationAddObjectiveArgs) {
@@ -12,6 +13,11 @@ async function listObjectivesByCourse(_: any, args: QueryObjectivesArgs) {
    return service.listObjectivesByCourse(args.course);
 }
 
+async function getTasks(parent: Objective) {
+   console.log(parent);
+   return taskService.listTasksByIds(parent.taskIds);
+}
+
 const resolvers = {
    Query: {
       objective: getObjectiveById,
@@ -19,6 +25,9 @@ const resolvers = {
    },
    Mutation: {
       addObjective
+   },
+   Objective: {
+      tasks: getTasks
    }
 };
 

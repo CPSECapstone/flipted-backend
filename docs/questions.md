@@ -4,6 +4,7 @@
 
 -  Add Free Response Question
 -  Add Multiple Choice Question
+-  List Questions By Question Ids
 
 ### Examples
 
@@ -38,5 +39,16 @@ mutation {
       answers: [3]
     }
   )
+}
+```
+
+#### List Questions By Question Ids
+
+```graphql
+query {
+   questions(questionIds: ["MC_QUESTION#6bc78eb2165", "MC_QUESTION#9347b1c758f"]) {
+      id
+      description
+   }
 }
 ```

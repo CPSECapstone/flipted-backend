@@ -9,6 +9,7 @@ type Objective {
    targetId: String!
    targetName: String!
    course: String!
+   taskIds: [String!]!
    tasks: [Task!]!
 }
 
@@ -23,6 +24,7 @@ input ObjectiveInput {
    targetId: String!
    targetName: String!
    course: String!
+   taskIds: [String!]!
 }
 
 type Mutation {

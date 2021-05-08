@@ -29,3 +29,7 @@ export interface TaskItem extends CompositeDBItem {
 }
 
 export const TaskPrefix = "TASK";
+
+export function TaskKey(taskId: string) {
+   return `${TaskPrefix}#${taskId}`;
+}
