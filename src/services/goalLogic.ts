@@ -23,7 +23,7 @@ export function convertGoalInputToItem(
             return convertSubGoalInputToItem(subGoalInput);
          }),
          category: goalInput.category,
-         favorited: false,
+         favorited: goalInput.favorited,
          owner: role == RoleInternal.Instructor && goalInput.owner ? goalInput.owner! : username,
          assignee: role == RoleInternal.Instructor && goalInput.assignee ? goalInput.assignee! : username,
          pointValue: role == RoleInternal.Instructor && goalInput.pointValue ? goalInput.pointValue! : 0
