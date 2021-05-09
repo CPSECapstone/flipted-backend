@@ -6,3 +6,4 @@
 3. Remove unused variables, arguments.
 4. Always format code with `prettier`
 5. Catch `error` from async function
+

@@ -1,3 +1,4 @@
 # Mission - Learning Target Progress Class Diagram
 
-![figure](mission_target_progress.png)
+![figure](../.gitbook/assets/mission_target_progress.png)
+
