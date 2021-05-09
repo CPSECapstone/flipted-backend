@@ -4,3 +4,4 @@
 2. Remove unused import statements
 3. Remove unused variables, arguments.
 4. Always format code with `prettier`
+5. Catch `error` from async function
