@@ -2,6 +2,10 @@
 
 * [Intruction](README.md)
 
+## How To Guide
+  * [Development Workflow](how-to-guide/development_workflow.md)
+  * [Getting Started](how-to-guide/getting_started.md)
+
 * [APIs](apis/README.md)
   * [SubMissions](apis/submissions.md)
   * [Task Submissions](apis/task-submissions.md)
@@ -15,18 +19,15 @@
   * [Missions](apis/missions.md)
   * [Users](apis/users.md)
 
-* [Best Practice](best-practice/README.md)
+* [Best Practice](best-practice/README.MD)
+  * [Best Practice](best-practice/best_practice.md)
   * [Coding styles](best-practice/coding_style.md)
   * [Avoid using any type](best-practice/avoid_using_any_type.md)
 
-## Design
+* [Design](design/README.md)
   * [Data Schema](design/data_schema.md)
   * [User Authentication](design/user_authentication.md)
   * [Mission - Learning Target Progress Class Diagram](design/mission_target_progress.md)
-
-## How To Guide
-  * [Development Workflow](how-to-guide/development_workflow.md)
-  * [Getting Started](how-to-guide/getting_started.md)
 
 ## Support
   * [Defect Reporting](support/defect_reporting.md)
