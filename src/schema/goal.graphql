@@ -50,5 +50,5 @@ type Query {
 }
 
 type Mutation {
-   editOrCreateGoal(goal: GoalInput!): Goal! # returns the goal
+   editOrCreateGoal(goal: GoalInput!): String! # returns id of goal
 }
