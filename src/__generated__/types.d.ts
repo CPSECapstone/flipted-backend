@@ -149,6 +149,13 @@ type MissionInput = {
   description: Scalars['String'];
 };
 
+type MissionProgress = {
+  __typename?: 'MissionProgress';
+  mission: Mission;
+  progress: Array<TaskStats>;
+  student: Scalars['String'];
+};
+
 /** Represents a students answer to a multiple choice question */
 type MultipleChoiceAnswerInput = {
   /** The id of the task the quiz block is contained in */
@@ -358,6 +365,7 @@ type Query = {
   courseInfo: CourseInfo;
   courseInfos: Array<CourseInfo>;
   getAllGoals: Array<Goal>;
+  getAllMissionProgress?: Maybe<MissionProgress>;
   /** Instructor only: get a user's goal given the user and the goal id */
   getGoalById: Goal;
   getUser?: Maybe<User>;
@@ -401,6 +409,12 @@ type QueryCourseInfoArgs = {
 
 type QueryCourseInfosArgs = {
   instructor: Scalars['String'];
+};
+
+
+type QueryGetAllMissionProgressArgs = {
+  courseId: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
 };
 
 
@@ -685,6 +699,14 @@ type TaskProgressInput = {
   finishedRequirementIds: Array<Scalars['String']>;
   /** The id of the task the user is submitting progress towards. */
   taskId: Scalars['String'];
+};
+
+type TaskStats = {
+  __typename?: 'TaskStats';
+  taskId: Scalars['String'];
+  name: Scalars['String'];
+  /** Null indicates that this task does not yet have an associated submission */
+  submission?: Maybe<TaskSubmissionResult>;
 };
 
 /**

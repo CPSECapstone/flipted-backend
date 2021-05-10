@@ -28,10 +28,28 @@ type ProgressOverview {
    targets: [Target!]!
 }
 
+type MissionProgress {
+   mission: Mission!
+   progress: [TaskStats!]!
+   student: String!
+}
+
+type TaskStats {
+   taskId: String!
+   name: String!
+
+   """
+   Null indicates that this task does not yet have an associated submission
+   """
+   submission: TaskSubmissionResult
+}
+
 type Query {
    progressByCourse(course: String!): [UserProgress!]!
    userProgress(userName: String!, course: String!): UserProgress!
    progressOverview(course: String!): ProgressOverview!
+
+   getAllMissionProgress(courseId: String!, username: String) : [MissionProgress]
 }
 
 type Mutation {
