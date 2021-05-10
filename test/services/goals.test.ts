@@ -14,7 +14,7 @@ describe("Converting goal inputs to goal db items", () => {
          dueDate: date,
          completed: false,
          category: "Emotional",
-         favorited: false,
+         favorited: true,
          subGoals: [
             { title: "MINT CHOCOLATE!", dueDate: date, completed: false },
             { title: "VANILLA!", dueDate: date, completed: true, completedDate: date }
@@ -36,7 +36,7 @@ describe("Converting goal inputs to goal db items", () => {
             { title: "VANILLA!", dueDate: dateString, completed: true, completedDate: dateString }
          ],
          category: "Emotional",
-         favorited: false,
+         favorited: true,
          owner: "GOOGLE#123456",
          assignee: "GOOGLE#123456",
          pointValue: 0
