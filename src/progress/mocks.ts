@@ -27,8 +27,8 @@ const mockTaskStats: TaskStats[] = [
    } 
 ];
 
-export const mockMissionProgress: MissionProgress = {
+export const mockMissionProgress: MissionProgress[] = [{
    mission: mockMission,
    progress: mockTaskStats,
    student: "MOCKUSER_123"
-};
+}];
