@@ -50,9 +50,7 @@ function convertTaskInputToTaskItem(input: TaskInput): TaskItem {
       requirements,
       course: input.course,
       missionId: input.missionId,
-      subMissionId: input.subMissionId,
-      objectiveId: input.objectiveId,
-      targetId: input.targetId
+      subMissionId: input.subMissionId
    };
 
    return taskItem;
@@ -139,10 +137,17 @@ export function dbItemToTask(rawItem: any): Task {
       course: item.course,
       missionId: item.missionId,
       missionIndex: item.missionIndex,
-      subMissionId: item.subMissionId,
-      objectiveId: item.objectiveId,
-      targetId: item.targetId
+      subMissionId: item.subMissionId
    };
+}
+
+export function batchResponseToTasks(rawItems: any[]): Task[] {
+   const tasks: Task[] = rawItems.map(rawItem => {
+      const task = dbItemToTask(rawItem);
+      return task;
+   });
+
+   return tasks;
 }
 
 const taskBusLogic = {

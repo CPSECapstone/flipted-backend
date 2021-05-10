@@ -1,8 +1,13 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import taskBusLogic, { dbItemsToTaskItem, dbItemToTask } from "./taskBusLogic";
+import taskBusLogic, {
+   dbItemsToTaskItem,
+   dbItemToTask,
+   batchResponseToTasks
+} from "./taskBusLogic";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
-import { TaskItem } from "../interfaces/task";
+import { TaskItem, TaskKey } from "../interfaces/task";
 import dynamodb, {
+   BatchGetParams,
    GetCompositeParams,
    PutCompositeParams,
    QueryParams,
@@ -117,12 +122,39 @@ async function listTasksByCourse(course: string): Promise<Task[]> {
    }
 }
 
+async function listTasksByIds(taskIds: string[]): Promise<Task[]> {
+   const tableName = COURSE_CONTENT_TABLE_NAME;
+   const keys = taskIds.map(taskId => {
+      return {
+         PK: TaskKey(taskId),
+         SK: TaskKey(taskId)
+      };
+   });
+   const params: BatchGetParams = {
+      tableName,
+      keys
+   };
+
+   try {
+      const output = await dynamodb.batchGet(params);
+      if (output.Responses) {
+         const tasks = batchResponseToTasks(output.Responses[tableName]);
+         return tasks;
+      }
+
+      return [];
+   } catch (err) {
+      return err;
+   }
+}
+
 const taskService = {
    add,
    getTaskById,
    listBySubMissionId,
    getTaskInfoById,
-   listTasksByCourse
+   listTasksByCourse,
+   listTasksByIds
 };
 
 export default taskService;

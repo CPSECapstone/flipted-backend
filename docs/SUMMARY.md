@@ -1,33 +1,32 @@
 # Table of contents
 
-* [Introduction](readme.md)
+* [Intruction](README.md)
 
 ## How To Guide
+  * [Getting Started](how-to-guide/getting_started.md)
+  * [Development Workflow](how-to-guide/development_workflow.md)
 
-* [Getting Started](how-to-guide/getting_started.md)
-* [Development Workflow](how-to-guide/development_workflow.md)
-* [Best Practice](how-to-guide/best_practice.md)
+* [APIs](apis/README.md)
+  * [Courses](apis/courses.md)
+  * [Goals](apis/goals.md)
+  * [Missions](apis/missions.md)
+  * [Objectives](apis/objectives.md)
+  * [Questions](apis/questions.md)
+  * [Quiz Blocks](apis/quizblocks.md)
+  * [SubMissions](apis/submissions.md)
+  * [Targets](apis/targets.md)
+  * [Tasks](apis/tasks.md)
+  * [Task Submissions](apis/task-submissions.md)
+  * [Users](apis/users.md)
 
-## Design
+* [Best Practice](best-practice/README.MD)
+  * [Avoid using any type](best-practice/avoid_using_any_type.md)
+  * [Coding styles](best-practice/coding_style.md)
 
-* [User Authentication](design/user_authentication.md)
-* [Data Schema](design/data_schema.md)
-
-## API
-
-* [Users](api/users.md)
-* [Courses](api/courses.md)
-* [Missions](api/missions.md)
-* [SubMissions](api/submissions.md)
-* [Targets](api/targets.md)
-* [Objectives](api/objectives.md)
-* [Tasks](api/tasks.md)
-* [Quiz Blocks](api/quizblocks.md)
-* [Questions](api/questions.md)
-* [Task Submissions](api/task-submissions.md)
-* [Goals](api/goals.md)
+* [Design](design/README.md)
+  * [Data Schema](design/data_schema.md)
+  * [User Authentication](design/user_authentication.md)
+  * [Mission - Learning Target Progress Class Diagram](design/mission_target_progress.md)
 
 ## Support
-
-* [Defect Reporting](support/defect_reporting.md)
-
+  * [Defect Reporting](support/defect_reporting.md)

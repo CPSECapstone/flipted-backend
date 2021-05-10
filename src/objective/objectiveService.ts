@@ -17,7 +17,7 @@ export async function addObjective(input: ObjectiveInput) {
          item: objectiveItem
       };
 
-      const output = dynamodb.putComposite(params);
+      const output = await dynamodb.putComposite(params);
       return objectiveItem.PK;
    } catch (err) {
       return err;

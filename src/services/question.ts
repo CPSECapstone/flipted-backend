@@ -56,16 +56,22 @@ export async function listByIds(
    questionIds: string[],
    withAnswer: boolean = false
 ): Promise<Question[]> {
+   const keys = questionIds.map(questionId => {
+      return { id: questionId };
+   });
+
    const params: BatchGetParams = {
       tableName: QUESTIONS_TABLE,
-      keyName: "id",
-      keyValues: questionIds
+      keys
    };
 
    try {
       const output = await dynamodb.batchGet(params);
       if (output.Responses) {
-         const questions = helper.dbResponsesToQuestions(output.Responses[QUESTIONS_TABLE], withAnswer);
+         const questions = helper.dbResponsesToQuestions(
+            output.Responses[QUESTIONS_TABLE],
+            withAnswer
+         );
          return questions;
       }
 

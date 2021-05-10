@@ -12,8 +12,6 @@ type Task {
    missionId: String!
    missionIndex: Int!
    subMissionId: String
-   objectiveId: String
-   targetId: String
 }
 
 input TaskInput {
@@ -29,8 +27,6 @@ input TaskInput {
    missionId: String!
    missionIndex: Int!
    subMissionId: String
-   objectiveId: String
-   targetId: String
 }
 
 type Page {
