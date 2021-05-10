@@ -1,3 +1,6 @@
+import { validateToken } from "../jws-verifer";
+import userService from "../services/user";
+import { mockMissionProgress } from "./mocks";
 import * as service from "./progressService";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
@@ -16,11 +19,18 @@ async function progressOverview(_: any, args: QueryProgressOverviewArgs) {
    return service.getProgressOverview(args.course);
 }
 
+async function getAllMissionProgress(_: any, args: QueryGetAllMissionProgressArgs, context: any, info: any) {
+   return mockMissionProgress
+   const tokenPayload = await validateToken(context.headers.Authorization);
+   const userRole = await userService.getUserRole(tokenPayload.username);
+}
+
 const resolvers = {
    Query: {
       progressByCourse,
       userProgress,
-      progressOverview
+      progressOverview,
+      getAllMissionProgress
    },
    Mutation: {
       addProgress
