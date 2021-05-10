@@ -1,9 +1,12 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
-import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "../interfaces/objective";
-import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "./dynamodb";
+import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "./objectiveInterface";
+import dynamodb, {
+   GetCompositeParams,
+   PutCompositeParams,
+   QueryParams
+} from "../services/dynamodb";
 import * as helper from "./objectiveHelper";
-import * as targetService from "./target";
 
 export async function addObjective(input: ObjectiveInput) {
    try {

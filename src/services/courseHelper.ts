@@ -7,11 +7,11 @@ import {
    SubMissionItem,
    SubMissionPrefix
 } from "../interfaces/mission";
-import { ObjectiveItem, ObjectivePrefix } from "../interfaces/objective";
+import { ObjectiveItem, ObjectivePrefix } from "../objective/objectiveInterface";
 import { TargetItem, TargetPrefix } from "../interfaces/target";
 import { TaskPrefix } from "../interfaces/task";
 import { dbItemToSubMission, dbMissionItemToMission } from "./missionLogic";
-import { dbItemToObjective } from "./objectiveHelper";
+import { dbItemToObjective } from "../objective/objectiveHelper";
 import { dbItemToTarget } from "./targetHelper";
 import { dbItemToTask } from "./taskBusLogic";
 

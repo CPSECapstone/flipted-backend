@@ -1,14 +1,14 @@
-import * as service from "../services/objective";
+import * as service from "./objectiveService";
 
-async function addObjective(_: any, args: MutationAddObjectiveArgs, context: any, info: any) {
+async function addObjective(_: any, args: MutationAddObjectiveArgs) {
    return service.addObjective(args.objective);
 }
 
-async function getObjectiveById(_: any, args: QueryObjectiveArgs, context: any, info: any) {
+async function getObjectiveById(_: any, args: QueryObjectiveArgs) {
    return service.getObjectiveById(args.objectiveId);
 }
 
-async function listObjectivesByCourse(_: any, args: QueryObjectivesArgs, context: any, info: any) {
+async function listObjectivesByCourse(_: any, args: QueryObjectivesArgs) {
    return service.listObjectivesByCourse(args.course);
 }
 
