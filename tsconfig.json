@@ -19,6 +19,6 @@
       "strict": true
    },
    "files": ["src/@types/graphql.d.ts"],
-   "exclude": ["node_modules", ".serverless", ".webpack"],
+   "exclude": ["node_modules", ".serverless", ".webpack", ".build"],
    "include": ["src/**/*", "test/**/*", "data/**/*"]
 }

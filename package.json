@@ -10,6 +10,7 @@
       "data:courses": "node data/courses.js",
       "data:tasks": "node data/tasks.js",
       "data:progress": "node data/progress.js",
+      "data:frQuestions": "tsc -p .&& node ./.build/data/frQuestions.js",
       "format": "prettier --write .",
       "test": "NODE_ENV=development jest",
       "test:watch": "NODE_ENV=development jest --watchAll=true",

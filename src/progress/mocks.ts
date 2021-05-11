@@ -87,7 +87,7 @@ const mockObjectiveProgress: ObjectiveProgress[] = [
             taskId: "TASK#1234",
             taskName: "Task B",
             mastery: "MASTERED" as Mastery
-         },
+         }
       ]
    }
 ];

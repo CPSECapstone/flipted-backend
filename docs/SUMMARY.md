@@ -18,6 +18,7 @@
   * [Tasks](apis/tasks.md)
   * [Task Submissions](apis/task-submissions.md)
   * [Users](apis/users.md)
+  * [User Progress](apis/userProgress.md)
 
 * [Best Practice](best-practice/README.MD)
   * [Avoid using any type](best-practice/avoid_using_any_type.md)
