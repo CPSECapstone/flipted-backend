@@ -44,12 +44,38 @@ type TaskStats {
    submission: TaskSubmissionResult
 }
 
+type TargetProgress {
+   target: Target!
+   objectives: [ObjectiveProgress!]!
+   student: String!
+}
+
+type ObjectiveProgress {
+   objectiveId: String!
+   objectiveName: String!
+   tasks: [TaskObjectiveProgress!]!
+}
+
+type TaskObjectiveProgress {
+   taskId: String!
+   taskName: String!
+   mastery: Mastery!
+}
+
+enum Mastery {
+   NOT_GRADED
+   NOT_MASTERED
+   NEARLY_MASTERED
+   MASTERED
+}
+
 type Query {
    progressByCourse(course: String!): [UserProgress!]!
    userProgress(userName: String!, course: String!): UserProgress!
    progressOverview(course: String!): ProgressOverview!
 
    getAllMissionProgress(courseId: String!, username: String) : [MissionProgress!]!
+   getAllTargetProgress(courseId: String!, username: String) : [TargetProgress!]!
 }
 
 type Mutation {
