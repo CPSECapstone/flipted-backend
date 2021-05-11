@@ -115,6 +115,13 @@ type ImageBlockInput = {
   imageUrl: Scalars['String'];
 };
 
+enum Mastery {
+  NotGraded = 'NOT_GRADED',
+  NotMastered = 'NOT_MASTERED',
+  NearlyMastered = 'NEARLY_MASTERED',
+  Mastered = 'MASTERED'
+}
+
 type McQuestion = Question & {
   __typename?: 'McQuestion';
   id: Scalars['String'];
@@ -321,6 +328,13 @@ type ObjectiveInput = {
   taskIds: Array<Scalars['String']>;
 };
 
+type ObjectiveProgress = {
+  __typename?: 'ObjectiveProgress';
+  objectiveId: Scalars['String'];
+  objectiveName: Scalars['String'];
+  tasks: Array<TaskObjectiveProgress>;
+};
+
 type Page = {
   __typename?: 'Page';
   blocks: Array<TaskBlock>;
@@ -365,7 +379,8 @@ type Query = {
   courseInfo: CourseInfo;
   courseInfos: Array<CourseInfo>;
   getAllGoals: Array<Goal>;
-  getAllMissionProgress?: Maybe<MissionProgress>;
+  getAllMissionProgress: Array<MissionProgress>;
+  getAllTargetProgress: Array<TargetProgress>;
   /** Instructor only: get a user's goal given the user and the goal id */
   getGoalById: Goal;
   getUser?: Maybe<User>;
@@ -413,6 +428,12 @@ type QueryCourseInfosArgs = {
 
 
 type QueryGetAllMissionProgressArgs = {
+  courseId: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
+};
+
+
+type QueryGetAllTargetProgressArgs = {
   courseId: Scalars['String'];
   username?: Maybe<Scalars['String']>;
 };
@@ -643,6 +664,13 @@ type TargetInput = {
   course: Scalars['String'];
 };
 
+type TargetProgress = {
+  __typename?: 'TargetProgress';
+  target: Target;
+  objectives: Array<ObjectiveProgress>;
+  student: Scalars['String'];
+};
+
 type Task = {
   __typename?: 'Task';
   id: Scalars['String'];
@@ -680,6 +708,13 @@ type TaskInput = {
   missionId: Scalars['String'];
   missionIndex: Scalars['Int'];
   subMissionId?: Maybe<Scalars['String']>;
+};
+
+type TaskObjectiveProgress = {
+  __typename?: 'TaskObjectiveProgress';
+  taskId: Scalars['String'];
+  taskName: Scalars['String'];
+  mastery: Mastery;
 };
 
 type TaskProgress = {
