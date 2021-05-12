@@ -23,7 +23,6 @@ export function dbItemToObjective(item: ObjectiveItem): Objective {
       targetId: item.targetId,
       targetName: item.targetName,
       course: item.course,
-      taskIds: item.taskIds,
       tasks: []
    };
 }

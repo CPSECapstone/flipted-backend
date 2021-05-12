@@ -14,8 +14,7 @@ describe("add method", () => {
          description: "obj 1 description",
          targetId: "target id 1",
          targetName: "target name 1",
-         course: "Biology",
-         taskIds: []
+         course: "Biology"
       };
 
       const MockedDynamoDB = mocked(dynamodb, true);

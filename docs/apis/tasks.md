@@ -175,10 +175,9 @@ query {
 
 ```text
 query {
-  taskInfosByCourse(course: "Integrated Science") {
+  tasksByCourse(course: "Integrated Science") {
     id
     name
   }
 }
 ```
-
