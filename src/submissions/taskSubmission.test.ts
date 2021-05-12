@@ -10,7 +10,7 @@ import {
    TaskProgressItem,
    TaskSubmissionResult,
    TaskSubmissionResultItem
-} from "../../src/interfaces/taskSubmission";
+} from "./taskSubmissionInterface";
 import {
    answerToAnswerOut,
    createQuestionProgressOutput,
@@ -23,7 +23,7 @@ import {
    multipleChoiceAnswerInputToDBItem,
    taskProgressInputToDBItem,
    taskSubResultToDBItem
-} from "../../src/services/taskSubmissionHelper";
+} from "./taskSubmissionHelper";
 
 const mockMCAnswer: MultipleChoiceAnswer = {
    username: "user",
@@ -85,12 +85,14 @@ const mockTaskSubmissionResultItem: TaskSubmissionResultItem = {
    graded: false,
    pointsAwarded: 5,
    pointsPossible: 6,
+   courseId: "TestCourse",
+   missionId: "MISSION#123",
    questionAndAnswers: JSON.parse(JSON.stringify(mockQuestionAndAnswers))
 };
 
 describe("converting TaskSubmission types", () => {
    it("will convert from a TaskSubmissionResult to a TaskSubmissionResultItem", async () => {
-      expect(taskSubResultToDBItem(mockTaskSubmissionResult, username)).toEqual(
+      expect(taskSubResultToDBItem("TestCourse", "MISSION#123", mockTaskSubmissionResult, username)).toEqual(
          mockTaskSubmissionResultItem
       );
    });

@@ -1,4 +1,4 @@
-import { Answer, TaskSubmissionResult } from "../interfaces/taskSubmission";
+import { Answer, TaskSubmissionResult } from "./taskSubmissionInterface";
 import { validateToken } from "../jws-verifer";
 import * as questionService from "../services/question";
 import {
@@ -7,7 +7,7 @@ import {
    quizBlockContainsQuestionIdWithPrefix
 } from "../services/questionHelper";
 import taskService from "../services/task";
-import taskSubmissionService from "../services/taskSubmission";
+import taskSubmissionService from "./taskSubmission";
 import {
    areTaskProgressIdsValid,
    freeResponseAnswerInputToDBItem,
@@ -17,7 +17,7 @@ import {
    taskQuestionsAllAnswered,
    createTaskSubmissionResult,
    createQuestionProgressOutput
-} from "../services/taskSubmissionHelper";
+} from "./taskSubmissionHelper";
 import quizblockService from "../services/taskblock";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: any) {
@@ -147,7 +147,7 @@ async function submitTask(_: any, args: any, context: any, info: any) {
    );
 
    // save the constructed submission to the database for grading and retrieval
-   taskSubmissionService.submitTaskForGrading(taskSubmissionResult, username);
+   taskSubmissionService.submitTaskForGrading(task, taskSubmissionResult, username);
 
    // return to user
    return taskSubmissionResult;

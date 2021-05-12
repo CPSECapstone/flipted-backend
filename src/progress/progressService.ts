@@ -9,6 +9,11 @@ import * as helper from "./progressHelper";
 import { ProgressPK } from "./progressInterface";
 import * as courseService from "../services/course";
 import usersData from "./users.json";
+import { TaskSubmissionResult, TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
+import taskSubmissionService from "../submissions/taskSubmission";
+import missionService from "../services/mission";
+import taskService from "../services/task";
+import { generateMissionProgress } from "./progressHelper";
 
 export async function addProgress(input: ProgressInput): Promise<string> {
    const courseItem = helper.progressInputToDBItem(input);
@@ -116,3 +121,13 @@ export async function deleteProgress(input: ProgresssDeletionInput): Promise<num
       return err;
    }
 }
+
+export async function getAllMissionProgressForUser(course: string, username: string) : Promise<MissionProgress[]> {
+    const missions: Promise<Mission[]> = missionService.listByCourse(course)
+    const tasks: Promise<Task[]> = taskService.listTasksByCourse(course)
+    const taskSubmissions: Promise<TaskSubmissionResultItem[]> = taskSubmissionService.listUserSubmissionsByCourse(course, username) // TODO: write this
+    const missionProgress: MissionProgress[] = generateMissionProgress(await missions, await tasks, await taskSubmissions) // TODO: write this
+    return missionProgress
+}
+
+

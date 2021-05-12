@@ -31,6 +31,8 @@ export interface TaskSubmissionResultItem {
    pointsAwarded: number;
    pointsPossible: number;
    teacherComment?: string;
+   missionId: string
+   courseId: string
    questionAndAnswers?: QuestionAndAnswer[];
 }
 

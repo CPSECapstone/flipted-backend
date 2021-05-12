@@ -18,7 +18,7 @@ import userResolvers from "./user.resolver";
 import courseResolvers from "./course.resolver";
 import taskResolvers from "./task.resolver";
 import questionResolvers from "./question.resolver";
-import quizTaskSubmissionResolvers from "./taskSubmission.resolver";
+import quizTaskSubmissionResolvers from "../submissions/taskSubmission.resolver";
 import missionResolvers from "./mission.resolver";
 import taskblockResolvers from "./taskblock.resolver";
 import objectiveResolvers from "../objective/objective.resolver";

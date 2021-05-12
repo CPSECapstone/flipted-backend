@@ -6,9 +6,9 @@ import {
    TaskProgressItem,
    TaskSubmissionResult,
    TaskSubmissionResultItem
-} from "../interfaces/taskSubmission";
+} from "./taskSubmissionInterface";
 
-import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "./dynamodb";
+import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "../services/dynamodb";
 import {
    dbItemsToQuestionAnswerItems,
    dbItemToTaskProgress,
@@ -101,8 +101,8 @@ async function getQuizProgressForTask(taskId: string, username: string): Promise
    throw new Error(`Task not found with id=${taskId}`);
 }
 
-async function submitTaskForGrading(taskResult: TaskSubmissionResult, username: string) {
-   const dbItem: TaskSubmissionResultItem = taskSubResultToDBItem(taskResult, username);
+async function submitTaskForGrading(task: Task, taskResult: TaskSubmissionResult, username: string) {
+   const dbItem: TaskSubmissionResultItem = taskSubResultToDBItem(task.course, task.missionId, taskResult, username);
 
    const params: PutCompositeParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
@@ -115,13 +115,40 @@ async function submitTaskForGrading(taskResult: TaskSubmissionResult, username: 
    }
 }
 
+async function listUserSubmissionsByCourse(course: string, username: string): Promise<TaskSubmissionResultItem[]> {
+   const params: QueryParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      indexName: "course-PK-index",
+      keyConditionExpression: "course = :courseVal and PK = :pkVal",
+      expressionAttributeValues: {
+         ":courseVal": course,
+         ":pkVal": `TASK_SUBMISSION#${username}`
+      }
+   };
+
+   try {
+      const output = await dynamodb.query(params);
+      if (output.Items) {
+         const submissions = output.Items.map(rawItem => {
+            return <TaskSubmissionResultItem>unmarshall(rawItem);
+         });
+         return submissions;
+      }
+
+      return [];
+   } catch (err) {
+      throw err;
+   }
+}
+
 const taskSubmissionService = {
    submitQuestionAnswer,
    submitTaskProgress,
    submitTaskForGrading,
    getTaskSubmission,
    getQuizProgressForTask,
-   getTaskRubricProgress
+   getTaskRubricProgress,
+   listUserSubmissionsByCourse
 };
 
 export default taskSubmissionService;

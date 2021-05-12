@@ -1,4 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
 import { ProgressPK, ProgressSK } from "./progressInterface";
 import { ProgressItem } from "./progressInterface";
 
@@ -57,4 +58,8 @@ export function dbItemsToProgressList(items: any[]): UserProgress[] {
    }
 
    return progressList;
+}
+
+export function generateMissionProgress(missions: Mission[], arg1: Task[], arg2: TaskSubmissionResultItem[]): MissionProgress[] {
+   throw new Error("Function not implemented.");
 }

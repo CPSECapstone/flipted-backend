@@ -11,9 +11,11 @@ import {
    AnswerOut,
    TaskSubmissionResultItem,
    QuestionProgress
-} from "../interfaces/taskSubmission";
+} from "./taskSubmissionInterface";
 
 export function taskSubResultToDBItem(
+   courseId: string,
+   missionId: string,
    input: TaskSubmissionResult,
    username: string
 ): TaskSubmissionResultItem {
@@ -24,7 +26,9 @@ export function taskSubResultToDBItem(
       pointsAwarded: input.pointsAwarded,
       pointsPossible: input.pointsPossible,
       teacherComment: input.teacherComment,
-      questionAndAnswers: input.questionAndAnswers
+      questionAndAnswers: input.questionAndAnswers,
+      missionId: missionId,
+      courseId: courseId
    };
 
    return output;
