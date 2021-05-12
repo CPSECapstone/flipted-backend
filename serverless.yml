@@ -2,6 +2,7 @@ service: apollo-lambda
 provider:
    name: aws
    runtime: nodejs12.x
+   stage: ${env:PROVIDER_STAGE}
    iamRoleStatements:
       - Effect:
            "Allow"
@@ -19,7 +20,7 @@ functions:
               path: graphql
               method: post
               cors: true
-              authorizor: arn:userpool-${env:STAGE}
+              authorizor: arn:userpool-${env:AUTHORIZOR_STAGE}
          - http:
               path: graphql
               method: get

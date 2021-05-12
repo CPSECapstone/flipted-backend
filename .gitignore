@@ -26,4 +26,6 @@ yarn.lock
 .dynamodb
 .webpack
 .env
+.env.development
+.env.production
 .build

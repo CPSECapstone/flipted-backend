@@ -1,11 +1,9 @@
-import { TABLE_NAME } from "../environment";
+import { QUESTIONS_TABLE } from "../environment";
 import dynamodb, { BatchGetParams, BatchWriteParams, GetParams, PutParams } from "./dynamodb";
 import { QuestionItem } from "../interfaces/question";
 import * as helper from "./questionHelper";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { BatchWriteItemCommandOutput } from "@aws-sdk/client-dynamodb";
-
-const QUESTIONS_TABLE = TABLE_NAME("Questions");
 
 export async function addQuestion(dbItem: QuestionItem) {
    const params: PutParams = {
@@ -95,7 +93,7 @@ export async function batchWriteFrQuestions(
 ): Promise<BatchWriteItemCommandOutput> {
    const items = questions.map(helper.frQuestionInputToDBItem);
    const params: BatchWriteParams = {
-      tableName: TABLE_NAME("Questions"),
+      tableName: QUESTIONS_TABLE,
       items
    };
    try {
