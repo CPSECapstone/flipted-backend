@@ -1,4 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { dbItemToTaskSubmissionResult } from "../submissions/taskSubmissionHelper";
 import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
 import { ProgressPK, ProgressSK } from "./progressInterface";
 import { ProgressItem } from "./progressInterface";
@@ -60,6 +61,50 @@ export function dbItemsToProgressList(items: any[]): UserProgress[] {
    return progressList;
 }
 
-export function generateMissionProgress(missions: Mission[], arg1: Task[], arg2: TaskSubmissionResultItem[]): MissionProgress[] {
-   throw new Error("Function not implemented.");
+function generateTaskStats(mission: Mission,  tasks: Task[], submissions: TaskSubmissionResultItem[]) : TaskStats[] {
+   const ret: TaskStats[] = []
+   for (var task of tasks) {
+      
+      if(task.missionId != mission.id) throw new Error("Invalid parameter! All tasks must have mission id of provided mission")
+
+      const submissionResult: TaskSubmissionResultItem | undefined = submissions.find(submission => {
+         return submission.SK == task.id
+      })
+
+      var taskStat: TaskStats = {
+         taskId: task.id,
+         name: task.name,
+      }
+
+      if(submissionResult) {
+         taskStat.submission = dbItemToTaskSubmissionResult(submissionResult)
+      }
+
+      ret.push(taskStat)
+   }
+   return ret
+}
+
+export function generateMissionProgress(missions: Mission[], tasks: Task[], submissions: TaskSubmissionResultItem[], user: string): MissionProgress[] {
+   const ret: MissionProgress[] = []
+   for (var mission of missions) {
+      const filteredTasks: Task[] = tasks.filter(task => {
+         return task.missionId == mission.id
+      });
+   
+      const filteredResults: TaskSubmissionResultItem[] = submissions.filter(submission => {
+         return submission.missionId == mission.id
+      })
+
+      console.log(filteredTasks)
+
+      var missionProg: MissionProgress = {
+         mission: mission, 
+         student: user,
+         progress: generateTaskStats(mission, filteredTasks, filteredResults)
+      }
+
+      ret.push(missionProg)
+   }
+   return ret
 }

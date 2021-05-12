@@ -6,7 +6,7 @@ import userType from "./user.graphql";
 import missionType from "./mission.graphql";
 import courseType from "./course.graphql";
 import taskType from "./task.graphql";
-import quizTaskSubmission from "./taskSubmission.graphql";
+import quizTaskSubmission from "../submissions/taskSubmission.graphql";
 import questionType from "./question.graphql";
 import taskblockType from "./taskblock.graphql";
 import objectiveType from "../objective/objective.graphql";

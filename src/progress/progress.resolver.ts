@@ -3,6 +3,7 @@ import userService from "../services/user";
 import { mockMissionProgress, mockTargetProgress } from "./mocks";
 import * as service from "./progressService";
 import * as courseService from "../services/course";
+import { RoleInternal } from "../interfaces/role";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
    return await service.addProgress(args.progress);
@@ -23,7 +24,7 @@ async function progressOverview(_: any, args: QueryProgressOverviewArgs) {
 async function getAllMissionProgress(_: any, args: QueryGetAllMissionProgressArgs, context: any, info: any) : Promise<MissionProgress[]> {
    const tokenPayload = await validateToken(context.headers.Authorization);
    const userRole = await userService.getUserRole(tokenPayload.username);
-   return await service.getAllMissionProgressForUser(args.courseId, tokenPayload.username)
+   return await service.getAllMissionProgressForUser(args.courseId, userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username)
 }
 
 async function getAllTargetProgress(_: any, args: QueryGetAllTargetProgressArgs, context: any, info: any) {

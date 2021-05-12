@@ -4,7 +4,6 @@ import {
    Answer,
    QuestionAnswerItem,
    TaskProgressItem,
-   TaskSubmissionResult,
    TaskSubmissionResultItem
 } from "./taskSubmissionInterface";
 

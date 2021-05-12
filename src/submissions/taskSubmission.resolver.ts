@@ -1,4 +1,4 @@
-import { Answer, TaskSubmissionResult } from "./taskSubmissionInterface";
+import { Answer } from "./taskSubmissionInterface";
 import { validateToken } from "../jws-verifer";
 import * as questionService from "../services/question";
 import {

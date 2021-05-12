@@ -25,7 +25,7 @@ export const mockTasks: Task[] = [
    },
    {
       id: "TASK#3",
-      name: "Mock Task 3",
+      name: "Mock Task 3: Submitted yet not graded",
       instructions: "",
       points: 10,
       pages: [],
@@ -36,7 +36,7 @@ export const mockTasks: Task[] = [
    },
    {
       id: "TASK#4",
-      name: "Mock Task 4",
+      name: "Mock Task 4: No Submission",
       instructions: "",
       points: 10,
       pages: [],
@@ -91,7 +91,7 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
       pointsAwarded: 93,
       pointsPossible: 100,
       missionId: "MISSION#123",
-      courseId: "My Awesome Backend Mock Course"
+      course: "My Awesome Backend Mock Course"
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
@@ -100,23 +100,21 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
       pointsAwarded: 14,
       pointsPossible: 25,
       missionId: "MISSION#123",
-      courseId: "My Awesome Backend Mock Course"
+      course: "My Awesome Backend Mock Course"
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
       SK: "TASK#3", // task id
       graded: false,
       missionId: "MISSION#123",
-      courseId: "My Awesome Backend Mock Course",
-      pointsAwarded: 0,
-      pointsPossible: 0
+      course: "My Awesome Backend Mock Course",
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
       SK: "TASK#5", // task id
-      graded: false,
+      graded: true,
       missionId: "MISSION#456",
-      courseId: "My Awesome Backend Mock Course",
+      course: "My Awesome Backend Mock Course",
       pointsAwarded: 8,
       pointsPossible: 10
    }
@@ -126,17 +124,17 @@ const mockTaskStats_1: TaskStats[] = [
    {
       taskId: "TASK#1",
       name: "Mock Task 1",
-      submission: { graded: true, pointsAwarded: 93, pointsPossible: 100 }
+      submission: { graded: true, pointsAwarded: 93, pointsPossible: 100, taskId: "TASK#1"}
    },
    {
       taskId: "TASK#2",
       name: "Mock Task 2",
-      submission: { graded: true, pointsAwarded: 14, pointsPossible: 25 }
+      submission: { graded: true, pointsAwarded: 14, pointsPossible: 25, taskId: "TASK#2" }
    },
    {
       taskId: "TASK#3",
       name: "Mock Task 3: Submitted yet not graded",
-      submission: { graded: false }
+      submission: { graded: false, taskId: "TASK#3"}
    },
    {
       taskId: "TASK#4",
@@ -148,7 +146,7 @@ const mockTaskStats_2: TaskStats[] = [
    {
       taskId: "TASK#5",
       name: "Mock Task 5",
-      submission: { graded: true, pointsAwarded: 8, pointsPossible: 10 }
+      submission: { graded: true, pointsAwarded: 8, pointsPossible: 10, taskId: "TASK#5" }
    },
    {
       taskId: "TASK#6",

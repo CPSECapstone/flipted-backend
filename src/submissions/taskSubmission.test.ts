@@ -5,10 +5,8 @@ import {
    FreeResponseAnswerItem,
    MultipleChoiceAnswer,
    MultipleChoiceAnswerItem,
-   QuestionAndAnswer,
    QuestionProgress,
    TaskProgressItem,
-   TaskSubmissionResult,
    TaskSubmissionResultItem
 } from "./taskSubmissionInterface";
 import {
@@ -71,12 +69,13 @@ const mockQuestionAndAnswers: QuestionAndAnswer[] = [
       answer: { pointsAwarded: 3, answer: "I like BUBBLES!", questionId: "FR_QUESTION#123" }
    }
 ];
+
 const mockTaskSubmissionResult: TaskSubmissionResult = {
    graded: false,
-   taskId: "TASK#123",
    pointsAwarded: 5,
    pointsPossible: 6,
-   questionAndAnswers: mockQuestionAndAnswers
+   questionAndAnswers: mockQuestionAndAnswers,
+   taskId: "TASK#123"
 };
 
 const mockTaskSubmissionResultItem: TaskSubmissionResultItem = {
@@ -85,7 +84,7 @@ const mockTaskSubmissionResultItem: TaskSubmissionResultItem = {
    graded: false,
    pointsAwarded: 5,
    pointsPossible: 6,
-   courseId: "TestCourse",
+   course: "TestCourse",
    missionId: "MISSION#123",
    questionAndAnswers: JSON.parse(JSON.stringify(mockQuestionAndAnswers))
 };

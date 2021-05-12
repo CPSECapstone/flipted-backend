@@ -765,6 +765,7 @@ type TaskSubmissionResult = {
    */
   questionAndAnswers?: Maybe<Array<QuestionAndAnswer>>;
   teacherComment?: Maybe<Scalars['String']>;
+  taskId: Scalars['String'];
 };
 
 type TextBlock = TaskBlock & {

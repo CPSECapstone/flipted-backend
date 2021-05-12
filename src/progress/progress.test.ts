@@ -9,6 +9,6 @@ describe("Generating mission progress for each mission in a course", () => {
       const tasks: Task[] = progressMocks.mockTasks
       const taskSubmissionItems: TaskSubmissionResultItem[] = progressMocks.mockTaskSubmissionItems
 
-      expect(generateMissionProgress(missions, tasks, taskSubmissionItems)).toEqual(progressMocks.mockMissionProgress)
+      expect(generateMissionProgress(missions, tasks, taskSubmissionItems, "MOCKUSER_123")).toEqual(progressMocks.mockMissionProgress)
    });
 });
