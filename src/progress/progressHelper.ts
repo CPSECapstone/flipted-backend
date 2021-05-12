@@ -96,8 +96,6 @@ export function generateMissionProgress(missions: Mission[], tasks: Task[], subm
          return submission.missionId == mission.id
       })
 
-      console.log(filteredTasks)
-
       var missionProg: MissionProgress = {
          mission: mission, 
          student: user,
