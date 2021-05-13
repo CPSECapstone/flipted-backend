@@ -5,18 +5,14 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ feat-ci ]
+    branches: [ dev ]
   pull_request:
-    branches: [ feat-ci ]
+    branches: [ dev ]
+    types: [closed]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    env:
-      PROVIDER_STAGE: dev-zzheng07
-      DATABASE_STAGE: dev
-      AUTHORIZOR_STAGE: dev
 
     strategy:
       matrix:
