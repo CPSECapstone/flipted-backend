@@ -13,6 +13,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      PROVIDER_STAGE: dev-zzheng07
+      DATABASE_STAGE: dev
+      AUTHORIZOR_STAGE: dev
 
     strategy:
       matrix:
@@ -24,6 +28,19 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run deploy
+        node-version: ${{ matrix.node-version }}        
+    - name: Install Serverless Framework
+      run: npm install -g serverless      
+    - name: Serverless AWS authentication
+      run: sls config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Create env file
+      run: | # cp sample.env.yml env.yml
+        cat > .env.development << EOF
+        PROVIDER_STAGE=${{ secrets.PROVIDER_STAGE }}
+        DATABASE_STAGE=${{ secrets.DATABASE_STAGE }}
+        AUTHORIZOR_STAGE=${{ secrets.AUTHORIZOR_STAGE }}
+        EOF
+    - name: Install NPM dependencies
+      run: npm install
+    - name: Deploy Lambda functions
+      run: npm run deploy
