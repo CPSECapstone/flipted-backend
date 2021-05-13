@@ -1,5 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { TABLE_NAME } from "../environment";
+import { TASK_SUBMISSIONS_TABLE } from "../environment";
 import {
    Answer,
    QuestionAnswerItem,
@@ -15,8 +15,6 @@ import {
    dbItemToTaskSubmissionResult,
    taskSubResultToDBItem
 } from "./taskSubmissionHelper";
-
-const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
 
 async function submitTaskProgress(taskProgress: TaskProgressItem) {
    const params: PutCompositeParams = {

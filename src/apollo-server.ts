@@ -1,11 +1,12 @@
 import { ApolloServer } from "apollo-server-lambda";
 import { typeDefs, resolvers } from "./schema";
+import { environment } from "./environment";
 
 const apolloServer = new ApolloServer({
    typeDefs,
    resolvers,
    playground: {
-      endpoint: "/dev/graphql"
+      endpoint: `/${environment.providerStage}/graphql`
    },
    context: ({ event, context }) => {
       return {

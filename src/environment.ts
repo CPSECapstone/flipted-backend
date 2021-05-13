@@ -1,17 +1,24 @@
 //EXAMPLE ENVIRONMENT VARIABLE OBJECT UTILIZING .env FILES
 type Environment = {
-   stage: string;
+   databaseStage: string;
+   providerStage: string;
 };
 
 export const environment: Environment = {
-   stage: (process.env.STAGE as string) || "dev"
+   providerStage: (process.env.PROVIDER_STAGE as string) || "dev",
+   databaseStage: (process.env.DATABASE_STAGE as string) || "dev"
 };
 
+// NOW all deployments use the same same database.
+// If in future, we need to separate the database into prod version and dev version
+// update this method
 export function TABLE_NAME(name: string): string {
-   return `flipted-${environment.stage}-${name}`;
+   return `flipted-${environment.databaseStage}-${name}`;
 }
 
-export const USERS_TABLE_NAME: string = "flipted-dev-Users";
-export const COURSE_CONTENT_TABLE_NAME: string = "flipted-dev-CourseContent";
-export const USER_PROGRESS_TABLE_NAME: string = "flipted-dev-UserProgress";
-export const GOALS_TABLE_NAME: string = "flipted-dev-Goals";
+export const USERS_TABLE_NAME = TABLE_NAME("Users");
+export const COURSE_CONTENT_TABLE_NAME = TABLE_NAME("CourseContent");
+export const USER_PROGRESS_TABLE_NAME = TABLE_NAME("UserProgress");
+export const GOALS_TABLE_NAME = TABLE_NAME("Goals");
+export const QUESTIONS_TABLE = TABLE_NAME("Questions");
+export const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
