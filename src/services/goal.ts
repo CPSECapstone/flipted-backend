@@ -2,10 +2,10 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { GOALS_TABLE_NAME } from "../environment";
 import { GoalItem } from "../interfaces/goal";
 import { RoleInternal } from "../interfaces/role";
-import { QuestionAnswerItem } from "../interfaces/taskSubmission";
+import { QuestionAnswerItem } from "../submissions/taskSubmissionInterface";
 import dynamodb, { GetCompositeParams, GetParams, PutCompositeParams, QueryParams } from "./dynamodb";
 import { convertGoalInputToItem, dbGoalItemToGoal } from "./goalLogic";
-import { dbItemsToQuestionAnswerItems } from "./taskSubmissionHelper";
+import { dbItemsToQuestionAnswerItems } from "../submissions/taskSubmissionHelper";
 
 const GOAL_TABLE = GOALS_TABLE_NAME
 

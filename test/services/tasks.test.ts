@@ -1,13 +1,13 @@
 import dynamodbMock from "../__mocks__/dynamodb";
 import taskBusLogic from "../../src/services/taskBusLogic";
-import { Answer } from "../../src/interfaces/taskSubmission";
+import { Answer } from "../../src/submissions/taskSubmissionInterface";
 
 import {
    areTaskProgressIdsValid,
    taskQuestionsAllAnswered,
    taskRubricRequirementsComplete
-} from "../../src/services/taskSubmissionHelper";
-import taskSubmission from "../../src/services/taskSubmission";
+} from "../../src/submissions/taskSubmissionHelper";
+import taskSubmission from "../../src/submissions/taskSubmission";
 
 const mockDate: Date = new Date(0);
 const sampleTask = {
