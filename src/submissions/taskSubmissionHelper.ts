@@ -1,19 +1,19 @@
 import {
    FreeResponseAnswer,
    FreeResponseAnswerItem,
-   QuestionAndAnswer,
    MultipleChoiceAnswer,
    MultipleChoiceAnswerItem,
    Answer,
    QuestionAnswerItem,
    TaskProgressItem,
-   TaskSubmissionResult,
    AnswerOut,
    TaskSubmissionResultItem,
    QuestionProgress
-} from "../interfaces/taskSubmission";
+} from "./taskSubmissionInterface";
 
 export function taskSubResultToDBItem(
+   course: string,
+   missionId: string,
    input: TaskSubmissionResult,
    username: string
 ): TaskSubmissionResultItem {
@@ -21,17 +21,31 @@ export function taskSubResultToDBItem(
       PK: "TASK_SUBMISSION#" + username,
       SK: input.taskId,
       graded: false,
-      pointsAwarded: input.pointsAwarded,
-      pointsPossible: input.pointsPossible,
-      teacherComment: input.teacherComment,
-      questionAndAnswers: input.questionAndAnswers
+      missionId: missionId,
+      course: course
    };
+
+   if (input.pointsAwarded) {
+      output.pointsAwarded = input.pointsAwarded
+   }
+
+   if (input.pointsPossible) {
+      output.pointsPossible = input.pointsPossible
+   }
+
+   if(input.teacherComment) {
+      output.teacherComment = input.teacherComment
+   }
+
+   if(input.questionAndAnswers) {
+      output.questionAndAnswers = input.questionAndAnswers
+   }
 
    return output;
 }
 
-export function dbItemToTaskSubmissionResult(item: TaskSubmissionResultItem) {
-   const output: TaskSubmissionResult = {
+export function dbItemToTaskSubmissionResult(item: TaskSubmissionResultItem) : TaskSubmissionResult {
+   const output: any = {
       graded: item.graded,
       pointsAwarded: item.pointsAwarded,
       pointsPossible: item.pointsPossible,
@@ -39,6 +53,8 @@ export function dbItemToTaskSubmissionResult(item: TaskSubmissionResultItem) {
       questionAndAnswers: item.questionAndAnswers,
       taskId: item.SK
    };
+
+   Object.keys(output).forEach(key => output[key] === undefined && delete output[key])
    return output;
 }
 
