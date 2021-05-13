@@ -28,9 +28,11 @@ export interface TaskSubmissionResultItem {
    PK: string; // #TASK_SUBMISSION + username
    SK: string; // task id
    graded: boolean;
-   pointsAwarded: number;
-   pointsPossible: number;
+   pointsAwarded?: number;
+   pointsPossible?: number;
    teacherComment?: string;
+   missionId: string
+   course: string
    questionAndAnswers?: QuestionAndAnswer[];
 }
 
@@ -49,21 +51,6 @@ export interface MultipleChoiceAnswer extends Answer {
 
 export interface FreeResponseAnswer extends Answer {
    answer: string;
-}
-
-/** Mirrors GraphQL return type */
-export interface TaskSubmissionResult {
-   graded: boolean;
-   taskId: string;
-   pointsAwarded: number;
-   pointsPossible: number;
-   teacherComment?: string;
-   questionAndAnswers?: QuestionAndAnswer[];
-}
-
-export interface QuestionAndAnswer {
-   question: Question;
-   answer: AnswerOut;
 }
 
 export interface AnswerOut {

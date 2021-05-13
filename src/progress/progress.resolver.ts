@@ -2,27 +2,29 @@ import { validateToken } from "../jws-verifer";
 import userService from "../services/user";
 import { mockMissionProgress, mockTargetProgress } from "./mocks";
 import * as service from "./progressService";
+import * as courseService from "../services/course";
+import { RoleInternal } from "../interfaces/role";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
-   return service.addProgress(args.progress);
+   return await service.addProgress(args.progress);
 }
 
 async function progressByCourse(_: any, args: QueryProgressByCourseArgs) {
-   return service.getProgressByCourse(args.course);
+   return await service.getProgressByCourse(args.course);
 }
 
 async function userProgress(_: any, args: QueryUserProgressArgs) {
-   return service.getUserProgress(args.userName, args.course);
+   return await service.getUserProgress(args.userName, args.course);
 }
 
 async function progressOverview(_: any, args: QueryProgressOverviewArgs) {
-   return service.getProgressOverview(args.course);
+   return await service.getProgressOverview(args.course);
 }
 
-async function getAllMissionProgress(_: any, args: QueryGetAllMissionProgressArgs, context: any, info: any) {
-   return mockMissionProgress
+async function getAllMissionProgress(_: any, args: QueryGetAllMissionProgressArgs, context: any, info: any) : Promise<MissionProgress[]> {
    const tokenPayload = await validateToken(context.headers.Authorization);
    const userRole = await userService.getUserRole(tokenPayload.username);
+   return await service.getAllMissionProgressForUser(args.courseId, userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username)
 }
 
 async function getAllTargetProgress(_: any, args: QueryGetAllTargetProgressArgs, context: any, info: any) {
