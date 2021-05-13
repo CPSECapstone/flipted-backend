@@ -125,6 +125,8 @@ type TaskSubmissionResult {
    questionAndAnswers: [QuestionAndAnswer!]
 
    teacherComment: String
+
+   taskId: String!
 }
 
 type Answer {

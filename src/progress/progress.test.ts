@@ -1,37 +1,14 @@
 import * as service from "./progressService";
+import * as progressMocks from "./mocks"
+import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
+import { generateMissionProgress } from "./progressHelper";
 
-// talk to the real db
-describe("addProgress method", () => {
-   it("should delete progress item", async () => {
-      const progress: ProgressInput = {
-         userName: "Test User",
-         course: "Test Course",
-         taskId: "test taskId",
-         status: false
-      };
+describe("Generating mission progress for each mission in a course", () => {
+   it("Should display task submission progress in task stats when it exists", async () => {
+      const missions: Mission[] = [progressMocks.mockMission_1, progressMocks.mockMission_2]
+      const tasks: Task[] = progressMocks.mockTasks
+      const taskSubmissionItems: TaskSubmissionResultItem[] = progressMocks.mockTaskSubmissionItems
 
-      const expected: UserProgress = {
-         userName: "Test User",
-         progress: [
-            {
-               taskId: "test taskId",
-               status: false
-            }
-         ]
-      };
-
-      const input: ProgresssDeletionInput = {
-         userName: "Test User",
-         course: "Test Course",
-         taskId: "test taskId"
-      };
-
-      return service.addProgress(progress).then((result: string) => {
-         expect(result).toEqual(progress.taskId);
-         return service.getUserProgress("Test User", "Test Course").then(actual => {
-            expect(expected).toEqual(actual);
-            return service.deleteProgress(input);
-         });
-      });
+      expect(generateMissionProgress(missions, tasks, taskSubmissionItems, "MOCKUSER_123")).toEqual(progressMocks.mockMissionProgress)
    });
 });
