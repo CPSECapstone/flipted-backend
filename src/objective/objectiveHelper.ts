@@ -8,6 +8,7 @@ export function objectiveInputToDBItem(input: ObjectiveInput): ObjectiveItem {
    const item: ObjectiveItem = {
       PK: ObjectiveKey(objectiveId),
       SK: ObjectiveKey(objectiveId),
+      tasks: [], // TODO: ADD LIST OF TASK IDS AS STRINGS
       objectiveId,
       ...input
    };
