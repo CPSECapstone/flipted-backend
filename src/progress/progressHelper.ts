@@ -143,8 +143,21 @@ function generateObjectiveProgress(
       ret.push({
          objectiveId: obj.objectiveId,
          objectiveName: obj.objectiveName,
-         tasks: filteredMasteryItems.map(item => {
-            return dbItemToMastery(item);
+         tasks: obj.taskIds.map(taskId => {
+            const masteryItem: MasteryItem | undefined = filteredMasteryItems.find(item => {
+               return item.taskId == taskId
+            })
+            
+            if(masteryItem) {
+               return dbItemToMastery(masteryItem);
+            }
+
+            // No mastery item exists, but we still want an entry
+            return {
+               objectiveId: obj.objectiveId,
+               taskId: taskId,
+               mastery: "NOT_GRADED" as Mastery
+            }
          })
       });
    }

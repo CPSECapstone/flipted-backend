@@ -311,15 +311,6 @@ export const mockMasteryItems: MasteryItem[] = [
       mastery: "NOT_GRADED"
    },
    {
-      PK: "TASK#6",
-      SK: "OBJECTIVE#2",
-      username: "USER_123",
-      taskId: "TASK#6",
-      objectiveId: "OBJECTIVE#3",
-      course: "Mocking 101",
-      mastery: "NOT_GRADED"
-   },
-   {
       PK: "TASK#5",
       SK: "OBJECTIVE#4",
       username: "USER_123",
