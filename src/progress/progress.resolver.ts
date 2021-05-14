@@ -28,7 +28,9 @@ async function getAllMissionProgress(_: any, args: QueryGetAllMissionProgressArg
 }
 
 async function getAllTargetProgress(_: any, args: QueryGetAllTargetProgressArgs, context: any, info: any) {
-   return mockTargetProgress
+   const tokenPayload = await validateToken(context.headers.Authorization);
+   const userRole = await userService.getUserRole(tokenPayload.username);
+   return await service.getAllTargetProgressForUser(args.courseId, userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username)
 }
 
 const resolvers = {

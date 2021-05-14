@@ -59,6 +59,7 @@ type ObjectiveProgress {
 type TaskObjectiveProgress {
    taskId: String!
    taskName: String!
+   objective: Objective!
    mastery: Mastery!
 }
 

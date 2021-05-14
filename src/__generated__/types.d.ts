@@ -716,6 +716,7 @@ type TaskObjectiveProgress = {
   __typename?: 'TaskObjectiveProgress';
   taskId: Scalars['String'];
   taskName: Scalars['String'];
+  objective: Objective;
   mastery: Mastery;
 };
 
