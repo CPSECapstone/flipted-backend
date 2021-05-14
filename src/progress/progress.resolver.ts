@@ -1,9 +1,9 @@
 import { validateToken } from "../jws-verifer";
 import userService from "../services/user";
-import { mockMissionProgress, mockTargetProgress } from "./mocks";
 import * as service from "./progressService";
-import * as courseService from "../services/course";
 import { RoleInternal } from "../interfaces/role";
+import { getTask } from "../schema/task.resolver";
+import { getObjective } from "../objective/objective.resolver";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
    return await service.addProgress(args.progress);
@@ -43,6 +43,10 @@ const resolvers = {
    },
    Mutation: {
       addProgress
+   },
+   TaskObjectiveProgress: {
+      task: getTask,
+      objective: getObjective
    },
    Mastery: {
       NOT_GRADED: "NOT_GRADED",

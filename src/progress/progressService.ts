@@ -150,14 +150,14 @@ export async function getAllMissionProgressForUser(
 export async function getAllTargetProgressForUser(
    course: string,
    username: string
-): Promise<TargetProgress[]> {
+) {
 
    const targets: Promise<Target[]> = listTargetsByCourse(course)
 
    // TODO: Need to change objective item definition to return list of task ids 
    const objectives: Promise<ObjectiveItem[]> = listObjectiveItemsByCourse(course)
    const userMasteryItems: Promise<MasteryItem[]> = listUserMasteryItemsByCourse(username, course)
-   const targetProgress: TargetProgress[] = generateTargetProgress(await targets, await objectives, await userMasteryItems, username)
+   const targetProgress = generateTargetProgress(await targets, await objectives, await userMasteryItems, username)
    return targetProgress
 }
 

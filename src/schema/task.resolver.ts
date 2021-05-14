@@ -21,6 +21,10 @@ async function getTaskById(_: any, args: any, context: any, info: any) {
    return task;
 }
 
+export async function getTask(parent: any) {
+  taskService.getTaskById(parent.id)
+}
+
 async function listTasksBySubmissionId(_: any, args: any, context: any, info: any) {
    const subMissionId: string = args.subMissionId;
    return taskService.listBySubMissionId(subMissionId);

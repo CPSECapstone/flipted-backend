@@ -355,28 +355,25 @@ export const mockTarget_2: Target = {
    objectives: []
 };
 
-const mockObjectiveProgress_T1: ObjectiveProgress[] = [
+const mockObjectiveProgress_T1 = [
    {
       objectiveId: "OBJECTIVE#1",
       objectiveName: "Objective 1",
       tasks: [
          {
-            taskId: "TASK#1",
-            taskName: "Mock Task 1",
             mastery: "MASTERED" as Mastery,
-            objective: mockObjectives[0]
+            objectiveId: "OBJECTIVE#1",
+            taskId: "TASK#1"
          },
          {
-            taskId: "TASK#2",
-            taskName: "Mock Task 2",
             mastery: "NEARLY_MASTERED" as Mastery,
-            objective: mockObjectives[0]
+            objectiveId: "OBJECTIVE#1",
+            taskId: "TASK#2"
          },
          {
-            taskId: "TASK#3",
-            taskName: "Mock Task 3: Submitted yet not graded",
             mastery: "NOT_GRADED" as Mastery,
-            objective: mockObjectives[0]
+            objectiveId: "OBJECTIVE#1",
+            taskId: "TASK#3"
          },
       ]
    },
@@ -385,37 +382,33 @@ const mockObjectiveProgress_T1: ObjectiveProgress[] = [
       objectiveName: "Objective 2",
       tasks: [
          {
-            taskId: "TASK#1",
-            taskName: "Mock Task 1",
             mastery: "MASTERED" as Mastery,
-            objective: mockObjectives[1]
+            objectiveId: "OBJECTIVE#2",
+            taskId: "TASK#1"
          },
          {
-            taskId: "TASK#2",
-            taskName: "Mock Task 2",
             mastery: "NOT_MASTERED" as Mastery,
-            objective: mockObjectives[1]
+            objectiveId: "OBJECTIVE#2",
+            taskId: "TASK#2"
          },
          {
-            taskId: "TASK#4",
-            taskName: "Mock Task 3: Submitted yet not graded",
             mastery: "NOT_GRADED" as Mastery,
-            objective: mockObjectives[1]
+            objectiveId: "OBJECTIVE#2",
+            taskId: "TASK#4"
          },
       ]
    }
 ];
 
-const mockObjectiveProgress_T2: ObjectiveProgress[] = [
+const mockObjectiveProgress_T2 = [
    {
       objectiveId: "OBJECTIVE#3",
       objectiveName: "Objective 3",
       tasks: [
          {
-            taskId: "TASK#6",
-            taskName: "Mock Task 6",
             mastery: "NOT_GRADED" as Mastery,
-            objective: mockObjectives[2]
+            objectiveId: "OBJECTIVE#3",
+            taskId: "TASK#6"
          }
       ]
    },
@@ -424,16 +417,15 @@ const mockObjectiveProgress_T2: ObjectiveProgress[] = [
       objectiveName: "Objective 4",
       tasks: [
          {
-            taskId: "TASK#5",
-            taskName: "Mock Task 5",
             mastery: "MASTERED" as Mastery,
-            objective: mockObjectives[3]
+            objectiveId: "OBJECTIVE#4",
+            taskId: "TASK#5"
          }
       ]
    }
 ];
 
-export const mockTargetProgress: TargetProgress[] = [
+export const mockTargetProgress = [
    {
       target: mockTarget_1,
       objectives: mockObjectiveProgress_T1,

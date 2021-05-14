@@ -120,11 +120,10 @@ export function generateMissionProgress(
    return ret;
 }
 
-export function dbItemToMastery(item: MasteryItem, objective: Objective): TaskObjectiveProgress {
+export function dbItemToMastery(item: MasteryItem) {
    return {
       taskId: item.taskId,
-      taskName: "TODO: Figure out task name",
-      objective: objective,
+      objectiveId: item.objectiveId,
       mastery: item.mastery as Mastery
    }
 }
@@ -132,8 +131,9 @@ export function dbItemToMastery(item: MasteryItem, objective: Objective): TaskOb
 function generateObjectiveProgress(
    filteredObjectiveItems: ObjectiveItem[],
    userMasteryItems: MasteryItem[]
-): ObjectiveProgress[] {
-   const ret: ObjectiveProgress[] = [];
+) {
+
+   const ret = [];
 
    for (var obj of filteredObjectiveItems) {
       const filteredMasteryItems: MasteryItem[] = userMasteryItems.filter(item => {
@@ -144,7 +144,7 @@ function generateObjectiveProgress(
          objectiveId: obj.objectiveId,
          objectiveName: obj.objectiveName,
          tasks: filteredMasteryItems.map(item => {
-            return dbItemToMastery(item, dbItemToObjective(obj));
+            return dbItemToMastery(item);
          })
       });
    }
@@ -157,8 +157,8 @@ export function generateTargetProgress(
    objectives: ObjectiveItem[],
    userMasteryItems: MasteryItem[],
    user: string
-): TargetProgress[] {
-   const ret: TargetProgress[] = [];
+) {
+   const ret = [];
    for (var target of targets) {
       const filteredObjectives: ObjectiveItem[] = objectives.filter(obj => {
          return obj.targetId == target.targetId;
