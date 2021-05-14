@@ -21,8 +21,8 @@ async function getTaskById(_: any, args: any, context: any, info: any) {
    return task;
 }
 
-export async function getTask(parent: any) {
-  taskService.getTaskById(parent.id)
+export async function getTask(parent: any) : Promise<Task> {
+  return taskService.getTaskById(parent.taskId)
 }
 
 async function listTasksBySubmissionId(_: any, args: any, context: any, info: any) {

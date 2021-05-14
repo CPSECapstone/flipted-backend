@@ -1,4 +1,4 @@
-import { USER_PROGRESS_TABLE_NAME } from "../environment";
+import { MASTERY_TABLE, USER_PROGRESS_TABLE_NAME } from "../environment";
 import dynamodb, {
    PutCompositeParams,
    ScanParams,
@@ -17,6 +17,7 @@ import { generateMissionProgress, generateTargetProgress } from "./progressHelpe
 import { listTargetsByCourse } from "../services/target";
 import { listObjectiveItemsByCourse, listObjectivesByCourse } from "../objective/objectiveService";
 import { ObjectiveItem } from "../objective/objectiveInterface";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 export async function addProgress(input: ProgressInput): Promise<string> {
    const courseItem = helper.progressInputToDBItem(input);
@@ -158,6 +159,7 @@ export async function getAllTargetProgressForUser(
    const objectives: Promise<ObjectiveItem[]> = listObjectiveItemsByCourse(course)
    const userMasteryItems: Promise<MasteryItem[]> = listUserMasteryItemsByCourse(username, course)
    const targetProgress = generateTargetProgress(await targets, await objectives, await userMasteryItems, username)
+
    return targetProgress
 }
 
@@ -165,6 +167,29 @@ function listUserMasteryItemsByTask(username: string, taskId: string) : Promise<
    throw new Error("Function not implemented.");
 }
 
-function listUserMasteryItemsByCourse(username: string, course: string): Promise<MasteryItem[]> {
-   throw new Error("Function not implemented.");
+
+async function listUserMasteryItemsByCourse(username: string, course: string): Promise<MasteryItem[]> {
+   const params: QueryParams = {
+      tableName: MASTERY_TABLE,
+      indexName: "username-course-index",
+      keyConditionExpression: "course = :courseVal and username = :userVal",
+      expressionAttributeValues: {
+         ":courseVal": course,
+         ":userVal": username
+      }
+   };
+
+   try {
+      const output = await dynamodb.query(params);
+      if (output.Items) {
+         const submissions = output.Items.map(rawItem => {
+            return <MasteryItem>unmarshall(rawItem);
+         });
+         return submissions;
+      }
+
+      return [];
+   } catch (err) {
+      throw err;
+   }
 }
