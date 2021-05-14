@@ -1,6 +1,9 @@
 import { CompositeDBItem } from "../services/dynamodb";
 
-export type ObjectiveItem = CompositeDBItem & {
+export type ObjectiveItem = CompositeDBItem &
+   Omit<Objective, "__typename" | "tasks"> & {
+      taskIds: string[];
+   };
    objectiveId: string,
    objectiveName: string;
    description: string;
