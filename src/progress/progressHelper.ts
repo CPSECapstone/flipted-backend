@@ -121,6 +121,8 @@ export function generateMissionProgress(
 }
 
 export function dbItemToMastery(item: MasteryItem) {
+   // we return just the task / objective id here
+   // the TaskObjectiveProgress resolver converts these into their corresponding objects
    return {
       taskId: item.taskId,
       objectiveId: item.objectiveId,
@@ -136,6 +138,8 @@ function generateObjectiveProgress(
    const ret = [];
 
    for (var obj of filteredObjectiveItems) {
+      
+      // get only the mastery items associated with this objective 
       const filteredMasteryItems: MasteryItem[] = userMasteryItems.filter(item => {
          return (item.objectiveId == obj.objectiveId);
       });
@@ -153,6 +157,7 @@ function generateObjectiveProgress(
             }
 
             // No mastery item exists, but we still want an entry
+            // could potentially create "NOT_SUBMITTED" as an option in the future
             return {
                objectiveId: obj.objectiveId,
                taskId: taskId,
@@ -173,6 +178,7 @@ export function generateTargetProgress(
 ) {
    const ret = [];
    for (var target of targets) {
+      // get only the objectives associated with this target
       const filteredObjectives: ObjectiveItem[] = objectives.filter(obj => {
          return obj.targetId == target.targetId;
       });
