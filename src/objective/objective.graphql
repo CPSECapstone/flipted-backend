@@ -9,6 +9,12 @@ type Objective {
    targetId: String!
    targetName: String!
    course: String!
+   """
+   The taskIds here are to be used in resolver chain.
+   In order to get tasks, the nested resolvers need to know taskIds from its
+   parent.
+   """
+   taskIds: [String!]!
    tasks: [Task!]!
 }
 
@@ -23,6 +29,7 @@ input ObjectiveInput {
    targetId: String!
    targetName: String!
    course: String!
+   taskIds: [String!]!
 }
 
 type Mutation {

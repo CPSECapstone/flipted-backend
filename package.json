@@ -17,7 +17,7 @@
       "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
       "build": "NODE_ENV=development sls package",
       "deploy": "NODE_ENV=development sls deploy",
-      "debug": "concurrently \"graphql-codegen --config codegen.yml --watch\" \"SLS_DEBUG=* NODE_ENV=development node --inspect node_modules/.bin/sls offline -s dev\""
+      "debug": "concurrently \"graphql-codegen --config codegen.yml --watch\" \"SLS_DEBUG=* NODE_ENV=development node --inspect node_modules/.bin/sls offline\""
    },
    "author": "Matt Cuento",
    "license": "ISC",

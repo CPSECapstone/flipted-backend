@@ -13,6 +13,10 @@ async function listObjectivesByCourse(_: any, args: QueryObjectivesArgs) {
    return service.listObjectivesByCourse(args.course);
 }
 
+async function listTasksByIds(parent: any, args: any) {
+   return taskService.listTasksByIds(parent.taskIds);
+}
+
 const resolvers = {
    Query: {
       objective: getObjectiveById,
@@ -20,6 +24,9 @@ const resolvers = {
    },
    Mutation: {
       addObjective
+   },
+   Objective: {
+      tasks: listTasksByIds
    }
 };
 

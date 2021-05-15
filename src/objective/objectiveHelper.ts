@@ -8,7 +8,6 @@ export function objectiveInputToDBItem(input: ObjectiveInput): ObjectiveItem {
    const item: ObjectiveItem = {
       PK: ObjectiveKey(objectiveId),
       SK: ObjectiveKey(objectiveId),
-      taskIds: [], // TODO: ADD LIST OF TASK IDS AS STRINGS
       objectiveId,
       ...input
    };
@@ -24,6 +23,7 @@ export function dbItemToObjective(item: ObjectiveItem): Objective {
       targetId: item.targetId,
       targetName: item.targetName,
       course: item.course,
+      taskIds: item.taskIds,
       tasks: []
    };
 }
