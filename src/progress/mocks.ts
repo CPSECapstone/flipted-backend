@@ -1,4 +1,6 @@
+import { ObjectiveItem } from "../objective/objectiveInterface";
 import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
+import { MasteryItem } from "./progressInterface";
 
 export const mockTasks: Task[] = [
    {
@@ -167,8 +169,161 @@ export const mockMissionProgress: MissionProgress[] = [
    }
 ];
 
-const mockTarget: Target = {
-   targetId: "TARGET_123",
+export const mockObjectiveItems : ObjectiveItem[] = [
+   {
+      PK: "OBJECTIVE#1",
+      SK: "OBJECTIVE#1",
+      objectiveId: "OBJECTIVE#1",
+      objectiveName: "Objective 1",
+      description: "",
+      targetId: "TARGET#1",
+      targetName: "Target 1",
+      course: "Mocking 101",
+      taskIds: ["TASK#1", "TASK#2", "TASK#3"]
+   },
+   {
+      PK: "OBJECTIVE#2",
+      SK: "OBJECTIVE#2",
+      objectiveId: "OBJECTIVE#2",
+      objectiveName: "Objective 2",
+      description: "",
+      targetId: "TARGET#1",
+      targetName: "Target 1",
+      course: "Mocking 101",
+      taskIds: ["TASK#1", "TASK#2", "TASK#4"]
+   },
+   {
+      PK: "OBJECTIVE#3",
+      SK: "OBJECTIVE#3",
+      objectiveId: "OBJECTIVE#3",
+      objectiveName: "Objective 3",
+      description: "",
+      targetId: "TARGET#2",
+      targetName: "Target 2",
+      course: "Mocking 101",
+      taskIds: ["TASK#6"]
+   },
+   {
+      PK: "OBJECTIVE#4",
+      SK: "OBJECTIVE#4",
+      objectiveId: "OBJECTIVE#4",
+      objectiveName: "Objective 4",
+      description: "",
+      targetId: "TARGET#2",
+      targetName: "Target 2",
+      course: "Mocking 101",
+      taskIds: ["TASK#5"]
+   }
+]
+
+export const mockObjectives : Objective[] = [
+   {
+      objectiveId: "OBJECTIVE#1",
+      objectiveName: "Objective 1",
+      description: "",
+      targetId: "TARGET#1",
+      targetName: "Target 1",
+      course: "Mocking 101",
+      tasks: []
+   },
+   {
+      objectiveId: "OBJECTIVE#2",
+      objectiveName: "Objective 2",
+      description: "",
+      targetId: "TARGET#1",
+      targetName: "Target 1",
+      course: "Mocking 101",
+      tasks: []
+   },
+   {
+      objectiveId: "OBJECTIVE#3",
+      objectiveName: "Objective 3",
+      description: "",
+      targetId: "TARGET#2",
+      targetName: "Target 2",
+      course: "Mocking 101",
+      tasks: []
+   },
+   {
+      objectiveId: "OBJECTIVE#4",
+      objectiveName: "Objective 4",
+      description: "",
+      targetId: "TARGET#2",
+      targetName: "Target 2",
+      course: "Mocking 101",
+      tasks: []
+   }
+]
+
+export const mockMasteryItems: MasteryItem[] = [
+   {
+      PK: "TASK#1",
+      SK: "OBJECTIVE#1",
+      username: "USER_123",
+      taskId: "TASK#1",
+      objectiveId: "OBJECTIVE#1",
+      course: "Mocking 101",
+      mastery: "MASTERED"
+   },
+   {
+      PK: "TASK#2",
+      SK: "OBJECTIVE#1",
+      username: "USER_123",
+      taskId: "TASK#2",
+      objectiveId: "OBJECTIVE#1",
+      course: "Mocking 101",
+      mastery: "NEARLY_MASTERED"
+   },
+   {
+      PK: "TASK#3",
+      SK: "OBJECTIVE#1",
+      username: "USER_123",
+      taskId: "TASK#3",
+      objectiveId: "OBJECTIVE#1",
+      course: "Mocking 101",
+      mastery: "NOT_GRADED"
+   },
+   {
+      PK: "TASK#1",
+      SK: "OBJECTIVE#2",
+      username: "USER_123",
+      taskId: "TASK#1",
+      objectiveId: "OBJECTIVE#2",
+      course: "Mocking 101",
+      mastery: "MASTERED"
+   },
+   {
+      PK: "TASK#2",
+      SK: "OBJECTIVE#2",
+      username: "USER_123",
+      taskId: "TASK#2",
+      objectiveId: "OBJECTIVE#2",
+      course: "Mocking 101",
+      mastery: "NOT_MASTERED"
+   },
+   {
+      PK: "TASK#4",
+      SK: "OBJECTIVE#2",
+      username: "USER_123",
+      taskId: "TASK#4",
+      objectiveId: "OBJECTIVE#2",
+      course: "Mocking 101",
+      mastery: "NOT_GRADED"
+   },
+   {
+      PK: "TASK#5",
+      SK: "OBJECTIVE#4",
+      username: "USER_123",
+      taskId: "TASK#5",
+      objectiveId: "OBJECTIVE#4",
+      course: "Mocking 101",
+      mastery: "MASTERED"
+   },
+   
+]
+
+export const mockTarget_1: Target = {
+   targetId: "TARGET#1",
    targetName: "Backend-Mocked Target",
    description: "This is a mock target.",
    subject: "Mockery",
@@ -179,55 +334,97 @@ const mockTarget: Target = {
    objectives: []
 };
 
-const mockObjectiveProgress: ObjectiveProgress[] = [
+export const mockTarget_2: Target = {
+   targetId: "TARGET#2",
+   targetName: "Backend-Mocked Target 2",
+   description: "This is the second mock target.",
+   subject: "Mockery",
+   gradeLevel: 1,
+   icon: "",
+   standards: "",
+   course: "Mocking 101",
+   objectives: []
+};
+
+const mockObjectiveProgress_T1 = [
    {
-      objectiveId: "OBJECTIVE#123",
-      objectiveName: "Backend-Mocked Objective 1",
+      objectiveId: "OBJECTIVE#1",
+      objectiveName: "Objective 1",
       tasks: [
          {
-            taskId: "TASK#123",
-            taskName: "Task 1",
-            mastery: "MASTERED" as Mastery
+            mastery: "MASTERED" as Mastery,
+            objectiveId: "OBJECTIVE#1",
+            taskId: "TASK#1"
          },
          {
-            taskId: "TASK#1234",
-            taskName: "Task 2",
-            mastery: "NEARLY_MASTERED" as Mastery
+            mastery: "NEARLY_MASTERED" as Mastery,
+            objectiveId: "OBJECTIVE#1",
+            taskId: "TASK#2"
          },
          {
-            taskId: "TASK#12345",
-            taskName: "Task 3",
-            mastery: "NOT_MASTERED" as Mastery
+            mastery: "NOT_GRADED" as Mastery,
+            objectiveId: "OBJECTIVE#1",
+            taskId: "TASK#3"
+         },
+      ]
+   },
+   {
+      objectiveId: "OBJECTIVE#2",
+      objectiveName: "Objective 2",
+      tasks: [
+         {
+            mastery: "MASTERED" as Mastery,
+            objectiveId: "OBJECTIVE#2",
+            taskId: "TASK#1"
          },
          {
-            taskId: "TASK#12345",
-            taskName: "Task 3",
-            mastery: "NOT_GRADED" as Mastery
+            mastery: "NOT_MASTERED" as Mastery,
+            objectiveId: "OBJECTIVE#2",
+            taskId: "TASK#2"
+         },
+         {
+            mastery: "NOT_GRADED" as Mastery,
+            objectiveId: "OBJECTIVE#2",
+            taskId: "TASK#4"
+         },
+      ]
+   }
+];
+
+const mockObjectiveProgress_T2 = [
+   {
+      objectiveId: "OBJECTIVE#3",
+      objectiveName: "Objective 3",
+      tasks: [
+         {
+            mastery: "NOT_GRADED" as Mastery,
+            objectiveId: "OBJECTIVE#3",
+            taskId: "TASK#6"
          }
       ]
    },
    {
-      objectiveId: "OBJECTIVE#1234",
-      objectiveName: "Backend-Mocked Objective 2",
+      objectiveId: "OBJECTIVE#4",
+      objectiveName: "Objective 4",
       tasks: [
          {
-            taskId: "TASK#123",
-            taskName: "Task A",
-            mastery: "MASTERED" as Mastery
-         },
-         {
-            taskId: "TASK#1234",
-            taskName: "Task B",
-            mastery: "MASTERED" as Mastery
+            mastery: "MASTERED" as Mastery,
+            objectiveId: "OBJECTIVE#4",
+            taskId: "TASK#5"
          }
       ]
    }
 ];
 
-export const mockTargetProgress: TargetProgress[] = [
+export const mockTargetProgress = [
    {
-      target: mockTarget,
-      objectives: mockObjectiveProgress,
+      target: mockTarget_1,
+      objectives: mockObjectiveProgress_T1,
+      student: "MOCKUSER_123"
+   },
+   {
+      target: mockTarget_2,
+      objectives: mockObjectiveProgress_T2,
       student: "MOCKUSER_123"
    }
 ];

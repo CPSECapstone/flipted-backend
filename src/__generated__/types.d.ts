@@ -721,8 +721,8 @@ type TaskInput = {
 
 type TaskObjectiveProgress = {
   __typename?: 'TaskObjectiveProgress';
-  taskId: Scalars['String'];
-  taskName: Scalars['String'];
+  task: Task;
+  objective: Objective;
   mastery: Mastery;
 };
 

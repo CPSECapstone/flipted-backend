@@ -138,6 +138,32 @@ async function listUserSubmissionsByCourse(course: string, username: string): Pr
    }
 }
 
+async function listUserMasteryItemsByCourse(course: string, username: string): Promise<TaskSubmissionResultItem[]> {
+   const params: QueryParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      indexName: "course-PK-index",
+      keyConditionExpression: "course = :courseVal",
+      expressionAttributeValues: {
+         ":courseVal": course,
+         ":pkVal": `TASK_SUBMISSION#${username}`
+      }
+   };
+
+   try {
+      const output = await dynamodb.query(params);
+      if (output.Items) {
+         const submissions = output.Items.map(rawItem => {
+            return <TaskSubmissionResultItem>unmarshall(rawItem);
+         });
+         return submissions;
+      }
+
+      return [];
+   } catch (err) {
+      throw err;
+   }
+}
+
 const taskSubmissionService = {
    submitQuestionAnswer,
    submitTaskProgress,
@@ -145,7 +171,8 @@ const taskSubmissionService = {
    getTaskSubmission,
    getQuizProgressForTask,
    getTaskRubricProgress,
-   listUserSubmissionsByCourse
+   listUserSubmissionsByCourse,
+   listUserMasteryItemsByCourse
 };
 
 export default taskSubmissionService;
