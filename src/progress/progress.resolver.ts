@@ -29,10 +29,10 @@ async function getAllMissionProgress(
 ): Promise<MissionProgress[]> {
    const tokenPayload = await validateToken(context.headers.Authorization);
    const userRole = await userService.getUserRole(tokenPayload.username);
-   return await service.getAllMissionProgressForUser(
-      args.courseId,
-      userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username
-   );
+   const user =
+      userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username;
+
+   return await service.getAllMissionProgressForUser(args.courseId, user);
 }
 
 async function getAllTargetProgress(
@@ -43,10 +43,9 @@ async function getAllTargetProgress(
 ) {
    const tokenPayload = await validateToken(context.headers.Authorization);
    const userRole = await userService.getUserRole(tokenPayload.username);
-   return await service.getAllTargetProgressForUser(
-      args.courseId,
-      userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username
-   );
+   const user =
+      userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username;
+   return await service.getAllTargetProgressForUser(args.courseId, user);
 }
 
 const resolvers = {
