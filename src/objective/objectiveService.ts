@@ -71,6 +71,10 @@ export async function listObjectivesByCourse(course: string): Promise<Objective[
    }
 }
 
+export async function getObjective(parent: any) {
+   return getObjectiveById(parent.objectiveId);
+}
+
 export async function listObjectiveItemsByCourse(course: string): Promise<ObjectiveItem[]> {
    const params: QueryParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,

@@ -2,35 +2,51 @@ import { validateToken } from "../jws-verifer";
 import userService from "../services/user";
 import * as service from "./progressService";
 import { RoleInternal } from "../interfaces/role";
-import { getTask } from "../schema/task.resolver";
-import { getObjective } from "../objective/objective.resolver";
+import { getTask } from "../services/task";
+import { getObjective } from "../objective/objectiveService";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
-   return await service.addProgress(args.progress);
+   return service.addProgress(args.progress);
 }
 
 async function progressByCourse(_: any, args: QueryProgressByCourseArgs) {
-   return await service.getProgressByCourse(args.course);
+   return service.getProgressByCourse(args.course);
 }
 
 async function userProgress(_: any, args: QueryUserProgressArgs) {
-   return await service.getUserProgress(args.userName, args.course);
+   return service.getUserProgress(args.userName, args.course);
 }
 
 async function progressOverview(_: any, args: QueryProgressOverviewArgs) {
-   return await service.getProgressOverview(args.course);
+   return service.getProgressOverview(args.course);
 }
 
-async function getAllMissionProgress(_: any, args: QueryGetAllMissionProgressArgs, context: any, info: any) : Promise<MissionProgress[]> {
+async function getAllMissionProgress(
+   _: any,
+   args: QueryGetAllMissionProgressArgs,
+   context: any,
+   info: any
+): Promise<MissionProgress[]> {
    const tokenPayload = await validateToken(context.headers.Authorization);
    const userRole = await userService.getUserRole(tokenPayload.username);
-   return await service.getAllMissionProgressForUser(args.courseId, userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username)
+   return await service.getAllMissionProgressForUser(
+      args.courseId,
+      userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username
+   );
 }
 
-async function getAllTargetProgress(_: any, args: QueryGetAllTargetProgressArgs, context: any, info: any) {
+async function getAllTargetProgress(
+   _: any,
+   args: QueryGetAllTargetProgressArgs,
+   context: any,
+   info: any
+) {
    const tokenPayload = await validateToken(context.headers.Authorization);
    const userRole = await userService.getUserRole(tokenPayload.username);
-   return await service.getAllTargetProgressForUser(args.courseId, userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username)
+   return await service.getAllTargetProgressForUser(
+      args.courseId,
+      userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username
+   );
 }
 
 const resolvers = {

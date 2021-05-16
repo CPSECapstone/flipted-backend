@@ -9,10 +9,6 @@ async function getObjectiveById(_: any, args: QueryObjectiveArgs) {
    return service.getObjectiveById(args.objectiveId);
 }
 
-export async function getObjective(parent: any) {
-   return service.getObjectiveById(parent.objectiveId);
-}
-
 async function listObjectivesByCourse(_: any, args: QueryObjectivesArgs) {
    return service.listObjectivesByCourse(args.course);
 }

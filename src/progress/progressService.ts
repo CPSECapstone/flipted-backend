@@ -131,44 +131,47 @@ export async function getAllMissionProgressForUser(
    username: string
 ): Promise<MissionProgress[]> {
    const missions: Promise<Mission[]> = missionService.listByCourse(course);
-   
+
    const tasks: Promise<Task[]> = taskService.listTasksByCourse(course);
-   
+
    const taskSubmissions: Promise<
       TaskSubmissionResultItem[]
    > = taskSubmissionService.listUserSubmissionsByCourse(course, username); // TODO: write this
-   
+
    const missionProgress: MissionProgress[] = generateMissionProgress(
       await missions,
       await tasks,
       await taskSubmissions,
       username
    );
-   
+
    return missionProgress;
 }
 
-export async function getAllTargetProgressForUser(
-   course: string,
-   username: string
-) {
+export async function getAllTargetProgressForUser(course: string, username: string) {
+   const targets: Promise<Target[]> = listTargetsByCourse(course);
 
-   const targets: Promise<Target[]> = listTargetsByCourse(course)
+   // TODO: Need to change objective item definition to return list of task ids
+   const objectives: Promise<ObjectiveItem[]> = listObjectiveItemsByCourse(course);
+   const userMasteryItems: Promise<MasteryItem[]> = listUserMasteryItemsByCourse(username, course);
+   const targetProgress = generateTargetProgress(
+      await targets,
+      await objectives,
+      await userMasteryItems,
+      username
+   );
 
-   // TODO: Need to change objective item definition to return list of task ids 
-   const objectives: Promise<ObjectiveItem[]> = listObjectiveItemsByCourse(course)
-   const userMasteryItems: Promise<MasteryItem[]> = listUserMasteryItemsByCourse(username, course)
-   const targetProgress = generateTargetProgress(await targets, await objectives, await userMasteryItems, username)
-
-   return targetProgress
+   return targetProgress;
 }
 
-function listUserMasteryItemsByTask(username: string, taskId: string) : Promise<MasteryItem[]> {
+function listUserMasteryItemsByTask(username: string, taskId: string): Promise<MasteryItem[]> {
    throw new Error("Function not implemented.");
 }
 
-
-async function listUserMasteryItemsByCourse(username: string, course: string): Promise<MasteryItem[]> {
+async function listUserMasteryItemsByCourse(
+   username: string,
+   course: string
+): Promise<MasteryItem[]> {
    const params: QueryParams = {
       tableName: MASTERY_TABLE,
       indexName: "username-course-index",

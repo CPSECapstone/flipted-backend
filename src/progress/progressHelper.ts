@@ -69,7 +69,7 @@ function generateTaskStats(
    submissions: TaskSubmissionResultItem[]
 ): TaskStats[] {
    const ret: TaskStats[] = [];
-   for (var task of tasks) {
+   for (let task of tasks) {
       if (task.missionId != mission.id)
          throw new Error("Invalid parameter! All tasks must have mission id of provided mission");
 
@@ -79,7 +79,7 @@ function generateTaskStats(
          }
       );
 
-      var taskStat: TaskStats = {
+      let taskStat: TaskStats = {
          taskId: task.id,
          name: task.name
       };
@@ -100,7 +100,7 @@ export function generateMissionProgress(
    user: string
 ): MissionProgress[] {
    const ret: MissionProgress[] = [];
-   for (var mission of missions) {
+   for (let mission of missions) {
       const filteredTasks: Task[] = tasks.filter(task => {
          return task.missionId == mission.id;
       });
@@ -109,7 +109,7 @@ export function generateMissionProgress(
          return submission.missionId == mission.id;
       });
 
-      var missionProg: MissionProgress = {
+      const missionProg: MissionProgress = {
          mission: mission,
          student: user,
          progress: generateTaskStats(mission, filteredTasks, filteredResults)
@@ -127,21 +127,19 @@ export function dbItemToMastery(item: MasteryItem) {
       taskId: item.taskId,
       objectiveId: item.objectiveId,
       mastery: item.mastery as Mastery
-   }
+   };
 }
 
 function generateObjectiveProgress(
    filteredObjectiveItems: ObjectiveItem[],
    userMasteryItems: MasteryItem[]
 ) {
+   let ret = [];
 
-   const ret = [];
-
-   for (var obj of filteredObjectiveItems) {
-      
-      // get only the mastery items associated with this objective 
+   for (let obj of filteredObjectiveItems) {
+      // get only the mastery items associated with this objective
       const filteredMasteryItems: MasteryItem[] = userMasteryItems.filter(item => {
-         return (item.objectiveId == obj.objectiveId);
+         return item.objectiveId == obj.objectiveId;
       });
 
       ret.push({
@@ -149,10 +147,10 @@ function generateObjectiveProgress(
          objectiveName: obj.objectiveName,
          tasks: obj.taskIds.map(taskId => {
             const masteryItem: MasteryItem | undefined = filteredMasteryItems.find(item => {
-               return item.taskId == taskId
-            })
-            
-            if(masteryItem) {
+               return item.taskId == taskId;
+            });
+
+            if (masteryItem) {
                return dbItemToMastery(masteryItem);
             }
 
@@ -162,7 +160,7 @@ function generateObjectiveProgress(
                objectiveId: obj.objectiveId,
                taskId: taskId,
                mastery: "NOT_GRADED" as Mastery
-            }
+            };
          })
       });
    }
@@ -177,7 +175,7 @@ export function generateTargetProgress(
    user: string
 ) {
    const ret = [];
-   for (var target of targets) {
+   for (let target of targets) {
       // get only the objectives associated with this target
       const filteredObjectives: ObjectiveItem[] = objectives.filter(obj => {
          return obj.targetId == target.targetId;
