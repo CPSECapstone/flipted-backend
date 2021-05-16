@@ -72,6 +72,35 @@ export async function listObjectivesByCourse(course: string): Promise<Objective[
    }
 }
 
+export async function getObjective(parent: any) {
+   return getObjectiveById(parent.objectiveId);
+}
+
+export async function listObjectiveItemsByCourse(course: string): Promise<ObjectiveItem[]> {
+   const params: QueryParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      indexName: "course-PK-index",
+      keyConditionExpression: "course = :courseVal and begins_with(PK, :pkPrefix) ",
+      expressionAttributeValues: {
+         ":courseVal": course,
+         ":pkPrefix": ObjectivePrefix
+      }
+   };
+
+   try {
+      const output = await dynamodb.query(params);
+      if (output.Items) {
+         return output.Items.map(rawItem => {
+            return <ObjectiveItem>unmarshall(rawItem);
+         });
+      }
+
+      return [];
+   } catch (err) {
+      return err;
+   }
+}
+
 export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promise<number> {
    const items = objectives.map(helper.objectiveInputToDBItem);
    const params: BatchWriteParams = {

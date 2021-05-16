@@ -1,7 +1,9 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { dbItemToObjective } from "../objective/objectiveHelper";
+import { ObjectiveItem } from "../objective/objectiveInterface";
 import { dbItemToTaskSubmissionResult } from "../submissions/taskSubmissionHelper";
 import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
-import { ProgressPK, ProgressSK } from "./progressInterface";
+import { MasteryItem, ProgressPK, ProgressSK } from "./progressInterface";
 import { ProgressItem } from "./progressInterface";
 
 export function progressInputToDBItem(input: ProgressInput): ProgressItem {
@@ -61,48 +63,130 @@ export function dbItemsToProgressList(items: any[]): UserProgress[] {
    return progressList;
 }
 
-function generateTaskStats(mission: Mission,  tasks: Task[], submissions: TaskSubmissionResultItem[]) : TaskStats[] {
-   const ret: TaskStats[] = []
-   for (var task of tasks) {
-      
-      if(task.missionId != mission.id) throw new Error("Invalid parameter! All tasks must have mission id of provided mission")
+function generateTaskStats(
+   mission: Mission,
+   tasks: Task[],
+   submissions: TaskSubmissionResultItem[]
+): TaskStats[] {
+   const ret: TaskStats[] = [];
+   for (let task of tasks) {
+      if (task.missionId != mission.id)
+         throw new Error("Invalid parameter! All tasks must have mission id of provided mission");
 
-      const submissionResult: TaskSubmissionResultItem | undefined = submissions.find(submission => {
-         return submission.SK == task.id
-      })
+      const submissionResult: TaskSubmissionResultItem | undefined = submissions.find(
+         submission => {
+            return submission.SK == task.id;
+         }
+      );
 
-      var taskStat: TaskStats = {
+      let taskStat: TaskStats = {
          taskId: task.id,
-         name: task.name,
+         name: task.name
+      };
+
+      if (submissionResult) {
+         taskStat.submission = dbItemToTaskSubmissionResult(submissionResult);
       }
 
-      if(submissionResult) {
-         taskStat.submission = dbItemToTaskSubmissionResult(submissionResult)
-      }
-
-      ret.push(taskStat)
+      ret.push(taskStat);
    }
-   return ret
+   return ret;
 }
 
-export function generateMissionProgress(missions: Mission[], tasks: Task[], submissions: TaskSubmissionResultItem[], user: string): MissionProgress[] {
-   const ret: MissionProgress[] = []
-   for (var mission of missions) {
+export function generateMissionProgress(
+   missions: Mission[],
+   tasks: Task[],
+   submissions: TaskSubmissionResultItem[],
+   user: string
+): MissionProgress[] {
+   const ret: MissionProgress[] = [];
+   for (let mission of missions) {
       const filteredTasks: Task[] = tasks.filter(task => {
-         return task.missionId == mission.id
+         return task.missionId == mission.id;
       });
-   
-      const filteredResults: TaskSubmissionResultItem[] = submissions.filter(submission => {
-         return submission.missionId == mission.id
-      })
 
-      var missionProg: MissionProgress = {
-         mission: mission, 
+      const filteredResults: TaskSubmissionResultItem[] = submissions.filter(submission => {
+         return submission.missionId == mission.id;
+      });
+
+      const missionProg: MissionProgress = {
+         mission: mission,
          student: user,
          progress: generateTaskStats(mission, filteredTasks, filteredResults)
-      }
+      };
 
-      ret.push(missionProg)
+      ret.push(missionProg);
    }
-   return ret
+   return ret;
+}
+
+export function dbItemToMastery(item: MasteryItem) {
+   // we return just the task / objective id here
+   // the TaskObjectiveProgress resolver converts these into their corresponding objects
+   return {
+      taskId: item.taskId,
+      objectiveId: item.objectiveId,
+      mastery: item.mastery as Mastery
+   };
+}
+
+function generateObjectiveProgress(
+   filteredObjectiveItems: ObjectiveItem[],
+   userMasteryItems: MasteryItem[]
+) {
+   let ret = [];
+
+   for (let obj of filteredObjectiveItems) {
+      // get only the mastery items associated with this objective
+      const filteredMasteryItems: MasteryItem[] = userMasteryItems.filter(item => {
+         return item.objectiveId == obj.objectiveId;
+      });
+
+      ret.push({
+         objectiveId: obj.objectiveId,
+         objectiveName: obj.objectiveName,
+         tasks: obj.taskIds.map(taskId => {
+            const masteryItem: MasteryItem | undefined = filteredMasteryItems.find(item => {
+               return item.taskId == taskId;
+            });
+
+            if (masteryItem) {
+               return dbItemToMastery(masteryItem);
+            }
+
+            // No mastery item exists, but we still want an entry
+            // could potentially create "NOT_SUBMITTED" as an option in the future
+            return {
+               objectiveId: obj.objectiveId,
+               taskId: taskId,
+               mastery: "NOT_GRADED" as Mastery
+            };
+         })
+      });
+   }
+
+   return ret;
+}
+
+export function generateTargetProgress(
+   targets: Target[],
+   objectives: ObjectiveItem[],
+   userMasteryItems: MasteryItem[],
+   user: string
+) {
+   const ret = [];
+   for (let target of targets) {
+      // get only the objectives associated with this target
+      const filteredObjectives: ObjectiveItem[] = objectives.filter(obj => {
+         return obj.targetId == target.targetId;
+      });
+
+      ret.push({
+         target: target,
+         objectives: generateObjectiveProgress(filteredObjectives, userMasteryItems),
+         student: user
+      });
+   }
+
+   return ret;
 }

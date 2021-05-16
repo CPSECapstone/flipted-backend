@@ -19,8 +19,9 @@ query GetTargetProgress {
       objectiveId
       objectiveName
       tasks {
-        taskId
-        taskName
+        task {
+           name
+        }
         mastery
       }
     }
