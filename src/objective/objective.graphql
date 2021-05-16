@@ -23,6 +23,7 @@ input ObjectiveInput {
    targetId: String!
    targetName: String!
    course: String!
+   taskIds: [String!]!
 }
 
 type Mutation {

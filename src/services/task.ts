@@ -52,9 +52,9 @@ async function getTaskById(taskId: string): Promise<Task> {
    }
 }
 
-export async function getTask(parent: any) : Promise<Task> {
-   return taskService.getTaskById(parent.taskId)
- }
+export async function getTask(parent: any): Promise<Task> {
+   return taskService.getTaskById(parent.taskId);
+}
 
 async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
    const params: ScanParams = {

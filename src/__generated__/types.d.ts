@@ -324,6 +324,7 @@ type ObjectiveInput = {
   targetId: Scalars['String'];
   targetName: Scalars['String'];
   course: Scalars['String'];
+  taskIds: Array<Scalars['String']>;
 };
 
 type ObjectiveProgress = {
