@@ -9,7 +9,6 @@ import dynamodb, {
    ScanParams
 } from "../services/dynamodb";
 import * as helper from "./objectiveHelper";
-import { AttributeValue } from "@aws-sdk/client-dynamodb";
 
 export async function addObjective(input: ObjectiveInput) {
    try {
