@@ -6,7 +6,7 @@
    "scripts": {
       "generate": "graphql-codegen --config codegen.yml",
       "data:targets": "node data/targets.js",
-      "data:objectives": "node data/objectives.js",
+      "data:objectives": "tsc -p .&& node ./.build/data/objectives.js",
       "data:courses": "node data/courses.js",
       "data:tasks": "node data/tasks.js",
       "data:progress": "node data/progress.js",

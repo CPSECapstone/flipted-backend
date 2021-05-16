@@ -115,11 +115,12 @@ async function getComposite(params: GetCompositeParams): Promise<GetItemCommandO
    }
 }
 
-async function scan(params: any): Promise<ScanCommandOutput> {
+async function scan(params: ScanParams): Promise<ScanCommandOutput> {
    const command = new ScanCommand({
       TableName: params.tableName,
       FilterExpression: params.filterExpression,
-      ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts)
+      ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
+      ExclusiveStartKey: params.ExclusiveStartKey
    });
 
    try {
@@ -148,25 +149,6 @@ async function batchGet(params: BatchGetParams): Promise<BatchGetItemCommandOutp
    return client.send(command);
 }
 
-async function batchWrite(params: BatchWriteParams): Promise<BatchWriteItemCommandOutput> {
-   const putRequests = params.items.map((item: any) => {
-      return {
-         PutRequest: {
-            Item: marshall(item, marshallOpts)
-         }
-      };
-   });
-
-   const command = new BatchWriteItemCommand({
-      RequestItems: {
-         [params.tableName]: putRequests
-      },
-      ReturnConsumedCapacity: "TOTAL"
-   });
-
-   return client.send(command);
-}
-
 async function query(params: QueryParams): Promise<QueryCommandOutput> {
    const command = new QueryCommand({
       TableName: params.tableName,
@@ -190,6 +172,92 @@ async function deleteItem(params: DeleteParam): Promise<DeleteItemCommandOutput>
    return client.send(command);
 }
 
+/*
+   write to database in batch mode
+*/
+async function batchWrite(params: BatchWriteParams): Promise<BatchWriteItemCommandOutput> {
+   const putRequests = params.items.map((item: any) => {
+      return {
+         PutRequest: {
+            Item: marshall(item, marshallOpts)
+         }
+      };
+   });
+
+   const command = new BatchWriteItemCommand({
+      RequestItems: {
+         [params.tableName]: putRequests
+      },
+      ReturnConsumedCapacity: "INDEXES",
+      ReturnItemCollectionMetrics: "SIZE"
+   });
+
+   return client.send(command);
+}
+
+/*
+   delete all items in the table in batch mode
+*/
+export async function batchDelete(scanParams: ScanParams): Promise<number> {
+   let items: any[] = [];
+   try {
+      let output = await scan(scanParams);
+      items = [...items, ...(output.Items || [])];
+
+      while (typeof output.LastEvaluatedKey != "undefined") {
+         scanParams.ExclusiveStartKey = output.LastEvaluatedKey;
+
+         output = await scan(scanParams);
+         items = [...items, ...(output.Items || [])];
+      }
+   } catch (err) {
+      console.log(err);
+      return 0;
+   }
+
+   let leftItems = items.length;
+   let group = [];
+   let groupNumber = 0;
+   console.log("Total items to be deleted", leftItems);
+
+   for (const item of items) {
+      const deleteRequest = {
+         DeleteRequest: {
+            Key: {
+               PK: item.PK,
+               SK: item.SK
+            }
+         }
+      };
+      console.log(item.PK);
+
+      group.push(deleteRequest);
+      leftItems--;
+
+      if (group.length == 25 || leftItems < 1) {
+         groupNumber++;
+         console.log(`Batch ${groupNumber} to be deleted.`);
+         try {
+            const command = new BatchWriteItemCommand({
+               RequestItems: {
+                  [scanParams.tableName]: group
+               },
+               ReturnConsumedCapacity: "TOTAL"
+            });
+
+            await client.send(command);
+            console.log(`Batch ${groupNumber} processed. Left items: ${leftItems}`);
+            //reset
+            group = [];
+         } catch (err) {
+            console.log(err);
+         }
+      }
+   }
+
+   return items.length;
+}
+
 const dynamodb = {
    put,
    get,
@@ -198,9 +266,10 @@ const dynamodb = {
    scan,
    update,
    batchGet,
-   batchWrite,
    query,
-   deleteItem
+   deleteItem,
+   batchWrite,
+   batchDelete
 };
 
 export default dynamodb;
@@ -239,6 +308,7 @@ export interface ScanParams {
    filterExpression: string;
    expressionAttributeValues: object;
    limit?: number;
+   ExclusiveStartKey?: { [key: string]: any };
 }
 
 export interface BatchGetParams {

@@ -2,9 +2,11 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "./objectiveInterface";
 import dynamodb, {
+   BatchWriteParams,
    GetCompositeParams,
    PutCompositeParams,
-   QueryParams
+   QueryParams,
+   ScanParams
 } from "../services/dynamodb";
 import * as helper from "./objectiveHelper";
 
@@ -65,6 +67,43 @@ export async function listObjectivesByCourse(course: string): Promise<Objective[
       }
 
       return [];
+   } catch (err) {
+      return err;
+   }
+}
+
+export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promise<number> {
+   const items = objectives.map(helper.objectiveInputToDBItem);
+   const params: BatchWriteParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      items
+   };
+   try {
+      const output = await dynamodb.batchWrite(params);
+      if (output.ConsumedCapacity) {
+         console.log(output.ConsumedCapacity);
+         return output.ConsumedCapacity.length;
+      }
+
+      return 0;
+   } catch (err) {
+      return err;
+   }
+}
+
+export async function deleteObjectives(): Promise<number> {
+   const params: ScanParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      filterExpression: "begins_with(PK, :pkPrefix) and begins_with(SK, :skPrefix)",
+      expressionAttributeValues: {
+         ":pkPrefix": ObjectivePrefix,
+         ":skPrefix": ObjectivePrefix
+      }
+   };
+
+   try {
+      const output = await dynamodb.batchDelete(params);
+      return output;
    } catch (err) {
       return err;
    }
