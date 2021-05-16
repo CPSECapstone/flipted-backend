@@ -1,5 +1,8 @@
-const csv = require("csv-parser");
-const fs = require("fs");
+import csv from "csv-parser";
+import fs from "fs";
+import { readFile } from "fs/promises";
+import yargs from "yargs";
+import chalk from "chalk";
 
 import taskService from "../src/services/task";
 import * as objectiveService from "../src/objective/objectiveService";
@@ -56,14 +59,81 @@ async function generateObjectiveInputs() {
    return objectives;
 }
 
-async function main() {
+async function listItems() {
+   const course = "Integrated Science";
    try {
-      await objectiveService.deleteObjectives();
-      const objectives = await generateObjectiveInputs();
-      await objectiveService.batchWriteObjectives(objectives);
+      const output = await objectiveService.listObjectivesByCourse(course);
+      const toPrint = output.map(objective => {
+         return {
+            objectiveId: objective.objectiveId,
+            objectiveName: objective.objectiveName,
+            targetId: objective.targetId,
+            targetName: objective.targetName
+         };
+      });
+
+      console.table(toPrint);
+      console.log(`Total: ${output.length} objective items.`);
    } catch (err) {
       console.log(err);
    }
 }
 
-main();
+async function deleteItems() {
+   try {
+      const output = await objectiveService.deleteObjectives();
+      console.log(output);
+   } catch (err) {
+      console.log(err);
+   }
+}
+
+async function importItems() {
+   try {
+      const objectives = await generateObjectiveInputs();
+      const output = await objectiveService.batchWriteObjectives(objectives);
+      console.log(output);
+   } catch (err) {
+      console.log(err);
+   }
+}
+
+async function addItem(args: Array<string | number>) {
+   if (args.length < 3) {
+      console.log(`Usage: flipted objective add json_file_path`);
+      return;
+   }
+
+   try {
+      const buffer = await readFile(args[2] as string);
+      const rawData = JSON.parse(buffer.toString());
+      const objective = <ObjectiveInput>rawData.objective;
+      console.table(objective);
+      const output = await objectiveService.addObjective(objective);
+      console.log(chalk.green(`Objective added. ${output}`));
+   } catch (err) {
+      console.log(chalk.red(err));
+   }
+}
+
+const actionMap: Map<string | number, (args: Array<string | number>) => void> = new Map();
+actionMap.set("list", listItems);
+actionMap.set("delete", deleteItems);
+actionMap.set("import", importItems);
+actionMap.set("add", addItem);
+
+const objectiveCmd: yargs.CommandModule<{}, {}> = {
+   command: "objective",
+   handler: args => {
+      const [name, action] = args._;
+      if (!actionMap.has(action)) {
+         console.log(`unsupported action: ${name} ${action}.`);
+      } else {
+         const fn = actionMap.get(action);
+         fn!(args._);
+      }
+   },
+   describe: "Import Objectives from objectives.csv"
+};
+
+export default objectiveCmd;
