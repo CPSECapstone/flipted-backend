@@ -315,12 +315,6 @@ type Objective = {
   targetId: Scalars['String'];
   targetName: Scalars['String'];
   course: Scalars['String'];
-  /**
-   * The taskIds here are to be used in resolver chain.
-   * In order to get tasks, the nested resolvers need to know taskIds from its
-   * parent.
-   */
-  taskIds: Array<Scalars['String']>;
   tasks: Array<Task>;
 };
 
