@@ -31,7 +31,7 @@ export async function addObjective(input: ObjectiveInput) {
          return output.ConsumedCapacity.length;
       }
 
-      return 0;
+      return objectiveItem.PK;
    } catch (err) {
       return err;
    }
