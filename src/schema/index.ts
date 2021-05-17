@@ -13,6 +13,7 @@ import objectiveType from "../objective/objective.graphql";
 import targetType from "./target.graphql";
 import progressType from "../progress/progress.graphql";
 import goalsType from "./goal.graphql";
+import rosterType from "../roster/roster.graphql";
 
 import userResolvers from "./user.resolver";
 import courseResolvers from "./course.resolver";
@@ -25,6 +26,7 @@ import objectiveResolvers from "../objective/objective.resolver";
 import targetResolvers from "./target.resolver";
 import progressResolvers from "../progress/progress.resolver";
 import goalsResolvers from "./goal.resolver";
+import rosterResolvers from "../roster/roster.resolver";
 
 const customScalarResolver = {
    Date: GraphQLDate
@@ -42,7 +44,8 @@ const typesArray = [
    targetType,
    objectiveType,
    progressType,
-   goalsType
+   goalsType,
+   rosterType
 ];
 
 const resolversArray = [
@@ -57,7 +60,8 @@ const resolversArray = [
    targetResolvers,
    objectiveResolvers,
    progressResolvers,
-   goalsResolvers
+   goalsResolvers,
+   rosterResolvers
 ];
 
 export const typeDefs = mergeTypeDefs(typesArray);

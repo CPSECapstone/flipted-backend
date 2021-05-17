@@ -2,5 +2,6 @@
 
 import yargs from "yargs";
 import objectiveCmd from "./objectives";
+import rosterCmd from "./roster";
 
-yargs.command(objectiveCmd).help().argv;
+yargs.command(objectiveCmd).command(rosterCmd).help().argv;

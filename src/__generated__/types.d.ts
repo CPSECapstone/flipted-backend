@@ -185,6 +185,7 @@ type Mutation = {
   addObjective: Scalars['String'];
   addProgress: Scalars['String'];
   addQuizBlock: Scalars['String'];
+  addStudent: Scalars['String'];
   addSubMission: Scalars['String'];
   addTarget: Scalars['String'];
   addTask: Scalars['String'];
@@ -250,6 +251,11 @@ type MutationAddProgressArgs = {
 
 type MutationAddQuizBlockArgs = {
   quizblock: QuizBlockInput;
+};
+
+
+type MutationAddStudentArgs = {
+  student: StudentInput;
 };
 
 
@@ -400,6 +406,8 @@ type Query = {
    * May be useful as a TaskSubmissionResult can change as a result of instructor actions.
    */
   retrieveTaskSubmission?: Maybe<TaskSubmissionResult>;
+  student: Student;
+  students: Array<Student>;
   subMission?: Maybe<SubMission>;
   target: Target;
   targets: Array<Target>;
@@ -497,6 +505,17 @@ type QueryRetrieveTaskProgressArgs = {
 
 type QueryRetrieveTaskSubmissionArgs = {
   taskId?: Maybe<Scalars['String']>;
+};
+
+
+type QueryStudentArgs = {
+  studentId: Scalars['String'];
+  course: Scalars['String'];
+};
+
+
+type QueryStudentsArgs = {
+  course: Scalars['String'];
 };
 
 
@@ -605,6 +624,23 @@ type RubricRequirement = {
 
 type RubricRequirementInput = {
   description?: Maybe<Scalars['String']>;
+};
+
+type Student = {
+  __typename?: 'Student';
+  studentId: Scalars['String'];
+  studentName: Scalars['String'];
+  course: Scalars['String'];
+  section: Scalars['String'];
+  team?: Maybe<Scalars['String']>;
+};
+
+type StudentInput = {
+  studentId: Scalars['String'];
+  studentName: Scalars['String'];
+  course: Scalars['String'];
+  section: Scalars['String'];
+  team?: Maybe<Scalars['String']>;
 };
 
 type SubGoal = {
