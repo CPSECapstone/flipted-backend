@@ -11,15 +11,25 @@ import dynamodb, {
 import * as helper from "./objectiveHelper";
 
 export async function addObjective(input: ObjectiveInput) {
+   const objectiveItem = helper.objectiveInputToDBItem(input);
+
+   const items = input.taskIds.map(taskId => {
+      return helper.objectTaskRecordItem(objectiveItem.objectiveId, taskId);
+   });
+
+   items.push(objectiveItem);
+
+   const params: BatchWriteParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      items: items
+   };
    try {
-      const objectiveItem = helper.objectiveInputToDBItem(input);
+      const output = await dynamodb.batchWrite(params);
+      if (output.ConsumedCapacity) {
+         console.log(output.ConsumedCapacity);
+         return output.ConsumedCapacity.length;
+      }
 
-      const params: PutCompositeParams = {
-         tableName: COURSE_CONTENT_TABLE_NAME,
-         item: objectiveItem
-      };
-
-      const output = await dynamodb.putComposite(params);
       return objectiveItem.PK;
    } catch (err) {
       return err;
@@ -102,13 +112,30 @@ export async function listObjectiveItemsByCourse(course: string): Promise<Object
 }
 
 export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promise<number> {
-   const items = objectives.map(helper.objectiveInputToDBItem);
+   const objItems = objectives.map(helper.objectiveInputToDBItem);
+
+   // a flat list of objective task record items for every objective
+   const taskRecords = objItems
+      .map(obj => {
+         // a list of objective task record items for one objective
+         return obj.taskIds.map(taskId => {
+            // a single objective task record item
+            return helper.objectTaskRecordItem(obj.objectiveId, taskId);
+         });
+      })
+      .flat();
+
+   // combine into one big batch
+   const items = objItems as any[];
+   items.push(...taskRecords);
+
    const params: BatchWriteParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       items
    };
    try {
       const output = await dynamodb.batchWrite(params);
+
       if (output.ConsumedCapacity) {
          console.log(output.ConsumedCapacity);
          return output.ConsumedCapacity.length;
@@ -123,10 +150,9 @@ export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promis
 export async function deleteObjectives(): Promise<number> {
    const params: ScanParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
-      filterExpression: "begins_with(PK, :pkPrefix) and begins_with(SK, :skPrefix)",
+      filterExpression: "begins_with(PK, :pkPrefix)",
       expressionAttributeValues: {
-         ":pkPrefix": ObjectivePrefix,
-         ":skPrefix": ObjectivePrefix
+         ":pkPrefix": ObjectivePrefix
       }
    };
 
