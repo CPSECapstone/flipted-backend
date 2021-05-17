@@ -14,3 +14,6 @@ export interface McQuestionItem extends QuestionItem {
    options: QuestionOption[];
    answers: number[];
 }
+
+export const McQuestionPrefix = "MC_QUESTION";
+export const FrQuestionPrefix = "FR_QUESTION";

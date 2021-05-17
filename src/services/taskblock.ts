@@ -2,7 +2,7 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import dynamodb, { PutCompositeParams, GetCompositeParams } from "./dynamodb";
 import { TaskBlockItem, QuizBlockItem } from "../interfaces/taskblock";
-import * as questionService from "./question";
+import * as questionService from "../question/questionService";
 import * as helper from "./taskblockHelper";
 
 async function addTaskBlock(taskblockItem: TaskBlockItem) {

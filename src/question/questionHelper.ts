@@ -1,6 +1,6 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-import { FrQuestionItem, McQuestionItem, QuestionItem } from "../interfaces/question";
+import { FrQuestionItem, McQuestionItem, QuestionItem } from "./questionInterface";
 
 export function gradeMultipleChoiceQuestion(question: McQuestion, answerIndex: number): number {
    return question.answers!.includes(answerIndex) ? question.points : 0;

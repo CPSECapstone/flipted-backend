@@ -1,11 +1,11 @@
 import { Answer } from "./taskSubmissionInterface";
 import { validateToken } from "../jws-verifer";
-import * as questionService from "../services/question";
+import * as questionService from "../question/questionService";
 import {
    gradeMultipleChoiceQuestion,
    isValidMultipleChoiceAnswer,
    quizBlockContainsQuestionIdWithPrefix
-} from "../services/questionHelper";
+} from "../question/questionHelper";
 import taskService from "../services/task";
 import taskSubmissionService from "./taskSubmission";
 import {

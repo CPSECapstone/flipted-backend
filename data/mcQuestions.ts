@@ -16,9 +16,9 @@ async function listItems(args: Arguments<flipted.IAction>) {
    const view = args.view;
 
    try {
-      const questions = await questionService.listFrQuestions();
+      const questions = await questionService.listMcQuestions();
       if (view == "table") {
-         console.table(questions);
+         console.table(questions, ["id", "description", "points", "answers"]);
       } else {
          console.log(JSON.stringify(questions, null, "  "));
       }
@@ -36,14 +36,15 @@ async function importItems(args: Arguments<flipted.IAction>) {
    try {
       const buffer = await readFile(args.input);
       const rawData = JSON.parse(buffer.toString());
-      const frQuestions = rawData.questions.map((question: any) => {
-         return <FrQuestionInput>{
+      const mcQuestions = rawData.questions.map((question: any) => {
+         return <McQuestionInput>{
             description: question.description,
             points: parseInt(question.points),
-            answer: question.answer
+            options: question.options,
+            answers: question.answers
          };
       });
-      const output = await questionService.batchWriteFrQuestions(frQuestions);
+      const output = await questionService.batchWriteMcQuestions(mcQuestions);
       console.log(output);
    } catch (err) {
       console.log(chalk.red(err));
@@ -62,11 +63,11 @@ actionMap.set("importFn", importItems);
 actionMap.set("deleteFn", deleteItems);
 
 const cmdArgs: flipted.CmdFactoryArgs = {
-   name: "frQuestion",
-   desc: "Access FreeResponseQuestion APIs",
+   name: "mcQuestion",
+   desc: "Access MultipleChoiceQuestion APIs",
    actionMap: actionMap
 };
 
-const frQuestionCmd = flipted.cmdFactory(cmdArgs);
+const mcQuestionCmd = flipted.cmdFactory(cmdArgs);
 
-export default frQuestionCmd;
+export default mcQuestionCmd;

@@ -1,4 +1,4 @@
-import * as questionService from "../services/question";
+import * as questionService from "./questionService";
 import { RoleInternal } from "../interfaces/role";
 import { validateToken } from "../jws-verifer";
 import userService from "../services/user";

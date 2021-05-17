@@ -1,6 +1,6 @@
 import { uid } from "uid";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import * as questionService from "./question";
+import * as questionService from "../question/questionService";
 import { TaskItem, RubricRequirementItem } from "../interfaces/task";
 import { QuizBlockItem } from "../interfaces/taskblock";
 

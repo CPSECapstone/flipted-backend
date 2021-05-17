@@ -1,7 +1,7 @@
 import {
    isValidMultipleChoiceAnswer,
    quizBlockContainsQuestionIdWithPrefix
-} from "../../src/services/questionHelper";
+} from "../../src/question/questionHelper";
 
 describe("Validating a question answer submission", () => {
    it("will make sure the question is contained in the provided quizblock as the expected type", async () => {

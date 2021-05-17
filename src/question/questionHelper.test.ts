@@ -1,4 +1,4 @@
-import { gradeMultipleChoiceQuestion } from "../../src/services/questionHelper";
+import { gradeMultipleChoiceQuestion } from "./questionHelper";
 
 describe("grading a multiple choice question", () => {
    it("will award full credit if the question is correct", async () => {

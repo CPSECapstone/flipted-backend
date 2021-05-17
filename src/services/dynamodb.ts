@@ -120,7 +120,8 @@ async function scan(params: ScanParams): Promise<ScanCommandOutput> {
       TableName: params.tableName,
       FilterExpression: params.filterExpression,
       ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
-      ExclusiveStartKey: params.ExclusiveStartKey
+      ExclusiveStartKey: params.ExclusiveStartKey,
+      Limit: params.limit
    });
 
    try {
