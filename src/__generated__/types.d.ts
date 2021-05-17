@@ -629,17 +629,21 @@ type RubricRequirementInput = {
 type Student = {
   __typename?: 'Student';
   studentId: Scalars['String'];
-  studentName: Scalars['String'];
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   course: Scalars['String'];
-  section: Scalars['String'];
+  section: Scalars['Int'];
   team?: Maybe<Scalars['String']>;
 };
 
 type StudentInput = {
   studentId: Scalars['String'];
-  studentName: Scalars['String'];
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   course: Scalars['String'];
-  section: Scalars['String'];
+  section: Scalars['Int'];
   team?: Maybe<Scalars['String']>;
 };
 

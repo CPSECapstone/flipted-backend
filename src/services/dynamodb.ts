@@ -16,7 +16,8 @@ import {
    QueryCommandOutput,
    QueryCommand,
    DeleteItemCommandOutput,
-   DeleteItemCommand
+   DeleteItemCommand,
+   ItemResponse
 } from "@aws-sdk/client-dynamodb";
 import { uid } from "uid/secure";
 
@@ -120,6 +121,7 @@ async function scan(params: ScanParams): Promise<ScanCommandOutput> {
       TableName: params.tableName,
       FilterExpression: params.filterExpression,
       ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
+      ExpressionAttributeNames: params.expressionAttributeNames,
       ExclusiveStartKey: params.ExclusiveStartKey
    });
 
@@ -175,24 +177,45 @@ async function deleteItem(params: DeleteParam): Promise<DeleteItemCommandOutput>
 /*
    write to database in batch mode
 */
-async function batchWrite(params: BatchWriteParams): Promise<BatchWriteItemCommandOutput> {
-   const putRequests = params.items.map((item: any) => {
-      return {
+async function batchWrite(params: BatchWriteParams): Promise<number> {
+   let leftItems = params.items.length;
+   let group = [];
+   let groupNumber = 0;
+   console.log("Total items to be imported", leftItems);
+
+   for (const item of params.items) {
+      const putRequests = {
          PutRequest: {
             Item: marshall(item, marshallOpts)
          }
       };
-   });
 
-   const command = new BatchWriteItemCommand({
-      RequestItems: {
-         [params.tableName]: putRequests
-      },
-      ReturnConsumedCapacity: "INDEXES",
-      ReturnItemCollectionMetrics: "SIZE"
-   });
+      group.push(putRequests);
+      leftItems--;
 
-   return client.send(command);
+      if (group.length == 25 || leftItems < 1) {
+         groupNumber++;
+         console.log(`Batch ${groupNumber} to be imported.`);
+         try {
+            const command = new BatchWriteItemCommand({
+               RequestItems: {
+                  [params.tableName]: group
+               },
+               ReturnConsumedCapacity: "INDEXES",
+               ReturnItemCollectionMetrics: "SIZE"
+            });
+
+            await client.send(command);
+            console.log(`Batch ${groupNumber} processed. Left items: ${leftItems}`);
+            //reset
+            group = [];
+         } catch (err) {
+            console.log(err);
+         }
+      }
+   }
+
+   return params.items.length;
 }
 
 /*
@@ -307,6 +330,7 @@ export interface ScanParams {
    tableName: string;
    filterExpression: string;
    expressionAttributeValues: object;
+   expressionAttributeNames?: { [key: string]: string };
    limit?: number;
    ExclusiveStartKey?: { [key: string]: any };
 }

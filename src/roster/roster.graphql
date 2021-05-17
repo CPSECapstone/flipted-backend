@@ -1,8 +1,10 @@
 type Student {
    studentId: String!
-   studentName: String!
+   email: String!
+   firstName: String
+   lastName: String
    course: String!
-   section: String!
+   section: Int!
    team: String
 }
 
@@ -13,9 +15,11 @@ type Query {
 
 input StudentInput {
    studentId: String!
-   studentName: String!
+   email: String!
+   firstName: String
+   lastName: String
    course: String!
-   section: String!
+   section: Int!
    team: String
 }
 

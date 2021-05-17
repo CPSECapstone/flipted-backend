@@ -1,11 +1,10 @@
-import csv from "csv-parser";
-import parse from "csv-parse/lib/sync";
-import fs from "fs";
 import { readFile } from "fs/promises";
 import { Arguments } from "yargs";
 import chalk from "chalk";
 import * as flipted from "./fliptedCmd";
 import * as rosterService from "../src/roster/rosterService";
+import userService from "../src/services/user";
+import { RoleInternal } from "../src/interfaces/role";
 
 async function addItem(args: Arguments<flipted.IAction>) {
    if (!args.input) {
@@ -30,35 +29,37 @@ async function listItems() {
 
    try {
       const students = await rosterService.listStudentsByCourse(course);
-      console.table(students, ["PK", "SK", "section", "studentName", "team"]);
+      console.table(students, ["course", "studentId", "email", "section", "team"]);
       console.log(`Total: ${students.length} roster items.`);
    } catch (err) {
       console.log(err);
    }
 }
 
-async function readStudentsFromCSV(filePath: string): Promise<StudentInput[]> {
-   const buffer = await readFile(filePath);
-   const rawData = parse(buffer.toString(), { columns: true, skip_empty_lines: true });
-   const students: StudentInput[] = rawData.map((record: any) => {
-      return <StudentInput>record;
-   });
-   console.log(`readStudentsFromCSV: total of ${students.length} student items.`);
-
-   return students;
+function randomInt(min: number, max: number) {
+   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+const TEAMS = ["alpha", "beta", "gamma"];
+const COURSE = "Integrated Science";
 
-async function importItems(args: Arguments<flipted.IAction>) {
-   if (!args.input) {
-      console.log("Missing --input=json_file_path");
-      return;
-   }
-
+async function importItems() {
    try {
-      const students = await readStudentsFromCSV(args.input);
+      const users = await userService.listUsersByRole(RoleInternal.Student);
+      const students = users.map(user => {
+         return <StudentInput>{
+            studentId: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            course: COURSE,
+            section: randomInt(1, 2),
+            team: TEAMS[randomInt(0, 2)]
+         };
+      });
       console.table(students);
       const output = await rosterService.importStudents(students);
-      console.log(output);
+      console.table(output);
+      // console.log(output);
    } catch (err) {
       console.log(err);
    }
