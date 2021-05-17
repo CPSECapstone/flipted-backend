@@ -46,14 +46,16 @@ async function generateObjectiveInputs() {
    const lenOfTasks = tasks.length;
 
    objectives.forEach(objective => {
-      const taskIds: string[] = [];
       const numberOfTask = randomInt(2, 5);
+      const set: Set<string> = new Set();
+
+      // random may give the same number
       for (let i = 0; i < numberOfTask; i++) {
          const taskIndex = randomInt(0, lenOfTasks - 1);
-         taskIds.push(tasks[taskIndex].id);
+         set.add(tasks[taskIndex].id);
       }
 
-      objective.taskIds = taskIds;
+      objective.taskIds = Array.from(set.values());
    });
 
    return objectives;

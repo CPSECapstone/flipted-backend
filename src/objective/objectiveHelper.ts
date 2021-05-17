@@ -1,5 +1,7 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
+import { TaskKey } from "../interfaces/task";
+import { CompositeDBItem } from "../services/dynamodb";
 import { ObjectiveItem, ObjectiveKey } from "./objectiveInterface";
 
 export function objectiveInputToDBItem(input: ObjectiveInput): ObjectiveItem {
@@ -13,6 +15,13 @@ export function objectiveInputToDBItem(input: ObjectiveInput): ObjectiveItem {
    };
 
    return item;
+}
+
+export function objectTaskRecordItem(objectiveId: string, taskId: string) : CompositeDBItem {
+   return {
+      PK: ObjectiveKey(objectiveId),
+      SK: TaskKey(taskId)
+   }
 }
 
 export function dbItemToObjective(item: ObjectiveItem): Objective {
