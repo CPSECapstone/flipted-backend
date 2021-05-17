@@ -150,10 +150,9 @@ export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promis
 export async function deleteObjectives(): Promise<number> {
    const params: ScanParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
-      filterExpression: "begins_with(PK, :pkPrefix) and begins_with(SK, :skPrefix)",
+      filterExpression: "begins_with(PK, :pkPrefix)",
       expressionAttributeValues: {
-         ":pkPrefix": ObjectivePrefix,
-         ":skPrefix": ObjectivePrefix
+         ":pkPrefix": ObjectivePrefix
       }
    };
 
