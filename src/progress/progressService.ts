@@ -1,9 +1,10 @@
-import { MASTERY_TABLE, USER_PROGRESS_TABLE_NAME } from "../environment";
+import { COURSE_CONTENT_TABLE_NAME, MASTERY_TABLE, USER_PROGRESS_TABLE_NAME } from "../environment";
 import dynamodb, {
    PutCompositeParams,
    ScanParams,
    QueryParams,
-   DeleteParam
+   DeleteParam,
+   CompositeDBItem
 } from "../services/dynamodb";
 import * as helper from "./progressHelper";
 import { MasteryItem, ProgressPK } from "./progressInterface";
@@ -16,8 +17,9 @@ import taskService from "../services/task";
 import { generateMissionProgress, generateTargetProgress } from "./progressHelper";
 import { listTargetsByCourse } from "../services/target";
 import { listObjectiveItemsByCourse, listObjectivesByCourse } from "../objective/objectiveService";
-import { ObjectiveItem } from "../objective/objectiveInterface";
+import { ObjectiveItem, ObjectiveKey } from "../objective/objectiveInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { TaskKey } from "../interfaces/task";
 
 export async function addProgress(input: ProgressInput): Promise<string> {
    const courseItem = helper.progressInputToDBItem(input);
@@ -164,8 +166,34 @@ export async function getAllTargetProgressForUser(course: string, username: stri
    return targetProgress;
 }
 
-function listUserMasteryItemsByTask(username: string, taskId: string): Promise<MasteryItem[]> {
+export async function listUserMasteryItemsByTask(username: string, taskId: string): Promise<MasteryItem[]> {
    throw new Error("Function not implemented.");
+}
+
+export async function listObjectivesIdsByTask(taskId: string) : Promise<string[]> {
+   const params: QueryParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      indexName: "SK-PK-index",
+      keyConditionExpression: "PK = :pkVal and begins_with(SK, :skPrefix)",
+      expressionAttributeValues: {
+         ":pkVal": TaskKey(taskId),
+         ":skPrefix": ObjectiveKey("")
+      }
+   };
+
+   try {
+      const output = await dynamodb.query(params);
+      if (output.Items) {
+         const submissions = output.Items.map(rawItem => {
+            return (<CompositeDBItem>unmarshall(rawItem)).PK;
+         });
+         return submissions
+      }
+
+      return [];
+   } catch (err) {
+      throw err;
+   }
 }
 
 async function listUserMasteryItemsByCourse(
