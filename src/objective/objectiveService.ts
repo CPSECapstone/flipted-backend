@@ -10,14 +10,19 @@ import dynamodb, {
 } from "../services/dynamodb";
 import * as helper from "./objectiveHelper";
 
-export async function addObjectiveTaskRecords(objectiveId: string, taskIds: string[]) {
-   const items = taskIds.map(taskId => {
-      return helper.objectTaskRecordItem(objectiveId, taskId)
+export async function addObjective(input: ObjectiveInput) {
+
+   const objectiveItem = helper.objectiveInputToDBItem(input);
+
+   const items = input.taskIds.map(taskId => {
+      return helper.objectTaskRecordItem(objectiveItem.objectiveId, taskId)
    });
+
+   items.push(objectiveItem)
 
    const params: BatchWriteParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
-      items
+      items: items
    };
    try {
       const output = await dynamodb.batchWrite(params);
@@ -27,23 +32,6 @@ export async function addObjectiveTaskRecords(objectiveId: string, taskIds: stri
       }
 
       return 0;
-   } catch (err) {
-      return err;
-   }
-}
-
-export async function addObjective(input: ObjectiveInput) {
-   try {
-      const objectiveItem = helper.objectiveInputToDBItem(input);
-
-      const params: PutCompositeParams = {
-         tableName: COURSE_CONTENT_TABLE_NAME,
-         item: objectiveItem
-      };
-
-      const output = await dynamodb.putComposite(params);
-      await addObjectiveTaskRecords(objectiveItem.objectiveId, objectiveItem.taskIds)
-      return objectiveItem.PK;
    } catch (err) {
       return err;
    }
@@ -125,17 +113,30 @@ export async function listObjectiveItemsByCourse(course: string): Promise<Object
 }
 
 export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promise<number> {
-   const items = objectives.map(helper.objectiveInputToDBItem);
+   const objItems = objectives.map(helper.objectiveInputToDBItem);
+
+   // a flat list of objective task record items for every objective
+   const taskRecords = objItems.map(obj => {
+
+      // a list of objective task record items for one objective
+      return obj.taskIds.map(taskId => {
+         
+         // a single objective task record item
+         return helper.objectTaskRecordItem(obj.objectiveId, taskId)
+      });
+
+   }).flat();
+
+   // combine into one big batch
+   const items = objItems as any[]
+   items.push(...taskRecords)
+
    const params: BatchWriteParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       items
    };
    try {
       const output = await dynamodb.batchWrite(params);
-      
-      items.forEach(obj => {
-         addObjectiveTaskRecords(obj.objectiveId, obj.taskIds)
-      });
 
       if (output.ConsumedCapacity) {
          console.log(output.ConsumedCapacity);
