@@ -5,6 +5,7 @@
 ## How To Guide
   * [Getting Started](how-to-guide/getting_started.md)
   * [Development Workflow](how-to-guide/development_workflow.md)
+  * [Use flipted CLI](how-to-guide/use_flipted_cli.md)
 
 * [APIs](apis/README.md)
   * [Courses](apis/courses.md)

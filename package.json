@@ -3,10 +3,14 @@
    "version": "1.0.0",
    "description": "LMS for K-12, Senior Capstone Project.",
    "main": "apollo-server.ts",
+   "bin": {
+      "flipted": ".build/data/index.js"
+   },
    "scripts": {
+      "compile": "tsc -p .",
+      "compile:watch": "tsc -p . --watch",
       "generate": "graphql-codegen --config codegen.yml",
       "data:targets": "node data/targets.js",
-      "data:objectives": "tsc -p .&& node ./.build/data/objectives.js",
       "data:courses": "node data/courses.js",
       "data:tasks": "node data/tasks.js",
       "data:progress": "node data/progress.js",
@@ -30,11 +34,13 @@
       "@types/graphql-iso-date": "^3.4.0",
       "apollo-server": "^2.19.1",
       "apollo-server-lambda": "^2.21.0",
+      "chalk": "^4.1.1",
       "csv-parser": "^3.0.0",
       "graphql": "^15.4.0",
       "graphql-iso-date": "^3.6.1",
       "graphql-type-json": "^0.3.2",
-      "uid": "^2.0.0"
+      "uid": "^2.0.0",
+      "yargs": "^16.2.0"
    },
    "devDependencies": {
       "@graphql-codegen/cli": "1.21.4",
@@ -42,6 +48,8 @@
       "@graphql-codegen/typescript": "^1.22.0",
       "@types/chai": "^4.2.15",
       "@types/jest": "^26.0.22",
+      "@types/node": "^15.3.0",
+      "@types/yargs": "^15.0.13",
       "concurrently": "^6.0.2",
       "eslint": "^7.23.0",
       "jest": "^26.6.3",
@@ -54,7 +62,7 @@
       "ts-jest": "^26.5.4",
       "ts-loader": "^8.0.17",
       "ts-node": "^9.1.1",
-      "typescript": "^4.2.3",
+      "typescript": "^4.2.4",
       "typings": "^2.1.1",
       "webpack": "^5.22.0",
       "webpack-node-externals": "^2.5.2"
