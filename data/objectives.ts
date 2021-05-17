@@ -1,9 +1,9 @@
 import csv from "csv-parser";
 import fs from "fs";
 import { readFile } from "fs/promises";
-import yargs from "yargs";
+import { Arguments } from "yargs";
 import chalk from "chalk";
-
+import * as flipted from "./flptedCmd";
 import taskService from "../src/services/task";
 import * as objectiveService from "../src/objective/objectiveService";
 
@@ -98,14 +98,14 @@ async function importItems() {
    }
 }
 
-async function addItem(args: Array<string | number>) {
-   if (args.length < 3) {
-      console.log(`Usage: flipted objective add json_file_path`);
+async function addItem(args: Arguments<flipted.IAction>) {
+   if (!args.input) {
+      console.log("Missing --input=json_file_path");
       return;
    }
 
    try {
-      const buffer = await readFile(args[2] as string);
+      const buffer = await readFile(args.input);
       const rawData = JSON.parse(buffer.toString());
       const objective = <ObjectiveInput>rawData.objective;
       console.table(objective);
@@ -116,24 +116,33 @@ async function addItem(args: Array<string | number>) {
    }
 }
 
-const actionMap: Map<string | number, (args: Array<string | number>) => void> = new Map();
-actionMap.set("list", listItems);
-actionMap.set("delete", deleteItems);
-actionMap.set("import", importItems);
-actionMap.set("add", addItem);
+async function getItem(args: Arguments<flipted.IAction>) {
+   if (!args.id) {
+      console.log("Missing --id=xxx");
+      return;
+   }
 
-const objectiveCmd: yargs.CommandModule<{}, {}> = {
-   command: "objective",
-   handler: args => {
-      const [name, action] = args._;
-      if (!actionMap.has(action)) {
-         console.log(`unsupported action: ${name} ${action}.`);
-      } else {
-         const fn = actionMap.get(action);
-         fn!(args._);
-      }
-   },
-   describe: "Import Objectives from objectives.csv"
+   try {
+      const output = await objectiveService.getObjectiveById(args.id);
+      console.dir(output);
+   } catch (err) {
+      console.log(err);
+   }
+}
+
+const actionMap: flipted.ActionMap = new Map();
+actionMap.set("addFn", addItem);
+actionMap.set("getFn", getItem);
+actionMap.set("listFn", listItems);
+actionMap.set("importFn", importItems);
+actionMap.set("deleteFn", deleteItems);
+
+const cmdArgs: flipted.CmdFactoryArgs = {
+   name: "objective",
+   desc: "Access objective APIs",
+   actionMap: actionMap
 };
+
+const objectiveCmd = flipted.cmdFactory(cmdArgs);
 
 export default objectiveCmd;

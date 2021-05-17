@@ -3,4 +3,4 @@
 import yargs from "yargs";
 import objectiveCmd from "./objectives";
 
-yargs.command(objectiveCmd).argv;
+yargs.command(objectiveCmd).help().argv;

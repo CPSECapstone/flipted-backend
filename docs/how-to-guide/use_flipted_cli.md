@@ -5,9 +5,10 @@ Now we have a `flipted` cli tool for interacting with our service API and databa
 ### Supported Commands
 
 ```
-flipted objective add [json_file_path]
-flipted objective import
+flipted objective add --input=json_file
+flipted objective get --id=xxx
 flipted objective list
+flipted objective import
 flipted objective delete
 ```
 
@@ -24,5 +25,5 @@ flipted objective delete
 
 ### Todo
 
-+ [ ] Add help info
++ [x] Add help info
 + [ ] Suppor More Commands
