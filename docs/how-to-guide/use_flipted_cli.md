@@ -34,7 +34,6 @@ flipted objective delete
 
 2. Run `npm install -g .` to install the `bin` script. This will add `flipted` to the system path. Whenever you type `flipted` in the command line interface, it will run the file that is pointed by `bin`. See `package.json` for more info.
 
-
 ### To Support More Commands
 
 1. See `data/index.ts` and `data/objectives.ts` for examples.
