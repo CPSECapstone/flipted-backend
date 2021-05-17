@@ -40,6 +40,27 @@ type QuizBlock implements TaskBlock {
    questions: [Question!]!
 }
 
+type FrBlock implements TaskBlock {
+   title: String!
+   blockId: String!
+   blockIndex: Int!
+   pageIndex: Int!
+   points: Int!
+   stem: String!
+   answer: String
+}
+
+type McBlock implements TaskBlock {
+   title: String!
+   blockId: String!
+   blockIndex: Int!
+   pageIndex: Int!
+   points: Int!
+   stem: String!
+   options: [String!]!
+   answers: [Int!]
+}
+
 input ImageBlockInput {
    taskId: String!
    title: String!
@@ -75,6 +96,27 @@ input QuizBlockInput {
    questionIds: [String!]!
 }
 
+input FrBlockInput {
+   taskId: String!
+   title: String!
+   pageIndex: Int!
+   blockIndex: Int!
+   points: Int!
+   stem: String!
+   answer: String
+}
+
+input McBlockInput {
+   taskId: String!
+   title: String!
+   pageIndex: Int!
+   blockIndex: Int!
+   points: Int!
+   stem: String!
+   options: [String!]!
+   answers: [Int!]
+}
+
 type Query {
    quizblock(taskId: String!, blockId: String!): QuizBlock!
 }
@@ -84,4 +126,6 @@ type Mutation {
    addImageBlock(imageblock: ImageBlockInput!): String!
    addVideoBlock(videoblock: VideoBlockInput!): String!
    addQuizBlock(quizblock: QuizBlockInput!): String!
+   addFrBlockInput(frBlock: FrBlockInput!): String!
+   addMcBlockInput(mcBlock: McBlockInput!): String!
 }

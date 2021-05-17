@@ -6,6 +6,7 @@ import chalk from "chalk";
 import * as flipted from "./fliptedCmd";
 import taskService from "../src/services/task";
 import * as objectiveService from "../src/objective/objectiveService";
+import * as util from "./util";
 
 async function readObjectivesFromCSV(): Promise<ObjectiveInput[]> {
    const objectives: ObjectiveInput[] = [];
@@ -36,22 +37,18 @@ async function readTasksFromDB(course: string): Promise<Task[]> {
    return tasks;
 }
 
-function randomInt(min: number, max: number) {
-   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 async function generateObjectiveInputs() {
    const objectives: ObjectiveInput[] = await readObjectivesFromCSV();
    const tasks: Task[] = await readTasksFromDB("Integrated Science");
    const lenOfTasks = tasks.length;
 
    objectives.forEach(objective => {
-      const numberOfTask = randomInt(2, 5);
+      const numberOfTask = util.randomInt(2, 5);
       const set: Set<string> = new Set();
 
       // random may give the same number
       for (let i = 0; i < numberOfTask; i++) {
-         const taskIndex = randomInt(0, lenOfTasks - 1);
+         const taskIndex = util.randomInt(0, lenOfTasks - 1);
          set.add(tasks[taskIndex].id);
       }
 
@@ -65,16 +62,7 @@ async function listItems() {
    const course = "Integrated Science";
    try {
       const output = await objectiveService.listObjectivesByCourse(course);
-      const toPrint = output.map(objective => {
-         return {
-            objectiveId: objective.objectiveId,
-            objectiveName: objective.objectiveName,
-            targetId: objective.targetId,
-            targetName: objective.targetName
-         };
-      });
-
-      console.table(toPrint);
+      console.table(output, ["objectiveId", "objectiveName"]);
       console.log(`Total: ${output.length} objective items.`);
    } catch (err) {
       console.log(err);
