@@ -11,14 +11,13 @@ import dynamodb, {
 import * as helper from "./objectiveHelper";
 
 export async function addObjective(input: ObjectiveInput) {
-
    const objectiveItem = helper.objectiveInputToDBItem(input);
 
    const items = input.taskIds.map(taskId => {
-      return helper.objectTaskRecordItem(objectiveItem.objectiveId, taskId)
+      return helper.objectTaskRecordItem(objectiveItem.objectiveId, taskId);
    });
 
-   items.push(objectiveItem)
+   items.push(objectiveItem);
 
    const params: BatchWriteParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
@@ -116,20 +115,19 @@ export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promis
    const objItems = objectives.map(helper.objectiveInputToDBItem);
 
    // a flat list of objective task record items for every objective
-   const taskRecords = objItems.map(obj => {
-
-      // a list of objective task record items for one objective
-      return obj.taskIds.map(taskId => {
-         
-         // a single objective task record item
-         return helper.objectTaskRecordItem(obj.objectiveId, taskId)
-      });
-
-   }).flat();
+   const taskRecords = objItems
+      .map(obj => {
+         // a list of objective task record items for one objective
+         return obj.taskIds.map(taskId => {
+            // a single objective task record item
+            return helper.objectTaskRecordItem(obj.objectiveId, taskId);
+         });
+      })
+      .flat();
 
    // combine into one big batch
-   const items = objItems as any[]
-   items.push(...taskRecords)
+   const items = objItems as any[];
+   items.push(...taskRecords);
 
    const params: BatchWriteParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
