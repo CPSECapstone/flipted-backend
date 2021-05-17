@@ -10,6 +10,28 @@ import dynamodb, {
 } from "../services/dynamodb";
 import * as helper from "./objectiveHelper";
 
+export async function addObjectiveTaskRecords(objectiveId: string, taskIds: string[]) {
+   const items = taskIds.map(taskId => {
+      return helper.objectTaskRecordItem(objectiveId, taskId)
+   });
+
+   const params: BatchWriteParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      items
+   };
+   try {
+      const output = await dynamodb.batchWrite(params);
+      if (output.ConsumedCapacity) {
+         console.log(output.ConsumedCapacity);
+         return output.ConsumedCapacity.length;
+      }
+
+      return 0;
+   } catch (err) {
+      return err;
+   }
+}
+
 export async function addObjective(input: ObjectiveInput) {
    try {
       const objectiveItem = helper.objectiveInputToDBItem(input);
@@ -20,6 +42,7 @@ export async function addObjective(input: ObjectiveInput) {
       };
 
       const output = await dynamodb.putComposite(params);
+      await addObjectiveTaskRecords(objectiveItem.objectiveId, objectiveItem.taskIds)
       return objectiveItem.PK;
    } catch (err) {
       return err;
@@ -109,6 +132,11 @@ export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promis
    };
    try {
       const output = await dynamodb.batchWrite(params);
+      
+      items.forEach(obj => {
+         addObjectiveTaskRecords(obj.objectiveId, obj.taskIds)
+      });
+
       if (output.ConsumedCapacity) {
          console.log(output.ConsumedCapacity);
          return output.ConsumedCapacity.length;
