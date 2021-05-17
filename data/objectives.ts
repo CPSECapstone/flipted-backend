@@ -3,7 +3,7 @@ import fs from "fs";
 import { readFile } from "fs/promises";
 import { Arguments } from "yargs";
 import chalk from "chalk";
-import * as flipted from "./flptedCmd";
+import * as flipted from "./fliptedCmd";
 import taskService from "../src/services/task";
 import * as objectiveService from "../src/objective/objectiveService";
 

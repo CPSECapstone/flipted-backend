@@ -33,7 +33,6 @@ export function cmdFactory(cmdArgs: CmdFactoryArgs): yargs.CommandModule<{}, IAc
          });
       },
       handler: args => {
-         console.log(args);
          const actionFnName: ActionIndex = <ActionIndex>`${args.action}Fn`;
          if (actionMap.has(actionFnName)) {
             actionMap.get(actionFnName)!(args);
