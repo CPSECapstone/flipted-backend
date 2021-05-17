@@ -1,6 +1,9 @@
-const csv = require("csv-parser");
-const fs = require("fs");
-
+import csv from "csv-parser";
+import fs from "fs";
+import { readFile } from "fs/promises";
+import { Arguments } from "yargs";
+import chalk from "chalk";
+import * as flipted from "./fliptedCmd";
 import taskService from "../src/services/task";
 import * as objectiveService from "../src/objective/objectiveService";
 
@@ -56,14 +59,90 @@ async function generateObjectiveInputs() {
    return objectives;
 }
 
-async function main() {
+async function listItems() {
+   const course = "Integrated Science";
    try {
-      await objectiveService.deleteObjectives();
-      const objectives = await generateObjectiveInputs();
-      await objectiveService.batchWriteObjectives(objectives);
+      const output = await objectiveService.listObjectivesByCourse(course);
+      const toPrint = output.map(objective => {
+         return {
+            objectiveId: objective.objectiveId,
+            objectiveName: objective.objectiveName,
+            targetId: objective.targetId,
+            targetName: objective.targetName
+         };
+      });
+
+      console.table(toPrint);
+      console.log(`Total: ${output.length} objective items.`);
    } catch (err) {
       console.log(err);
    }
 }
 
-main();
+async function deleteItems() {
+   try {
+      const output = await objectiveService.deleteObjectives();
+      console.log(output);
+   } catch (err) {
+      console.log(err);
+   }
+}
+
+async function importItems() {
+   try {
+      const objectives = await generateObjectiveInputs();
+      const output = await objectiveService.batchWriteObjectives(objectives);
+      console.log(output);
+   } catch (err) {
+      console.log(err);
+   }
+}
+
+async function addItem(args: Arguments<flipted.IAction>) {
+   if (!args.input) {
+      console.log("Missing --input=json_file_path");
+      return;
+   }
+
+   try {
+      const buffer = await readFile(args.input);
+      const rawData = JSON.parse(buffer.toString());
+      const objective = <ObjectiveInput>rawData.objective;
+      console.table(objective);
+      const output = await objectiveService.addObjective(objective);
+      console.log(chalk.green(`Objective added. ${output}`));
+   } catch (err) {
+      console.log(chalk.red(err));
+   }
+}
+
+async function getItem(args: Arguments<flipted.IAction>) {
+   if (!args.id) {
+      console.log("Missing --id=xxx");
+      return;
+   }
+
+   try {
+      const output = await objectiveService.getObjectiveById(args.id);
+      console.dir(output);
+   } catch (err) {
+      console.log(err);
+   }
+}
+
+const actionMap: flipted.ActionMap = new Map();
+actionMap.set("addFn", addItem);
+actionMap.set("getFn", getItem);
+actionMap.set("listFn", listItems);
+actionMap.set("importFn", importItems);
+actionMap.set("deleteFn", deleteItems);
+
+const cmdArgs: flipted.CmdFactoryArgs = {
+   name: "objective",
+   desc: "Access objective APIs",
+   actionMap: actionMap
+};
+
+const objectiveCmd = flipted.cmdFactory(cmdArgs);
+
+export default objectiveCmd;
