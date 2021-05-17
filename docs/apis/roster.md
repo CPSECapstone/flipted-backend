@@ -4,7 +4,7 @@
 
 * Add Student To Course
 * Get Student By StudentId and Course
-* List Roster By Course
+* List Students By Course
 
 ## Examples
 
@@ -15,9 +15,11 @@ mutation AddStudent {
   addStudent(
     student: {
       studentId: "Test Student Id 1"
-      studentName: "Test Student Name 1"
+      email: "Test Student email 1"
+      firstName: "Test Student firstName 1"
+      lastName: "Test Student lastName 1"
       course: "Integrated Science"
-      section: "1"
+      section: 1
       team: "Gamma"
     }
   )
@@ -30,7 +32,9 @@ mutation AddStudent {
 query Student {
   student(studentId: "Test Student Id 1", course: "Integrated Science") {
     studentId
-    studentName
+    email
+    firstName
+    lastName
     course
     section
     team
@@ -41,10 +45,12 @@ query Student {
 ### List Students By Course
 
 ```graphql
-query Roster {
+query Students {
   students(course: "Integrated Science") {
     studentId
-    studentName
+    email
+    firstName
+    lastName
     course
     section
     team
