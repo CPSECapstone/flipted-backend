@@ -3,7 +3,6 @@ import {
    BatchGetItemCommand,
    BatchGetItemCommandOutput,
    BatchWriteItemCommand,
-   BatchWriteItemCommandOutput,
    DynamoDBClient,
    GetItemCommand,
    GetItemCommandOutput,
