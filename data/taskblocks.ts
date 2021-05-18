@@ -10,9 +10,9 @@ import { TaskBlockItem } from "../src/taskblock/taskblockInterface";
 
 async function listItems() {
    try {
-      const output = await taskblockService.listTaskBlocks();
-      console.table(output, ["PK", "SK", "title", "points"]);
-      console.log(`Total: ${output.length} taskblock items.`);
+      const blocks = await taskblockService.listTaskBlocks();
+      console.table(blocks, ["PK", "title", "pageIndex", "blockIndex", "points"]);
+      console.log(`Total: ${blocks.length} taskblock items.`);
    } catch (err) {
       console.log(err);
    }
@@ -37,7 +37,7 @@ function readFrBlock(data: any, taskId: string): TaskBlockItem {
       taskId: taskId,
       title: data.Title,
       pageIndex: parseInt(data.Page) - 1,
-      blockIndex: 1,
+      blockIndex: parseInt(data.BlockIndex) - 1,
       stem: data["Question Stem"],
       points: util.randomInt(1, 10),
       answer: ""
@@ -51,7 +51,7 @@ function readMcBlock(data: any, taskId: string): TaskBlockItem {
       taskId: taskId,
       title: data.Title,
       pageIndex: parseInt(data.Page) - 1,
-      blockIndex: 1,
+      blockIndex: parseInt(data.BlockIndex) - 1,
       stem: data["Question Stem"],
       points: util.randomInt(1, 10),
       options: [data["Option 1"], data["Option 2"], data["Option 3"], data["Option 4"]],
@@ -66,7 +66,7 @@ function readTextBlock(data: any, taskId: string): TaskBlockItem {
       taskId: taskId,
       title: data.Title,
       pageIndex: parseInt(data.Page) - 1,
-      blockIndex: 1,
+      blockIndex: parseInt(data.BlockIndex) - 1,
       contents: data.Text,
       fontSize: 12
    };
@@ -79,7 +79,7 @@ function readImageBlock(data: any, taskId: string): TaskBlockItem {
       taskId: taskId,
       title: data.Title,
       pageIndex: parseInt(data.Page) - 1,
-      blockIndex: 1,
+      blockIndex: parseInt(data.BlockIndex) - 1,
       imageUrl: data["Media Link"]
    };
 
@@ -91,7 +91,7 @@ function readVideoBlock(data: any, taskId: string): TaskBlockItem {
       taskId: taskId,
       title: data.Title,
       pageIndex: parseInt(data.Page) - 1,
-      blockIndex: 1,
+      blockIndex: parseInt(data.BlockIndex) - 1,
       videoUrl: data["Media Link"]
    };
 
@@ -106,7 +106,6 @@ function generateTaskBlockItems(records: any[], tasks: Task[]): TaskBlockItem[] 
 
    const blockItems: TaskBlockItem[] = [];
 
-   console.log(records);
    records.forEach(record => {
       const taskName = record.Task || "unknown task";
       const taskId = map.get(taskName) || "unknown task";
@@ -138,18 +137,29 @@ async function importItems(args: Arguments<flipted.IAction>) {
       const records = await readTaskBlocksFromCSV(filePath);
       const tasks = await taskService.listTasksByCourse(course);
       const blocks: TaskBlockItem[] = generateTaskBlockItems(records, tasks);
-      console.table(blocks, ["SK", "title", "pageIndex", "blockIndex", "points"]);
-      // const output = await taskblockService.importBlocks(blocks);
-      // console.log(output);
+      console.table(blocks, ["PK", "title", "pageIndex", "blockIndex"]);
+
+      const output = await taskblockService.importBlocks(blocks);
+      console.log(output);
    } catch (err) {
       console.log(err);
       return err;
    }
 }
 
+async function deleteItems() {
+   try {
+      const output = await taskblockService.deleteTaskBlocks();
+      console.log(output);
+   } catch (err) {
+      console.log(err);
+   }
+}
+
 const actionMap: flipted.ActionMap = new Map();
 actionMap.set("listFn", listItems);
 actionMap.set("importFn", importItems);
+actionMap.set("deleteFn", deleteItems);
 
 const cmdArgs: flipted.CmdFactoryArgs = {
    name: "taskblock",

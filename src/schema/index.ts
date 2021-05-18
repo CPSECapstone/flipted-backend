@@ -10,7 +10,7 @@ import quizTaskSubmission from "../submissions/taskSubmission.graphql";
 import questionType from "./question.graphql";
 import taskblockType from "../taskblock/taskblock.graphql";
 import objectiveType from "../objective/objective.graphql";
-import targetType from "./target.graphql";
+import targetType from "../target/target.graphql";
 import progressType from "../progress/progress.graphql";
 import goalsType from "./goal.graphql";
 import rosterType from "../roster/roster.graphql";
@@ -23,7 +23,7 @@ import quizTaskSubmissionResolvers from "../submissions/taskSubmission.resolver"
 import missionResolvers from "./mission.resolver";
 import taskblockResolvers from "../taskblock/taskblock.resolver";
 import objectiveResolvers from "../objective/objective.resolver";
-import targetResolvers from "./target.resolver";
+import targetResolvers from "../target/target.resolver";
 import progressResolvers from "../progress/progress.resolver";
 import goalsResolvers from "./goal.resolver";
 import rosterResolvers from "../roster/roster.resolver";
