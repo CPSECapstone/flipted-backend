@@ -3,7 +3,6 @@ import {
    BatchGetItemCommand,
    BatchGetItemCommandOutput,
    BatchWriteItemCommand,
-   BatchWriteItemCommandOutput,
    DynamoDBClient,
    GetItemCommand,
    GetItemCommandOutput,
@@ -16,8 +15,7 @@ import {
    QueryCommandOutput,
    QueryCommand,
    DeleteItemCommandOutput,
-   DeleteItemCommand,
-   ItemResponse
+   DeleteItemCommand
 } from "@aws-sdk/client-dynamodb";
 import { uid } from "uid/secure";
 

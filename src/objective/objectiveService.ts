@@ -4,7 +4,6 @@ import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "./objectiveInterfa
 import dynamodb, {
    BatchWriteParams,
    GetCompositeParams,
-   PutCompositeParams,
    QueryParams,
    ScanParams
 } from "../services/dynamodb";

@@ -7,7 +7,7 @@ import dynamodb, {
 } from "../services/dynamodb";
 import * as helper from "./progressHelper";
 import { MasteryItem, ProgressPK } from "./progressInterface";
-import * as courseService from "../services/course";
+import * as courseService from "../course/courseService";
 import usersData from "./users.json";
 import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
 import taskSubmissionService from "../submissions/taskSubmission";

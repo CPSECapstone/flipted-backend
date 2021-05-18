@@ -1,5 +1,22 @@
 import * as flipted from "./fliptedCmd";
 import taskService from "../src/services/task";
+import { Arguments } from "yargs";
+
+async function getItem(args: Arguments<flipted.IAction>) {
+   if (!args.id) {
+      console.log("Mission --id=xxx");
+      return;
+   }
+
+   const taskId: string = args.id;
+
+   try {
+      const task = await taskService.getTaskById(taskId);
+      console.log(task);
+   } catch (err) {
+      console.log(err);
+   }
+}
 
 async function listItems() {
    const course = "Integrated Science";
@@ -15,6 +32,7 @@ async function listItems() {
 
 const actionMap: flipted.ActionMap = new Map();
 
+actionMap.set("getFn", getItem);
 actionMap.set("listFn", listItems);
 
 const cmdArgs: flipted.CmdFactoryArgs = {

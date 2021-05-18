@@ -222,10 +222,10 @@ type MultipleChoiceAnswerInput = {
 type Mutation = {
   __typename?: 'Mutation';
   addCourse: Scalars['String'];
-  addFrBlockInput: Scalars['String'];
+  addFrBlock: Scalars['String'];
   addFrQuestion: Scalars['String'];
   addImageBlock: Scalars['String'];
-  addMcBlockInput: Scalars['String'];
+  addMcBlock: Scalars['String'];
   addMcQuestion: Scalars['String'];
   addMission: Scalars['String'];
   addObjective: Scalars['String'];
@@ -265,7 +265,7 @@ type MutationAddCourseArgs = {
 };
 
 
-type MutationAddFrBlockInputArgs = {
+type MutationAddFrBlockArgs = {
   frBlock: FrBlockInput;
 };
 
@@ -280,7 +280,7 @@ type MutationAddImageBlockArgs = {
 };
 
 
-type MutationAddMcBlockInputArgs = {
+type MutationAddMcBlockArgs = {
   mcBlock: McBlockInput;
 };
 

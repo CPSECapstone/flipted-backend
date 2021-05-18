@@ -1,6 +1,6 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-import { CourseInfoItem, CourseKey, CoursePrefix } from "../interfaces/course";
+import { CourseInfoItem, CourseKey, CoursePrefix } from "./courseInterface";
 import {
    MissionItem,
    MissionPrefix,
@@ -10,10 +10,10 @@ import {
 import { ObjectiveItem, ObjectivePrefix } from "../objective/objectiveInterface";
 import { TargetItem, TargetPrefix } from "../interfaces/target";
 import { TaskPrefix } from "../interfaces/task";
-import { dbItemToSubMission, dbMissionItemToMission } from "./missionLogic";
+import { dbItemToSubMission, dbMissionItemToMission } from "../services/missionLogic";
 import { dbItemToObjective } from "../objective/objectiveHelper";
-import { dbItemToTarget } from "./targetHelper";
-import { dbItemToTask } from "./taskBusLogic";
+import { dbItemToTarget } from "../services/targetHelper";
+import { dbItemToTask } from "../services/taskBusLogic";
 
 export function courseInputToDBItem(input: CourseInput): CourseInfoItem {
    const courseId = uid();

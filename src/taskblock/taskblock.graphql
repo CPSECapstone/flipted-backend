@@ -126,6 +126,6 @@ type Mutation {
    addImageBlock(imageblock: ImageBlockInput!): String!
    addVideoBlock(videoblock: VideoBlockInput!): String!
    addQuizBlock(quizblock: QuizBlockInput!): String!
-   addFrBlockInput(frBlock: FrBlockInput!): String!
-   addMcBlockInput(mcBlock: McBlockInput!): String!
+   addFrBlock(frBlock: FrBlockInput!): String!
+   addMcBlock(mcBlock: McBlockInput!): String!
 }
