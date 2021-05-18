@@ -153,7 +153,6 @@ export async function getAllMissionProgressForUser(
 export async function getAllTargetProgressForUser(course: string, username: string) {
    const targets: Promise<Target[]> = listTargetsByCourse(course);
 
-   // TODO: Need to change objective item definition to return list of task ids
    const objectives: Promise<ObjectiveItem[]> = listObjectiveItemsByCourse(course);
    const userMasteryItems: Promise<MasteryItem[]> = listUserMasteryItemsByCourse(username, course);
    const targetProgress = generateTargetProgress(
@@ -166,18 +165,14 @@ export async function getAllTargetProgressForUser(course: string, username: stri
    return targetProgress;
 }
 
-export async function listUserMasteryItemsByTask(username: string, taskId: string): Promise<MasteryItem[]> {
-   throw new Error("Function not implemented.");
-}
-
 export async function listObjectivesIdsByTask(taskId: string) : Promise<string[]> {
    const params: QueryParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       indexName: "SK-PK-index",
-      keyConditionExpression: "PK = :pkVal and begins_with(SK, :skPrefix)",
+      keyConditionExpression: "SK = :skVal and begins_with(PK, :pkPrefix)",
       expressionAttributeValues: {
-         ":pkVal": TaskKey(taskId),
-         ":skPrefix": ObjectiveKey("")
+         ":skVal": TaskKey(taskId),
+         ":pkPrefix": ObjectiveKey("")
       }
    };
 
@@ -206,6 +201,36 @@ async function listUserMasteryItemsByCourse(
       keyConditionExpression: "course = :courseVal and username = :userVal",
       expressionAttributeValues: {
          ":courseVal": course,
+         ":userVal": username
+      }
+   };
+
+   try {
+      const output = await dynamodb.query(params);
+      if (output.Items) {
+         const submissions = output.Items.map(rawItem => {
+            return <MasteryItem>unmarshall(rawItem);
+         });
+         return submissions;
+      }
+
+      return [];
+   } catch (err) {
+      throw err;
+   }
+}
+
+export async function listUserMasteryItemsByTask(
+   username: string,
+   taskId: string
+): Promise<MasteryItem[]> {
+
+   const params: QueryParams = {
+      tableName: MASTERY_TABLE,
+      indexName: "username-taskId-index",
+      keyConditionExpression: "taskId = :taskVal and username = :userVal",
+      expressionAttributeValues: {
+         ":taskVal": taskId,
          ":userVal": username
       }
    };

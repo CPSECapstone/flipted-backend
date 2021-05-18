@@ -76,6 +76,7 @@ type Query {
 
    getAllMissionProgress(courseId: String!, username: String) : [MissionProgress!]!
    getAllTargetProgress(courseId: String!, username: String) : [TargetProgress!]!
+   getTaskObjectiveProgress(taskId: String!, username: String) : [TaskObjectiveProgress!]!
 }
 
 type Mutation {
