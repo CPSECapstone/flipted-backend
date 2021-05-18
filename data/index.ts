@@ -1,8 +1,18 @@
-#!/usr/bin/env -S node --use_strict
+#!/usr/bin/env node
 
 import yargs from "yargs";
 import objectiveCmd from "./objectives";
 import rosterCmd from "./roster";
 import userCmd from "./users";
+import targetCmd from "./targets";
+import taskCmd from "./tasks";
+import taskblockCmd from "./taskblocks";
 
-yargs.command(objectiveCmd).command(rosterCmd).command(userCmd).help().argv;
+yargs
+   .command(objectiveCmd)
+   .command(rosterCmd)
+   .command(userCmd)
+   .command(targetCmd)
+   .command(taskCmd)
+   .command(taskblockCmd)
+   .help().argv;

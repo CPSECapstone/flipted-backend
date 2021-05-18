@@ -42,6 +42,27 @@ type CourseInput = {
 };
 
 
+type FrBlock = TaskBlock & {
+  __typename?: 'FrBlock';
+  title: Scalars['String'];
+  blockId: Scalars['String'];
+  blockIndex: Scalars['Int'];
+  pageIndex: Scalars['Int'];
+  points: Scalars['Int'];
+  stem: Scalars['String'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+type FrBlockInput = {
+  taskId: Scalars['String'];
+  title: Scalars['String'];
+  pageIndex: Scalars['Int'];
+  blockIndex: Scalars['Int'];
+  points: Scalars['Int'];
+  stem: Scalars['String'];
+  answer?: Maybe<Scalars['String']>;
+};
+
 type FrQuestion = Question & {
   __typename?: 'FrQuestion';
   id: Scalars['String'];
@@ -122,6 +143,29 @@ enum Mastery {
   Mastered = 'MASTERED'
 }
 
+type McBlock = TaskBlock & {
+  __typename?: 'McBlock';
+  title: Scalars['String'];
+  blockId: Scalars['String'];
+  blockIndex: Scalars['Int'];
+  pageIndex: Scalars['Int'];
+  points: Scalars['Int'];
+  stem: Scalars['String'];
+  options: Array<Scalars['String']>;
+  answers?: Maybe<Array<Scalars['Int']>>;
+};
+
+type McBlockInput = {
+  taskId: Scalars['String'];
+  title: Scalars['String'];
+  pageIndex: Scalars['Int'];
+  blockIndex: Scalars['Int'];
+  points: Scalars['Int'];
+  stem: Scalars['String'];
+  options: Array<Scalars['String']>;
+  answers?: Maybe<Array<Scalars['Int']>>;
+};
+
 type McQuestion = Question & {
   __typename?: 'McQuestion';
   id: Scalars['String'];
@@ -178,8 +222,10 @@ type MultipleChoiceAnswerInput = {
 type Mutation = {
   __typename?: 'Mutation';
   addCourse: Scalars['String'];
+  addFrBlock: Scalars['String'];
   addFrQuestion: Scalars['String'];
   addImageBlock: Scalars['String'];
+  addMcBlock: Scalars['String'];
   addMcQuestion: Scalars['String'];
   addMission: Scalars['String'];
   addObjective: Scalars['String'];
@@ -219,6 +265,11 @@ type MutationAddCourseArgs = {
 };
 
 
+type MutationAddFrBlockArgs = {
+  frBlock: FrBlockInput;
+};
+
+
 type MutationAddFrQuestionArgs = {
   question: FrQuestionInput;
 };
@@ -226,6 +277,11 @@ type MutationAddFrQuestionArgs = {
 
 type MutationAddImageBlockArgs = {
   imageblock: ImageBlockInput;
+};
+
+
+type MutationAddMcBlockArgs = {
+  mcBlock: McBlockInput;
 };
 
 

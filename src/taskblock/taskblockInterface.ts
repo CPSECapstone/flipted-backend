@@ -5,6 +5,8 @@ export declare type TaskBlockItem = TaskBlock & CompositeDBItem;
 export declare type TextBlockItem = TextBlock & TaskBlockItem;
 export declare type ImageBlockItem = ImageBlock & TaskBlockItem;
 export declare type VideoBlockItem = VideoBlock & TaskBlockItem;
+export declare type FrBlockItem = FrBlock & TaskBlockItem;
+export declare type McBlockItem = McBlock & TaskBlockItem;
 
 export interface QuizBlockItem extends TaskBlockItem {
    requiredScore: number;

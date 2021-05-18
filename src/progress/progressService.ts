@@ -14,7 +14,7 @@ import taskSubmissionService from "../submissions/taskSubmission";
 import missionService from "../services/mission";
 import taskService from "../services/task";
 import { generateMissionProgress, generateTargetProgress } from "./progressHelper";
-import { listTargetsByCourse } from "../services/target";
+import { listTargetsByCourse } from "../target/targetService";
 import { listObjectiveItemsByCourse, listObjectivesByCourse } from "../objective/objectiveService";
 import { ObjectiveItem } from "../objective/objectiveInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
