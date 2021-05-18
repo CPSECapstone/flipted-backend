@@ -382,6 +382,7 @@ type Query = {
   getAllTargetProgress: Array<TargetProgress>;
   /** Instructor only: get a user's goal given the user and the goal id */
   getGoalById: Goal;
+  getTaskObjectiveProgress: Array<TaskObjectiveProgress>;
   getUser?: Maybe<User>;
   mission?: Maybe<Mission>;
   missions?: Maybe<Array<Maybe<Mission>>>;
@@ -441,6 +442,12 @@ type QueryGetAllTargetProgressArgs = {
 type QueryGetGoalByIdArgs = {
   id: Scalars['String'];
   user: Scalars['String'];
+};
+
+
+type QueryGetTaskObjectiveProgressArgs = {
+  taskId: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
 };
 
 

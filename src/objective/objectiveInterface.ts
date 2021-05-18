@@ -8,5 +8,5 @@ export type ObjectiveItem = CompositeDBItem &
 export const ObjectivePrefix = "OBJECTIVE";
 
 export function ObjectiveKey(objectiveId: string): string {
-   return `${ObjectivePrefix}#${objectiveId}`;
+   return `${ObjectivePrefix}#${objectiveId.replace(ObjectivePrefix + "#", '')}`;
 }
