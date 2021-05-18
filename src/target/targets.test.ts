@@ -1,5 +1,5 @@
-import dynamodbMock from "../__mocks__/dynamodb";
-import * as service from "../../src/services/target";
+import dynamodbMock from "../../test/__mocks__/dynamodb";
+import * as service from "./targetService";
 
 jest.mock("../../src/services/dynamodb", () => {
    return dynamodbMock;

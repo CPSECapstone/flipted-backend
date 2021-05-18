@@ -25,11 +25,6 @@ export async function addObjective(input: ObjectiveInput) {
    };
    try {
       const output = await dynamodb.batchWrite(params);
-      if (output.ConsumedCapacity) {
-         console.log(output.ConsumedCapacity);
-         return output.ConsumedCapacity.length;
-      }
-
       return objectiveItem.PK;
    } catch (err) {
       return err;
