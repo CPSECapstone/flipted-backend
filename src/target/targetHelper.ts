@@ -1,6 +1,6 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-import { TargetItem, TargetKey } from "../interfaces/target";
+import { TargetItem, TargetKey } from "./targetInterface";
 
 export function targetInputToDBItem(input: TargetInput): TargetItem {
    const targetId = uid();

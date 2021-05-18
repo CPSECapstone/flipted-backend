@@ -8,11 +8,11 @@ import {
    SubMissionPrefix
 } from "../interfaces/mission";
 import { ObjectiveItem, ObjectivePrefix } from "../objective/objectiveInterface";
-import { TargetItem, TargetPrefix } from "../interfaces/target";
+import { TargetItem, TargetPrefix } from "../target/targetInterface";
 import { TaskPrefix } from "../interfaces/task";
 import { dbItemToSubMission, dbMissionItemToMission } from "./missionLogic";
 import { dbItemToObjective } from "../objective/objectiveHelper";
-import { dbItemToTarget } from "./targetHelper";
+import { dbItemToTarget } from "../target/targetHelper";
 import { dbItemToTask } from "./taskBusLogic";
 
 export function courseInputToDBItem(input: CourseInput): CourseInfoItem {
