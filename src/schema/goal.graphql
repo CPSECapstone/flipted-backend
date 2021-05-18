@@ -51,4 +51,5 @@ type Query {
 
 type Mutation {
    editOrCreateGoal(goal: GoalInput!): String! # returns id of goal
+   deleteGoal(id: String!): String! # returns id of the deleted goal
 }
