@@ -3,7 +3,7 @@ import { GOALS_TABLE_NAME } from "../environment";
 import { GoalItem } from "../interfaces/goal";
 import { RoleInternal } from "../interfaces/role";
 import { QuestionAnswerItem } from "../submissions/taskSubmissionInterface";
-import dynamodb, { GetCompositeParams, GetParams, PutCompositeParams, QueryParams } from "./dynamodb";
+import dynamodb, { GetCompositeParams, DeleteParam, PutCompositeParams, QueryParams } from "./dynamodb";
 import { convertGoalInputToItem, dbGoalItemToGoal } from "./goalLogic";
 import { dbItemsToQuestionAnswerItems } from "../submissions/taskSubmissionHelper";
 
@@ -67,9 +67,28 @@ async function getAllUserGoals(username: string): Promise<Goal[]> {
    throw new Error(`Error fetching goals for username=${username}`);
 }
 
+async function deleteGoal(goalId: String, username: String) {
+  
+   const params: DeleteParam = {
+       tableName: GOAL_TABLE,
+       key: {
+         PK: `GOAL#${username}`,
+         SK: `GOAL#${goalId}`
+     }
+   };
+
+   try {
+       await dynamodb.deleteItem(params);
+       return goalId;
+    } catch (err) {
+       throw err;
+    }
+}
+
 const goalService = {
     addGoal,
     getGoalById,
+    deleteGoal,
     getAllUserGoals
 }
 

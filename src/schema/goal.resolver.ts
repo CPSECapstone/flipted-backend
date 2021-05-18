@@ -39,13 +39,21 @@ async function getAllGoals(_: any, args: any, context: any, info: any) {
    return await goalService.getAllUserGoals(username)
 }
 
+async function deleteGoal(_: any, args: any, context: any, info: any) {
+    const tokenPayload = await validateToken(context.headers.Authorization)
+    const username = tokenPayload.username
+    
+    return await goalService.deleteGoal(args.id, username)
+ }
+
 const resolvers = {
     Query: {
         getGoalById: getGoalById,
         getAllGoals: getAllGoals
     },
     Mutation: {
-        editOrCreateGoal: editOrCreateGoal
+        editOrCreateGoal: editOrCreateGoal,
+        deleteGoal: deleteGoal
     }
 }
 
