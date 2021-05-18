@@ -7,7 +7,11 @@ import {
    TaskSubmissionResultItem
 } from "./taskSubmissionInterface";
 
-import dynamodb, { GetCompositeParams, PutCompositeParams, QueryParams } from "../services/dynamodb";
+import dynamodb, {
+   GetCompositeParams,
+   PutCompositeParams,
+   QueryParams
+} from "../services/dynamodb";
 import {
    dbItemsToQuestionAnswerItems,
    dbItemToTaskProgress,
@@ -98,8 +102,17 @@ async function getQuizProgressForTask(taskId: string, username: string): Promise
    throw new Error(`Task not found with id=${taskId}`);
 }
 
-async function submitTaskForGrading(task: Task, taskResult: TaskSubmissionResult, username: string) {
-   const dbItem: TaskSubmissionResultItem = taskSubResultToDBItem(task.course, task.missionId, taskResult, username);
+async function submitTaskForGrading(
+   task: Task,
+   taskResult: TaskSubmissionResult,
+   username: string
+) {
+   const dbItem: TaskSubmissionResultItem = taskSubResultToDBItem(
+      task.course,
+      task.missionId,
+      taskResult,
+      username
+   );
 
    const params: PutCompositeParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
@@ -112,7 +125,10 @@ async function submitTaskForGrading(task: Task, taskResult: TaskSubmissionResult
    }
 }
 
-async function listUserSubmissionsByCourse(course: string, username: string): Promise<TaskSubmissionResultItem[]> {
+async function listUserSubmissionsByCourse(
+   course: string,
+   username: string
+): Promise<TaskSubmissionResultItem[]> {
    const params: QueryParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       indexName: "course-PK-index",
@@ -138,7 +154,10 @@ async function listUserSubmissionsByCourse(course: string, username: string): Pr
    }
 }
 
-async function listUserMasteryItemsByCourse(course: string, username: string): Promise<TaskSubmissionResultItem[]> {
+async function listUserMasteryItemsByCourse(
+   course: string,
+   username: string
+): Promise<TaskSubmissionResultItem[]> {
    const params: QueryParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       indexName: "course-PK-index",

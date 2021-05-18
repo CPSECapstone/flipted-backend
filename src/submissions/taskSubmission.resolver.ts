@@ -18,7 +18,7 @@ import {
    createTaskSubmissionResult,
    createQuestionProgressOutput
 } from "./taskSubmissionHelper";
-import quizblockService from "../services/taskblock";
+import * as taskblockService from "../taskblock/taskblockService";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);
@@ -29,7 +29,7 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
    );
 
    // this asserts both the existence of the task, and the quizblock being within that task
-   const quizBlock: QuizBlock = await quizblockService.getQuizBlockById(
+   const quizBlock: QuizBlock = await taskblockService.getQuizBlockById(
       mcAnswerInput.taskId,
       mcAnswerInput.questionBlockId
    );
@@ -70,7 +70,7 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
    }
 
    // this asserts both the existence of the task, and the quizblock being within that task
-   const quizBlock: QuizBlock = await quizblockService.getQuizBlockById(
+   const quizBlock: QuizBlock = await taskblockService.getQuizBlockById(
       frAnswerInput.taskId,
       frAnswerInput.questionBlockId
    );

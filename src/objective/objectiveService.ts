@@ -123,6 +123,7 @@ export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promis
    // combine into one big batch
    const items = objItems as any[];
    items.push(...taskRecords);
+   console.table(items);
 
    const params: BatchWriteParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,

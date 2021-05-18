@@ -2,6 +2,7 @@ import { readFile } from "fs/promises";
 import { Arguments } from "yargs";
 import chalk from "chalk";
 import * as flipted from "./fliptedCmd";
+import * as util from "./util";
 import * as rosterService from "../src/roster/rosterService";
 import userService from "../src/services/user";
 import { RoleInternal } from "../src/interfaces/role";
@@ -36,9 +37,6 @@ async function listItems() {
    }
 }
 
-function randomInt(min: number, max: number) {
-   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 const TEAMS = ["alpha", "beta", "gamma"];
 const COURSE = "Integrated Science";
 
@@ -52,8 +50,8 @@ async function importItems() {
             firstName: user.firstName,
             lastName: user.lastName,
             course: COURSE,
-            section: randomInt(1, 2),
-            team: TEAMS[randomInt(0, 2)]
+            section: util.randomInt(1, 2),
+            team: TEAMS[util.randomInt(0, 2)]
          };
       });
       console.table(students);
