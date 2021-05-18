@@ -1,14 +1,14 @@
-import * as service from "../services/target";
+import * as service from "./targetService";
 
-async function addTarget(_: any, args: MutationAddTargetArgs, context: any, info: any) {
+async function addTarget(_: any, args: MutationAddTargetArgs) {
    return service.addTarget(args.target);
 }
 
-async function getTargetById(_: any, args: QueryTargetArgs, context: any, info: any) {
+async function getTargetById(_: any, args: QueryTargetArgs) {
    return service.getTargetById(args.targetId);
 }
 
-async function listTargetsByCourse(_: any, args: QueryTargetsArgs, context: any, info: any) {
+async function listTargetsByCourse(_: any, args: QueryTargetsArgs) {
    return service.listTargetsByCourse(args.course);
 }
 
