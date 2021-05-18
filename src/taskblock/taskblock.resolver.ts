@@ -20,12 +20,12 @@ async function addQuizBlock(_: any, args: MutationAddQuizBlockArgs) {
    return service.addQuizBlock(quizblock);
 }
 
-async function addFrBlock(_: any, args: MutationAddFrBlockInputArgs) {
+async function addFrBlock(_: any, args: MutationAddFrBlockArgs) {
    const frBlock: FrBlockInput = args.frBlock;
    return service.addFrBlock(frBlock);
 }
 
-async function addMcBlock(_: any, args: MutationAddMcBlockInputArgs) {
+async function addMcBlock(_: any, args: MutationAddMcBlockArgs) {
    const mcBlock: McBlockInput = args.mcBlock;
    return service.addMcBlock(mcBlock);
 }

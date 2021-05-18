@@ -50,6 +50,7 @@ function convertTaskInputToTaskItem(input: TaskInput): TaskItem {
       requirements,
       course: input.course,
       missionId: input.missionId,
+      missionIndex: input.missionIndex,
       subMissionId: input.subMissionId
    };
 
@@ -135,6 +136,7 @@ export function dbItemToTask(rawItem: any): Task {
       id: item.id,
       name: item.name,
       course: item.course,
+      instructions: item.instructions,
       missionId: item.missionId,
       missionIndex: item.missionIndex,
       subMissionId: item.subMissionId
