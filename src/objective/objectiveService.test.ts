@@ -1,6 +1,4 @@
 import dynamodbMock from "../../test/__mocks__/dynamodb";
-import dynamodb from "../services/dynamodb";
-import { mocked } from "ts-jest/utils";
 import * as services from "./objectiveService";
 
 jest.mock("../../src/services/dynamodb", () => {
@@ -18,9 +16,7 @@ describe("add method", () => {
          taskIds: []
       };
 
-      const MockedDynamoDB = mocked(dynamodb, true);
-
       await services.addObjective(objective);
-      expect(MockedDynamoDB.putComposite).toHaveBeenCalledTimes(1);
+      expect(dynamodbMock.batchWrite).toHaveBeenCalledTimes(1);
    });
 });
