@@ -52,6 +52,7 @@ async function importItems() {
             course: COURSE,
             section: util.randomInt(1, 2),
             team: TEAMS[util.randomInt(0, 2)]
+
          };
       });
       console.table(students);

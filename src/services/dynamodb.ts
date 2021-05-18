@@ -15,7 +15,8 @@ import {
    QueryCommandOutput,
    QueryCommand,
    DeleteItemCommandOutput,
-   DeleteItemCommand
+   DeleteItemCommand,
+   ItemResponse
 } from "@aws-sdk/client-dynamodb";
 import { uid } from "uid/secure";
 
