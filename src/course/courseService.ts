@@ -4,9 +4,9 @@ import dynamodb, {
    PutCompositeParams,
    ScanParams,
    QueryParams
-} from "./dynamodb";
+} from "../services/dynamodb";
 import * as helper from "./courseHelper";
-import { CourseKey, CoursePrefix } from "../interfaces/course";
+import { CourseKey, CoursePrefix } from "./courseInterface";
 
 export async function addCourse(input: CourseInput) {
    const courseItem = helper.courseInputToDBItem(input);

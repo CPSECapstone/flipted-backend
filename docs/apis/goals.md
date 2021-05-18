@@ -5,6 +5,7 @@
 * Get Goal by User and Id
 * Get All Assigned Goals
 * Edit or Create A Goal
+* Delete a Goal
 
 ## Examples
 
@@ -78,3 +79,10 @@ mutation editGoal {
 }
 ```
 
+### Delete a Goal
+
+```text
+mutation deleteGoal{
+  deleteGoal(id: "32cd7573ccd")
+}
+```

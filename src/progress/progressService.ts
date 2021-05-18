@@ -1,23 +1,25 @@
-import { MASTERY_TABLE, USER_PROGRESS_TABLE_NAME } from "../environment";
+import { COURSE_CONTENT_TABLE_NAME, MASTERY_TABLE, USER_PROGRESS_TABLE_NAME } from "../environment";
 import dynamodb, {
    PutCompositeParams,
    ScanParams,
    QueryParams,
-   DeleteParam
+   DeleteParam,
+   CompositeDBItem
 } from "../services/dynamodb";
 import * as helper from "./progressHelper";
 import { MasteryItem, ProgressPK } from "./progressInterface";
-import * as courseService from "../services/course";
+import * as courseService from "../course/courseService";
 import usersData from "./users.json";
 import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
 import taskSubmissionService from "../submissions/taskSubmission";
 import missionService from "../services/mission";
 import taskService from "../services/task";
 import { generateMissionProgress, generateTargetProgress } from "./progressHelper";
-import { listTargetsByCourse } from "../services/target";
+import { listTargetsByCourse } from "../target/targetService";
 import { listObjectiveItemsByCourse, listObjectivesByCourse } from "../objective/objectiveService";
-import { ObjectiveItem } from "../objective/objectiveInterface";
+import { ObjectiveItem, ObjectiveKey } from "../objective/objectiveInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { TaskKey } from "../interfaces/task";
 
 export async function addProgress(input: ProgressInput): Promise<string> {
    const courseItem = helper.progressInputToDBItem(input);
@@ -151,7 +153,6 @@ export async function getAllMissionProgressForUser(
 export async function getAllTargetProgressForUser(course: string, username: string) {
    const targets: Promise<Target[]> = listTargetsByCourse(course);
 
-   // TODO: Need to change objective item definition to return list of task ids
    const objectives: Promise<ObjectiveItem[]> = listObjectiveItemsByCourse(course);
    const userMasteryItems: Promise<MasteryItem[]> = listUserMasteryItemsByCourse(username, course);
    const targetProgress = generateTargetProgress(
@@ -164,8 +165,30 @@ export async function getAllTargetProgressForUser(course: string, username: stri
    return targetProgress;
 }
 
-function listUserMasteryItemsByTask(username: string, taskId: string): Promise<MasteryItem[]> {
-   throw new Error("Function not implemented.");
+export async function listObjectivesIdsByTask(taskId: string) : Promise<string[]> {
+   const params: QueryParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      indexName: "SK-PK-index",
+      keyConditionExpression: "SK = :skVal and begins_with(PK, :pkPrefix)",
+      expressionAttributeValues: {
+         ":skVal": TaskKey(taskId),
+         ":pkPrefix": ObjectiveKey("")
+      }
+   };
+
+   try {
+      const output = await dynamodb.query(params);
+      if (output.Items) {
+         const submissions = output.Items.map(rawItem => {
+            return (<CompositeDBItem>unmarshall(rawItem)).PK;
+         });
+         return submissions
+      }
+
+      return [];
+   } catch (err) {
+      throw err;
+   }
 }
 
 async function listUserMasteryItemsByCourse(
@@ -178,6 +201,36 @@ async function listUserMasteryItemsByCourse(
       keyConditionExpression: "course = :courseVal and username = :userVal",
       expressionAttributeValues: {
          ":courseVal": course,
+         ":userVal": username
+      }
+   };
+
+   try {
+      const output = await dynamodb.query(params);
+      if (output.Items) {
+         const submissions = output.Items.map(rawItem => {
+            return <MasteryItem>unmarshall(rawItem);
+         });
+         return submissions;
+      }
+
+      return [];
+   } catch (err) {
+      throw err;
+   }
+}
+
+export async function listUserMasteryItemsByTask(
+   username: string,
+   taskId: string
+): Promise<MasteryItem[]> {
+
+   const params: QueryParams = {
+      tableName: MASTERY_TABLE,
+      indexName: "username-taskId-index",
+      keyConditionExpression: "taskId = :taskVal and username = :userVal",
+      expressionAttributeValues: {
+         ":taskVal": taskId,
          ":userVal": username
       }
    };

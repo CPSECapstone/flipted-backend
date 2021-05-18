@@ -22,4 +22,4 @@ export const USER_PROGRESS_TABLE_NAME = TABLE_NAME("UserProgress");
 export const GOALS_TABLE_NAME = TABLE_NAME("Goals");
 export const QUESTIONS_TABLE = TABLE_NAME("Questions");
 export const TASK_SUBMISSIONS_TABLE = TABLE_NAME("TaskSubmissions");
-export const MASTERY_TABLE = TABLE_NAME("Mastery")
+export const MASTERY_TABLE = TABLE_NAME("Mastery");

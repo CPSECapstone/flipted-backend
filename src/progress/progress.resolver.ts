@@ -4,6 +4,8 @@ import * as service from "./progressService";
 import { RoleInternal } from "../interfaces/role";
 import { getTask } from "../services/task";
 import { getObjective } from "../objective/objectiveService";
+import { MasteryItem } from "./progressInterface";
+import { dbItemToMastery } from "./progressHelper";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
    return service.addProgress(args.progress);
@@ -48,13 +50,48 @@ async function getAllTargetProgress(
    return await service.getAllTargetProgressForUser(args.courseId, user);
 }
 
+async function getTaskObjectiveProgress(
+   _: any,
+   args: QueryGetTaskObjectiveProgressArgs,
+   context: any,
+   info: any
+) {
+   const tokenPayload = await validateToken(context.headers.Authorization);
+   const userRole = await userService.getUserRole(tokenPayload.username);
+   const user =
+      userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username;
+
+   const items = await service.listUserMasteryItemsByTask(args.taskId, user);
+
+   const objectiveIdsForTask: string[] = await service.listObjectivesIdsByTask(args.taskId)
+
+   return objectiveIdsForTask.map(objectiveId => {
+      const masteryItem: MasteryItem | undefined = items.find(item => {
+         return item.objectiveId == objectiveId;
+      });
+
+      if (masteryItem) {
+         return dbItemToMastery(masteryItem);
+      }
+
+      // No mastery item exists, but we still want an entry
+      // could potentially create "NOT_SUBMITTED" as an option in the future
+      return {
+         objectiveId: objectiveId,
+         taskId: args.taskId,
+         mastery: "NOT_GRADED" as Mastery
+      }; 
+   });
+}
+
 const resolvers = {
    Query: {
       progressByCourse,
       userProgress,
       progressOverview,
       getAllMissionProgress,
-      getAllTargetProgress
+      getAllTargetProgress,
+      getTaskObjectiveProgress
    },
    Mutation: {
       addProgress

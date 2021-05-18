@@ -8,6 +8,7 @@ import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { TaskItem, TaskKey } from "../interfaces/task";
 import dynamodb, {
    BatchGetParams,
+   BatchWriteParams,
    GetCompositeParams,
    PutCompositeParams,
    QueryParams,
@@ -53,7 +54,7 @@ async function getTaskById(taskId: string): Promise<Task> {
 }
 
 export async function getTask(parent: any): Promise<Task> {
-   return taskService.getTaskById(parent.taskId);
+   return taskService.getTaskInfoById(parent.taskId);
 }
 
 async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
@@ -152,13 +153,45 @@ async function listTasksByIds(taskIds: string[]): Promise<Task[]> {
    }
 }
 
+async function importTasks(taskItems: TaskItem[]): Promise<number> {
+   const params: BatchWriteParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      items: taskItems
+   };
+
+   try {
+      return dynamodb.batchWrite(params);
+   } catch (err) {
+      return err;
+   }
+}
+
+async function deleteTasks(): Promise<number> {
+   const params: ScanParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      filterExpression: "begins_with(PK, :pkPrefix)",
+      expressionAttributeValues: {
+         ":pkPrefix": "TASK"
+      }
+   };
+
+   try {
+      const output = await dynamodb.batchDelete(params);
+      return output;
+   } catch (err) {
+      return err;
+   }
+}
+
 const taskService = {
    add,
    getTaskById,
    listBySubMissionId,
    getTaskInfoById,
    listTasksByCourse,
-   listTasksByIds
+   listTasksByIds,
+   importTasks,
+   deleteTasks
 };
 
 export default taskService;

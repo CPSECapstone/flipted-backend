@@ -14,6 +14,7 @@
   * [Objectives](apis/objectives.md)
   * [Questions](apis/questions.md)
   * [Quiz Blocks](apis/quizblocks.md)
+  * [Class Roster](apis/roster.md)
   * [SubMissions](apis/submissions.md)
   * [Targets](apis/targets.md)
   * [Tasks](apis/tasks.md)

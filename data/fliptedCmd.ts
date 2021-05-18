@@ -4,6 +4,7 @@ export interface IAction {
    action: string;
    id?: string;
    input?: string;
+   role?: string;
 }
 
 export type ActionFn = (args: Arguments<IAction>) => void;
@@ -37,7 +38,7 @@ export function cmdFactory(cmdArgs: CmdFactoryArgs): yargs.CommandModule<{}, IAc
          if (actionMap.has(actionFnName)) {
             actionMap.get(actionFnName)!(args);
          } else {
-            console.log(`Unimplemented action: ${name} ${actionFnName}`);
+            console.log(`Unimplemented action: ${name} ${args.action}`);
          }
       }
    };

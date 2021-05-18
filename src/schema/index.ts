@@ -4,27 +4,29 @@ import { GraphQLDate } from "graphql-iso-date";
 import customType from "./custom.graphql";
 import userType from "./user.graphql";
 import missionType from "./mission.graphql";
-import courseType from "./course.graphql";
+import courseType from "../course/course.graphql";
 import taskType from "./task.graphql";
 import quizTaskSubmission from "../submissions/taskSubmission.graphql";
 import questionType from "./question.graphql";
-import taskblockType from "./taskblock.graphql";
+import taskblockType from "../taskblock/taskblock.graphql";
 import objectiveType from "../objective/objective.graphql";
-import targetType from "./target.graphql";
+import targetType from "../target/target.graphql";
 import progressType from "../progress/progress.graphql";
 import goalsType from "./goal.graphql";
+import rosterType from "../roster/roster.graphql";
 
 import userResolvers from "./user.resolver";
-import courseResolvers from "./course.resolver";
+import courseResolvers from "../course/course.resolver";
 import taskResolvers from "./task.resolver";
 import questionResolvers from "./question.resolver";
 import quizTaskSubmissionResolvers from "../submissions/taskSubmission.resolver";
 import missionResolvers from "./mission.resolver";
-import taskblockResolvers from "./taskblock.resolver";
+import taskblockResolvers from "../taskblock/taskblock.resolver";
 import objectiveResolvers from "../objective/objective.resolver";
-import targetResolvers from "./target.resolver";
+import targetResolvers from "../target/target.resolver";
 import progressResolvers from "../progress/progress.resolver";
 import goalsResolvers from "./goal.resolver";
+import rosterResolvers from "../roster/roster.resolver";
 
 const customScalarResolver = {
    Date: GraphQLDate
@@ -42,7 +44,8 @@ const typesArray = [
    targetType,
    objectiveType,
    progressType,
-   goalsType
+   goalsType,
+   rosterType
 ];
 
 const resolversArray = [
@@ -57,7 +60,8 @@ const resolversArray = [
    targetResolvers,
    objectiveResolvers,
    progressResolvers,
-   goalsResolvers
+   goalsResolvers,
+   rosterResolvers
 ];
 
 export const typeDefs = mergeTypeDefs(typesArray);

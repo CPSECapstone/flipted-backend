@@ -2,7 +2,7 @@ import { uid } from "uid";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import * as questionService from "./question";
 import { TaskItem, RubricRequirementItem } from "../interfaces/task";
-import { QuizBlockItem } from "../interfaces/taskblock";
+import { QuizBlockItem } from "../taskblock/taskblockInterface";
 
 /**
  * Modifies a teacher specified default task with any ongoing completion progress represented
@@ -50,6 +50,7 @@ function convertTaskInputToTaskItem(input: TaskInput): TaskItem {
       requirements,
       course: input.course,
       missionId: input.missionId,
+      missionIndex: input.missionIndex,
       subMissionId: input.subMissionId
    };
 
@@ -135,6 +136,7 @@ export function dbItemToTask(rawItem: any): Task {
       id: item.id,
       name: item.name,
       course: item.course,
+      instructions: item.instructions,
       missionId: item.missionId,
       missionIndex: item.missionIndex,
       subMissionId: item.subMissionId

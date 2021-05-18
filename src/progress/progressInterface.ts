@@ -6,8 +6,8 @@ export type ProgressItem = CompositeDBItem & {
    status: boolean;
 };
 
-// PK: TASK#XXXX
-// SK: OBJECTIVE#XXXX
+// PK: USER#XXXX
+// SK: OBJECTIVE#XXXXTASK#XXXX
 export type MasteryItem = CompositeDBItem & {
    username: string,
    taskId: string,
@@ -16,12 +16,12 @@ export type MasteryItem = CompositeDBItem & {
    mastery: string // maps to the mastery enum 
 }
 
-export function MasteryPK(taskId: string) : string {
-   return `TASK#${taskId.replace("TASK#", "")}`
+export function MasteryPK(username: string) : string {
+   return `USERNAME#${username}`
 }
 
-export function MasterySK(objectiveId: string) : string {
-   return `OBJECTIVE#${objectiveId.replace("OBJECTIVE#", "")}`
+export function MasterySK(objectiveId: string, taskId: string) : string {
+   return `OBJECTIVE#${objectiveId}TASK#${taskId}`
 }
 
 export function ProgressPK(userName: string, course: string): string {

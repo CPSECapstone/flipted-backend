@@ -1,0 +1,28 @@
+type Student {
+   studentId: String!
+   email: String!
+   firstName: String
+   lastName: String
+   course: String!
+   section: Int!
+   team: String
+}
+
+type Query {
+   student(studentId: String!, course: String!): Student!
+   students(course: String!): [Student!]!
+}
+
+input StudentInput {
+   studentId: String!
+   email: String!
+   firstName: String
+   lastName: String
+   course: String!
+   section: Int!
+   team: String
+}
+
+type Mutation {
+   addStudent(student: StudentInput!): String!
+}

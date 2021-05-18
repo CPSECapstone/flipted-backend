@@ -42,6 +42,27 @@ type CourseInput = {
 };
 
 
+type FrBlock = TaskBlock & {
+  __typename?: 'FrBlock';
+  title: Scalars['String'];
+  blockId: Scalars['String'];
+  blockIndex: Scalars['Int'];
+  pageIndex: Scalars['Int'];
+  points: Scalars['Int'];
+  stem: Scalars['String'];
+  answer?: Maybe<Scalars['String']>;
+};
+
+type FrBlockInput = {
+  taskId: Scalars['String'];
+  title: Scalars['String'];
+  pageIndex: Scalars['Int'];
+  blockIndex: Scalars['Int'];
+  points: Scalars['Int'];
+  stem: Scalars['String'];
+  answer?: Maybe<Scalars['String']>;
+};
+
 type FrQuestion = Question & {
   __typename?: 'FrQuestion';
   id: Scalars['String'];
@@ -122,6 +143,29 @@ enum Mastery {
   Mastered = 'MASTERED'
 }
 
+type McBlock = TaskBlock & {
+  __typename?: 'McBlock';
+  title: Scalars['String'];
+  blockId: Scalars['String'];
+  blockIndex: Scalars['Int'];
+  pageIndex: Scalars['Int'];
+  points: Scalars['Int'];
+  stem: Scalars['String'];
+  options: Array<Scalars['String']>;
+  answers?: Maybe<Array<Scalars['Int']>>;
+};
+
+type McBlockInput = {
+  taskId: Scalars['String'];
+  title: Scalars['String'];
+  pageIndex: Scalars['Int'];
+  blockIndex: Scalars['Int'];
+  points: Scalars['Int'];
+  stem: Scalars['String'];
+  options: Array<Scalars['String']>;
+  answers?: Maybe<Array<Scalars['Int']>>;
+};
+
 type McQuestion = Question & {
   __typename?: 'McQuestion';
   id: Scalars['String'];
@@ -178,13 +222,16 @@ type MultipleChoiceAnswerInput = {
 type Mutation = {
   __typename?: 'Mutation';
   addCourse: Scalars['String'];
+  addFrBlock: Scalars['String'];
   addFrQuestion: Scalars['String'];
   addImageBlock: Scalars['String'];
+  addMcBlock: Scalars['String'];
   addMcQuestion: Scalars['String'];
   addMission: Scalars['String'];
   addObjective: Scalars['String'];
   addProgress: Scalars['String'];
   addQuizBlock: Scalars['String'];
+  addStudent: Scalars['String'];
   addSubMission: Scalars['String'];
   addTarget: Scalars['String'];
   addTask: Scalars['String'];
@@ -218,6 +265,11 @@ type MutationAddCourseArgs = {
 };
 
 
+type MutationAddFrBlockArgs = {
+  frBlock: FrBlockInput;
+};
+
+
 type MutationAddFrQuestionArgs = {
   question: FrQuestionInput;
 };
@@ -225,6 +277,11 @@ type MutationAddFrQuestionArgs = {
 
 type MutationAddImageBlockArgs = {
   imageblock: ImageBlockInput;
+};
+
+
+type MutationAddMcBlockArgs = {
+  mcBlock: McBlockInput;
 };
 
 
@@ -250,6 +307,11 @@ type MutationAddProgressArgs = {
 
 type MutationAddQuizBlockArgs = {
   quizblock: QuizBlockInput;
+};
+
+
+type MutationAddStudentArgs = {
+  student: StudentInput;
 };
 
 
@@ -382,6 +444,7 @@ type Query = {
   getAllTargetProgress: Array<TargetProgress>;
   /** Instructor only: get a user's goal given the user and the goal id */
   getGoalById: Goal;
+  getTaskObjectiveProgress: Array<TaskObjectiveProgress>;
   getUser?: Maybe<User>;
   mission?: Maybe<Mission>;
   missions?: Maybe<Array<Maybe<Mission>>>;
@@ -400,6 +463,8 @@ type Query = {
    * May be useful as a TaskSubmissionResult can change as a result of instructor actions.
    */
   retrieveTaskSubmission?: Maybe<TaskSubmissionResult>;
+  student: Student;
+  students: Array<Student>;
   subMission?: Maybe<SubMission>;
   target: Target;
   targets: Array<Target>;
@@ -441,6 +506,12 @@ type QueryGetAllTargetProgressArgs = {
 type QueryGetGoalByIdArgs = {
   id: Scalars['String'];
   user: Scalars['String'];
+};
+
+
+type QueryGetTaskObjectiveProgressArgs = {
+  taskId: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
 };
 
 
@@ -497,6 +568,17 @@ type QueryRetrieveTaskProgressArgs = {
 
 type QueryRetrieveTaskSubmissionArgs = {
   taskId?: Maybe<Scalars['String']>;
+};
+
+
+type QueryStudentArgs = {
+  studentId: Scalars['String'];
+  course: Scalars['String'];
+};
+
+
+type QueryStudentsArgs = {
+  course: Scalars['String'];
 };
 
 
@@ -605,6 +687,27 @@ type RubricRequirement = {
 
 type RubricRequirementInput = {
   description?: Maybe<Scalars['String']>;
+};
+
+type Student = {
+  __typename?: 'Student';
+  studentId: Scalars['String'];
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  course: Scalars['String'];
+  section: Scalars['Int'];
+  team?: Maybe<Scalars['String']>;
+};
+
+type StudentInput = {
+  studentId: Scalars['String'];
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  course: Scalars['String'];
+  section: Scalars['Int'];
+  team?: Maybe<Scalars['String']>;
 };
 
 type SubGoal = {

@@ -1,4 +1,4 @@
-import * as service from "../services/course";
+import * as service from "./courseService";
 
 async function addCourse(_: any, args: MutationAddCourseArgs, context: any, info: any) {
    return service.addCourse(args.course);
