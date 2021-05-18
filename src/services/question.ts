@@ -88,17 +88,15 @@ export function resolveQuestionType(question: any) {
    return null;
 }
 
-export async function batchWriteFrQuestions(
-   questions: FrQuestionInput[]
-): Promise<BatchWriteItemCommandOutput> {
+export async function batchWriteFrQuestions(questions: FrQuestionInput[]): Promise<number> {
    const items = questions.map(helper.frQuestionInputToDBItem);
    const params: BatchWriteParams = {
       tableName: QUESTIONS_TABLE,
       items
    };
+
    try {
-      const output = await dynamodb.batchWrite(params);
-      return output;
+      return dynamodb.batchWrite(params);
    } catch (err) {
       return err;
    }

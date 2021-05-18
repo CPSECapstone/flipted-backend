@@ -1,0 +1,9 @@
+{
+   "student": {
+      "studentId": "Test Student Id 1",
+      "studentName": "Test Student Name 1",
+      "course": "Integrated Science",
+      "section": "1",
+      "team": "Gamma"
+   }
+}

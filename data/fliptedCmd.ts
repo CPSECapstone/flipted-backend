@@ -4,6 +4,7 @@ export interface IAction {
    action: string;
    id?: string;
    input?: string;
+   role?: string;
 }
 
 export type ActionFn = (args: Arguments<IAction>) => void;

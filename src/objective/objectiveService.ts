@@ -133,15 +133,9 @@ export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promis
       tableName: COURSE_CONTENT_TABLE_NAME,
       items
    };
+
    try {
-      const output = await dynamodb.batchWrite(params);
-
-      if (output.ConsumedCapacity) {
-         console.log(output.ConsumedCapacity);
-         return output.ConsumedCapacity.length;
-      }
-
-      return 0;
+      return dynamodb.batchWrite(params);
    } catch (err) {
       return err;
    }
