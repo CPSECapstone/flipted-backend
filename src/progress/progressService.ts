@@ -11,12 +11,12 @@ import { MasteryItem, ProgressPK } from "./progressInterface";
 import * as courseService from "../course/courseService";
 import usersData from "./users.json";
 import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
+import * as missionService from "../mission/missionService";
 import taskSubmissionService from "../submissions/taskSubmission";
-import missionService from "../services/mission";
 import taskService from "../services/task";
 import { generateMissionProgress, generateTargetProgress } from "./progressHelper";
 import { listTargetsByCourse } from "../target/targetService";
-import { listObjectiveItemsByCourse, listObjectivesByCourse } from "../objective/objectiveService";
+import { listObjectiveItemsByCourse } from "../objective/objectiveService";
 import { ObjectiveItem, ObjectiveKey } from "../objective/objectiveInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TaskKey } from "../interfaces/task";
@@ -165,7 +165,7 @@ export async function getAllTargetProgressForUser(course: string, username: stri
    return targetProgress;
 }
 
-export async function listObjectivesIdsByTask(taskId: string) : Promise<string[]> {
+export async function listObjectivesIdsByTask(taskId: string): Promise<string[]> {
    const params: QueryParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       indexName: "SK-PK-index",
@@ -182,7 +182,7 @@ export async function listObjectivesIdsByTask(taskId: string) : Promise<string[]
          const submissions = output.Items.map(rawItem => {
             return (<CompositeDBItem>unmarshall(rawItem)).PK;
          });
-         return submissions
+         return submissions;
       }
 
       return [];
@@ -224,7 +224,6 @@ export async function listUserMasteryItemsByTask(
    username: string,
    taskId: string
 ): Promise<MasteryItem[]> {
-
    const params: QueryParams = {
       tableName: MASTERY_TABLE,
       indexName: "username-taskId-index",

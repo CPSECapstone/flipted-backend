@@ -1,23 +1,19 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
-import { MissionItem } from "../interfaces/mission";
-
+import { MissionItem, MissionPrefix } from "./missionInterface";
 import dynamodb, {
    PutCompositeParams,
-   ScanParams,
    GetCompositeParams,
-   QueryParams
-} from "./dynamodb";
-import {
-   dbItemsToMissionContent,
-   dbMissionItemToMission,
-   convertMissionInputToItem
-} from "./missionLogic";
+   QueryParams,
+   ScanParams,
+   BatchWriteParams
+} from "../services/dynamodb";
+import * as helper from "./missionLogic";
 
 const MISSIONS_TABLE = COURSE_CONTENT_TABLE_NAME;
 
-async function addMission(missionInput: MissionInput) {
-   const missionItem = convertMissionInputToItem(missionInput);
+export async function addMission(missionInput: MissionInput) {
+   const missionItem = helper.convertMissionInputToItem(missionInput);
 
    const params: PutCompositeParams = {
       tableName: MISSIONS_TABLE,
@@ -33,7 +29,7 @@ async function addMission(missionInput: MissionInput) {
    }
 }
 
-async function getMissionContent(missionId: string): Promise<MissionContent[]> {
+export async function getMissionContent(missionId: string): Promise<MissionContent[]> {
    const params: QueryParams = {
       tableName: MISSIONS_TABLE,
       keyConditionExpression: "missionId = :missionId",
@@ -46,13 +42,13 @@ async function getMissionContent(missionId: string): Promise<MissionContent[]> {
    try {
       const output = await dynamodb.query(params);
       console.log(output);
-      return await dbItemsToMissionContent(output.Items);
+      return helper.dbItemsToMissionContent(output.Items);
    } catch (err) {
       return err;
    }
 }
 
-async function getMissionById(missionId: string): Promise<Mission> {
+export async function getMissionById(missionId: string): Promise<Mission> {
    const getparams: GetCompositeParams = {
       tableName: MISSIONS_TABLE,
       key: {
@@ -66,13 +62,14 @@ async function getMissionById(missionId: string): Promise<Mission> {
       if (!output.Item) {
          throw new Error(`Mission not found with id=${missionId}`);
       }
-      return dbMissionItemToMission(<MissionItem>unmarshall(output.Item));
+
+      return helper.dbMissionItemToMission(<MissionItem>unmarshall(output.Item));
    } catch (err) {
       return err;
    }
 }
 
-async function listByCourse(course: string): Promise<Mission[]> {
+export async function listByCourse(course: string): Promise<Mission[]> {
    const params: QueryParams = {
       tableName: MISSIONS_TABLE,
       indexName: "course-PK-index",
@@ -87,7 +84,7 @@ async function listByCourse(course: string): Promise<Mission[]> {
       const output = await dynamodb.query(params);
       if (output.Items) {
          const missions = output.Items.map((item: any) => {
-            return dbMissionItemToMission(<MissionItem>unmarshall(item));
+            return helper.dbMissionItemToMission(<MissionItem>unmarshall(item));
          });
          return missions;
       }
@@ -98,19 +95,40 @@ async function listByCourse(course: string): Promise<Mission[]> {
    }
 }
 
-function resolveMissionContentType(missionContent: any) {
+export function resolveMissionContentType(missionContent: any) {
    if (missionContent.pages) {
       return "Task";
    }
    return "SubMission";
 }
 
-const missionService = {
-   addMission,
-   getMissionById,
-   listByCourse,
-   getMissionContent,
-   resolveMissionContentType
-};
+export async function importMissions(missions: MissionInput[]): Promise<number> {
+   const missionItems = missions.map(helper.convertMissionInputToItem);
+   const params: BatchWriteParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      items: missionItems
+   };
 
-export default missionService;
+   try {
+      return dynamodb.batchWrite(params);
+   } catch (err) {
+      return err;
+   }
+}
+
+export async function deleteMissions(): Promise<number> {
+   const params: ScanParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      filterExpression: "begins_with(PK, :pkPrefix)",
+      expressionAttributeValues: {
+         ":pkPrefix": MissionPrefix
+      }
+   };
+
+   try {
+      const output = await dynamodb.batchDelete(params);
+      return output;
+   } catch (err) {
+      return err;
+   }
+}
