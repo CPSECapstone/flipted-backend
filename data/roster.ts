@@ -25,11 +25,9 @@ async function addItem(args: Arguments<flipted.IAction>) {
    }
 }
 
-async function listItems() {
-   const course = "Integrated Science";
-
+async function listItems(args: Arguments<flipted.IAction>) {
    try {
-      const students = await rosterService.listStudentsByCourse(course);
+      const students = await rosterService.listStudentsByCourse(args.course);
       console.table(students, ["course", "studentId", "email", "section", "team"]);
       console.log(`Total: ${students.length} roster items.`);
    } catch (err) {
@@ -57,7 +55,6 @@ async function importItems() {
       console.table(students);
       const output = await rosterService.importStudents(students);
       console.table(output);
-      // console.log(output);
    } catch (err) {
       console.log(err);
    }
