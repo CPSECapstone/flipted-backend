@@ -1,5 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { MASTERY_TABLE, USER_PROGRESS_TABLE_NAME } from "../environment";
+import { USER_PROGRESS_TABLE_NAME } from "../environment";
 import dynamodb, {
    PutCompositeParams,
    ScanParams,
@@ -60,18 +60,18 @@ export async function listMissionMastery(missionId: string): Promise<StudentMiss
 
 export async function queryClassMissionMastery(
    courseId: string,
-   missioId: string
+   missionId: string
 ): Promise<ClassMissionMastery> {
    try {
       const students: Student[] = await rosterService.listStudentsByCourse(courseId);
-      const mission: Mission = await missionService.getMissionById(missioId);
-      const tasks: Task[] = await taskService.listTasksByMissionId(missioId);
-      const mastertyItems: StudentMissionMasteryItem[] = await listMissionMastery(missioId);
+      const mission: Mission = await missionService.getMissionById(missionId);
+      const tasks: Task[] = await taskService.listTasksByMissionId(missionId);
+      const masteryItems: StudentMissionMasteryItem[] = await listMissionMastery(missionId);
       const classMissionMastery = helper.generateClassMissionMastery(
          students,
          mission,
          tasks,
-         mastertyItems
+         masteryItems
       );
       return classMissionMastery;
    } catch (err) {
