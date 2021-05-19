@@ -8,6 +8,7 @@
   * [Use flipted CLI](how-to-guide/use_flipted_cli.md)
 
 * [APIs](apis/README.md)
+  * [Class Mission Mastery](missionMastery.md)
   * [Courses](apis/courses.md)
   * [Goals](apis/goals.md)
   * [Missions](apis/missions.md)
