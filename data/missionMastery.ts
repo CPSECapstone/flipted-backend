@@ -23,36 +23,47 @@ async function listItems(args: Arguments<flipted.IAction>) {
 }
 
 function generateStudentMissionMasteryItems(
-   missionId: string,
    students: Student[],
    tasks: Task[]
 ): StudentMissionMasteryItem[] {
-   const masteryItems = students.map(student => {
-      const input: StudentMissionMasteryInput = {
-         missionId,
-         studentId: student.studentId,
-         currentTaskId: tasks[0].id,
-         level: util.randomInt(1, 10),
-         progress: Math.random()
-      };
+   const masteryItems: Array<StudentMissionMasteryItem> = [];
 
-      return helper.missionMasteryInputToDBItem(input);
+   const taskMap: Map<string, Array<Task>> = new Map();
+   tasks.forEach(task => {
+      if (!task.missionId) {
+         return;
+      }
+      if (taskMap.has(task.missionId)) {
+         taskMap.get(task.missionId)!.push(task);
+      } else {
+         taskMap.set(task.missionId, [task]);
+      }
    });
+
+   for (let [missionId, tasks] of taskMap) {
+      students.map(student => {
+         const input: StudentMissionMasteryInput = {
+            missionId,
+            studentId: student.studentId,
+            currentTaskId: tasks[0].id,
+            level: util.randomInt(1, 10),
+            progress: Math.random()
+         };
+         const item = helper.missionMasteryInputToDBItem(input);
+         masteryItems.push(item);
+      });
+   }
 
    return masteryItems;
 }
 
 async function importItems(args: Arguments<flipted.IAction>) {
-   if (!args.missionId) {
-      console.log("Missing --missionId=xxx");
-      return;
-   }
-
    try {
-      const missionId = args.missionId;
       const students: Student[] = await rosterService.listStudentsByCourse(args.course);
-      const tasks: Task[] = await taskService.listTasksByMissionId(missionId);
-      const mastertItems = generateStudentMissionMasteryItems(missionId, students, tasks);
+      console.table(students);
+      const tasks: Task[] = await taskService.listTasksByCourse(args.course);
+      console.table(tasks);
+      const mastertItems = generateStudentMissionMasteryItems(students, tasks);
       console.table(mastertItems);
 
       const output = await missionMasteryService.importItems(mastertItems);

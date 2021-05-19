@@ -35,7 +35,7 @@ export async function addMissionMastery(input: StudentMissionMasteryInput): Prom
 
 export async function listMissionMastery(missionId: string): Promise<StudentMissionMasteryItem[]> {
    const params: QueryParams = {
-      tableName: MASTERY_TABLE,
+      tableName: USER_PROGRESS_TABLE_NAME,
       keyConditionExpression: "PK = :pkVal",
       expressionAttributeValues: {
          ":pkVal": StudentMissionMasteryPK(missionId)
@@ -85,7 +85,7 @@ export async function importItems(masteryItems: StudentMissionMasteryItem[]): Pr
    });
 
    const params: BatchWriteParams = {
-      tableName: MASTERY_TABLE,
+      tableName: USER_PROGRESS_TABLE_NAME,
       items: masteryItems
    };
 
@@ -98,7 +98,7 @@ export async function importItems(masteryItems: StudentMissionMasteryItem[]): Pr
 
 export async function deleteItems(): Promise<number> {
    const params: ScanParams = {
-      tableName: MASTERY_TABLE,
+      tableName: USER_PROGRESS_TABLE_NAME,
       filterExpression: "begins_with(PK, :pkPrefix) and begins_with(SK, :skPrefix)",
       expressionAttributeValues: {
          ":pkPrefix": StudentMissionMasteryPKPrefix,
