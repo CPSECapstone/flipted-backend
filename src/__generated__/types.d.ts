@@ -20,6 +20,17 @@ type Answer = {
   answer?: Maybe<Scalars['String']>;
 };
 
+type ClassMissionMastery = {
+  __typename?: 'ClassMissionMastery';
+  mission: Mission;
+  studentMissionMasteryList: Array<StudentMissionMastery>;
+};
+
+type ClassTargetMastery = {
+  __typename?: 'ClassTargetMastery';
+  studentTargetMasteryList: Array<StudentTargetMastery>;
+};
+
 type CourseContent = {
   __typename?: 'CourseContent';
   courseInfo: CourseInfo;
@@ -228,6 +239,7 @@ type Mutation = {
   addMcBlock: Scalars['String'];
   addMcQuestion: Scalars['String'];
   addMission: Scalars['String'];
+  addMissionMastery: Scalars['String'];
   addObjective: Scalars['String'];
   addProgress: Scalars['String'];
   addQuizBlock: Scalars['String'];
@@ -293,6 +305,11 @@ type MutationAddMcQuestionArgs = {
 
 type MutationAddMissionArgs = {
   mission: MissionInput;
+};
+
+
+type MutationAddMissionMasteryArgs = {
+  mastery: StudentMissionMasteryInput;
 };
 
 
@@ -442,6 +459,8 @@ type ProgresssDeletionInput = {
 type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']>;
+  classMissionMastery?: Maybe<ClassMissionMastery>;
+  classTargetMastery: ClassTargetMastery;
   courseContent: CourseContent;
   courseInfo: CourseInfo;
   courseInfos: Array<CourseInfo>;
@@ -479,6 +498,17 @@ type Query = {
   tasks: Array<Task>;
   tasksByCourse: Array<Task>;
   userProgress: UserProgress;
+};
+
+
+type QueryClassMissionMasteryArgs = {
+  courseId: Scalars['String'];
+  missionId: Scalars['String'];
+};
+
+
+type QueryClassTargetMasteryArgs = {
+  courseId: Scalars['String'];
 };
 
 
@@ -716,6 +746,29 @@ type StudentInput = {
   team?: Maybe<Scalars['String']>;
 };
 
+type StudentMissionMastery = {
+  __typename?: 'StudentMissionMastery';
+  student: Student;
+  currentTaskId: Scalars['String'];
+  currentTaskName: Scalars['String'];
+  level: Scalars['Int'];
+  progress: Scalars['Float'];
+};
+
+type StudentMissionMasteryInput = {
+  missionId: Scalars['String'];
+  studentId: Scalars['String'];
+  currentTaskId: Scalars['String'];
+  level: Scalars['Int'];
+  progress: Scalars['Float'];
+};
+
+type StudentTargetMastery = {
+  __typename?: 'StudentTargetMastery';
+  student: Student;
+  targetMasteryList: Array<TargetMastery>;
+};
+
 type SubGoal = {
   __typename?: 'SubGoal';
   title: Scalars['String'];
@@ -770,6 +823,13 @@ type TargetInput = {
   icon: Scalars['String'];
   standards: Scalars['String'];
   course: Scalars['String'];
+};
+
+type TargetMastery = {
+  __typename?: 'TargetMastery';
+  targetId: Scalars['String'];
+  targetName: Scalars['String'];
+  progress: Scalars['Float'];
 };
 
 type TargetProgress = {

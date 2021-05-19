@@ -1,0 +1,44 @@
+type StudentMissionMastery {
+   student: Student!
+   currentTaskId: String!
+   currentTaskName: String!
+   level: Int!
+   progress: Float!
+}
+
+type ClassMissionMastery {
+   mission: Mission!
+   studentMissionMasteryList: [StudentMissionMastery!]!
+}
+
+type TargetMastery {
+   targetId: String!
+   targetName: String!
+   progress: Float!
+}
+
+type StudentTargetMastery {
+   student: Student!
+   targetMasteryList: [TargetMastery!]!
+}
+
+type ClassTargetMastery {
+   studentTargetMasteryList: [StudentTargetMastery!]!
+}
+
+type Query {
+   classMissionMastery(courseId: String!, missionId: String!): ClassMissionMastery
+   classTargetMastery(courseId: String!): ClassTargetMastery!
+}
+
+input StudentMissionMasteryInput {
+   missionId: String!
+   studentId: String!
+   currentTaskId: String!
+   level: Int!
+   progress: Float!
+}
+
+type Mutation {
+   addMissionMastery(mastery: StudentMissionMasteryInput!): String!
+}

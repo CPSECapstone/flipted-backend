@@ -127,6 +127,32 @@ async function listTasksByCourse(course: string): Promise<Task[]> {
    }
 }
 
+async function listTasksByIds(taskIds: string[]): Promise<Task[]> {
+   const tableName = COURSE_CONTENT_TABLE_NAME;
+   const keys = taskIds.map(taskId => {
+      return {
+         PK: TaskKey(taskId),
+         SK: TaskKey(taskId)
+      };
+   });
+   const params: BatchGetParams = {
+      tableName,
+      keys
+   };
+
+   try {
+      const output = await dynamodb.batchGet(params);
+      if (output.Responses) {
+         const tasks = batchResponseToTasks(output.Responses[tableName]);
+         return tasks;
+      }
+
+      return [];
+   } catch (err) {
+      return err;
+   }
+}
+
 async function listTasksByMissionId(missionId: string): Promise<Task[]> {
    const params: QueryParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
@@ -151,32 +177,6 @@ async function listTasksByMissionId(missionId: string): Promise<Task[]> {
       return [];
    } catch (err) {
       console.log(err);
-      return err;
-   }
-}
-
-async function listTasksByIds(taskIds: string[]): Promise<Task[]> {
-   const tableName = COURSE_CONTENT_TABLE_NAME;
-   const keys = taskIds.map(taskId => {
-      return {
-         PK: TaskKey(taskId),
-         SK: TaskKey(taskId)
-      };
-   });
-   const params: BatchGetParams = {
-      tableName,
-      keys
-   };
-
-   try {
-      const output = await dynamodb.batchGet(params);
-      if (output.Responses) {
-         const tasks = batchResponseToTasks(output.Responses[tableName]);
-         return tasks;
-      }
-
-      return [];
-   } catch (err) {
       return err;
    }
 }
