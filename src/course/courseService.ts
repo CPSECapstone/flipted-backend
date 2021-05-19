@@ -3,10 +3,11 @@ import dynamodb, {
    GetCompositeParams,
    PutCompositeParams,
    ScanParams,
-   QueryParams
+   QueryParams,
+   BatchWriteParams
 } from "../services/dynamodb";
 import * as helper from "./courseHelper";
-import { CourseKey, CoursePrefix } from "./courseInterface";
+import { CourseInfoItem, CourseKey, CoursePrefix } from "./courseInterface";
 
 export async function addCourse(input: CourseInput) {
    const courseItem = helper.courseInputToDBItem(input);
@@ -87,6 +88,40 @@ export async function getCourseContent(course: string): Promise<CourseContent> {
       }
 
       throw new Error(`Course not found with courseName=${course}`);
+   } catch (err) {
+      return err;
+   }
+}
+
+export async function importCourses(courseItems: CourseInfoItem[]): Promise<number> {
+   courseItems.forEach(item => {
+      item.source = "imported";
+   });
+
+   const params: BatchWriteParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      items: courseItems
+   };
+
+   try {
+      return dynamodb.batchWrite(params);
+   } catch (err) {
+      return err;
+   }
+}
+
+export async function deleteCourses(): Promise<number> {
+   const params: ScanParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      filterExpression: "begins_with(PK, :pkPrefix)",
+      expressionAttributeValues: {
+         ":pkPrefix": CoursePrefix
+      }
+   };
+
+   try {
+      const output = await dynamodb.batchDelete(params);
+      return output;
    } catch (err) {
       return err;
    }

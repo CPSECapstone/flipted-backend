@@ -1,18 +1,23 @@
-import * as flipted from "./fliptedCmd";
-import * as service from "../src/mission/missionService";
 import { Arguments } from "yargs";
 import { readFile } from "fs/promises";
+import * as flipted from "./fliptedCmd";
+import * as service from "../src/mission/missionService";
+import * as helper from "../src/mission/missionLogic";
+import { MissionItem } from "../src/mission/missionInterface";
 
 async function listItems(args: Arguments<flipted.IAction>) {
-   const course = args.course;
-
    try {
-      const output = await service.listByCourse(course!);
+      const output = await service.listByCourse(args.course!);
       console.table(output, ["id", "name", "course", "description"]);
       console.log(`Total: ${output.length} mission items.`);
    } catch (err) {
       console.log(err);
    }
+}
+
+function generateMissionItems(records: any): MissionItem[] {
+   const missions: MissionInput[] = records.missions;
+   return missions.map(helper.convertMissionInputToItem);
 }
 
 async function importItems() {
@@ -21,9 +26,8 @@ async function importItems() {
    try {
       const buffer = await readFile(filePath);
       const records = JSON.parse(buffer.toString());
-      const missions: MissionInput[] = records.missions;
-      console.table(missions);
-
+      const missions = generateMissionItems(records);
+      console.log(missions);
       const output = await service.importMissions(missions);
       console.log(output);
    } catch (err) {

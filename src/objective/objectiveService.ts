@@ -105,8 +105,11 @@ export async function listObjectiveItemsByCourse(course: string): Promise<Object
    }
 }
 
-export async function batchWriteObjectives(objectives: ObjectiveInput[]): Promise<number> {
-   const objItems = objectives.map(helper.objectiveInputToDBItem);
+export async function importObjectives(objectiveItems: ObjectiveItem[]): Promise<number> {
+   const objItems = objectiveItems;
+   objItems.forEach(item => {
+      item.source = "imported";
+   });
 
    // a flat list of objective task record items for every objective
    const taskRecords = objItems

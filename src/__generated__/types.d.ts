@@ -237,6 +237,7 @@ type Mutation = {
   addTask: Scalars['String'];
   addTextBlock: Scalars['String'];
   addVideoBlock: Scalars['String'];
+  deleteGoal: Scalars['String'];
   editOrCreateGoal: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress: Scalars['Boolean'];
@@ -337,6 +338,11 @@ type MutationAddTextBlockArgs = {
 
 type MutationAddVideoBlockArgs = {
   videoblock: VideoBlockInput;
+};
+
+
+type MutationDeleteGoalArgs = {
+  id: Scalars['String'];
 };
 
 
