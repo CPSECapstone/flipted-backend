@@ -1,4 +1,4 @@
-import * as service from "./missionMsteryService";
+import * as service from "./missionMasteryService";
 
 async function queryClassMissionMastery(_: any, args: QueryClassMissionMasteryArgs) {
    return service.queryClassMissionMastery(args.courseId, args.missionId);
