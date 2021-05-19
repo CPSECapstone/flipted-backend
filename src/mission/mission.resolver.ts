@@ -1,9 +1,8 @@
-import missionService from "../services/mission";
-import subMissionService from "../services/subMission";
+import * as missionService from "./missionService";
+import subMissionService from "./subMission";
 import { validateToken } from "../jws-verifer";
 import userService from "../services/user";
 import { RoleInternal } from "../interfaces/role";
-
 
 async function addMission(_: any, args: any, context: any, info: any) {
    const tokenPayload = await validateToken(context.headers.Authorization);

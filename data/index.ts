@@ -2,6 +2,7 @@
 
 import yargs from "yargs";
 import courseCmd from "./courses";
+import missionCmd from "./missions";
 import objectiveCmd from "./objectives";
 import rosterCmd from "./roster";
 import userCmd from "./users";
@@ -11,6 +12,7 @@ import taskblockCmd from "./taskblocks";
 
 yargs
    .command(courseCmd)
+   .command(missionCmd)
    .command(objectiveCmd)
    .command(rosterCmd)
    .command(userCmd)

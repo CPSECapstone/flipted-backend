@@ -1,13 +1,13 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { SubMissionItem } from "../interfaces/mission";
-import { dbItemToSubMission, convertSubMissionInputToItem } from "../services/missionLogic";
+import { SubMissionItem } from "./missionInterface";
+import * as helper from "./missionLogic";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
-import dynamodb, { GetCompositeParams, PutCompositeParams, ScanParams } from "./dynamodb";
+import dynamodb, { GetCompositeParams, PutCompositeParams } from "../services/dynamodb";
 
 const SUBMISSIONS_TABLE = COURSE_CONTENT_TABLE_NAME;
 
 async function addSubMission(subMissionInput: SubMissionInput) {
-   const subMissionItem: SubMissionItem = convertSubMissionInputToItem(subMissionInput);
+   const subMissionItem: SubMissionItem = helper.convertSubMissionInputToItem(subMissionInput);
 
    const params: PutCompositeParams = {
       tableName: SUBMISSIONS_TABLE,
@@ -37,7 +37,7 @@ async function getSubMissionById(subMissionId: string): Promise<SubMission> {
       if (!output.Item) {
          throw new Error(`SubMission not found with id=${subMissionId}`);
       }
-      return dbItemToSubMission(<SubMissionItem>unmarshall(output.Item));
+      return helper.dbItemToSubMission(<SubMissionItem>unmarshall(output.Item));
    } catch (err) {
       return err;
    }

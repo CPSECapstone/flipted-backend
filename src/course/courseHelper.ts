@@ -6,11 +6,11 @@ import {
    MissionPrefix,
    SubMissionItem,
    SubMissionPrefix
-} from "../interfaces/mission";
+} from "../mission/missionInterface";
 import { ObjectiveItem, ObjectivePrefix } from "../objective/objectiveInterface";
 import { TargetItem, TargetPrefix } from "../target/targetInterface";
 import { TaskPrefix } from "../interfaces/task";
-import { dbItemToSubMission, dbMissionItemToMission } from "../services/missionLogic";
+import * as missionLogic from "../mission/missionLogic";
 import { dbItemToObjective } from "../objective/objectiveHelper";
 import { dbItemToTarget } from "../target/targetHelper";
 import { dbItemToTask } from "../services/taskBusLogic";
@@ -77,13 +77,13 @@ function parseCourseItems(
          const target = dbItemToTarget(<TargetItem>item);
          targetMap.set(id, target);
       } else if (type == MissionPrefix) {
-         const mission = dbMissionItemToMission(<MissionItem>item);
+         const mission = missionLogic.dbMissionItemToMission(<MissionItem>item);
          missionMap.set(id, mission);
       } else if (type == TaskPrefix) {
          const task = dbItemToTask(rawItem);
          taskMap.set(id, task);
       } else if (type == SubMissionPrefix) {
-         const subMission = dbItemToSubMission(<SubMissionItem>item);
+         const subMission = missionLogic.dbItemToSubMission(<SubMissionItem>item);
          subMissionMap.set(id, subMission);
       }
    });

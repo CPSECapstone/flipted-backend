@@ -5,6 +5,8 @@ export interface IAction {
    id?: string;
    input?: string;
    role?: string;
+   course?: string;
+   missionId?: string;
 }
 
 export type ActionFn = (args: Arguments<IAction>) => void;
@@ -26,12 +28,17 @@ export function cmdFactory(cmdArgs: CmdFactoryArgs): yargs.CommandModule<{}, IAc
       command: `${name} <action>`,
       describe: desc,
       builder: (_args: Argv<{}>): Argv<IAction> => {
-         return yargs.positional("action", {
-            type: "string",
-            describe: "the action you want to perform on the entity",
-            choices: ["add", "get", "list", "import", "delete"],
-            default: "help"
-         });
+         return yargs
+            .positional("action", {
+               type: "string",
+               describe: "the action you want to perform on the entity",
+               choices: ["add", "get", "list", "import", "delete"],
+               default: "help"
+            })
+            .option("course", {
+               demandOption: false,
+               default: "Integrated Science"
+            });
       },
       handler: args => {
          const actionFnName: ActionIndex = <ActionIndex>`${args.action}Fn`;
