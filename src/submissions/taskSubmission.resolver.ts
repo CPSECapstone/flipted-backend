@@ -146,6 +146,8 @@ async function submitTask(_: any, args: any, context: any, info: any) {
       questions
    );
 
+   taskSubmissionService.generateMasteryItemsForTask(username, task.id, task.course);
+
    // save the constructed submission to the database for grading and retrieval
    taskSubmissionService.submitTaskForGrading(task, taskSubmissionResult, username);
 
