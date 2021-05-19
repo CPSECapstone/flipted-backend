@@ -104,6 +104,10 @@ export async function getQuizBlockById(taskId: string, blockId: string): Promise
 }
 
 export async function importBlocks(blockItems: TaskBlockItem[]): Promise<number> {
+   blockItems.forEach(blockItem => {
+      blockItem.source = "imported";
+   });
+
    const params: BatchWriteParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       items: blockItems

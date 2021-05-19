@@ -1,6 +1,9 @@
 import { CompositeDBItem } from "../services/dynamodb";
 
-export type CourseInfoItem = CompositeDBItem & Omit<CourseInfo, "__typename">;
+export type CourseInfoItem = CompositeDBItem &
+   Omit<CourseInfo, "__typename"> & {
+      source?: string;
+   };
 
 export const CoursePrefix = "COURSE";
 

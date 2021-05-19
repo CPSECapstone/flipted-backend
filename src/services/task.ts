@@ -5,7 +5,7 @@ import taskBusLogic, {
    batchResponseToTasks
 } from "./taskBusLogic";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
-import { TaskItem, TaskKey } from "../interfaces/task";
+import { TaskItem, TaskKey, TaskPrefix } from "../interfaces/task";
 import dynamodb, {
    BatchGetParams,
    BatchWriteParams,
@@ -127,6 +127,34 @@ async function listTasksByCourse(course: string): Promise<Task[]> {
    }
 }
 
+async function listTasksByMissionId(missionId: string): Promise<Task[]> {
+   const params: QueryParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      indexName: "missionId-index",
+      keyConditionExpression: "missionId = :missionIdVal",
+      filterExpression: "begins_with(SK, :skPrefix)",
+      expressionAttributeValues: {
+         ":missionIdVal": missionId,
+         ":skPrefix": TaskPrefix
+      }
+   };
+
+   try {
+      const output = await dynamodb.query(params);
+      if (output.Items) {
+         const tasks = output.Items.map(rawItem => {
+            return dbItemToTask(rawItem);
+         });
+         return tasks;
+      }
+
+      return [];
+   } catch (err) {
+      console.log(err);
+      return err;
+   }
+}
+
 async function listTasksByIds(taskIds: string[]): Promise<Task[]> {
    const tableName = COURSE_CONTENT_TABLE_NAME;
    const keys = taskIds.map(taskId => {
@@ -154,6 +182,10 @@ async function listTasksByIds(taskIds: string[]): Promise<Task[]> {
 }
 
 async function importTasks(taskItems: TaskItem[]): Promise<number> {
+   taskItems.forEach(taskItem => {
+      taskItem.source = "imported";
+   });
+
    const params: BatchWriteParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       items: taskItems
@@ -189,6 +221,7 @@ const taskService = {
    listBySubMissionId,
    getTaskInfoById,
    listTasksByCourse,
+   listTasksByMissionId,
    listTasksByIds,
    importTasks,
    deleteTasks

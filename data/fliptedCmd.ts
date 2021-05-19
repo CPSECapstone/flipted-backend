@@ -2,10 +2,10 @@ import yargs, { Arguments, Argv } from "yargs";
 
 export interface IAction {
    action: string;
+   course: string;
    id?: string;
    input?: string;
    role?: string;
-   course?: string;
    missionId?: string;
 }
 
@@ -32,7 +32,7 @@ export function cmdFactory(cmdArgs: CmdFactoryArgs): yargs.CommandModule<{}, IAc
             .positional("action", {
                type: "string",
                describe: "the action you want to perform on the entity",
-               choices: ["add", "get", "list", "import", "delete"],
+               choices: ["get", "list", "import", "delete"],
                default: "help"
             })
             .option("course", {

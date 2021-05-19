@@ -102,8 +102,11 @@ export function resolveMissionContentType(missionContent: any) {
    return "SubMission";
 }
 
-export async function importMissions(missions: MissionInput[]): Promise<number> {
-   const missionItems = missions.map(helper.convertMissionInputToItem);
+export async function importMissions(missionItems: MissionItem[]): Promise<number> {
+   missionItems.forEach(mission => {
+      mission.source = "imported";
+   });
+
    const params: BatchWriteParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       items: missionItems
