@@ -239,7 +239,6 @@ type Mutation = {
   addMcBlock: Scalars['String'];
   addMcQuestion: Scalars['String'];
   addMission: Scalars['String'];
-  addMissionMastery: Scalars['String'];
   addObjective: Scalars['String'];
   addProgress: Scalars['String'];
   addQuizBlock: Scalars['String'];
@@ -305,11 +304,6 @@ type MutationAddMcQuestionArgs = {
 
 type MutationAddMissionArgs = {
   mission: MissionInput;
-};
-
-
-type MutationAddMissionMasteryArgs = {
-  mastery: StudentMissionMasteryInput;
 };
 
 
