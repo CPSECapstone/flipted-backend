@@ -1,8 +1,8 @@
 import * as flipted from "./fliptedCmd";
-import parse from "csv-parse/lib/sync";
-import { readFile } from "fs/promises";
+import * as util from "./util";
 import { Arguments } from "yargs";
 import taskService from "../src/services/task";
+import * as missionService from "../src/mission/missionService";
 import { TaskItem } from "../src/interfaces/task";
 import taskBusLogic from "../src/services/taskBusLogic";
 
@@ -21,77 +21,77 @@ async function getItem(args: Arguments<flipted.IAction>) {
    }
 }
 
-async function listItems() {
-   const course = "Integrated Science";
-
+async function listItems(args: Arguments<flipted.IAction>) {
    try {
-      const tasks: Task[] = await taskService.listTasksByCourse(course);
-      console.table(tasks);
+      let tasks: Task[] = [];
+      if (args.missionId) {
+         tasks = await taskService.listTasksByMissionId(args.missionId);
+      } else {
+         // default - list by course
+         tasks = await taskService.listTasksByCourse(args.course!);
+      }
+      console.table(tasks, ["id", "name", "missionId", "missionIndex", "pages"]);
       console.log(`Total: ${tasks.length} task items.`);
    } catch (err) {
       console.log(err);
    }
 }
 
-async function readPagesFromCSV(filePath: string): Promise<Map<string, number>> {
-   try {
-      const buff = await readFile(filePath);
-      const records = parse(buff.toString(), {
-         columns: true,
-         skip_empty_lines: true
-      });
+function generatePageMap(records: any[]): Map<string, number> {
+   const map: Map<string, number> = new Map();
+   records.forEach((record: any) => {
+      const taskName = record.Task;
+      const oldPage = map.get(taskName) || -1;
+      const page = parseInt(record.Page);
+      map.set(taskName, page > oldPage ? page : oldPage);
+   });
 
-      const map: Map<string, number> = new Map();
-      records.forEach((record: any) => {
-         const taskName = record.Task;
-         const oldPage = map.get(taskName) || -1;
-         const page = parseInt(record.Page);
-         map.set(taskName, page > oldPage ? page : oldPage);
-      });
-
-      return map;
-   } catch (err) {
-      console.log(err);
-      return err;
-   }
+   return map;
 }
 
-async function readTasksFromCSV(filePath: string): Promise<TaskItem[]> {
-   try {
-      const buff = await readFile(filePath);
-      const records = parse(buff.toString(), {
-         columns: true,
-         skip_empty_lines: true
-      });
+function generateTaskItems(records: any[]): TaskItem[] {
+   const taskItems: TaskItem[] = records.map((record: any) => {
+      const input: TaskInput = {
+         name: record.TaskName,
+         instructions: record.Instructions,
+         points: parseInt(record.Points),
+         requirements: [
+            {
+               description: record.Requirements
+            }
+         ],
+         pages: [],
+         course: record.Course,
+         missionId: record.MissionId,
+         missionIndex: parseInt(record.MissionIndex)
+      };
 
-      const taskItems: TaskItem[] = records.map((record: any) => {
-         const input: TaskInput = {
-            name: record.TaskName,
-            instructions: record.Instructions,
-            points: parseInt(record.Points),
-            requirements: [],
-            pages: [],
-            course: record.Course,
-            missionId: record.MissionId,
-            missionIndex: parseInt(record.MissionIndex)
-         };
+      const taskItem = taskBusLogic.convertTaskInputToTaskItem(input);
+      return taskItem;
+   });
 
-         return taskBusLogic.convertTaskInputToTaskItem(input);
-      });
-
-      return taskItems;
-   } catch (err) {
-      console.log(err);
-      return err;
-   }
+   return taskItems;
 }
 
 async function importItems(args: Arguments<flipted.IAction>) {
    const filePath = args.input || "data/tasks.csv";
 
    try {
-      const pageMap: Map<string, number> = await readPagesFromCSV("data/taskblocks.csv");
-      const taskItems: TaskItem[] = await readTasksFromCSV(filePath);
+      const taskblockRecords = await util.readFromCSV("data/taskblocks.csv");
+      const pageMap: Map<string, number> = generatePageMap(taskblockRecords);
+
+      const records = await util.readFromCSV(filePath);
+      const taskItems: TaskItem[] = generateTaskItems(records);
+
+      const missions: Mission[] = await missionService.listByCourse(args.course);
+      const lenOfMisssions = missions.length;
+
+      // randomly assign a missionId and missionIndexto task
+      taskItems.forEach(task => {
+         const randomIndex = util.randomInt(0, lenOfMisssions - 1);
+         task.missionId = missions[randomIndex].id;
+         task.missionIndex = randomIndex;
+      });
 
       taskItems.forEach(taskItem => {
          if (pageMap.has(taskItem.name)) {
@@ -99,14 +99,8 @@ async function importItems(args: Arguments<flipted.IAction>) {
             taskItem.pages = Array(pageNum).fill(false);
          }
       });
-      console.table(taskItems, [
-         "id",
-         "name",
-         "pages",
-         "instructions",
-         "missionId",
-         "missionIndex"
-      ]);
+
+      console.table(taskItems, ["id", "name", "pages", "missionId", "missionIndex"]);
       const output = await taskService.importTasks(taskItems);
       console.log(output);
    } catch (err) {

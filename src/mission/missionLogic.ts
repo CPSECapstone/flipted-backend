@@ -1,7 +1,7 @@
 import { uid } from "uid";
-import { MissionItem, SubMissionItem } from "../interfaces/mission";
+import { MissionItem, SubMissionItem } from "./missionInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import taskService from "./task";
+import taskService from "../services/task";
 
 /*
    item - the representation in database

@@ -26,6 +26,7 @@ export interface TaskItem extends CompositeDBItem {
    subMissionId: string;
    objectiveId: string;
    targetId: string;
+   source?: string;
 }
 
 export const TaskPrefix = "TASK";

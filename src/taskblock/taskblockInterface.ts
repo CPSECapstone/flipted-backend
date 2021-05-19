@@ -1,7 +1,10 @@
 import { CompositeDBItem } from "../services/dynamodb";
 
 /***************** Database item ******************************/
-export declare type TaskBlockItem = TaskBlock & CompositeDBItem;
+export declare type TaskBlockItem = TaskBlock &
+   CompositeDBItem & {
+      source?: string;
+   };
 export declare type TextBlockItem = TextBlock & TaskBlockItem;
 export declare type ImageBlockItem = ImageBlock & TaskBlockItem;
 export declare type VideoBlockItem = VideoBlock & TaskBlockItem;

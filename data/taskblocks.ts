@@ -1,5 +1,3 @@
-import parse from "csv-parse/lib/sync";
-import { readFile } from "fs/promises";
 import { Arguments } from "yargs";
 import * as flipted from "./fliptedCmd";
 import * as util from "./util";
@@ -15,20 +13,6 @@ async function listItems() {
       console.log(`Total: ${blocks.length} taskblock items.`);
    } catch (err) {
       console.log(err);
-   }
-}
-
-async function readTaskBlocksFromCSV(filePath: string): Promise<any> {
-   try {
-      const buff = await readFile(filePath);
-      const records = parse(buff.toString(), {
-         columns: true,
-         skip_empty_lines: true
-      });
-      return records;
-   } catch (err) {
-      console.log(err);
-      return err;
    }
 }
 
@@ -126,6 +110,10 @@ function generateTaskBlockItems(records: any[], tasks: Task[]): TaskBlockItem[] 
       }
    });
 
+   blockItems.forEach(block => {
+      block.source = "imported";
+   });
+
    return blockItems;
 }
 
@@ -134,7 +122,7 @@ async function importItems(args: Arguments<flipted.IAction>) {
    const course = "Integrated Science";
 
    try {
-      const records = await readTaskBlocksFromCSV(filePath);
+      const records = await util.readFromCSV(filePath);
       const tasks = await taskService.listTasksByCourse(course);
       const blocks: TaskBlockItem[] = generateTaskBlockItems(records, tasks);
       console.table(blocks, ["PK", "title", "pageIndex", "blockIndex"]);

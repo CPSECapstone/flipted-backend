@@ -3,7 +3,7 @@ import { GraphQLDate } from "graphql-iso-date";
 
 import customType from "./custom.graphql";
 import userType from "./user.graphql";
-import missionType from "./mission.graphql";
+import missionType from "../mission/mission.graphql";
 import courseType from "../course/course.graphql";
 import taskType from "./task.graphql";
 import quizTaskSubmission from "../submissions/taskSubmission.graphql";
@@ -20,7 +20,7 @@ import courseResolvers from "../course/course.resolver";
 import taskResolvers from "./task.resolver";
 import questionResolvers from "./question.resolver";
 import quizTaskSubmissionResolvers from "../submissions/taskSubmission.resolver";
-import missionResolvers from "./mission.resolver";
+import missionResolvers from "../mission/mission.resolver";
 import taskblockResolvers from "../taskblock/taskblock.resolver";
 import objectiveResolvers from "../objective/objective.resolver";
 import targetResolvers from "../target/target.resolver";

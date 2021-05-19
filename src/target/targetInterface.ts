@@ -1,6 +1,9 @@
 import { CompositeDBItem } from "../services/dynamodb";
 
-export type TargetItem = CompositeDBItem & Omit<Target, "__typename" | "objectives">;
+export type TargetItem = CompositeDBItem &
+   Omit<Target, "__typename" | "objectives"> & {
+      source?: string;
+   };
 
 export const TargetPrefix = "TARGET";
 

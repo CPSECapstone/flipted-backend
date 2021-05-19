@@ -2,9 +2,11 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { TargetItem, TargetKey, TargetPrefix } from "./targetInterface";
 import dynamodb, {
+   BatchWriteParams,
    GetCompositeParams,
    PutCompositeParams,
-   QueryParams
+   QueryParams,
+   ScanParams
 } from "../services/dynamodb";
 import * as helper from "./targetHelper";
 
@@ -51,10 +53,10 @@ export async function listTargetsByCourse(course: string): Promise<Target[]> {
    const params: QueryParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       indexName: "course-PK-index",
-      keyConditionExpression: "course = :courseVal and begins_with(PK, :skPrefix)",
+      keyConditionExpression: "course = :courseVal and begins_with(PK, :pkPrefix)",
       expressionAttributeValues: {
          ":courseVal": course,
-         ":skPrefix": TargetPrefix
+         ":pkPrefix": TargetPrefix
       }
    };
 
@@ -66,6 +68,40 @@ export async function listTargetsByCourse(course: string): Promise<Target[]> {
       }
 
       return [];
+   } catch (err) {
+      return err;
+   }
+}
+
+export async function importTargets(targetItems: TargetItem[]): Promise<number> {
+   targetItems.forEach(targetItem => {
+      targetItem.source = "imported";
+   });
+
+   const params: BatchWriteParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      items: targetItems
+   };
+
+   try {
+      return dynamodb.batchWrite(params);
+   } catch (err) {
+      return err;
+   }
+}
+
+export async function deleteTargets(): Promise<number> {
+   const params: ScanParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      filterExpression: "begins_with(PK, :pkPrefix)",
+      expressionAttributeValues: {
+         ":pkPrefix": TargetPrefix
+      }
+   };
+
+   try {
+      const output = await dynamodb.batchDelete(params);
+      return output;
    } catch (err) {
       return err;
    }
