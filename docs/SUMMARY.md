@@ -9,6 +9,7 @@
 
 * [APIs](apis/README.md)
   * [Class Mission Mastery](missionMastery.md)
+  * [Class Target Mastery](apis/targetMastery.md)
   * [Courses](apis/courses.md)
   * [Goals](apis/goals.md)
   * [Missions](apis/missions.md)

@@ -88,7 +88,7 @@ export async function listObjectiveItemsByCourse(course: string): Promise<Object
 export async function listObjectiveItemsByTarget(targetId: string): Promise<ObjectiveItem[]> {
    const params: QueryParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
-      indexName: "course-PK-index",
+      indexName: "targetId-SK-index",
       keyConditionExpression: "targetId = :targetIdVal and begins_with(SK, :skPrefix) ",
       expressionAttributeValues: {
          ":targetIdVal": targetId,

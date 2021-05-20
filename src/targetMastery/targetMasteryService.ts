@@ -2,8 +2,8 @@ import { USER_PROGRESS_TABLE_NAME } from "../environment";
 import dynamodb, { ScanParams, QueryParams, BatchWriteParams } from "../services/dynamodb";
 import {
    StudentObjectiveMasteryItem,
-   StudentObjectiveMasteryPK,
-   StudentObjectiveMasterySK
+   StudentObjectiveMasteryPKPrefix,
+   StudentObjectiveMasterySKPrefix
 } from "./targetMasteryInterface";
 import * as rosterService from "../roster/rosterService";
 import * as helper from "./targetMasteryHelper";
@@ -17,7 +17,7 @@ export async function listStudentObjectiveMasteryItemByTarget(
 ): Promise<StudentObjectiveMasteryItem[]> {
    const params: QueryParams = {
       tableName: USER_PROGRESS_TABLE_NAME,
-      indexName: "target-index",
+      indexName: "targetId-index",
       keyConditionExpression: "targetId = :targetIdVal",
       expressionAttributeValues: {
          ":targetIdVal": targetId
@@ -37,7 +37,7 @@ export async function queryClassTargetMastery(targetId: string): Promise<ClassTa
 
       const students: Array<Student> = await rosterService.listStudentsByCourse(target.course);
       const masteryItems: Array<StudentObjectiveMasteryItem> = await listStudentObjectiveMasteryItemByTarget(
-         target.course
+         target.targetId
       );
 
       const classTargetMastery: ClassTargetMastery = helper.generateClassTargetMastery(
@@ -74,8 +74,8 @@ export async function deleteItems(): Promise<number> {
       tableName: USER_PROGRESS_TABLE_NAME,
       filterExpression: "begins_with(PK, :pkPrefix) and begins_with(SK, :skPrefix)",
       expressionAttributeValues: {
-         ":pkPrefix": StudentObjectiveMasteryPK,
-         ":skPrefix": StudentObjectiveMasterySK
+         ":pkPrefix": StudentObjectiveMasteryPKPrefix,
+         ":skPrefix": StudentObjectiveMasterySKPrefix
       }
    };
 
