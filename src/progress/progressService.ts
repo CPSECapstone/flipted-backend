@@ -4,7 +4,9 @@ import dynamodb, {
    ScanParams,
    QueryParams,
    DeleteParam,
-   CompositeDBItem
+   CompositeDBItem,
+   MappingFn,
+   BatchWriteParams
 } from "../services/dynamodb";
 import * as helper from "./progressHelper";
 import { MasteryItem, ProgressPK } from "./progressInterface";
@@ -16,7 +18,7 @@ import taskSubmissionService from "../submissions/taskSubmission";
 import taskService from "../services/task";
 import { generateMissionProgress, generateTargetProgress } from "./progressHelper";
 import { listTargetsByCourse } from "../target/targetService";
-import { listObjectiveItemsByCourse, listObjectivesByCourse } from "../objective/objectiveService";
+import { listObjectiveItemsByCourse } from "../objective/objectiveService";
 import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "../objective/objectiveInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TaskKey } from "../interfaces/task";
@@ -246,5 +248,56 @@ export async function listUserMasteryItemsByTask(
       return [];
    } catch (err) {
       throw err;
+   }
+}
+
+export async function listAllByCourse(course: string): Promise<Array<MasteryItem>> {
+   const params: QueryParams = {
+      tableName: MASTERY_TABLE,
+      indexName: "course-SK-index",
+      keyConditionExpression: "course = :courseVal",
+      expressionAttributeValues: {
+         ":courseVal": course
+      }
+   };
+
+   const mappingFn: MappingFn<MasteryItem> = (item: any) => {
+      return <MasteryItem>item;
+   };
+
+   return dynamodb.queryList(params, mappingFn);
+}
+
+export async function importItems(masteryItems: Array<MasteryItem>): Promise<number> {
+   masteryItems.forEach(item => {
+      item.source = "imported";
+   });
+
+   const params: BatchWriteParams = {
+      tableName: MASTERY_TABLE,
+      items: masteryItems
+   };
+
+   try {
+      return dynamodb.batchWrite(params);
+   } catch (err) {
+      return err;
+   }
+}
+
+export async function deleteItems(): Promise<number> {
+   const params: ScanParams = {
+      tableName: MASTERY_TABLE,
+      filterExpression: "source = :sourceVal",
+      expressionAttributeValues: {
+         ":sourceVal": "imported"
+      }
+   };
+
+   try {
+      const output = await dynamodb.batchDelete(params);
+      return output;
+   } catch (err) {
+      return err;
    }
 }

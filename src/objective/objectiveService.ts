@@ -4,6 +4,7 @@ import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "./objectiveInterfa
 import dynamodb, {
    BatchWriteParams,
    GetCompositeParams,
+   MappingFn,
    QueryParams,
    ScanParams
 } from "../services/dynamodb";
@@ -63,17 +64,7 @@ export async function listObjectivesByCourse(course: string): Promise<Objective[
       }
    };
 
-   try {
-      const output = await dynamodb.query(params);
-      if (output.Items) {
-         const objectives = helper.dbItemsToObjectives(output.Items);
-         return objectives;
-      }
-
-      return [];
-   } catch (err) {
-      return err;
-   }
+   return dynamodb.queryList(params, helper.dbItemToObjective);
 }
 
 export async function getObjective(parent: any) {
@@ -91,18 +82,11 @@ export async function listObjectiveItemsByCourse(course: string): Promise<Object
       }
    };
 
-   try {
-      const output = await dynamodb.query(params);
-      if (output.Items) {
-         return output.Items.map(rawItem => {
-            return <ObjectiveItem>unmarshall(rawItem);
-         });
-      }
+   const mappingFn: MappingFn<ObjectiveItem> = (item: any) => {
+      return <ObjectiveItem>item;
+   };
 
-      return [];
-   } catch (err) {
-      return err;
-   }
+   return dynamodb.queryList(params, mappingFn);
 }
 
 export async function importObjectives(objectiveItems: ObjectiveItem[]): Promise<number> {

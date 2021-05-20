@@ -1,5 +1,4 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { dbItemToObjective } from "../objective/objectiveHelper";
 import { ObjectiveItem } from "../objective/objectiveInterface";
 import { dbItemToTaskSubmissionResult } from "../submissions/taskSubmissionHelper";
 import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
