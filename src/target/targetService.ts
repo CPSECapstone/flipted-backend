@@ -60,17 +60,7 @@ export async function listTargetsByCourse(course: string): Promise<Target[]> {
       }
    };
 
-   try {
-      const output = await dynamodb.query(params);
-      if (output.Items) {
-         const targets = helper.dbItemsToTargets(output.Items);
-         return targets;
-      }
-
-      return [];
-   } catch (err) {
-      return err;
-   }
+   return dynamodb.queryList(params, helper.dbItemToTarget);
 }
 
 export async function importTargets(targetItems: TargetItem[]): Promise<number> {

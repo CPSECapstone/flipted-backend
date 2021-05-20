@@ -1,3 +1,4 @@
+import { MasteryItem, MasteryPK, MasterySK } from "../progress/progressInterface";
 import {
    FreeResponseAnswer,
    FreeResponseAnswerItem,
@@ -10,6 +11,23 @@ import {
    TaskSubmissionResultItem,
    QuestionProgress
 } from "./taskSubmissionInterface";
+
+export function createMasteryItem(
+   username: string,
+   course: string,
+   objId: string,
+   taskId: string
+): MasteryItem {
+   return {
+      username: username,
+      course: course,
+      PK: MasteryPK(username),
+      SK: MasterySK(objId, taskId),
+      objectiveId: objId,
+      taskId: taskId,
+      mastery: "NEARLY_MASTERED" as Mastery
+   };
+}
 
 export function taskSubResultToDBItem(
    course: string,
@@ -26,25 +44,25 @@ export function taskSubResultToDBItem(
    };
 
    if (input.pointsAwarded) {
-      output.pointsAwarded = input.pointsAwarded
+      output.pointsAwarded = input.pointsAwarded;
    }
 
    if (input.pointsPossible) {
-      output.pointsPossible = input.pointsPossible
+      output.pointsPossible = input.pointsPossible;
    }
 
-   if(input.teacherComment) {
-      output.teacherComment = input.teacherComment
+   if (input.teacherComment) {
+      output.teacherComment = input.teacherComment;
    }
 
-   if(input.questionAndAnswers) {
-      output.questionAndAnswers = input.questionAndAnswers
+   if (input.questionAndAnswers) {
+      output.questionAndAnswers = input.questionAndAnswers;
    }
 
    return output;
 }
 
-export function dbItemToTaskSubmissionResult(item: TaskSubmissionResultItem) : TaskSubmissionResult {
+export function dbItemToTaskSubmissionResult(item: TaskSubmissionResultItem): TaskSubmissionResult {
    const output: any = {
       graded: item.graded,
       pointsAwarded: item.pointsAwarded,
@@ -54,7 +72,7 @@ export function dbItemToTaskSubmissionResult(item: TaskSubmissionResultItem) : T
       taskId: item.SK
    };
 
-   Object.keys(output).forEach(key => output[key] === undefined && delete output[key])
+   Object.keys(output).forEach(key => output[key] === undefined && delete output[key]);
    return output;
 }
 

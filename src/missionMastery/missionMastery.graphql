@@ -38,7 +38,3 @@ input StudentMissionMasteryInput {
    level: Int!
    progress: Float!
 }
-
-type Mutation {
-   addMissionMastery(mastery: StudentMissionMasteryInput!): String!
-}

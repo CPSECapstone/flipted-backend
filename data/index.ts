@@ -5,6 +5,7 @@ import courseCmd from "./courses";
 import missionCmd from "./missions";
 import missionMasteryCmd from "./missionMastery";
 import objectiveCmd from "./objectives";
+import progressCmd from "./progress";
 import rosterCmd from "./roster";
 import userCmd from "./users";
 import targetCmd from "./targets";
@@ -16,6 +17,7 @@ yargs
    .command(missionCmd)
    .command(missionMasteryCmd)
    .command(objectiveCmd)
+   .command(progressCmd)
    .command(rosterCmd)
    .command(userCmd)
    .command(targetCmd)
