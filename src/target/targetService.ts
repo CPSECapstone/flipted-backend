@@ -60,7 +60,8 @@ export async function listTargetsByCourse(course: string): Promise<Target[]> {
       }
    };
 
-   return dynamodb.queryList(params, helper.dbItemToTarget);
+   const targetItems: Array<TargetItem> = await dynamodb.queryList<TargetItem>(params);
+   return targetItems.map(helper.dbItemToTarget);
 }
 
 export async function importTargets(targetItems: TargetItem[]): Promise<number> {

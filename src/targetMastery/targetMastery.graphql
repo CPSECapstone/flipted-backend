@@ -1,0 +1,26 @@
+type ObjectiveMastery {
+   objectiveId: String!
+   targetId: String!
+   mastery: String!
+}
+
+type StudentObjectiveMastery {
+   student: Student!
+   objectiveMasteryList: [ObjectiveMastery!]!
+}
+
+type ClassTargetMastery {
+   target: Target!
+   studentObjectiveMasteryList: [StudentObjectiveMastery!]!
+}
+
+type Query {
+   classTargetMastery(targetId: String!): ClassTargetMastery!
+}
+
+input StudentObjectiveMasteryInput {
+   studentId: String!
+   objectiveId: String!
+   targetId: String!
+   mastery: String!
+}

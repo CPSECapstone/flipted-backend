@@ -58,13 +58,10 @@ export async function listMissionMastery(missionId: string): Promise<StudentMiss
    }
 }
 
-export async function queryClassMissionMastery(
-   courseId: string,
-   missionId: string
-): Promise<ClassMissionMastery> {
+export async function queryClassMissionMastery(missionId: string): Promise<ClassMissionMastery> {
    try {
-      const students: Student[] = await rosterService.listStudentsByCourse(courseId);
       const mission: Mission = await missionService.getMissionById(missionId);
+      const students: Student[] = await rosterService.listStudentsByCourse(mission.course);
       const tasks: Task[] = await taskService.listTasksByMissionId(missionId);
       const masteryItems: StudentMissionMasteryItem[] = await listMissionMastery(missionId);
       const classMissionMastery = helper.generateClassMissionMastery(

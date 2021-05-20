@@ -1,4 +1,3 @@
-import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { StudentItem, StudentPK, StudentSK } from "./rosterInterface";
 
 export function studentInputToDBItem(input: StudentInput): StudentItem {
@@ -13,14 +12,4 @@ export function studentInputToDBItem(input: StudentInput): StudentItem {
 
 export function dbItemToStudent(item: StudentItem): Student {
    return <Student>item;
-}
-
-export function dbItemsToStudent(items: any[]): Student[] {
-   const students = items.map(rawItem => {
-      const item = <StudentItem>unmarshall(rawItem);
-      const student = dbItemToStudent(item);
-      return student;
-   });
-
-   return students;
 }

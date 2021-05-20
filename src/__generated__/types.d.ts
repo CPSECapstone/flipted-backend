@@ -28,7 +28,8 @@ type ClassMissionMastery = {
 
 type ClassTargetMastery = {
   __typename?: 'ClassTargetMastery';
-  studentTargetMasteryList: Array<StudentTargetMastery>;
+  target: Target;
+  studentObjectiveMasteryList: Array<StudentObjectiveMastery>;
 };
 
 type CourseContent = {
@@ -406,6 +407,13 @@ type ObjectiveInput = {
   taskIds: Array<Scalars['String']>;
 };
 
+type ObjectiveMastery = {
+  __typename?: 'ObjectiveMastery';
+  objectiveId: Scalars['String'];
+  targetId: Scalars['String'];
+  mastery: Scalars['String'];
+};
+
 type ObjectiveProgress = {
   __typename?: 'ObjectiveProgress';
   objectiveId: Scalars['String'];
@@ -496,13 +504,12 @@ type Query = {
 
 
 type QueryClassMissionMasteryArgs = {
-  courseId: Scalars['String'];
   missionId: Scalars['String'];
 };
 
 
 type QueryClassTargetMasteryArgs = {
-  courseId: Scalars['String'];
+  targetId: Scalars['String'];
 };
 
 
@@ -757,10 +764,17 @@ type StudentMissionMasteryInput = {
   progress: Scalars['Float'];
 };
 
-type StudentTargetMastery = {
-  __typename?: 'StudentTargetMastery';
+type StudentObjectiveMastery = {
+  __typename?: 'StudentObjectiveMastery';
   student: Student;
-  targetMasteryList: Array<TargetMastery>;
+  objectiveMasteryList: Array<ObjectiveMastery>;
+};
+
+type StudentObjectiveMasteryInput = {
+  studentId: Scalars['String'];
+  objectiveId: Scalars['String'];
+  targetId: Scalars['String'];
+  mastery: Scalars['String'];
 };
 
 type SubGoal = {
@@ -817,13 +831,6 @@ type TargetInput = {
   icon: Scalars['String'];
   standards: Scalars['String'];
   course: Scalars['String'];
-};
-
-type TargetMastery = {
-  __typename?: 'TargetMastery';
-  targetId: Scalars['String'];
-  targetName: Scalars['String'];
-  progress: Scalars['Float'];
 };
 
 type TargetProgress = {

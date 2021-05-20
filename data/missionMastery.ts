@@ -1,7 +1,7 @@
 import { Arguments } from "yargs";
 import * as util from "./util";
 import * as flipted from "./fliptedCmd";
-import * as missionMasteryService from "../src/missionMastery/missionMasteryService";
+import * as missionMasteryService from "../src/missionMastery/missionMsteryService";
 import * as helper from "../src/missionMastery/missionMasteryHelper";
 import * as rosterService from "../src/roster/rosterService";
 import { StudentMissionMasteryItem } from "../src/missionMastery/missionMasteryInterface";

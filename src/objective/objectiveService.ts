@@ -4,7 +4,6 @@ import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "./objectiveInterfa
 import dynamodb, {
    BatchWriteParams,
    GetCompositeParams,
-   MappingFn,
    QueryParams,
    ScanParams
 } from "../services/dynamodb";
@@ -64,7 +63,8 @@ export async function listObjectivesByCourse(course: string): Promise<Objective[
       }
    };
 
-   return dynamodb.queryList(params, helper.dbItemToObjective);
+   const objectiveItems = await dynamodb.queryList<ObjectiveItem>(params);
+   return objectiveItems.map(helper.dbItemToObjective);
 }
 
 export async function getObjective(parent: any) {
@@ -82,11 +82,21 @@ export async function listObjectiveItemsByCourse(course: string): Promise<Object
       }
    };
 
-   const mappingFn: MappingFn<ObjectiveItem> = (item: any) => {
-      return <ObjectiveItem>item;
+   return dynamodb.queryList<ObjectiveItem>(params);
+}
+
+export async function listObjectiveItemsByTarget(targetId: string): Promise<ObjectiveItem[]> {
+   const params: QueryParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      indexName: "targetId-SK-index",
+      keyConditionExpression: "targetId = :targetIdVal and begins_with(SK, :skPrefix) ",
+      expressionAttributeValues: {
+         ":targetIdVal": targetId,
+         ":skPrefix": ObjectivePrefix
+      }
    };
 
-   return dynamodb.queryList(params, mappingFn);
+   return dynamodb.queryList<ObjectiveItem>(params);
 }
 
 export async function importObjectives(objectiveItems: ObjectiveItem[]): Promise<number> {

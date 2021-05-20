@@ -3,7 +3,6 @@ import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import dynamodb, {
    BatchWriteParams,
    GetCompositeParams,
-   MappingFn,
    PutCompositeParams,
    QueryParams,
    ScanParams
@@ -66,8 +65,8 @@ export async function listStudentsByCourse(course: string): Promise<Student[]> {
       }
    };
 
-   const mappingFn: MappingFn<Student> = helper.dbItemToStudent;
-   return dynamodb.queryList(params, mappingFn);
+   const studentItems: Array<StudentItem> = await dynamodb.queryList<StudentItem>(params);
+   return studentItems.map(helper.dbItemToStudent);
 }
 
 export async function importStudents(studentInput: StudentInput[]): Promise<number> {
