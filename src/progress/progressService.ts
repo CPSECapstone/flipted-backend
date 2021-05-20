@@ -4,7 +4,8 @@ import dynamodb, {
    ScanParams,
    QueryParams,
    DeleteParam,
-   CompositeDBItem
+   CompositeDBItem,
+   MappingFn
 } from "../services/dynamodb";
 import * as helper from "./progressHelper";
 import { MasteryItem, ProgressPK } from "./progressInterface";
@@ -246,5 +247,39 @@ export async function listUserMasteryItemsByTask(
       return [];
    } catch (err) {
       throw err;
+   }
+}
+
+export async function listAllByCourse(course: string): Promise<Array<MasteryItem>> {
+   const params: QueryParams = {
+      tableName: MASTERY_TABLE,
+      indexName: "course-SK-index",
+      keyConditionExpression: "course = :courseVal",
+      expressionAttributeValues: {
+         ":courseVal": course
+      }
+   };
+
+   const mappingFn: MappingFn<MasteryItem> = (item: any) => {
+      return <MasteryItem>item;
+   };
+
+   return dynamodb.queryList(params, mappingFn);
+}
+
+export async function deleteAllByCourse(course: string): Promise<number> {
+   const params: ScanParams = {
+      tableName: MASTERY_TABLE,
+      filterExpression: "course = :courseVal",
+      expressionAttributeValues: {
+         ":courseVal": course
+      }
+   };
+
+   try {
+      const output = await dynamodb.batchDelete(params);
+      return output;
+   } catch (err) {
+      return err;
    }
 }

@@ -1,4 +1,4 @@
-import { marshall, marshallOptions } from "@aws-sdk/util-dynamodb";
+import { marshall, marshallOptions, unmarshall } from "@aws-sdk/util-dynamodb";
 import {
    BatchGetItemCommand,
    BatchGetItemCommandOutput,
@@ -162,6 +162,33 @@ async function query(params: QueryParams): Promise<QueryCommandOutput> {
    return client.send(command);
 }
 
+async function queryList<T>(params: QueryParams, fn: MappingFn<T>): Promise<T[]> {
+   const command = new QueryCommand({
+      TableName: params.tableName,
+      FilterExpression: params.filterExpression,
+      IndexName: params.indexName,
+      KeyConditionExpression: params.keyConditionExpression,
+      ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts)
+   });
+
+   try {
+      const output = await client.send(command);
+      if (output.Items) {
+         const entities: Array<T> = output.Items.map(rawItem => {
+            const item = unmarshall(rawItem);
+            return fn(item);
+         });
+
+         return entities;
+      }
+
+      return [];
+   } catch (err) {
+      console.log(err);
+      return [];
+   }
+}
+
 async function deleteItem(params: DeleteParam): Promise<DeleteItemCommandOutput> {
    const command = new DeleteItemCommand({
       TableName: params.tableName,
@@ -289,6 +316,7 @@ const dynamodb = {
    update,
    batchGet,
    query,
+   queryList,
    deleteItem,
    batchWrite,
    batchDelete
@@ -366,3 +394,5 @@ export interface CompositeDBItem {
    PK: string;
    SK: string;
 }
+
+export type MappingFn<T> = (item: any) => T;
