@@ -2,7 +2,7 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { SubMissionItem } from "./missionInterface";
 import * as helper from "./missionLogic";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
-import dynamodb, { GetCompositeParams, PutCompositeParams } from "../services/dynamodb";
+import dynamodb from "../services/dynamodb";
 
 const SUBMISSIONS_TABLE = COURSE_CONTENT_TABLE_NAME;
 

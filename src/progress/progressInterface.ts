@@ -1,5 +1,3 @@
-import { CompositeDBItem } from "../services/dynamodb";
-
 export type ProgressItem = CompositeDBItem & {
    userName: string;
    taskId: string;

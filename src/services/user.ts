@@ -1,7 +1,7 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { USERS_TABLE_NAME } from "../environment";
 import { RoleInternal } from "../interfaces/role";
-import dynamodb, { ScanParams } from "./dynamodb";
+import dynamodb from "./dynamodb";
 
 async function get(userId: string): Promise<User> {
    const params = {

@@ -1,12 +1,7 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "./objectiveInterface";
-import dynamodb, {
-   BatchWriteParams,
-   GetCompositeParams,
-   QueryParams,
-   ScanParams
-} from "../services/dynamodb";
+import dynamodb from "../services/dynamodb";
 import * as helper from "./objectiveHelper";
 
 export async function addObjective(input: ObjectiveInput) {

@@ -1,11 +1,5 @@
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
-import dynamodb, {
-   GetCompositeParams,
-   PutCompositeParams,
-   ScanParams,
-   QueryParams,
-   BatchWriteParams
-} from "../services/dynamodb";
+import dynamodb from "../services/dynamodb";
 import * as helper from "./courseHelper";
 import { CourseInfoItem, CourseKey, CoursePrefix } from "./courseInterface";
 

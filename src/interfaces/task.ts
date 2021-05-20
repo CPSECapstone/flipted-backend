@@ -1,5 +1,3 @@
-import { CompositeDBItem } from "../services/dynamodb";
-
 /***************** Database item ******************************/
 export interface PageItem {
    skippable: boolean;

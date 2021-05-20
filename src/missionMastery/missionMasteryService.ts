@@ -1,11 +1,6 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { USER_PROGRESS_TABLE_NAME } from "../environment";
-import dynamodb, {
-   PutCompositeParams,
-   ScanParams,
-   QueryParams,
-   BatchWriteParams
-} from "../services/dynamodb";
+import dynamodb from "../services/dynamodb";
 import * as missionService from "../mission/missionService";
 import * as rosterService from "../roster/rosterService";
 import * as helper from "./missionMasteryHelper";

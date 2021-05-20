@@ -7,11 +7,7 @@ import {
    TaskSubmissionResultItem
 } from "./taskSubmissionInterface";
 
-import dynamodb, {
-   GetCompositeParams,
-   PutCompositeParams,
-   QueryParams
-} from "../services/dynamodb";
+import dynamodb from "../services/dynamodb";
 import {
    createMasteryItem,
    dbItemsToQuestionAnswerItems,

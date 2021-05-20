@@ -1,5 +1,3 @@
-import { DBItem } from "../services/dynamodb";
-
 /***************** Database item ******************************/
 export interface QuestionItem extends DBItem {
    description: string;

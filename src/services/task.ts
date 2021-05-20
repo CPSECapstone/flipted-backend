@@ -6,14 +6,7 @@ import taskBusLogic, {
 } from "./taskBusLogic";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { TaskItem, TaskKey, TaskPrefix } from "../interfaces/task";
-import dynamodb, {
-   BatchGetParams,
-   BatchWriteParams,
-   GetCompositeParams,
-   PutCompositeParams,
-   QueryParams,
-   ScanParams
-} from "./dynamodb";
+import dynamodb from "./dynamodb";
 
 async function add(input: TaskInput) {
    const toSubmit: TaskItem = taskBusLogic.convertTaskInputToTaskItem(input);

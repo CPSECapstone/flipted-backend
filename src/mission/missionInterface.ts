@@ -1,5 +1,3 @@
-import { CompositeDBItem } from "../services/dynamodb";
-
 /***************** Database item ******************************/
 export interface MissionItem extends CompositeDBItem {
    course: string;

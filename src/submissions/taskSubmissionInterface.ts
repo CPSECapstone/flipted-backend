@@ -1,5 +1,3 @@
-import { CompositeDBItem } from "../services/dynamodb";
-
 /***************** Database item ******************************/
 export interface TaskProgressItem extends CompositeDBItem {
    PK: string; //username
@@ -31,8 +29,8 @@ export interface TaskSubmissionResultItem {
    pointsAwarded?: number;
    pointsPossible?: number;
    teacherComment?: string;
-   missionId: string
-   course: string
+   missionId: string;
+   course: string;
    questionAndAnswers?: QuestionAndAnswer[];
 }
 

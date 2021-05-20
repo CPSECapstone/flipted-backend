@@ -1,11 +1,6 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
-import dynamodb, {
-   PutCompositeParams,
-   GetCompositeParams,
-   ScanParams,
-   BatchWriteParams
-} from "../services/dynamodb";
+import dynamodb from "../services/dynamodb";
 import { TaskBlockItem, QuizBlockItem } from "../taskblock/taskblockInterface";
 import * as questionService from "../services/question";
 import * as helper from "./taskblockHelper";
