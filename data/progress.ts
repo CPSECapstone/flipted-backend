@@ -57,12 +57,6 @@ function generateMasterItems(
    return masterItems;
 }
 
-// username: string;
-// taskId: string;
-// objectiveId: string;
-// course: string;
-// mastery: string; // maps to the mastery enum
-// source?: string;
 async function importItems(args: Arguments<flipted.IAction>) {
    try {
       const students = await rosterService.listStudentsByCourse(args.course);
