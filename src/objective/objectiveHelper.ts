@@ -17,11 +17,11 @@ export function objectiveInputToDBItem(input: ObjectiveInput): ObjectiveItem {
    return item;
 }
 
-export function objectTaskRecordItem(objectiveId: string, taskId: string) : CompositeDBItem {
+export function objectTaskRecordItem(objectiveId: string, taskId: string): CompositeDBItem {
    return {
       PK: ObjectiveKey(objectiveId),
       SK: TaskKey(taskId)
-   }
+   };
 }
 
 export function dbItemToObjective(item: ObjectiveItem): Objective {
@@ -35,14 +35,4 @@ export function dbItemToObjective(item: ObjectiveItem): Objective {
       taskIds: item.taskIds,
       tasks: []
    };
-}
-
-export function dbItemsToObjectives(items: any[]): Objective[] {
-   const targets = items.map(rawItem => {
-      const item = <ObjectiveItem>unmarshall(rawItem);
-      const target = dbItemToObjective(item);
-      return target;
-   });
-
-   return targets;
 }

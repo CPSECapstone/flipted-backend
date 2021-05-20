@@ -5,7 +5,6 @@ import dynamodb, {
    QueryParams,
    DeleteParam,
    CompositeDBItem,
-   MappingFn,
    BatchWriteParams
 } from "../services/dynamodb";
 import * as helper from "./progressHelper";
@@ -236,22 +235,10 @@ export async function listUserMasteryItemsByTask(
       }
    };
 
-   try {
-      const output = await dynamodb.query(params);
-      if (output.Items) {
-         const submissions = output.Items.map(rawItem => {
-            return <MasteryItem>unmarshall(rawItem);
-         });
-         return submissions;
-      }
-
-      return [];
-   } catch (err) {
-      throw err;
-   }
+   return dynamodb.queryList<MasteryItem>(params);
 }
 
-export async function listAllByCourse(course: string): Promise<Array<MasteryItem>> {
+export async function listMasteryItemsByCourse(course: string): Promise<Array<MasteryItem>> {
    const params: QueryParams = {
       tableName: MASTERY_TABLE,
       indexName: "course-SK-index",
@@ -261,11 +248,7 @@ export async function listAllByCourse(course: string): Promise<Array<MasteryItem
       }
    };
 
-   const mappingFn: MappingFn<MasteryItem> = (item: any) => {
-      return <MasteryItem>item;
-   };
-
-   return dynamodb.queryList(params, mappingFn);
+   return dynamodb.queryList<MasteryItem>(params);
 }
 
 export async function importItems(masteryItems: Array<MasteryItem>): Promise<number> {

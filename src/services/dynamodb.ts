@@ -162,7 +162,7 @@ async function query(params: QueryParams): Promise<QueryCommandOutput> {
    return client.send(command);
 }
 
-async function queryList<T>(params: QueryParams, fn: MappingFn<T>): Promise<T[]> {
+async function queryList<T>(params: QueryParams): Promise<T[]> {
    const command = new QueryCommand({
       TableName: params.tableName,
       FilterExpression: params.filterExpression,
@@ -176,7 +176,7 @@ async function queryList<T>(params: QueryParams, fn: MappingFn<T>): Promise<T[]>
       if (output.Items) {
          const entities: Array<T> = output.Items.map(rawItem => {
             const item = unmarshall(rawItem);
-            return fn(item);
+            return <T>item;
          });
 
          return entities;
@@ -184,6 +184,7 @@ async function queryList<T>(params: QueryParams, fn: MappingFn<T>): Promise<T[]>
 
       return [];
    } catch (err) {
+      console.log(params);
       console.log(err);
       return [];
    }
@@ -394,5 +395,3 @@ export interface CompositeDBItem {
    PK: string;
    SK: string;
 }
-
-export type MappingFn<T> = (item: any) => T;

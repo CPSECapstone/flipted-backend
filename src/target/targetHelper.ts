@@ -1,4 +1,3 @@
-import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
 import { TargetItem, TargetKey } from "./targetInterface";
 
@@ -27,14 +26,4 @@ export function dbItemToTarget(item: TargetItem): Target {
       course: item.course,
       objectives: []
    };
-}
-
-export function dbItemsToTargets(items: any[]): Target[] {
-   const targets = items.map(rawItem => {
-      const item = <TargetItem>unmarshall(rawItem);
-      const target = dbItemToTarget(item);
-      return target;
-   });
-
-   return targets;
 }
