@@ -11,7 +11,7 @@ import { createMasteryItem } from "../src/submissions/taskSubmissionHelper";
 
 async function listItems(args: Arguments<flipted.IAction>) {
    try {
-      const masteryItems = await progressService.listAllByCourse(args.course);
+      const masteryItems = await progressService.listMasteryItemsByCourse(args.course);
       console.table(masteryItems, ["username", "taskId", "objectiveId", "mastery"]);
       console.log(`Total: ${masteryItems.length} target items.`);
    } catch (err) {
