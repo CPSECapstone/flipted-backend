@@ -1,5 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { TASK_SUBMISSIONS_TABLE } from "../environment";
+import { MASTERY_TABLE, TASK_SUBMISSIONS_TABLE } from "../environment";
 import {
    Answer,
    QuestionAnswerItem,
@@ -13,11 +13,14 @@ import dynamodb, {
    QueryParams
 } from "../services/dynamodb";
 import {
+   createMasteryItem,
    dbItemsToQuestionAnswerItems,
    dbItemToTaskProgress,
    dbItemToTaskSubmissionResult,
    taskSubResultToDBItem
 } from "./taskSubmissionHelper";
+import { listObjectivesIdsByTask } from "../progress/progressService";
+import { MasteryItem, MasteryPK, MasterySK } from "../progress/progressInterface";
 
 async function submitTaskProgress(taskProgress: TaskProgressItem) {
    const params: PutCompositeParams = {
@@ -183,6 +186,29 @@ async function listUserMasteryItemsByCourse(
    }
 }
 
+async function generateMasteryItemsForTask(username: string, taskId: string, course: string) {
+   const objectiveIds: string[] = await listObjectivesIdsByTask(taskId);
+   const items: MasteryItem[] = objectiveIds.map(objId => {
+      return createMasteryItem(username, course, objId, taskId);
+   });
+
+   items.forEach(async item => {
+      await putMasteryItem(item);
+   });
+}
+
+async function putMasteryItem(item: MasteryItem) {
+   const params: PutCompositeParams = {
+      tableName: MASTERY_TABLE,
+      item: item
+   };
+   try {
+      return dynamodb.putComposite(params);
+   } catch (err) {
+      return err;
+   }
+}
+
 const taskSubmissionService = {
    submitQuestionAnswer,
    submitTaskProgress,
@@ -191,7 +217,8 @@ const taskSubmissionService = {
    getQuizProgressForTask,
    getTaskRubricProgress,
    listUserSubmissionsByCourse,
-   listUserMasteryItemsByCourse
+   listUserMasteryItemsByCourse,
+   generateMasteryItemsForTask
 };
 
 export default taskSubmissionService;

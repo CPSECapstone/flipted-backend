@@ -16,8 +16,8 @@ import taskSubmissionService from "../submissions/taskSubmission";
 import taskService from "../services/task";
 import { generateMissionProgress, generateTargetProgress } from "./progressHelper";
 import { listTargetsByCourse } from "../target/targetService";
-import { listObjectiveItemsByCourse } from "../objective/objectiveService";
-import { ObjectiveItem, ObjectiveKey } from "../objective/objectiveInterface";
+import { listObjectiveItemsByCourse, listObjectivesByCourse } from "../objective/objectiveService";
+import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "../objective/objectiveInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TaskKey } from "../interfaces/task";
 
@@ -180,7 +180,7 @@ export async function listObjectivesIdsByTask(taskId: string): Promise<string[]>
       const output = await dynamodb.query(params);
       if (output.Items) {
          const submissions = output.Items.map(rawItem => {
-            return (<CompositeDBItem>unmarshall(rawItem)).PK;
+            return (<CompositeDBItem>unmarshall(rawItem)).PK.replace(ObjectivePrefix + "#", "");
          });
          return submissions;
       }

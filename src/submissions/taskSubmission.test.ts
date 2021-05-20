@@ -11,6 +11,7 @@ import {
 } from "./taskSubmissionInterface";
 import {
    answerToAnswerOut,
+   createMasteryItem,
    createQuestionProgressOutput,
    createTaskSubmissionResult,
    dbItemToFreeResponseAnswer,
@@ -22,6 +23,7 @@ import {
    taskProgressInputToDBItem,
    taskSubResultToDBItem
 } from "./taskSubmissionHelper";
+import { MasteryItem } from "../progress/progressInterface";
 
 const mockMCAnswer: MultipleChoiceAnswer = {
    username: "user",
@@ -100,6 +102,20 @@ describe("converting TaskSubmission types", () => {
       expect(dbItemToTaskSubmissionResult(mockTaskSubmissionResultItem)).toEqual(
          mockTaskSubmissionResult
       );
+   });
+
+   it("Will create a mastery item", async () => {
+      const expResult: MasteryItem = {
+         PK: "USERNAME#user",
+         SK: "OBJECTIVE#123TASK#456",
+         username: "user",
+         objectiveId: "123",
+         taskId: "456",
+         course: "Mockery",
+         mastery: "NEARLY_MASTERED" as Mastery
+      }
+
+      expect(createMasteryItem("user", "Mockery", "123", "456")).toEqual(expResult)
    });
 });
 
