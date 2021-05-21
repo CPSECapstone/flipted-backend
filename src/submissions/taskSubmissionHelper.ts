@@ -43,12 +43,12 @@ export function taskSubResultToDBItem(
       course: course
    };
 
-   if (input.pointsAwarded) {
-      output.pointsAwarded = input.pointsAwarded;
+   if ('pointsAwarded' in input) {
+      output.pointsAwarded = <number>input.pointsAwarded;
    }
 
-   if (input.pointsPossible) {
-      output.pointsPossible = input.pointsPossible;
+   if ('pointsPossible' in input) {
+      output.pointsPossible = <number>input.pointsPossible;
    }
 
    if (input.teacherComment) {
