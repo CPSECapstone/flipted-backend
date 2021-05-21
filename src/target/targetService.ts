@@ -1,13 +1,7 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { TargetItem, TargetKey, TargetPrefix } from "./targetInterface";
-import dynamodb, {
-   BatchWriteParams,
-   GetCompositeParams,
-   PutCompositeParams,
-   QueryParams,
-   ScanParams
-} from "../services/dynamodb";
+import dynamodb from "../services/dynamodb";
 import * as helper from "./targetHelper";
 
 export async function addTarget(input: TargetInput) {

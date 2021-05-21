@@ -1,5 +1,5 @@
 import { USER_PROGRESS_TABLE_NAME } from "../environment";
-import dynamodb, { ScanParams, QueryParams, BatchWriteParams } from "../services/dynamodb";
+import dynamodb from "../services/dynamodb";
 import {
    StudentObjectiveMasteryItem,
    StudentObjectiveMasteryPKPrefix,

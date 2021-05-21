@@ -1,13 +1,7 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { MissionItem, MissionPrefix } from "./missionInterface";
-import dynamodb, {
-   PutCompositeParams,
-   GetCompositeParams,
-   QueryParams,
-   ScanParams,
-   BatchWriteParams
-} from "../services/dynamodb";
+import dynamodb from "../services/dynamodb";
 import * as helper from "./missionLogic";
 
 const MISSIONS_TABLE = COURSE_CONTENT_TABLE_NAME;

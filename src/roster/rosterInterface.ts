@@ -1,5 +1,3 @@
-import { CompositeDBItem } from "../services/dynamodb";
-
 export type StudentItem = CompositeDBItem & Omit<Student, "__typename">;
 
 export const StudentPKPrefix = "STUDENT";

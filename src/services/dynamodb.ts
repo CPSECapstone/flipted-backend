@@ -15,8 +15,7 @@ import {
    QueryCommandOutput,
    QueryCommand,
    DeleteItemCommandOutput,
-   DeleteItemCommand,
-   ItemResponse
+   DeleteItemCommand
 } from "@aws-sdk/client-dynamodb";
 import { uid } from "uid/secure";
 
@@ -325,73 +324,75 @@ const dynamodb = {
 
 export default dynamodb;
 
-export interface PutParams {
-   tableName: string;
-   item: object;
-}
+declare global {
+   export interface PutParams {
+      tableName: string;
+      item: object;
+   }
 
-export interface PutCompositeParams {
-   tableName: string;
-   item: object;
-}
+   export interface PutCompositeParams {
+      tableName: string;
+      item: object;
+   }
 
-export interface UpdateParams {
-   tableName: string;
-   key: string;
-   updateExpression: string;
-   expressionAttributeValues: { [key: string]: any };
-}
+   export interface UpdateParams {
+      tableName: string;
+      key: string;
+      updateExpression: string;
+      expressionAttributeValues: { [key: string]: any };
+   }
 
-export interface GetParams {
-   tableName: string;
-   key: string;
-   projectionExpression?: string;
-}
+   export interface GetParams {
+      tableName: string;
+      key: string;
+      projectionExpression?: string;
+   }
 
-export interface GetCompositeParams {
-   tableName: string;
-   key: object;
-   projectionExpression?: string;
-}
+   export interface GetCompositeParams {
+      tableName: string;
+      key: object;
+      projectionExpression?: string;
+   }
 
-export interface ScanParams {
-   tableName: string;
-   filterExpression: string;
-   expressionAttributeValues: object;
-   expressionAttributeNames?: { [key: string]: string };
-   limit?: number;
-   ExclusiveStartKey?: { [key: string]: any };
-}
+   export interface ScanParams {
+      tableName: string;
+      filterExpression: string;
+      expressionAttributeValues: object;
+      expressionAttributeNames?: { [key: string]: string };
+      limit?: number;
+      ExclusiveStartKey?: { [key: string]: any };
+   }
 
-export interface BatchGetParams {
-   tableName: string;
-   keys: { [key: string]: string }[];
-   projectionExpression?: string;
-}
+   export interface BatchGetParams {
+      tableName: string;
+      keys: { [key: string]: string }[];
+      projectionExpression?: string;
+   }
 
-export interface BatchWriteParams {
-   tableName: string;
-   items: object[];
-}
+   export interface BatchWriteParams {
+      tableName: string;
+      items: object[];
+   }
 
-export interface QueryParams {
-   tableName: string;
-   keyConditionExpression: string;
-   expressionAttributeValues: { [key: string]: any };
-   filterExpression?: string;
-   indexName?: string;
-}
+   export interface QueryParams {
+      tableName: string;
+      keyConditionExpression: string;
+      expressionAttributeValues: { [key: string]: any };
+      filterExpression?: string;
+      indexName?: string;
+   }
 
-export interface DeleteParam {
-   tableName: string;
-   key: { [key: string]: any };
-}
+   export interface DeleteParam {
+      tableName: string;
+      key: { [key: string]: any };
+   }
 
-export interface DBItem {
-   id: string;
-}
+   export interface DBItem {
+      id: string;
+   }
 
-export interface CompositeDBItem {
-   PK: string;
-   SK: string;
+   export interface CompositeDBItem {
+      PK: string;
+      SK: string;
+   }
 }

@@ -1,5 +1,3 @@
-import { CompositeDBItem } from "../services/dynamodb";
-
 /***************** Database item ******************************/
 export declare type TaskBlockItem = TaskBlock &
    CompositeDBItem & {

@@ -1,5 +1,3 @@
-import { CompositeDBItem } from "../services/dynamodb";
-
 export type CourseInfoItem = CompositeDBItem &
    Omit<CourseInfo, "__typename"> & {
       source?: string;

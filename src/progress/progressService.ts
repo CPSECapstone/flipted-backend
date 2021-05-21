@@ -1,12 +1,5 @@
 import { COURSE_CONTENT_TABLE_NAME, MASTERY_TABLE, USER_PROGRESS_TABLE_NAME } from "../environment";
-import dynamodb, {
-   PutCompositeParams,
-   ScanParams,
-   QueryParams,
-   DeleteParam,
-   CompositeDBItem,
-   BatchWriteParams
-} from "../services/dynamodb";
+import dynamodb from "../services/dynamodb";
 import * as helper from "./progressHelper";
 import { MasteryItem, ProgressPK } from "./progressInterface";
 import * as courseService from "../course/courseService";

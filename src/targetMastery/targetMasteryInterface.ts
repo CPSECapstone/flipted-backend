@@ -1,5 +1,3 @@
-import { CompositeDBItem } from "../services/dynamodb";
-
 export type StudentObjectiveMasteryItem = CompositeDBItem & {
    targetId: string;
    mastery: string;
