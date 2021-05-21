@@ -4,7 +4,7 @@ import { MasteryItem } from "./progressInterface";
 
 export const mockTasks: Task[] = [
    {
-      id: "TASK#1",
+      id: "1",
       name: "Mock Task 1",
       instructions: "",
       points: 100,
@@ -15,7 +15,7 @@ export const mockTasks: Task[] = [
       missionIndex: 0
    },
    {
-      id: "TASK#2",
+      id: "2",
       name: "Mock Task 2",
       instructions: "",
       points: 25,
@@ -26,7 +26,7 @@ export const mockTasks: Task[] = [
       missionIndex: 1
    },
    {
-      id: "TASK#3",
+      id: "3",
       name: "Mock Task 3: Submitted yet not graded",
       instructions: "",
       points: 10,
@@ -37,7 +37,7 @@ export const mockTasks: Task[] = [
       missionIndex: 2
    },
    {
-      id: "TASK#4",
+      id: "4",
       name: "Mock Task 4: No Submission",
       instructions: "",
       points: 10,
@@ -48,7 +48,7 @@ export const mockTasks: Task[] = [
       missionIndex: 3
    },
    {
-      id: "TASK#5",
+      id: "5",
       name: "Mock Task 5",
       instructions: "",
       points: 10,
@@ -59,7 +59,7 @@ export const mockTasks: Task[] = [
       missionIndex: 0
    },
    {
-      id: "TASK#6",
+      id: "6",
       name: "Mock Task 6",
       instructions: "",
       points: 10,
@@ -88,7 +88,7 @@ export const mockMission_2: Mission = {
 export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
-      SK: "TASK#1", // task id
+      SK: "1", // task id
       graded: true,
       pointsAwarded: 93,
       pointsPossible: 100,
@@ -97,7 +97,7 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
-      SK: "TASK#2", // task id
+      SK: "2", // task id
       graded: true,
       pointsAwarded: 14,
       pointsPossible: 25,
@@ -106,14 +106,14 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
-      SK: "TASK#3", // task id
+      SK: "3", // task id
       graded: false,
       missionId: "MISSION#123",
       course: "My Awesome Backend Mock Course",
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
-      SK: "TASK#5", // task id
+      SK: "5", // task id
       graded: true,
       missionId: "MISSION#456",
       course: "My Awesome Backend Mock Course",
@@ -124,34 +124,34 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
 
 const mockTaskStats_1: TaskStats[] = [
    {
-      taskId: "TASK#1",
+      taskId: "1",
       name: "Mock Task 1",
-      submission: { graded: true, pointsAwarded: 93, pointsPossible: 100, taskId: "TASK#1"}
+      submission: { graded: true, pointsAwarded: 93, pointsPossible: 100, taskId: "1"}
    },
    {
-      taskId: "TASK#2",
+      taskId: "2",
       name: "Mock Task 2",
-      submission: { graded: true, pointsAwarded: 14, pointsPossible: 25, taskId: "TASK#2" }
+      submission: { graded: true, pointsAwarded: 14, pointsPossible: 25, taskId: "2" }
    },
    {
-      taskId: "TASK#3",
+      taskId: "3",
       name: "Mock Task 3: Submitted yet not graded",
-      submission: { graded: false, taskId: "TASK#3"}
+      submission: { graded: false, taskId: "3"}
    },
    {
-      taskId: "TASK#4",
+      taskId: "4",
       name: "Mock Task 4: No Submission"
    }
 ];
 
 const mockTaskStats_2: TaskStats[] = [
    {
-      taskId: "TASK#5",
+      taskId: "5",
       name: "Mock Task 5",
-      submission: { graded: true, pointsAwarded: 8, pointsPossible: 10, taskId: "TASK#5" }
+      submission: { graded: true, pointsAwarded: 8, pointsPossible: 10, taskId: "5" }
    },
    {
-      taskId: "TASK#6",
+      taskId: "6",
       name: "Mock Task 6"
    }
 ];
@@ -173,52 +173,52 @@ export const mockObjectiveItems : ObjectiveItem[] = [
    {
       PK: "OBJECTIVE#1",
       SK: "OBJECTIVE#1",
-      objectiveId: "OBJECTIVE#1",
+      objectiveId: "1",
       objectiveName: "Objective 1",
       description: "",
       targetId: "TARGET#1",
       targetName: "Target 1",
       course: "Mocking 101",
-      taskIds: ["TASK#1", "TASK#2", "TASK#3"]
+      taskIds: ["1", "2", "3"]
    },
    {
       PK: "OBJECTIVE#2",
       SK: "OBJECTIVE#2",
-      objectiveId: "OBJECTIVE#2",
+      objectiveId: "2",
       objectiveName: "Objective 2",
       description: "",
       targetId: "TARGET#1",
       targetName: "Target 1",
       course: "Mocking 101",
-      taskIds: ["TASK#1", "TASK#2", "TASK#4"]
+      taskIds: ["1", "2", "4"]
    },
    {
       PK: "OBJECTIVE#3",
       SK: "OBJECTIVE#3",
-      objectiveId: "OBJECTIVE#3",
+      objectiveId: "3",
       objectiveName: "Objective 3",
       description: "",
       targetId: "TARGET#2",
       targetName: "Target 2",
       course: "Mocking 101",
-      taskIds: ["TASK#6"]
+      taskIds: ["6"]
    },
    {
       PK: "OBJECTIVE#4",
-      SK: "OBJECTIVE#4",
-      objectiveId: "OBJECTIVE#4",
+      SK: "4",
+      objectiveId: "4",
       objectiveName: "Objective 4",
       description: "",
       targetId: "TARGET#2",
       targetName: "Target 2",
       course: "Mocking 101",
-      taskIds: ["TASK#5"]
+      taskIds: ["5"]
    }
 ]
 
 export const mockObjectives : Objective[] = [
    {
-      objectiveId: "OBJECTIVE#1",
+      objectiveId: "1",
       objectiveName: "Objective 1",
       description: "",
       targetId: "TARGET#1",
@@ -227,7 +227,7 @@ export const mockObjectives : Objective[] = [
       tasks: []
    },
    {
-      objectiveId: "OBJECTIVE#2",
+      objectiveId: "2",
       objectiveName: "Objective 2",
       description: "",
       targetId: "TARGET#1",
@@ -236,7 +236,7 @@ export const mockObjectives : Objective[] = [
       tasks: []
    },
    {
-      objectiveId: "OBJECTIVE#3",
+      objectiveId: "3",
       objectiveName: "Objective 3",
       description: "",
       targetId: "TARGET#2",
@@ -245,7 +245,7 @@ export const mockObjectives : Objective[] = [
       tasks: []
    },
    {
-      objectiveId: "OBJECTIVE#4",
+      objectiveId: "4",
       objectiveName: "Objective 4",
       description: "",
       targetId: "TARGET#2",
@@ -257,65 +257,65 @@ export const mockObjectives : Objective[] = [
 
 export const mockMasteryItems: MasteryItem[] = [
    {
-      PK: "TASK#1",
-      SK: "OBJECTIVE#1",
+      PK: "USERNAME#USER_123",
+      SK: "OBJECTIVE#11",
       username: "USER_123",
-      taskId: "TASK#1",
-      objectiveId: "OBJECTIVE#1",
+      taskId: "1",
+      objectiveId: "1",
       course: "Mocking 101",
       mastery: "MASTERED"
    },
    {
-      PK: "TASK#2",
-      SK: "OBJECTIVE#1",
+      PK: "USERNAME#USER_123",
+      SK: "OBJECTIVE#12",
       username: "USER_123",
-      taskId: "TASK#2",
-      objectiveId: "OBJECTIVE#1",
+      taskId: "2",
+      objectiveId: "1",
       course: "Mocking 101",
       mastery: "NEARLY_MASTERED"
    },
    {
-      PK: "TASK#3",
-      SK: "OBJECTIVE#1",
+      PK: "USERNAME#USER_123",
+      SK: "OBJECTIVE#13",
       username: "USER_123",
-      taskId: "TASK#3",
-      objectiveId: "OBJECTIVE#1",
+      taskId: "3",
+      objectiveId: "1",
       course: "Mocking 101",
       mastery: "NOT_GRADED"
    },
    {
-      PK: "TASK#1",
-      SK: "OBJECTIVE#2",
+      PK: "USERNAME#USER_123",
+      SK: "OBJECTIVE#21",
       username: "USER_123",
-      taskId: "TASK#1",
-      objectiveId: "OBJECTIVE#2",
+      taskId: "1",
+      objectiveId: "2",
       course: "Mocking 101",
       mastery: "MASTERED"
    },
    {
-      PK: "TASK#2",
-      SK: "OBJECTIVE#2",
+      PK: "USERNAME#USER_123",
+      SK: "OBJECTIVE#22",
       username: "USER_123",
-      taskId: "TASK#2",
-      objectiveId: "OBJECTIVE#2",
+      taskId: "2",
+      objectiveId: "2",
       course: "Mocking 101",
       mastery: "NOT_MASTERED"
    },
    {
-      PK: "TASK#4",
-      SK: "OBJECTIVE#2",
+      PK: "USERNAME#USER_123",
+      SK: "OBJECTIVE#24",
       username: "USER_123",
-      taskId: "TASK#4",
-      objectiveId: "OBJECTIVE#2",
+      taskId: "4",
+      objectiveId: "2",
       course: "Mocking 101",
       mastery: "NOT_GRADED"
    },
    {
-      PK: "TASK#5",
-      SK: "OBJECTIVE#4",
+      PK: "USERNAME#USER_123",
+      SK: "OBJECTIVE#45",
       username: "USER_123",
-      taskId: "TASK#5",
-      objectiveId: "OBJECTIVE#4",
+      taskId: "5",
+      objectiveId: "4",
       course: "Mocking 101",
       mastery: "MASTERED"
    },
@@ -348,44 +348,44 @@ export const mockTarget_2: Target = {
 
 const mockObjectiveProgress_T1 = [
    {
-      objectiveId: "OBJECTIVE#1",
+      objectiveId: "1",
       objectiveName: "Objective 1",
       tasks: [
          {
             mastery: "MASTERED" as Mastery,
-            objectiveId: "OBJECTIVE#1",
-            taskId: "TASK#1"
+            objectiveId: "1",
+            taskId: "1"
          },
          {
             mastery: "NEARLY_MASTERED" as Mastery,
-            objectiveId: "OBJECTIVE#1",
-            taskId: "TASK#2"
+            objectiveId: "1",
+            taskId: "2"
          },
          {
             mastery: "NOT_GRADED" as Mastery,
-            objectiveId: "OBJECTIVE#1",
-            taskId: "TASK#3"
+            objectiveId: "1",
+            taskId: "3"
          },
       ]
    },
    {
-      objectiveId: "OBJECTIVE#2",
+      objectiveId: "2",
       objectiveName: "Objective 2",
       tasks: [
          {
             mastery: "MASTERED" as Mastery,
-            objectiveId: "OBJECTIVE#2",
-            taskId: "TASK#1"
+            objectiveId: "2",
+            taskId: "1"
          },
          {
             mastery: "NOT_MASTERED" as Mastery,
-            objectiveId: "OBJECTIVE#2",
-            taskId: "TASK#2"
+            objectiveId: "2",
+            taskId: "2"
          },
          {
             mastery: "NOT_GRADED" as Mastery,
-            objectiveId: "OBJECTIVE#2",
-            taskId: "TASK#4"
+            objectiveId: "2",
+            taskId: "4"
          },
       ]
    }
@@ -393,24 +393,24 @@ const mockObjectiveProgress_T1 = [
 
 const mockObjectiveProgress_T2 = [
    {
-      objectiveId: "OBJECTIVE#3",
+      objectiveId: "3",
       objectiveName: "Objective 3",
       tasks: [
          {
             mastery: "NOT_GRADED" as Mastery,
-            objectiveId: "OBJECTIVE#3",
-            taskId: "TASK#6"
+            objectiveId: "3",
+            taskId: "6"
          }
       ]
    },
    {
-      objectiveId: "OBJECTIVE#4",
+      objectiveId: "4",
       objectiveName: "Objective 4",
       tasks: [
          {
             mastery: "MASTERED" as Mastery,
-            objectiveId: "OBJECTIVE#4",
-            taskId: "TASK#5"
+            objectiveId: "4",
+            taskId: "5"
          }
       ]
    }
