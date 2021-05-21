@@ -11,7 +11,7 @@
       "compile:watch": "tsc -p . --watch",
       "generate": "graphql-codegen --config codegen.yml",
       "format": "prettier --write .",
-      "test": "jest --coverage",
+      "test": "jest",
       "test:watch": "NODE_ENV=development jest --watchAll=true",
       "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
       "build": "NODE_ENV=development sls package",
@@ -23,6 +23,8 @@
    "dependencies": {
       "@aws-sdk/client-dynamodb": "^3.1.0",
       "@aws-sdk/util-dynamodb": "^3.1.0",
+      "@graphql-codegen/graphql-modules-preset": "^1.2.5",
+      "@graphql-codegen/typescript-resolvers": "^1.19.1",
       "@graphql-tools/load-files": "^6.3.0",
       "@graphql-tools/merge": "^6.2.10",
       "@southlane/cognito-jwt-verifier": "^0.1.7",
@@ -45,9 +47,10 @@
       "@types/node": "^15.3.0",
       "@types/yargs": "^15.0.13",
       "concurrently": "^6.0.2",
-      "eslint": "^7.23.0",
+      "eslint": "^7.26.0",
+      "eslint-config-airbnb-typescript-prettier": "^4.2.0",
       "jest": "^26.6.3",
-      "prettier": "2.2.1",
+      "prettier": "^2.2.1",
       "serverless": "^2.41.1",
       "serverless-dotenv-plugin": "^3.3.0",
       "serverless-offline": "^6.8.0",
@@ -56,7 +59,6 @@
       "ts-loader": "^8.0.17",
       "ts-node": "^9.1.1",
       "typescript": "^4.2.4",
-      "typings": "^2.1.1",
       "webpack": "^5.22.0",
       "webpack-node-externals": "^2.5.2"
    }

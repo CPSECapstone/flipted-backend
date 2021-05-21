@@ -18,7 +18,7 @@
       "sourceMap": true,
       "strict": true
    },
-   "files": ["src/@types/graphql.d.ts"],
+   "files": ["src/@types/graphql.d.ts", "src/__generated__/resolvers.d.ts"],
    "exclude": ["node_modules", ".serverless", ".webpack", ".build"],
    "include": ["src/**/*", "test/**/*", "data/**/*"]
 }

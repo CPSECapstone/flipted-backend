@@ -32,3 +32,8 @@ generates:
          nonOptionalTypename: false
          useTypeImports: false
          useImplementingTypes: false
+   src/__generated__/resolvers.d.ts:
+      plugins:
+        - typescript-resolvers
+      config:
+        useIndexSignature: true
