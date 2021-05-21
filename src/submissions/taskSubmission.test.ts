@@ -43,6 +43,24 @@ const mockFRAnswer: FreeResponseAnswer = {
    answer: "I like BUBBLES!"
 };
 
+const mockMCAnswer_noPoints: MultipleChoiceAnswer = {
+   username: "user",
+   questionId: "MC_QUESTION#456",
+   taskId: "abc",
+   questionBlockId: "xyz",
+   pointsAwarded: 0,
+   answerId: 3
+}
+
+const mockFRAnswer_noPoints: FreeResponseAnswer = {
+   username: "user",
+   questionId: "FR_QUESTION#123",
+   taskId: "abc",
+   questionBlockId: "xyz",
+   pointsAwarded: 0,
+   answer: "I like BUBBLES!"
+};
+
 const mockFrQuestion: FrQuestion = {
    id: "FR_QUESTION#123",
    description: "",
@@ -72,11 +90,30 @@ const mockQuestionAndAnswers: QuestionAndAnswer[] = [
    }
 ];
 
+const mockQuestionAndAnswers_noPoints: QuestionAndAnswer[] = [
+   {
+      question: JSON.parse(JSON.stringify(mockMcQuestion)),
+      answer: { pointsAwarded: 0, answer: "3", questionId: "MC_QUESTION#456" }
+   },
+   {
+      question: JSON.parse(JSON.stringify(mockFrQuestion)),
+      answer: { pointsAwarded: 0, answer: "I like BUBBLES!", questionId: "FR_QUESTION#123" }
+   }
+];
+
 const mockTaskSubmissionResult: TaskSubmissionResult = {
    graded: false,
    pointsAwarded: 5,
    pointsPossible: 6,
    questionAndAnswers: mockQuestionAndAnswers,
+   taskId: "TASK#123"
+};
+
+const mockTaskSubmissionResult_noPoints: TaskSubmissionResult = {
+   graded: false,
+   pointsAwarded: 0,
+   pointsPossible: 6,
+   questionAndAnswers: mockQuestionAndAnswers_noPoints,
    taskId: "TASK#123"
 };
 
@@ -91,10 +128,27 @@ const mockTaskSubmissionResultItem: TaskSubmissionResultItem = {
    questionAndAnswers: JSON.parse(JSON.stringify(mockQuestionAndAnswers))
 };
 
+const mockTaskSubmissionResultItem_noPoints: TaskSubmissionResultItem = {
+   PK: "TASK_SUBMISSION#BUBBLES!",
+   SK: "TASK#123",
+   graded: false,
+   pointsAwarded: 0,
+   pointsPossible: 6,
+   course: "TestCourse",
+   missionId: "MISSION#123",
+   questionAndAnswers: JSON.parse(JSON.stringify(mockQuestionAndAnswers_noPoints))
+};
+
 describe("converting TaskSubmission types", () => {
    it("will convert from a TaskSubmissionResult to a TaskSubmissionResultItem", async () => {
       expect(taskSubResultToDBItem("TestCourse", "MISSION#123", mockTaskSubmissionResult, username)).toEqual(
          mockTaskSubmissionResultItem
+      );
+   });
+
+   it("will convert from a TaskSubmissionResult to a TaskSubmissionResultItem with a 0 point task", async () => {
+      expect(taskSubResultToDBItem("TestCourse", "MISSION#123", mockTaskSubmissionResult_noPoints, username)).toEqual(
+         mockTaskSubmissionResultItem_noPoints
       );
    });
 
@@ -295,6 +349,15 @@ describe("Creating a task submission result", () => {
 
       expect(createTaskSubmissionResult(6, "TASK#123", answers, questions)).toEqual(
          mockTaskSubmissionResult
+      );
+   });
+
+   it("will still contain points awarded field even with 0 points", async () => {
+      const questions: Question[] = [mockFrQuestion, mockMcQuestion];
+      const answers: Answer[] = [mockMCAnswer_noPoints, mockFRAnswer_noPoints];
+
+      expect(createTaskSubmissionResult(6, "TASK#123", answers, questions)).toEqual(
+         mockTaskSubmissionResult_noPoints
       );
    });
 });
