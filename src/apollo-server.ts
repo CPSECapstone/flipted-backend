@@ -1,6 +1,8 @@
 import { ApolloServer } from "apollo-server-lambda";
 import { typeDefs, resolvers } from "./schema";
 import { environment } from "./environment";
+import { validateToken } from "./jws-verifer";
+import userService from "./services/user";
 
 const apolloServer = new ApolloServer({
    typeDefs,
@@ -8,13 +10,23 @@ const apolloServer = new ApolloServer({
    playground: {
       endpoint: `/${environment.providerStage}/graphql`
    },
-   context: ({ event, context }) => {
-      return {
-         headers: event.headers,
-         functionName: context.functionName,
-         event,
-         context
-      };
+   context: async ({ event, context }) => {
+      try {
+         const tokenPayload = await validateToken(event.headers.Authorization);
+         const userRole = await userService.getUserRole(tokenPayload.username)
+
+         return {
+            headers: event.headers,
+            functionName: context.functionName,
+            event,
+            userRole: userRole,
+            username: tokenPayload.username,
+            context
+         };
+      }
+      catch(err) {
+         return err
+      }
    }
 });
 

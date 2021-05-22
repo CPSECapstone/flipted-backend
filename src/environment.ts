@@ -1,9 +1,15 @@
+import { string } from "yargs";
+import { RoleInternal } from "./interfaces/role";
+
 //EXAMPLE ENVIRONMENT VARIABLE OBJECT UTILIZING .env FILES
 type Environment = {
    databaseStage: string;
    providerStage: string;
 };
-
+export type FliptedContext = {
+   username: string
+   userRole: RoleInternal
+}
 export const environment: Environment = {
    providerStage: (process.env.PROVIDER_STAGE as string) || "dev",
    databaseStage: (process.env.DATABASE_STAGE as string) || "dev"
