@@ -1,29 +1,22 @@
+import { Resolvers } from "../__generated__/resolvers";
 import * as service from "./courseService";
 
-async function addCourse(_: any, args: MutationAddCourseArgs, context: any, info: any) {
-   return service.addCourse(args.course);
-}
-
-async function getCourseInfo(_: any, args: QueryCourseInfoArgs, context: any, info: any) {
-   return service.getCourseInfo(args.courseId);
-}
-
-async function listCourseInfos(_: any, args: QueryCourseInfosArgs, context: any, info: any) {
-   return service.listCourseInfos(args.instructor);
-}
-
-async function getCourseContent(_: any, args: QueryCourseContentArgs, context: any, info: any) {
-   return service.getCourseContent(args.course);
-}
-
-const resolvers = {
+const resolvers: Resolvers = {
    Query: {
-      courseInfo: getCourseInfo,
-      courseInfos: listCourseInfos,
-      courseContent: getCourseContent
+      courseInfo: (_, args) => {
+         return service.getCourseInfo(args.courseId);
+      },
+      courseInfos: (_, args) => {
+         return service.listCourseInfos(args.instructor);
+      },
+      courseContent: (_, args) => {
+         return service.getCourseContent(args.course);
+      }
    },
    Mutation: {
-      addCourse
+      addCourse(_, args) {
+         return service.addCourse(args.course);
+      }
    }
 };
 
