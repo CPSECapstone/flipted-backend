@@ -6,7 +6,6 @@ import { getTask } from "../services/task";
 import { getObjective } from "../objective/objectiveService";
 import { MasteryItem } from "./progressInterface";
 import { dbItemToMastery } from "./progressHelper";
-import { FliptedContext } from "../environment";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
    return service.addProgress(args.progress);

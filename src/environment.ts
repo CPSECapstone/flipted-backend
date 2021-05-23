@@ -6,10 +6,7 @@ type Environment = {
    databaseStage: string;
    providerStage: string;
 };
-export type FliptedContext = {
-   username: string
-   userRole: RoleInternal
-}
+
 export const environment: Environment = {
    providerStage: (process.env.PROVIDER_STAGE as string) || "dev",
    databaseStage: (process.env.DATABASE_STAGE as string) || "dev"

@@ -3,6 +3,14 @@ import { typeDefs, resolvers } from "./schema";
 import { environment } from "./environment";
 import { validateToken } from "./jws-verifer";
 import userService from "./services/user";
+import { RoleInternal } from "./interfaces/role";
+
+declare global {
+   export type FliptedContext = {
+      username: string
+      userRole: RoleInternal
+   }
+ }
 
 const apolloServer = new ApolloServer({
    typeDefs,
