@@ -1,3 +1,6 @@
+import { string } from "yargs";
+import { RoleInternal } from "./interfaces/role";
+
 //EXAMPLE ENVIRONMENT VARIABLE OBJECT UTILIZING .env FILES
 type Environment = {
    databaseStage: string;
