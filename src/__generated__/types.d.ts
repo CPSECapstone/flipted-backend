@@ -20,6 +20,21 @@ type Answer = {
   answer?: Maybe<Scalars['String']>;
 };
 
+type AnswerGrade = {
+  __typename?: 'AnswerGrade';
+  student: Scalars['String'];
+  questionId: Scalars['String'];
+  awardedPoints: Scalars['Int'];
+  comment?: Maybe<Scalars['String']>;
+};
+
+type AnswerGradeInput = {
+  student: Scalars['String'];
+  questionId: Scalars['String'];
+  awardedPoints: Scalars['Int'];
+  comment?: Maybe<Scalars['String']>;
+};
+
 type ClassMissionMastery = {
   __typename?: 'ClassMissionMastery';
   mission: Mission;
@@ -251,6 +266,8 @@ type Mutation = {
   addVideoBlock: Scalars['String'];
   deleteGoal: Scalars['String'];
   editOrCreateGoal: Scalars['String'];
+  gradeAnswer: AnswerGrade;
+  gradeTaskSubmission: TaskSubmissionGrade;
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress: Scalars['Boolean'];
   /** Saves a students answer to a multiple choice question quiz block */
@@ -360,6 +377,16 @@ type MutationDeleteGoalArgs = {
 
 type MutationEditOrCreateGoalArgs = {
   goal: GoalInput;
+};
+
+
+type MutationGradeAnswerArgs = {
+  grade: AnswerGradeInput;
+};
+
+
+type MutationGradeTaskSubmissionArgs = {
+  grade: TaskSubmissionGradeInput;
 };
 
 
@@ -915,6 +942,31 @@ type TaskStats = {
   name: Scalars['String'];
   /** Null indicates that this task does not yet have an associated submission */
   submission?: Maybe<TaskSubmissionResult>;
+};
+
+type TaskSubmissionGrade = {
+  __typename?: 'TaskSubmissionGrade';
+  taskId: Scalars['String'];
+  student: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  /**
+   * This is only for the points that aren't directly associated to a question answer.
+   * If this exceeds the total point worth of the task minus the points accounted for by questions,
+   * it will give the student extra credit.
+   */
+  awardedPoints: Scalars['Int'];
+};
+
+type TaskSubmissionGradeInput = {
+  taskId: Scalars['String'];
+  student: Scalars['String'];
+  comment?: Maybe<Scalars['String']>;
+  /**
+   * This is only for the points that aren't directly associated to a question answer.
+   * If this exceeds the total point worth of the task minus the points accounted for by questions,
+   * it will give the student extra credit.
+   */
+  awardedPoints: Scalars['Int'];
 };
 
 /**

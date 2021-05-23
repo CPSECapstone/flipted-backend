@@ -78,14 +78,16 @@ async function get(params: GetParams): Promise<GetItemCommandOutput> {
 }
 
 async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
+   
+   // determine if UpdateParams is for a composite or single key item
+   const key = (typeof params.key === 'string') ? marshall(
+      {
+         id: params.key
+      }) : marshall(params.key, marshallOpts)
+   
    const command = new UpdateItemCommand({
       TableName: params.tableName,
-      Key: marshall(
-         {
-            id: params.key
-         },
-         marshallOpts
-      ),
+      Key: key,
       UpdateExpression: params.updateExpression,
       ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
       ReturnValues: "UPDATED_NEW"
@@ -337,7 +339,7 @@ declare global {
 
    export interface UpdateParams {
       tableName: string;
-      key: string;
+      key: string | object;
       updateExpression: string;
       expressionAttributeValues: { [key: string]: any };
    }
