@@ -3,7 +3,6 @@ import subMissionService from "./subMission";
 import { validateToken } from "../jws-verifer";
 import userService from "../services/user";
 import { RoleInternal } from "../interfaces/role";
-import { FliptedContext } from "../environment";
 
 async function addMission(_: any, args: any, context: FliptedContext, info: any) {
    if (context.userRole == RoleInternal.Instructor) {
