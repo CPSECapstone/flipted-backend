@@ -4,7 +4,6 @@ import goalService from "../services/goal";
 import { convertGoalInputToItem } from "../services/goalLogic";
 import { uid } from "uid";
 import { RoleInternal } from "../interfaces/role";
-import { FliptedContext } from "../environment";
 
 async function editOrCreateGoal(_: any, args: any, context: FliptedContext, info: any) {
    const goalInput: GoalInput = args.goal;

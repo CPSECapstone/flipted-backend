@@ -1,4 +1,3 @@
-import { FliptedContext } from "../environment";
 import { RoleInternal } from "../interfaces/role";
 import { validateToken } from "../jws-verifer";
 import taskService from "../services/task";

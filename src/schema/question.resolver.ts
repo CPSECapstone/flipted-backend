@@ -2,7 +2,6 @@ import * as questionService from "../services/question";
 import { RoleInternal } from "../interfaces/role";
 import { validateToken } from "../jws-verifer";
 import userService from "../services/user";
-import { FliptedContext } from "../environment";
 
 async function addFrQuestion(_: any, args: MutationAddFrQuestionArgs) {
    return questionService.addFrQuestion(args.question);

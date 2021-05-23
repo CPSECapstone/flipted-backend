@@ -19,7 +19,6 @@ import {
    createQuestionProgressOutput
 } from "./taskSubmissionHelper";
 import * as taskblockService from "../taskblock/taskblockService";
-import { FliptedContext } from "../environment";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: FliptedContext) {
    const mcAnswerInput: MultipleChoiceAnswerInput = args.mcBlockInput;
