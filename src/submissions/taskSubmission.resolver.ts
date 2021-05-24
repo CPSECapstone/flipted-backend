@@ -149,8 +149,12 @@ async function submitTask(_: any, args: any, context: FliptedContext, info: any)
    // save the constructed submission to the database for grading and retrieval
    taskSubmissionService.submitTaskForGrading(task, taskSubmissionResult, username);
 
+   const questionAndAnswers = associateQuestionWithAnswers(questions, questionAnswers);
    // return to user
-   return taskSubmissionResult;
+   return {
+      questionAndAnswers: questionAndAnswers,
+      ...taskSubmissionResult
+   };
 }
 
 async function retrieveTaskSubmission(

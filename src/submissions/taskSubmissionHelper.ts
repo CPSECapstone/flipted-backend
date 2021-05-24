@@ -254,7 +254,6 @@ export function createTaskSubmissionResult(
       pointsAwarded: questionAnswers.reduce((a, b) => a + b.pointsAwarded, 0),
       pointsPossible: taskPointValue,
       taskId: taskId,
-      questionAndAnswers: associateQuestionWithAnswers(questions, questionAnswers)
    };
 
    return submissionResult;
