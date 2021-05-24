@@ -164,12 +164,12 @@ type Query {
    Returns an existing task submission or errors if it does not exist.
    May be useful as a TaskSubmissionResult can change as a result of instructor actions.
    """
-   retrieveTaskSubmission(taskId: String!): TaskSubmissionResult
+   retrieveTaskSubmission(taskId: String!, username: String): TaskSubmissionResult
 
    """
    Returns student's progress on the rubric requirements for the task if it exists.
    """
-   retrieveTaskProgress(taskId: String!, username: String): TaskProgress
+   retrieveTaskProgress(taskId: String!): TaskProgress
 
    """
    Returns student's task progress on the rubric requirements if it exists.

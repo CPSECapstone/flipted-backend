@@ -160,7 +160,7 @@ async function submitTask(_: any, args: any, context: FliptedContext, info: any)
 
 async function retrieveTaskSubmission(
    _: any,
-   args: QueryRetrieveTaskProgressArgs,
+   args: QueryRetrieveTaskSubmissionArgs,
    context: FliptedContext,
    info: any
 ): Promise<TaskSubmissionResult> {

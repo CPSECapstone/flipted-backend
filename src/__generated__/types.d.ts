@@ -629,12 +629,12 @@ type QueryRetrieveQuestionProgressArgs = {
 
 type QueryRetrieveTaskProgressArgs = {
   taskId: Scalars['String'];
-  username?: Maybe<Scalars['String']>;
 };
 
 
 type QueryRetrieveTaskSubmissionArgs = {
   taskId: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
 };
 
 
