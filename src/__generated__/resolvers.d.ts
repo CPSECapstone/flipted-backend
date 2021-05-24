@@ -257,6 +257,7 @@ export type AnswerResolvers<ContextType = any, ParentType extends ResolversParen
   pointsAwarded?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   answer?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   graded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  teacherComment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

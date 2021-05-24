@@ -21,6 +21,7 @@ import {
 } from "./taskSubmissionHelper";
 import * as taskblockService from "../taskblock/taskblockService";
 import { Resolvers } from "../__generated__/resolvers";
+import { RoleInternal } from "../interfaces/role";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: FliptedContext) {
    const mcAnswerInput: MultipleChoiceAnswerInput = args.mcBlockInput;
@@ -163,7 +164,7 @@ async function retrieveTaskSubmission(
    context: FliptedContext,
    info: any
 ): Promise<TaskSubmissionResult> {
-   const username: string = context.username;
+   const username: string = context.userRole == RoleInternal.Instructor && args.username ? args.username : context.username
 
    try {
       // Get all submitted answers to the questions in this task by the user from the db

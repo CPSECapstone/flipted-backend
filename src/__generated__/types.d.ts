@@ -19,6 +19,7 @@ type Answer = {
   /** Either the id of the chosen answer id or the provided free response */
   answer?: Maybe<Scalars['String']>;
   graded: Scalars['Boolean'];
+  teacherComment?: Maybe<Scalars['String']>;
 };
 
 type AnswerGrade = {
@@ -628,6 +629,7 @@ type QueryRetrieveQuestionProgressArgs = {
 
 type QueryRetrieveTaskProgressArgs = {
   taskId: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
 };
 
 

@@ -169,7 +169,7 @@ type Query {
    """
    Returns student's progress on the rubric requirements for the task if it exists.
    """
-   retrieveTaskProgress(taskId: String!): TaskProgress
+   retrieveTaskProgress(taskId: String!, username: String): TaskProgress
 
    """
    Returns student's task progress on the rubric requirements if it exists.
