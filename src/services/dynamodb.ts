@@ -88,6 +88,7 @@ async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
    const command = new UpdateItemCommand({
       TableName: params.tableName,
       Key: key,
+      ConditionExpression: params.conditionExpression,
       UpdateExpression: params.updateExpression,
       ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
       ReturnValues: "ALL_NEW"
@@ -340,6 +341,7 @@ declare global {
    export interface UpdateParams {
       tableName: string;
       key: string | object;
+      conditionExpression?: string;
       updateExpression: string;
       expressionAttributeValues: { [key: string]: any };
    }

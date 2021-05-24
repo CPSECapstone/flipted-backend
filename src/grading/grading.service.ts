@@ -11,16 +11,28 @@ export async function updateTaskGrade(input: TaskSubmissionGradeInput) {
    const params: UpdateParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       key: key,
-      updateExpression: "set graded = :graded, pointsAwarded = :pointsAwarded, teacherComment = :teacherComment",
+      conditionExpression: "attribute_exists(SK)",
+      updateExpression:
+         "set graded = :graded, pointsAwarded = :pointsAwarded, teacherComment = :teacherComment",
       expressionAttributeValues: {
          ":graded": true,
          ":pointsAwarded": input.pointsAwarded, // this is wrong
          ":teacherComment": input.teacherComment ? input.teacherComment : null
       }
    };
-   const output = await dynamodb.update(params);
-   if (output.Attributes) {
-      return unmarshall(output.Attributes);
+   try {
+      const output = await dynamodb.update(params);
+      console.log(output);
+      if (output.Attributes) {
+         return unmarshall(output.Attributes);
+      }
+   } catch (err) {
+      if (err.name === "ConditionalCheckFailedException") {
+         throw new Error(
+            `Task submission ${input.taskId} for user ${input.student} could not be found`
+         );
+      }
+      throw err;
    }
 }
 
@@ -32,16 +44,28 @@ export async function updateAnswerGrade(input: AnswerGradeInput) {
 
    const params: UpdateParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
+      conditionExpression: "attribute_exists(SK)",
       key: key,
-      updateExpression: "set graded = :graded, pointsAwarded = :pointsAwarded, teacherComment = :teacherComment",
+      updateExpression:
+         "set graded = :graded, pointsAwarded = :pointsAwarded, teacherComment = :teacherComment",
       expressionAttributeValues: {
          ":graded": true,
          ":pointsAwarded": input.pointsAwarded,
          ":teacherComment": input.teacherComment ? input.teacherComment : null
       }
    };
-   const output = await dynamodb.update(params);
-   if (output.Attributes) {
-      return unmarshall(output.Attributes);
+   try {
+      const output = await dynamodb.update(params);
+      console.log(output);
+      if (output.Attributes) {
+         return unmarshall(output.Attributes);
+      }
+   } catch (err) {
+      if (err.name === "ConditionalCheckFailedException") {
+         throw new Error(
+            `Question submission ${input.questionId} for user ${input.student} could not be found`
+         );
+      }
+      throw err;
    }
 }
