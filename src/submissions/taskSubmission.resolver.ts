@@ -1,4 +1,4 @@
-import { Answer } from "./taskSubmissionInterface";
+import { Answer, TaskSubmissionResultInternal } from "./taskSubmissionInterface";
 import { validateToken } from "../jws-verifer";
 import * as questionService from "../services/question";
 import {
@@ -6,7 +6,7 @@ import {
    isValidMultipleChoiceAnswer,
    quizBlockContainsQuestionIdWithPrefix
 } from "../services/questionHelper";
-import taskService from "../services/task";
+import taskService, { getTask } from "../services/task";
 import taskSubmissionService from "./taskSubmission";
 import {
    areTaskProgressIdsValid,
@@ -16,9 +16,11 @@ import {
    taskProgressInputToDBItem,
    taskQuestionsAllAnswered,
    createTaskSubmissionResult,
-   createQuestionProgressOutput
+   createQuestionProgressOutput,
+   associateQuestionWithAnswers
 } from "./taskSubmissionHelper";
 import * as taskblockService from "../taskblock/taskblockService";
+import { Resolvers } from "../__generated__/resolvers";
 
 async function submitMultChoiceQuestion(_: any, args: any, context: FliptedContext) {
    const mcAnswerInput: MultipleChoiceAnswerInput = args.mcBlockInput;
@@ -55,7 +57,6 @@ async function submitMultChoiceQuestion(_: any, args: any, context: FliptedConte
 }
 
 async function submitFreeResponseQuestion(_: any, args: any, context: FliptedContext) {
-
    const frAnswerInput: FreeResponseAnswerInput = args.frBlockInput;
 
    // get the question as defined by the database
@@ -95,10 +96,10 @@ async function submitTaskRubricProgress(_: any, args: any, context: FliptedConte
    if (areTaskProgressIdsValid(task, taskProgInput)) {
       const taskItem = taskProgressInputToDBItem(taskProgInput, context.username);
       taskSubmissionService.submitTaskProgress(taskItem);
-      return true;
+      return "success";
    }
 
-   return Error("Failed to verify ids contained in task submission");
+   throw new Error("Failed to verify ids contained in task submission");
 }
 
 async function submitTask(_: any, args: any, context: FliptedContext, info: any) {
@@ -139,7 +140,8 @@ async function submitTask(_: any, args: any, context: FliptedContext, info: any)
       task.points,
       task.id,
       questionAnswers,
-      questions
+      questions,
+      false
    );
 
    taskSubmissionService.generateMasteryItemsForTask(username, task.id, task.course);
@@ -151,15 +153,48 @@ async function submitTask(_: any, args: any, context: FliptedContext, info: any)
    return taskSubmissionResult;
 }
 
-async function retrieveTaskSubmission(_: any, args: any, context: FliptedContext, info: any) {
+async function retrieveTaskSubmission(
+   _: any,
+   args: QueryRetrieveTaskProgressArgs,
+   context: FliptedContext,
+   info: any
+): Promise<TaskSubmissionResult> {
    const username: string = context.username;
 
    try {
+      // Get all submitted answers to the questions in this task by the user from the db
+      const questionAnswers: Answer[] = await taskSubmissionService.getQuizProgressForTask(
+         args.taskId,
+         username
+      );
+
+      // Get all questions associated with the task
+      const questions: Question[] = await questionService.listByIds(
+         questionAnswers.map(qa => {
+            return qa.questionId;
+         }),
+         true
+      );
+
       const taskSubmission = await taskSubmissionService.getTaskSubmission(username, args.taskId);
-      return taskSubmission;
+      const questionAndAnswers = associateQuestionWithAnswers(questions, questionAnswers);
+
+      // only factor in teacher awarded free points if full task is graded
+      // otherwise it will duplicate add automatically generated scores
+      const pointAwarded =
+         questionAnswers.reduce((a, b) => a + b.pointsAwarded, 0) +
+         (taskSubmission.graded && taskSubmission.pointsAwarded ? taskSubmission.pointsAwarded : 0);
+
+      return {
+         questionAndAnswers: questionAndAnswers,
+         pointsAwarded: pointAwarded,
+         pointsPossible: taskSubmission.pointsPossible,
+         teacherComment: taskSubmission.teacherComment,
+         taskId: taskSubmission.taskId,
+         graded: taskSubmission.graded
+      };
    } catch (err) {
-      // don't error: just return null if it doesn't exist
-      return null;
+      throw err;
    }
 }
 
@@ -182,7 +217,7 @@ async function retrieveQuestionProgress(_: any, args: any, context: FliptedConte
    return createQuestionProgressOutput(args.taskId, answers);
 }
 
-const resolvers = {
+const resolvers: Resolvers = {
    Query: {
       retrieveTaskSubmission: retrieveTaskSubmission,
       retrieveTaskProgress: retrieveTaskProgress,

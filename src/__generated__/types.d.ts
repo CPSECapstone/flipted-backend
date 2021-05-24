@@ -18,6 +18,7 @@ type Answer = {
   pointsAwarded?: Maybe<Scalars['Int']>;
   /** Either the id of the chosen answer id or the provided free response */
   answer?: Maybe<Scalars['String']>;
+  graded: Scalars['Boolean'];
 };
 
 type AnswerGrade = {
@@ -391,22 +392,22 @@ type MutationGradeTaskSubmissionArgs = {
 
 
 type MutationSaveFreeResponseProgressArgs = {
-  frBlockInput?: Maybe<FreeResponseAnswerInput>;
+  frBlockInput: FreeResponseAnswerInput;
 };
 
 
 type MutationSaveMultipleChoiceProgressArgs = {
-  mcBlockInput?: Maybe<MultipleChoiceAnswerInput>;
+  mcBlockInput: MultipleChoiceAnswerInput;
 };
 
 
 type MutationSubmitTaskArgs = {
-  taskId?: Maybe<Scalars['String']>;
+  taskId: Scalars['String'];
 };
 
 
 type MutationSubmitTaskProgressArgs = {
-  taskProgress?: Maybe<TaskProgressInput>;
+  taskProgress: TaskProgressInput;
 };
 
 
@@ -621,17 +622,17 @@ type QueryQuizblockArgs = {
 
 
 type QueryRetrieveQuestionProgressArgs = {
-  taskId?: Maybe<Scalars['String']>;
+  taskId: Scalars['String'];
 };
 
 
 type QueryRetrieveTaskProgressArgs = {
-  taskId?: Maybe<Scalars['String']>;
+  taskId: Scalars['String'];
 };
 
 
 type QueryRetrieveTaskSubmissionArgs = {
-  taskId?: Maybe<Scalars['String']>;
+  taskId: Scalars['String'];
 };
 
 

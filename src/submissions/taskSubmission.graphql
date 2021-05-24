@@ -138,6 +138,10 @@ type Answer {
    Either the id of the chosen answer id or the provided free response
    """
    answer: String
+
+   graded: Boolean!
+
+   teacherComment: String
 }
 
 """
@@ -160,17 +164,17 @@ type Query {
    Returns an existing task submission or errors if it does not exist.
    May be useful as a TaskSubmissionResult can change as a result of instructor actions.
    """
-   retrieveTaskSubmission(taskId: String): TaskSubmissionResult
+   retrieveTaskSubmission(taskId: String!): TaskSubmissionResult
 
    """
    Returns student's progress on the rubric requirements for the task if it exists.
    """
-   retrieveTaskProgress(taskId: String): TaskProgress
+   retrieveTaskProgress(taskId: String!): TaskProgress
 
    """
    Returns student's task progress on the rubric requirements if it exists.
    """
-   retrieveQuestionProgress(taskId: String): QuestionProgress!
+   retrieveQuestionProgress(taskId: String!): QuestionProgress!
 }
 
 type Mutation {
@@ -182,21 +186,21 @@ type Mutation {
    Even on a successful submission, many fields may be null
    as a Task may require manual grading by an instructor.
    """
-   submitTask(taskId: String): TaskSubmissionResult!
+   submitTask(taskId: String!): TaskSubmissionResult!
 
    """
    Saves completed rubric requirements linked to this task for the user
    calling this function
    """
-   submitTaskProgress(taskProgress: TaskProgressInput): String!
+   submitTaskProgress(taskProgress: TaskProgressInput!): String!
 
    """
    Saves a students answer to a multiple choice question quiz block
    """
-   saveMultipleChoiceProgress(mcBlockInput: MultipleChoiceAnswerInput): Boolean!
+   saveMultipleChoiceProgress(mcBlockInput: MultipleChoiceAnswerInput!): Boolean!
 
    """
    Saves and a students answer to a free response question quiz block
    """
-   saveFreeResponseProgress(frBlockInput: FreeResponseAnswerInput): Boolean!
+   saveFreeResponseProgress(frBlockInput: FreeResponseAnswerInput!): Boolean!
 }

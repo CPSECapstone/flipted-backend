@@ -83,6 +83,7 @@ export type ResolversTypes = ResolversObject<{
   Answer: ResolverTypeWrapper<Answer>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   AnswerGrade: ResolverTypeWrapper<AnswerGrade>;
   AnswerGradeInput: AnswerGradeInput;
   ClassMissionMastery: ResolverTypeWrapper<ClassMissionMastery>;
@@ -97,7 +98,6 @@ export type ResolversTypes = ResolversObject<{
   FrQuestionInput: FrQuestionInput;
   FreeResponseAnswerInput: FreeResponseAnswerInput;
   Goal: ResolverTypeWrapper<Goal>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   GoalInput: GoalInput;
   ImageBlock: ResolverTypeWrapper<ImageBlock>;
   ImageBlockInput: ImageBlockInput;
@@ -171,6 +171,7 @@ export type ResolversParentTypes = ResolversObject<{
   Answer: Answer;
   String: Scalars['String'];
   Int: Scalars['Int'];
+  Boolean: Scalars['Boolean'];
   AnswerGrade: AnswerGrade;
   AnswerGradeInput: AnswerGradeInput;
   ClassMissionMastery: ClassMissionMastery;
@@ -185,7 +186,6 @@ export type ResolversParentTypes = ResolversObject<{
   FrQuestionInput: FrQuestionInput;
   FreeResponseAnswerInput: FreeResponseAnswerInput;
   Goal: Goal;
-  Boolean: Scalars['Boolean'];
   GoalInput: GoalInput;
   ImageBlock: ImageBlock;
   ImageBlockInput: ImageBlockInput;
@@ -256,6 +256,7 @@ export type AnswerResolvers<ContextType = any, ParentType extends ResolversParen
   questionId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   pointsAwarded?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   answer?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  graded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -405,10 +406,10 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   editOrCreateGoal?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationEditOrCreateGoalArgs, 'goal'>>;
   gradeAnswer?: Resolver<ResolversTypes['AnswerGrade'], ParentType, ContextType, RequireFields<MutationGradeAnswerArgs, 'grade'>>;
   gradeTaskSubmission?: Resolver<ResolversTypes['TaskSubmissionGrade'], ParentType, ContextType, RequireFields<MutationGradeTaskSubmissionArgs, 'grade'>>;
-  saveFreeResponseProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveFreeResponseProgressArgs, never>>;
-  saveMultipleChoiceProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveMultipleChoiceProgressArgs, never>>;
-  submitTask?: Resolver<ResolversTypes['TaskSubmissionResult'], ParentType, ContextType, RequireFields<MutationSubmitTaskArgs, never>>;
-  submitTaskProgress?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSubmitTaskProgressArgs, never>>;
+  saveFreeResponseProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveFreeResponseProgressArgs, 'frBlockInput'>>;
+  saveMultipleChoiceProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveMultipleChoiceProgressArgs, 'mcBlockInput'>>;
+  submitTask?: Resolver<ResolversTypes['TaskSubmissionResult'], ParentType, ContextType, RequireFields<MutationSubmitTaskArgs, 'taskId'>>;
+  submitTaskProgress?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSubmitTaskProgressArgs, 'taskProgress'>>;
   updateUser?: Resolver<Maybe<ResolversTypes['UpdateUserOutput']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, never>>;
 }>;
 
@@ -478,9 +479,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   progressOverview?: Resolver<ResolversTypes['ProgressOverview'], ParentType, ContextType, RequireFields<QueryProgressOverviewArgs, 'course'>>;
   questions?: Resolver<Array<ResolversTypes['Question']>, ParentType, ContextType, RequireFields<QueryQuestionsArgs, 'questionIds'>>;
   quizblock?: Resolver<ResolversTypes['QuizBlock'], ParentType, ContextType, RequireFields<QueryQuizblockArgs, 'taskId' | 'blockId'>>;
-  retrieveQuestionProgress?: Resolver<ResolversTypes['QuestionProgress'], ParentType, ContextType, RequireFields<QueryRetrieveQuestionProgressArgs, never>>;
-  retrieveTaskProgress?: Resolver<Maybe<ResolversTypes['TaskProgress']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskProgressArgs, never>>;
-  retrieveTaskSubmission?: Resolver<Maybe<ResolversTypes['TaskSubmissionResult']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskSubmissionArgs, never>>;
+  retrieveQuestionProgress?: Resolver<ResolversTypes['QuestionProgress'], ParentType, ContextType, RequireFields<QueryRetrieveQuestionProgressArgs, 'taskId'>>;
+  retrieveTaskProgress?: Resolver<Maybe<ResolversTypes['TaskProgress']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskProgressArgs, 'taskId'>>;
+  retrieveTaskSubmission?: Resolver<Maybe<ResolversTypes['TaskSubmissionResult']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskSubmissionArgs, 'taskId'>>;
   student?: Resolver<ResolversTypes['Student'], ParentType, ContextType, RequireFields<QueryStudentArgs, 'studentId' | 'course'>>;
   students?: Resolver<Array<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<QueryStudentsArgs, 'course'>>;
   subMission?: Resolver<Maybe<ResolversTypes['SubMission']>, ParentType, ContextType, RequireFields<QuerySubMissionArgs, never>>;

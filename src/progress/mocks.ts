@@ -93,7 +93,8 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
       pointsAwarded: 93,
       pointsPossible: 100,
       missionId: "MISSION#123",
-      course: "My Awesome Backend Mock Course"
+      course: "My Awesome Backend Mock Course",
+      username: "USER_123"
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
@@ -102,7 +103,8 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
       pointsAwarded: 14,
       pointsPossible: 25,
       missionId: "MISSION#123",
-      course: "My Awesome Backend Mock Course"
+      course: "My Awesome Backend Mock Course",
+      username: "USER_123"
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
@@ -110,6 +112,7 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
       graded: false,
       missionId: "MISSION#123",
       course: "My Awesome Backend Mock Course",
+      username: "USER_123"
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
@@ -118,7 +121,8 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
       missionId: "MISSION#456",
       course: "My Awesome Backend Mock Course",
       pointsAwarded: 8,
-      pointsPossible: 10
+      pointsPossible: 10,
+      username: "USER_123"
    }
 ];
 
@@ -126,12 +130,22 @@ const mockTaskStats_1: TaskStats[] = [
    {
       taskId: "1",
       name: "Mock Task 1",
-      submission: { graded: true, pointsAwarded: 93, pointsPossible: 100, taskId: "1"}
+      submission: {
+         graded: true,
+         pointsAwarded: 93,
+         pointsPossible: 100,
+         taskId: "1",
+      }
    },
    {
       taskId: "2",
       name: "Mock Task 2",
-      submission: { graded: true, pointsAwarded: 14, pointsPossible: 25, taskId: "2" }
+      submission: {
+         graded: true,
+         pointsAwarded: 14,
+         pointsPossible: 25,
+         taskId: "2",
+      }
    },
    {
       taskId: "3",
@@ -148,7 +162,12 @@ const mockTaskStats_2: TaskStats[] = [
    {
       taskId: "5",
       name: "Mock Task 5",
-      submission: { graded: true, pointsAwarded: 8, pointsPossible: 10, taskId: "5" }
+      submission: {
+         graded: true,
+         pointsAwarded: 8,
+         pointsPossible: 10,
+         taskId: "5",
+      }
    },
    {
       taskId: "6",
@@ -169,7 +188,7 @@ export const mockMissionProgress: MissionProgress[] = [
    }
 ];
 
-export const mockObjectiveItems : ObjectiveItem[] = [
+export const mockObjectiveItems: ObjectiveItem[] = [
    {
       PK: "OBJECTIVE#1",
       SK: "OBJECTIVE#1",
@@ -214,9 +233,9 @@ export const mockObjectiveItems : ObjectiveItem[] = [
       course: "Mocking 101",
       taskIds: ["5"]
    }
-]
+];
 
-export const mockObjectives : Objective[] = [
+export const mockObjectives: Objective[] = [
    {
       objectiveId: "1",
       objectiveName: "Objective 1",
@@ -253,7 +272,7 @@ export const mockObjectives : Objective[] = [
       course: "Mocking 101",
       tasks: []
    }
-]
+];
 
 export const mockMasteryItems: MasteryItem[] = [
    {
@@ -318,9 +337,8 @@ export const mockMasteryItems: MasteryItem[] = [
       objectiveId: "4",
       course: "Mocking 101",
       mastery: "MASTERED"
-   },
-   
-]
+   }
+];
 
 export const mockTarget_1: Target = {
    targetId: "TARGET#1",
@@ -365,7 +383,7 @@ const mockObjectiveProgress_T1 = [
             mastery: "NOT_GRADED" as Mastery,
             objectiveId: "1",
             taskId: "3"
-         },
+         }
       ]
    },
    {
@@ -386,7 +404,7 @@ const mockObjectiveProgress_T1 = [
             mastery: "NOT_GRADED" as Mastery,
             objectiveId: "2",
             taskId: "4"
-         },
+         }
       ]
    }
 ];
