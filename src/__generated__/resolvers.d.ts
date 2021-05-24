@@ -262,8 +262,8 @@ export type AnswerResolvers<ContextType = any, ParentType extends ResolversParen
 export type AnswerGradeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AnswerGrade'] = ResolversParentTypes['AnswerGrade']> = ResolversObject<{
   student?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   questionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  awardedPoints?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pointsAwarded?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  teacherComment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -653,8 +653,8 @@ export type TaskStatsResolvers<ContextType = any, ParentType extends ResolversPa
 export type TaskSubmissionGradeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TaskSubmissionGrade'] = ResolversParentTypes['TaskSubmissionGrade']> = ResolversObject<{
   taskId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   student?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  awardedPoints?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  teacherComment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pointsAwarded?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

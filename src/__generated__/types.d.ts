@@ -24,15 +24,15 @@ type AnswerGrade = {
   __typename?: 'AnswerGrade';
   student: Scalars['String'];
   questionId: Scalars['String'];
-  awardedPoints: Scalars['Int'];
-  comment?: Maybe<Scalars['String']>;
+  pointsAwarded: Scalars['Int'];
+  teacherComment?: Maybe<Scalars['String']>;
 };
 
 type AnswerGradeInput = {
   student: Scalars['String'];
   questionId: Scalars['String'];
-  awardedPoints: Scalars['Int'];
-  comment?: Maybe<Scalars['String']>;
+  pointsAwarded: Scalars['Int'];
+  teacherComment?: Maybe<Scalars['String']>;
 };
 
 type ClassMissionMastery = {
@@ -948,25 +948,25 @@ type TaskSubmissionGrade = {
   __typename?: 'TaskSubmissionGrade';
   taskId: Scalars['String'];
   student: Scalars['String'];
-  comment?: Maybe<Scalars['String']>;
+  teacherComment?: Maybe<Scalars['String']>;
   /**
    * This is only for the points that aren't directly associated to a question answer.
    * If this exceeds the total point worth of the task minus the points accounted for by questions,
    * it will give the student extra credit.
    */
-  awardedPoints: Scalars['Int'];
+  pointsAwarded: Scalars['Int'];
 };
 
 type TaskSubmissionGradeInput = {
   taskId: Scalars['String'];
   student: Scalars['String'];
-  comment?: Maybe<Scalars['String']>;
+  teacherComment?: Maybe<Scalars['String']>;
   /**
    * This is only for the points that aren't directly associated to a question answer.
    * If this exceeds the total point worth of the task minus the points accounted for by questions,
    * it will give the student extra credit.
    */
-  awardedPoints: Scalars['Int'];
+  pointsAwarded: Scalars['Int'];
 };
 
 /**

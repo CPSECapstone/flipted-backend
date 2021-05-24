@@ -8,15 +8,36 @@ export async function updateTaskGrade(input: TaskSubmissionGradeInput) {
       SK: input.taskId
    };
 
-   console.log(`Key: ${JSON.stringify(key)}`)
+   const params: UpdateParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      key: key,
+      updateExpression: "set graded = :graded, pointsAwarded = :pointsAwarded, teacherComment = :teacherComment",
+      expressionAttributeValues: {
+         ":graded": true,
+         ":pointsAwarded": input.pointsAwarded, // this is wrong
+         ":teacherComment": input.teacherComment ? input.teacherComment : null
+      }
+   };
+   const output = await dynamodb.update(params);
+   if (output.Attributes) {
+      return unmarshall(output.Attributes);
+   }
+}
+
+export async function updateAnswerGrade(input: AnswerGradeInput) {
+   const key: CompositeDBItem = {
+      PK: `QUESTION_ANSWER#${input.student}`,
+      SK: input.questionId
+   };
 
    const params: UpdateParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       key: key,
-      updateExpression: "set graded = :graded, pointsAwarded = :pointsAwarded",
+      updateExpression: "set graded = :graded, pointsAwarded = :pointsAwarded, teacherComment = :teacherComment",
       expressionAttributeValues: {
          ":graded": true,
-         ":pointsAwarded": input.awardedPoints // this is wrong
+         ":pointsAwarded": input.pointsAwarded,
+         ":teacherComment": input.teacherComment ? input.teacherComment : null
       }
    };
    const output = await dynamodb.update(params);

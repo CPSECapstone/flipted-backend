@@ -90,14 +90,14 @@ async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
       Key: key,
       UpdateExpression: params.updateExpression,
       ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
-      ReturnValues: "UPDATED_NEW"
+      ReturnValues: "ALL_NEW"
    });
 
    try {
       const output: GetItemCommandOutput = await client.send(command);
       return output;
    } catch (err) {
-      return err;
+      throw err;
    }
 }
 
