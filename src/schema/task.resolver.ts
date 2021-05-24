@@ -3,10 +3,8 @@ import { validateToken } from "../jws-verifer";
 import taskService from "../services/task";
 import userService from "../services/user";
 
-async function addTask(_: any, args: MutationAddTaskArgs, context: any, info: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
-   const userRole = await userService.getUserRole(tokenPayload.username); // then get the user role
-   if (userRole == RoleInternal.Instructor) {
+async function addTask(_: any, args: MutationAddTaskArgs, context: FliptedContext, info: any) {
+   if (context.userRole == RoleInternal.Instructor) {
       const task: TaskInput = args.task;
       return taskService.add(task);
    } else {
@@ -14,8 +12,7 @@ async function addTask(_: any, args: MutationAddTaskArgs, context: any, info: an
    }
 }
 
-async function getTaskById(_: any, args: any, context: any, info: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
+async function getTaskById(_: any, args: any, context: FliptedContext, info: any) {
    const task: Task = await taskService.getTaskById(args.taskId);
 
    return task;

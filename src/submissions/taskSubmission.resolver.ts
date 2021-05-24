@@ -20,8 +20,7 @@ import {
 } from "./taskSubmissionHelper";
 import * as taskblockService from "../taskblock/taskblockService";
 
-async function submitMultChoiceQuestion(_: any, args: any, context: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
+async function submitMultChoiceQuestion(_: any, args: any, context: FliptedContext) {
    const mcAnswerInput: MultipleChoiceAnswerInput = args.mcBlockInput;
 
    const question: McQuestion = <McQuestion>(
@@ -49,14 +48,13 @@ async function submitMultChoiceQuestion(_: any, args: any, context: any) {
 
    // store the grade for that quiz block and associate with the user
    taskSubmissionService.submitQuestionAnswer(
-      multipleChoiceAnswerInputToDBItem(mcAnswerInput, tokenPayload.username, pointsAwarded)
+      multipleChoiceAnswerInputToDBItem(mcAnswerInput, context.username, pointsAwarded)
    );
 
    return true;
 }
 
-async function submitFreeResponseQuestion(_: any, args: any, context: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
+async function submitFreeResponseQuestion(_: any, args: any, context: FliptedContext) {
 
    const frAnswerInput: FreeResponseAnswerInput = args.frBlockInput;
 
@@ -83,20 +81,19 @@ async function submitFreeResponseQuestion(_: any, args: any, context: any) {
 
    // store the grade for that quiz block and associate with the user
    taskSubmissionService.submitQuestionAnswer(
-      freeResponseAnswerInputToDBItem(frAnswerInput, tokenPayload.username)
+      freeResponseAnswerInputToDBItem(frAnswerInput, context.username)
    );
 
    return true;
 }
 
-async function submitTaskRubricProgress(_: any, args: any, context: any, info: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
+async function submitTaskRubricProgress(_: any, args: any, context: FliptedContext, info: any) {
    const taskProgInput: TaskProgressInput = args.taskProgress;
 
    // verify that the list of completed requirement ids exist in the task
    const task: Task = await taskService.getTaskById(taskProgInput.taskId);
    if (areTaskProgressIdsValid(task, taskProgInput)) {
-      const taskItem = taskProgressInputToDBItem(taskProgInput, tokenPayload.username);
+      const taskItem = taskProgressInputToDBItem(taskProgInput, context.username);
       taskSubmissionService.submitTaskProgress(taskItem);
       return true;
    }
@@ -104,9 +101,8 @@ async function submitTaskRubricProgress(_: any, args: any, context: any, info: a
    return Error("Failed to verify ids contained in task submission");
 }
 
-async function submitTask(_: any, args: any, context: any, info: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
-   const username: string = tokenPayload.username;
+async function submitTask(_: any, args: any, context: FliptedContext, info: any) {
+   const username: string = context.username;
    const taskId: string = args.taskId;
    const task: Task = await taskService.getTaskById(taskId);
 
@@ -155,9 +151,8 @@ async function submitTask(_: any, args: any, context: any, info: any) {
    return taskSubmissionResult;
 }
 
-async function retrieveTaskSubmission(_: any, args: any, context: any, info: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
-   const username: string = tokenPayload.username;
+async function retrieveTaskSubmission(_: any, args: any, context: FliptedContext, info: any) {
+   const username: string = context.username;
 
    try {
       const taskSubmission = await taskSubmissionService.getTaskSubmission(username, args.taskId);
@@ -168,9 +163,8 @@ async function retrieveTaskSubmission(_: any, args: any, context: any, info: any
    }
 }
 
-async function retrieveTaskProgress(_: any, args: any, context: any, info: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
-   const username: string = tokenPayload.username;
+async function retrieveTaskProgress(_: any, args: any, context: FliptedContext, info: any) {
+   const username: string = context.username;
 
    try {
       const taskProgress = await taskSubmissionService.getTaskRubricProgress(args.taskId, username);
@@ -181,9 +175,8 @@ async function retrieveTaskProgress(_: any, args: any, context: any, info: any) 
    }
 }
 
-async function retrieveQuestionProgress(_: any, args: any, context: any, info: any) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
-   const username: string = tokenPayload.username;
+async function retrieveQuestionProgress(_: any, args: any, context: FliptedContext, info: any) {
+   const username: string = context.username;
 
    const answers = await taskSubmissionService.getQuizProgressForTask(args.taskId, username);
    return createQuestionProgressOutput(args.taskId, answers);

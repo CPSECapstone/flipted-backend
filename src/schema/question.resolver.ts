@@ -11,12 +11,9 @@ async function addMcQuestion(_: any, args: MutationAddMcQuestionArgs) {
    return questionService.addMcQuestion(args.question);
 }
 
-async function listQuestionsByIds(_: any, args: QueryQuestionsArgs, context: any) {
+async function listQuestionsByIds(_: any, args: QueryQuestionsArgs, context: FliptedContext) {
    const questionIds: string[] = args.questionIds;
-   const tokenPayload = await validateToken(context.headers.Authorization);
-   const userRole = await userService.getUserRole(tokenPayload.username); // then get the user role
-
-   return questionService.listByIds(questionIds, userRole == RoleInternal.Instructor);
+   return questionService.listByIds(questionIds, context.userRole == RoleInternal.Instructor);
 }
 
 async function resolveQuestionType(question: any, context: any, info: any) {

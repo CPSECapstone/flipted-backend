@@ -5,3 +5,5 @@ build
 package-lock.json
 .webpack
 src/__generated__/*.d.ts
+coverage
+.build

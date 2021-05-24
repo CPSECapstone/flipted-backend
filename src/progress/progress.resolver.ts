@@ -26,13 +26,11 @@ async function progressOverview(_: any, args: QueryProgressOverviewArgs) {
 async function getAllMissionProgress(
    _: any,
    args: QueryGetAllMissionProgressArgs,
-   context: any,
+   context: FliptedContext,
    info: any
 ): Promise<MissionProgress[]> {
-   const tokenPayload = await validateToken(context.headers.Authorization);
-   const userRole = await userService.getUserRole(tokenPayload.username);
    const user =
-      userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username;
+      context.userRole == RoleInternal.Instructor && context.username ? context.username : context.username;
 
    return await service.getAllMissionProgressForUser(args.courseId, user);
 }
@@ -40,26 +38,24 @@ async function getAllMissionProgress(
 async function getAllTargetProgress(
    _: any,
    args: QueryGetAllTargetProgressArgs,
-   context: any,
+   context: FliptedContext,
    info: any
 ) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
-   const userRole = await userService.getUserRole(tokenPayload.username);
    const user =
-      userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username;
+      context.userRole == RoleInternal.Instructor && args.username ? args.username : context.username;
+   console.log(user)
+   console.log(context.userRole)
    return await service.getAllTargetProgressForUser(args.courseId, user);
 }
 
 async function getTaskObjectiveProgress(
    _: any,
    args: QueryGetTaskObjectiveProgressArgs,
-   context: any,
+   context: FliptedContext,
    info: any
 ) {
-   const tokenPayload = await validateToken(context.headers.Authorization);
-   const userRole = await userService.getUserRole(tokenPayload.username);
    const user =
-      userRole == RoleInternal.Instructor && args.username ? args.username : tokenPayload.username;
+      context.userRole == RoleInternal.Instructor && args.username ? args.username : context.username;
 
    const items = await service.listUserMasteryItemsByTask(args.taskId, user);
 

@@ -247,7 +247,7 @@ async function batchWrite(params: BatchWriteParams): Promise<number> {
 /*
    delete all items in the table in batch mode
 */
-export async function batchDelete(scanParams: ScanParams): Promise<number> {
+async function batchDelete(scanParams: ScanParams): Promise<number> {
    let items: any[] = [];
    try {
       let output = await scan(scanParams);
