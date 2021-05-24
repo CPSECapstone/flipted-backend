@@ -3,11 +3,23 @@
 * [Intruction](README.md)
 
 ## How To Guide
+
   * [Getting Started](how-to-guide/getting_started.md)
-  * [Development Workflow](how-to-guide/development_workflow.md)
   * [Use flipted CLI](how-to-guide/use_flipted_cli.md)
 
-* [APIs](apis/README.md)
+## Best Practice
+
+  * [Avoid using any type](best-practice/avoid_using_any_type.md)
+  * [Coding styles](best-practice/coding_style.md)
+
+## Design
+
+  * [Data Schema](design/data_schema.md)
+  * [User Authentication](design/user_authentication.md)
+  * [Mission - Learning Target Progress Class Diagram](design/mission_target_progress.md)
+
+## API Documentation
+
   * [Class Mission Mastery](missionMastery.md)
   * [Class Target Mastery](apis/targetMastery.md)
   * [Courses](apis/courses.md)
@@ -24,14 +36,6 @@
   * [Users](apis/users.md)
   * [User Progress](apis/userProgress.md)
 
-* [Best Practice](best-practice/README.MD)
-  * [Avoid using any type](best-practice/avoid_using_any_type.md)
-  * [Coding styles](best-practice/coding_style.md)
-
-* [Design](design/README.md)
-  * [Data Schema](design/data_schema.md)
-  * [User Authentication](design/user_authentication.md)
-  * [Mission - Learning Target Progress Class Diagram](design/mission_target_progress.md)
-
 ## Support
+
   * [Defect Reporting](support/defect_reporting.md)
