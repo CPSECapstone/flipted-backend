@@ -40,7 +40,8 @@ export function taskSubResultToDBItem(
       SK: input.taskId,
       graded: false,
       missionId: missionId,
-      course: course
+      course: course,
+      username: username
    };
 
    if ('pointsAwarded' in input) {
@@ -102,7 +103,8 @@ export function multipleChoiceAnswerInputToDBItem(
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
       answerIndex: input.answerId,
-      pointsAwarded: pointsAwarded
+      pointsAwarded: pointsAwarded,
+      graded: true
    };
 
    return multipleChoiceAnswerItem;
@@ -118,7 +120,8 @@ export function freeResponseAnswerInputToDBItem(
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
       answer: input.answer,
-      pointsAwarded: 0 // not yet graded
+      pointsAwarded: 0, // not yet graded
+      graded: false // 
    };
 
    return freeResponseAnswerItem;
@@ -131,7 +134,9 @@ export function dbItemToMultipleChoiceAnswer(input: MultipleChoiceAnswerItem): A
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
       answerId: input.answerIndex,
-      pointsAwarded: input.pointsAwarded
+      pointsAwarded: input.pointsAwarded,
+      graded: input.graded,
+      teacherComment: input.teacherComment
    };
 
    return questionAnswer;
@@ -144,7 +149,9 @@ export function dbItemToFreeResponseAnswer(input: FreeResponseAnswerItem): Answe
       taskId: input.taskId,
       questionBlockId: input.questionBlockId,
       answer: input.answer,
-      pointsAwarded: input.pointsAwarded
+      pointsAwarded: input.pointsAwarded,
+      graded: input.graded,
+      teacherComment: input.teacherComment
    };
 
    return questionAnswer;
@@ -239,20 +246,20 @@ export function createTaskSubmissionResult(
    taskPointValue: number,
    taskId: string,
    questionAnswers: Answer[],
-   questions: Question[]
+   questions: Question[],
+   graded: boolean
 ): TaskSubmissionResult {
    const submissionResult: TaskSubmissionResult = {
-      graded: false, // TODO "auto graded" setting in task should modify this
+      graded: graded, // TODO "auto graded" setting in task should modify this
       pointsAwarded: questionAnswers.reduce((a, b) => a + b.pointsAwarded, 0),
       pointsPossible: taskPointValue,
       taskId: taskId,
-      questionAndAnswers: associateQuestionWithAnswers(questions, questionAnswers)
    };
 
    return submissionResult;
 }
 
-function associateQuestionWithAnswers(
+export function associateQuestionWithAnswers(
    questions: Question[],
    questionAnswers: Answer[]
 ): QuestionAndAnswer[] {
@@ -271,13 +278,17 @@ export function answerToAnswerOut(answer: Answer): AnswerOut {
       answerOut = {
          questionId: answer.questionId,
          answer: (<any>answer).answer,
-         pointsAwarded: answer.pointsAwarded
+         pointsAwarded: answer.pointsAwarded,
+         graded: answer.graded,
+         teacherComment: answer.teacherComment
       };
    } else {
       answerOut = {
          questionId: answer.questionId,
          answer: String((<any>answer).answerId),
-         pointsAwarded: answer.pointsAwarded
+         pointsAwarded: answer.pointsAwarded,
+         graded: answer.graded,
+         teacherComment: answer.teacherComment
       };
    }
    return answerOut;

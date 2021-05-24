@@ -12,6 +12,8 @@ export interface QuestionAnswerItem {
    taskId: string;
    questionBlockId: string;
    pointsAwarded: number;
+   graded: boolean
+   teacherComment?: string
 }
 
 export interface MultipleChoiceAnswerItem extends QuestionAnswerItem {
@@ -31,7 +33,8 @@ export interface TaskSubmissionResultItem {
    teacherComment?: string;
    missionId: string;
    course: string;
-   questionAndAnswers?: QuestionAndAnswer[];
+   username: string;
+   questionAndAnswers?: QuestionAndAnswer[]
 }
 
 /***************** Internal Types ******************************/
@@ -41,6 +44,8 @@ export interface Answer {
    taskId: string;
    questionBlockId: string;
    pointsAwarded: number;
+   graded: boolean
+   teacherComment?: string
 }
 
 export interface MultipleChoiceAnswer extends Answer {
@@ -55,6 +60,8 @@ export interface AnswerOut {
    questionId: string;
    pointsAwarded?: number;
    answer: string;
+   graded: boolean
+   teacherComment?: string
 }
 
 export interface QuestionProgress {

@@ -78,24 +78,27 @@ async function get(params: GetParams): Promise<GetItemCommandOutput> {
 }
 
 async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
+   
+   // determine if UpdateParams is for a composite or single key item
+   const key = (typeof params.key === 'string') ? marshall(
+      {
+         id: params.key
+      }) : marshall(params.key, marshallOpts)
+   
    const command = new UpdateItemCommand({
       TableName: params.tableName,
-      Key: marshall(
-         {
-            id: params.key
-         },
-         marshallOpts
-      ),
+      Key: key,
+      ConditionExpression: params.conditionExpression,
       UpdateExpression: params.updateExpression,
       ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
-      ReturnValues: "UPDATED_NEW"
+      ReturnValues: "ALL_NEW"
    });
 
    try {
       const output: GetItemCommandOutput = await client.send(command);
       return output;
    } catch (err) {
-      return err;
+      throw err;
    }
 }
 
@@ -337,7 +340,8 @@ declare global {
 
    export interface UpdateParams {
       tableName: string;
-      key: string;
+      key: string | object;
+      conditionExpression?: string;
       updateExpression: string;
       expressionAttributeValues: { [key: string]: any };
    }
