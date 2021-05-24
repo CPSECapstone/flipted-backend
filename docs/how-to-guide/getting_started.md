@@ -29,3 +29,11 @@ This command is used to generate types files at `src/__generate__/types.d.ts`. N
 ### `npm run deploy`
 
 When you completed one feature or fix one bug, you can then push the change to the AWS lambda function service, and all teams will the new version of APIs.
+
+## Development Workflow
+
+1. Design Data Models
+2. Define `GraphQL` schema, including type definitions and resolvers
+3. Generate type definition file with `graphql-code-genertor` tool and implement resolvers.
+4. Write tests
+5. Deploy via Github Action

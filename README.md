@@ -1,48 +1,14 @@
 # flipted-backend
 
-[Repo](https://github.com/CPSECapstone/flipted-backend.git)
+The `flipted-backend` project is a part of the senior capstone project for CSC 405/406 class. The capstone project is to build a LMS (learning management system) for K-12, which features in mastery learning and gamification.
 
-## Setup
+The backend is built with `Typescript`, `Apollo GraphQL Server` and `Amazon Dynamo DB`. It is deployed as `Amazon Lambda Function` through `serverless` framework.
 
-1. Clone the repo and install dependencies
+### Development
 
-```bash
-# install dependencies
-npm install -g serverless
-npm install
-```
+Please see `docs` folder for more on how to start developing the project. See [more](https://zzheng07.gitbook.io/flipted-backend/how-to-guide/getting_started)
 
-2. Next, type in `serverless offline` and visit the url it generates on your local machine
 
-3. Now you can start to play around with the **resolvers, typedefs, and queries** that our Apollo Server is working with (I use Postman to test queries).
+### License
 
-## Development
-
-### Resolvers
-
-These will be the keywords that are waiting to be triggered. Our only resolver right now is for users.
-
-#### Typedefs
-
-Typedefs will define both Queries and the contents of any objects we return. This is where Graphql gets pretty powerful.
-
-#### Queries
-
-In the same constant, we define all of the Queries our Graphql server will handle and what it returns.
-
-### Deployment
-
-When you're ready, you can deploy or redeploy with `serverless deploy`. To specify the stage (dev/prod), use the following `serverless deploy --stage prod` or `serverless deploy --stage dev`.
-
-```
-# Debug locally
-npm run debug
-
-# Deploy to AWS
-npm run deploy
-```
-
-### Code Linting
-
--  [Getting Started - Linting your TypeScript Codebase](https://github.com/typescript-eslint/typescript-eslint/blob/HEAD/docs/getting-started/linting/README.md)
--  [The future of TypeScript on ESLint](https://eslint.org/blog/2019/01/future-typescript-eslint)
+`flipted-backend` project is licensed under the [MIT Licence](https://opensource.org/licenses/mit-license.php). See the [LICENSE](LICENSE).
