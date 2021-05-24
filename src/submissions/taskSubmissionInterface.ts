@@ -68,12 +68,3 @@ export interface QuestionProgress {
    taskId: string;
    answers: AnswerOut[];
 }
-
-export interface TaskSubmissionResultInternal {
-   taskId: string,
-   nonQuestionPoints: number,
-   graded: boolean,
-   username: string,
-   teacherComment?: string,
-   answers: Answer[]
-}
