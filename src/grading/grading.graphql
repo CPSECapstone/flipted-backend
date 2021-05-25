@@ -1,0 +1,44 @@
+input TaskSubmissionGradeInput {
+   taskId: String!
+   student: String!
+   teacherComment: String
+   
+   """
+   This is only for the points that aren't directly associated to a question answer. 
+   If this exceeds the total point worth of the task minus the points accounted for by questions,
+   it will give the student extra credit. 
+   """
+   pointsAwarded: Int! 
+}
+
+type TaskSubmissionGrade {
+   taskId: String!
+   student: String!
+   teacherComment: String
+   
+   """
+   This is only for the points that aren't directly associated to a question answer. 
+   If this exceeds the total point worth of the task minus the points accounted for by questions,
+   it will give the student extra credit. 
+   """
+   pointsAwarded: Int! 
+}
+
+input AnswerGradeInput {
+   student: String!
+   questionId: String!
+   pointsAwarded: Int!
+   teacherComment: String
+}
+
+type AnswerGrade {
+   student: String!
+   questionId: String!
+   pointsAwarded: Int!
+   teacherComment: String
+}
+
+type Mutation {
+   gradeTaskSubmission(grade: TaskSubmissionGradeInput!) : TaskSubmissionGrade!
+   gradeAnswer(grade: AnswerGradeInput!) : AnswerGrade!
+}

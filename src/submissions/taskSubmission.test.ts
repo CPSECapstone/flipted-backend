@@ -31,7 +31,8 @@ const mockMCAnswer: MultipleChoiceAnswer = {
    taskId: "abc",
    questionBlockId: "xyz",
    pointsAwarded: 2,
-   answerId: 3
+   answerId: 3,
+   graded: true
 };
 
 const mockFRAnswer: FreeResponseAnswer = {
@@ -40,7 +41,8 @@ const mockFRAnswer: FreeResponseAnswer = {
    taskId: "abc",
    questionBlockId: "xyz",
    pointsAwarded: 3,
-   answer: "I like BUBBLES!"
+   answer: "I like BUBBLES!",
+   graded: true
 };
 
 const mockMCAnswer_noPoints: MultipleChoiceAnswer = {
@@ -49,8 +51,9 @@ const mockMCAnswer_noPoints: MultipleChoiceAnswer = {
    taskId: "abc",
    questionBlockId: "xyz",
    pointsAwarded: 0,
-   answerId: 3
-}
+   answerId: 3,
+   graded: true
+};
 
 const mockFRAnswer_noPoints: FreeResponseAnswer = {
    username: "user",
@@ -58,7 +61,8 @@ const mockFRAnswer_noPoints: FreeResponseAnswer = {
    taskId: "abc",
    questionBlockId: "xyz",
    pointsAwarded: 0,
-   answer: "I like BUBBLES!"
+   answer: "I like BUBBLES!",
+   graded: true
 };
 
 const mockFrQuestion: FrQuestion = {
@@ -82,22 +86,32 @@ const username = "BUBBLES!";
 const mockQuestionAndAnswers: QuestionAndAnswer[] = [
    {
       question: JSON.parse(JSON.stringify(mockMcQuestion)),
-      answer: { pointsAwarded: 2, answer: "3", questionId: "MC_QUESTION#456" }
+      answer: { pointsAwarded: 2, answer: "3", questionId: "MC_QUESTION#456", graded: true }
    },
    {
       question: JSON.parse(JSON.stringify(mockFrQuestion)),
-      answer: { pointsAwarded: 3, answer: "I like BUBBLES!", questionId: "FR_QUESTION#123" }
+      answer: {
+         pointsAwarded: 3,
+         answer: "I like BUBBLES!",
+         questionId: "FR_QUESTION#123",
+         graded: true
+      }
    }
 ];
 
 const mockQuestionAndAnswers_noPoints: QuestionAndAnswer[] = [
    {
       question: JSON.parse(JSON.stringify(mockMcQuestion)),
-      answer: { pointsAwarded: 0, answer: "3", questionId: "MC_QUESTION#456" }
+      answer: { pointsAwarded: 0, answer: "3", questionId: "MC_QUESTION#456", graded: true }
    },
    {
       question: JSON.parse(JSON.stringify(mockFrQuestion)),
-      answer: { pointsAwarded: 0, answer: "I like BUBBLES!", questionId: "FR_QUESTION#123" }
+      answer: {
+         pointsAwarded: 0,
+         answer: "I like BUBBLES!",
+         questionId: "FR_QUESTION#123",
+         graded: true
+      }
    }
 ];
 
@@ -105,16 +119,14 @@ const mockTaskSubmissionResult: TaskSubmissionResult = {
    graded: false,
    pointsAwarded: 5,
    pointsPossible: 6,
-   questionAndAnswers: mockQuestionAndAnswers,
-   taskId: "TASK#123"
+   taskId: "TASK#123",
 };
 
 const mockTaskSubmissionResult_noPoints: TaskSubmissionResult = {
-   graded: false,
+   graded: true,
    pointsAwarded: 0,
    pointsPossible: 6,
-   questionAndAnswers: mockQuestionAndAnswers_noPoints,
-   taskId: "TASK#123"
+   taskId: "TASK#123",
 };
 
 const mockTaskSubmissionResultItem: TaskSubmissionResultItem = {
@@ -125,7 +137,7 @@ const mockTaskSubmissionResultItem: TaskSubmissionResultItem = {
    pointsPossible: 6,
    course: "TestCourse",
    missionId: "MISSION#123",
-   questionAndAnswers: JSON.parse(JSON.stringify(mockQuestionAndAnswers))
+   username: "BUBBLES!"
 };
 
 const mockTaskSubmissionResultItem_noPoints: TaskSubmissionResultItem = {
@@ -136,20 +148,25 @@ const mockTaskSubmissionResultItem_noPoints: TaskSubmissionResultItem = {
    pointsPossible: 6,
    course: "TestCourse",
    missionId: "MISSION#123",
-   questionAndAnswers: JSON.parse(JSON.stringify(mockQuestionAndAnswers_noPoints))
+   username: "BUBBLES!"
 };
 
 describe("converting TaskSubmission types", () => {
    it("will convert from a TaskSubmissionResult to a TaskSubmissionResultItem", async () => {
-      expect(taskSubResultToDBItem("TestCourse", "MISSION#123", mockTaskSubmissionResult, username)).toEqual(
-         mockTaskSubmissionResultItem
-      );
+      expect(
+         taskSubResultToDBItem("TestCourse", "MISSION#123", mockTaskSubmissionResult, username)
+      ).toEqual(mockTaskSubmissionResultItem);
    });
 
    it("will convert from a TaskSubmissionResult to a TaskSubmissionResultItem with a 0 point task", async () => {
-      expect(taskSubResultToDBItem("TestCourse", "MISSION#123", mockTaskSubmissionResult_noPoints, username)).toEqual(
-         mockTaskSubmissionResultItem_noPoints
-      );
+      expect(
+         taskSubResultToDBItem(
+            "TestCourse",
+            "MISSION#123",
+            mockTaskSubmissionResult_noPoints,
+            username
+         )
+      ).toEqual(mockTaskSubmissionResultItem_noPoints);
    });
 
    it("will convert from a TaskSubmissionResultItem to a TaskSubmissionResult", async () => {
@@ -167,9 +184,9 @@ describe("converting TaskSubmission types", () => {
          taskId: "456",
          course: "Mockery",
          mastery: "NEARLY_MASTERED" as Mastery
-      }
+      };
 
-      expect(createMasteryItem("user", "Mockery", "123", "456")).toEqual(expResult)
+      expect(createMasteryItem("user", "Mockery", "123", "456")).toEqual(expResult);
    });
 });
 
@@ -220,7 +237,8 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
          SK: "MC_QUESTION#a9bfcb78e7d",
          taskId: "c5110abd8c4",
          questionBlockId: "123",
-         pointsAwarded: 3
+         pointsAwarded: 3,
+         graded: true
       };
 
       const expectedOutput: MultipleChoiceAnswer = {
@@ -229,7 +247,8 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
          questionId: "MC_QUESTION#a9bfcb78e7d",
          answerId: 2,
          questionBlockId: "123",
-         pointsAwarded: 3
+         pointsAwarded: 3,
+         graded: true
       };
 
       expect(dbItemToMultipleChoiceAnswer(input)).toEqual(expectedOutput);
@@ -242,7 +261,8 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
          SK: "FR_QUESTION#a9bfcb78e7d",
          taskId: "c5110abd8c4",
          questionBlockId: "123",
-         pointsAwarded: 0
+         pointsAwarded: 0,
+         graded: false
       };
 
       const expectedOutput: FreeResponseAnswer = {
@@ -251,7 +271,8 @@ describe("converting QuestionAnswerItem to a QuestionAnswer", () => {
          questionId: "FR_QUESTION#a9bfcb78e7d",
          answer: "Hello World!",
          questionBlockId: "123",
-         pointsAwarded: 0
+         pointsAwarded: 0,
+         graded: false
       };
 
       expect(dbItemToFreeResponseAnswer(input)).toEqual(expectedOutput);
@@ -275,7 +296,8 @@ describe("converting question Answer types", () => {
          taskId: "TASK_ID#12345",
          questionBlockId: "123",
          answerIndex: 2,
-         pointsAwarded: 3
+         pointsAwarded: 3,
+         graded: true
       };
 
       expect(multipleChoiceAnswerInputToDBItem(input, username, 3)).toEqual(expectedOutput);
@@ -297,7 +319,8 @@ describe("converting question Answer types", () => {
          taskId: "TASK_ID#12345",
          questionBlockId: "123",
          answer: "Hello, world!",
-         pointsAwarded: 0
+         pointsAwarded: 0,
+         graded: false
       };
 
       expect(freeResponseAnswerInputToDBItem(input, username)).toEqual(expectedOutput);
@@ -310,13 +333,15 @@ describe("converting question Answer types", () => {
          questionId: "ABC",
          answerId: 2,
          username: "fliptedEdRoXX",
-         pointsAwarded: 10
+         pointsAwarded: 10,
+         graded: true
       };
 
       const expectedOutput: AnswerOut = {
          questionId: "ABC",
          answer: "2",
-         pointsAwarded: 10
+         pointsAwarded: 10,
+         graded: true
       };
 
       expect(answerToAnswerOut(input)).toEqual(expectedOutput);
@@ -329,13 +354,15 @@ describe("converting question Answer types", () => {
          questionId: "ABC",
          answer: "Bubbles!",
          username: "fliptedEdRoXX",
-         pointsAwarded: 10
+         pointsAwarded: 10,
+         graded: true
       };
 
       const expectedOutput: AnswerOut = {
          questionId: "ABC",
          answer: "Bubbles!",
-         pointsAwarded: 10
+         pointsAwarded: 10,
+         graded: true
       };
 
       expect(answerToAnswerOut(input)).toEqual(expectedOutput);
@@ -347,7 +374,7 @@ describe("Creating a task submission result", () => {
       const questions: Question[] = [mockFrQuestion, mockMcQuestion];
       const answers: Answer[] = [mockMCAnswer, mockFRAnswer];
 
-      expect(createTaskSubmissionResult(6, "TASK#123", answers, questions)).toEqual(
+      expect(createTaskSubmissionResult(6, "TASK#123", answers, questions, false)).toEqual(
          mockTaskSubmissionResult
       );
    });
@@ -356,7 +383,7 @@ describe("Creating a task submission result", () => {
       const questions: Question[] = [mockFrQuestion, mockMcQuestion];
       const answers: Answer[] = [mockMCAnswer_noPoints, mockFRAnswer_noPoints];
 
-      expect(createTaskSubmissionResult(6, "TASK#123", answers, questions)).toEqual(
+      expect(createTaskSubmissionResult(6, "TASK#123", answers, questions, true)).toEqual(
          mockTaskSubmissionResult_noPoints
       );
    });
@@ -370,8 +397,8 @@ describe("Creating a question progress object", () => {
       const expectedOut: QuestionProgress = {
          taskId: "TASKID#123",
          answers: [
-            { answer: "3", questionId: "MC_QUESTION#456" },
-            { answer: "I like BUBBLES!", questionId: "FR_QUESTION#123" }
+            { answer: "3", questionId: "MC_QUESTION#456", graded: true },
+            { answer: "I like BUBBLES!", questionId: "FR_QUESTION#123", graded: true }
          ]
       };
 

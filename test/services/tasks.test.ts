@@ -201,7 +201,8 @@ describe("Verifying a task submission", () => {
             questionId: "questionId123",
             taskId: "0",
             questionBlockId: "5",
-            pointsAwarded: 3
+            pointsAwarded: 3,
+            graded: true
          }
       ];
       expect(taskQuestionsAllAnswered(sampleTask, questionAnswer)).toBeTruthy();

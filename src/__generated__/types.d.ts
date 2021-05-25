@@ -18,6 +18,23 @@ type Answer = {
   pointsAwarded?: Maybe<Scalars['Int']>;
   /** Either the id of the chosen answer id or the provided free response */
   answer?: Maybe<Scalars['String']>;
+  graded: Scalars['Boolean'];
+  teacherComment?: Maybe<Scalars['String']>;
+};
+
+type AnswerGrade = {
+  __typename?: 'AnswerGrade';
+  student: Scalars['String'];
+  questionId: Scalars['String'];
+  pointsAwarded: Scalars['Int'];
+  teacherComment?: Maybe<Scalars['String']>;
+};
+
+type AnswerGradeInput = {
+  student: Scalars['String'];
+  questionId: Scalars['String'];
+  pointsAwarded: Scalars['Int'];
+  teacherComment?: Maybe<Scalars['String']>;
 };
 
 type ClassMissionMastery = {
@@ -251,6 +268,8 @@ type Mutation = {
   addVideoBlock: Scalars['String'];
   deleteGoal: Scalars['String'];
   editOrCreateGoal: Scalars['String'];
+  gradeAnswer: AnswerGrade;
+  gradeTaskSubmission: TaskSubmissionGrade;
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress: Scalars['Boolean'];
   /** Saves a students answer to a multiple choice question quiz block */
@@ -363,23 +382,33 @@ type MutationEditOrCreateGoalArgs = {
 };
 
 
+type MutationGradeAnswerArgs = {
+  grade: AnswerGradeInput;
+};
+
+
+type MutationGradeTaskSubmissionArgs = {
+  grade: TaskSubmissionGradeInput;
+};
+
+
 type MutationSaveFreeResponseProgressArgs = {
-  frBlockInput?: Maybe<FreeResponseAnswerInput>;
+  frBlockInput: FreeResponseAnswerInput;
 };
 
 
 type MutationSaveMultipleChoiceProgressArgs = {
-  mcBlockInput?: Maybe<MultipleChoiceAnswerInput>;
+  mcBlockInput: MultipleChoiceAnswerInput;
 };
 
 
 type MutationSubmitTaskArgs = {
-  taskId?: Maybe<Scalars['String']>;
+  taskId: Scalars['String'];
 };
 
 
 type MutationSubmitTaskProgressArgs = {
-  taskProgress?: Maybe<TaskProgressInput>;
+  taskProgress: TaskProgressInput;
 };
 
 
@@ -594,17 +623,18 @@ type QueryQuizblockArgs = {
 
 
 type QueryRetrieveQuestionProgressArgs = {
-  taskId?: Maybe<Scalars['String']>;
+  taskId: Scalars['String'];
 };
 
 
 type QueryRetrieveTaskProgressArgs = {
-  taskId?: Maybe<Scalars['String']>;
+  taskId: Scalars['String'];
 };
 
 
 type QueryRetrieveTaskSubmissionArgs = {
-  taskId?: Maybe<Scalars['String']>;
+  taskId: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
 };
 
 
@@ -915,6 +945,31 @@ type TaskStats = {
   name: Scalars['String'];
   /** Null indicates that this task does not yet have an associated submission */
   submission?: Maybe<TaskSubmissionResult>;
+};
+
+type TaskSubmissionGrade = {
+  __typename?: 'TaskSubmissionGrade';
+  taskId: Scalars['String'];
+  student: Scalars['String'];
+  teacherComment?: Maybe<Scalars['String']>;
+  /**
+   * This is only for the points that aren't directly associated to a question answer.
+   * If this exceeds the total point worth of the task minus the points accounted for by questions,
+   * it will give the student extra credit.
+   */
+  pointsAwarded: Scalars['Int'];
+};
+
+type TaskSubmissionGradeInput = {
+  taskId: Scalars['String'];
+  student: Scalars['String'];
+  teacherComment?: Maybe<Scalars['String']>;
+  /**
+   * This is only for the points that aren't directly associated to a question answer.
+   * If this exceeds the total point worth of the task minus the points accounted for by questions,
+   * it will give the student extra credit.
+   */
+  pointsAwarded: Scalars['Int'];
 };
 
 /**
