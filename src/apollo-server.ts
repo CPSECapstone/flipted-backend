@@ -33,7 +33,7 @@ const apolloServer = new ApolloServer({
          };
       }
       catch(err) {
-         return err
+         throw err
       }
    }
 });
