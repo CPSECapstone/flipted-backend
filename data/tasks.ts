@@ -1,10 +1,10 @@
 import * as flipted from "./fliptedCmd";
 import * as util from "./util";
 import { Arguments } from "yargs";
-import taskService from "../src/services/task";
+import taskService from "../src/task/task.service";
 import * as missionService from "../src/mission/missionService";
 import { TaskItem } from "../src/interfaces/task";
-import taskBusLogic from "../src/services/taskBusLogic";
+import taskBusLogic from "../src/task/taskBusLogic";
 
 async function getItem(args: Arguments<flipted.IAction>) {
    if (!args.id) {
@@ -14,7 +14,7 @@ async function getItem(args: Arguments<flipted.IAction>) {
    const taskId = args.id;
 
    try {
-      const task: Task = await taskService.getTaskById(taskId!);
+      const task: Task = await taskService.getTaskInfoById(taskId!);
       console.log(JSON.stringify(task, null, "  "));
    } catch (err) {
       console.log(err);
@@ -60,7 +60,7 @@ function generateTaskItems(records: any[]): TaskItem[] {
                description: record.Requirements
             }
          ],
-         pages: [],
+         pages: [{skippable: true}],
          course: record.Course,
          missionId: record.MissionId,
          missionIndex: parseInt(record.MissionIndex)

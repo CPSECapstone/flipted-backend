@@ -5,7 +5,7 @@ import * as missionMasteryService from "../src/missionMastery/missionMasteryServ
 import * as helper from "../src/missionMastery/missionMasteryHelper";
 import * as rosterService from "../src/roster/rosterService";
 import { StudentMissionMasteryItem } from "../src/missionMastery/missionMasteryInterface";
-import taskService from "../src/services/task";
+import taskService from "../src/task/task.service";
 
 async function listItems(args: Arguments<flipted.IAction>) {
    if (!args.missionId) {

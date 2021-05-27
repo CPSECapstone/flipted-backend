@@ -1,6 +1,6 @@
 import { RoleInternal } from "../interfaces/role";
 import { validateToken } from "../jws-verifer";
-import taskService from "../services/task";
+import taskService from "./task.service";
 import userService from "../services/user";
 
 async function addTask(_: any, args: MutationAddTaskArgs, context: FliptedContext, info: any) {
@@ -10,12 +10,6 @@ async function addTask(_: any, args: MutationAddTaskArgs, context: FliptedContex
    } else {
       return Error("User is not an instructor");
    }
-}
-
-async function getTaskById(_: any, args: any, context: FliptedContext, info: any) {
-   const task: Task = await taskService.getTaskById(args.taskId);
-
-   return task;
 }
 
 async function listTasksBySubmissionId(_: any, args: any, context: any, info: any) {
@@ -49,11 +43,16 @@ async function resolveTaskBlockType(taskBlock: any, context: any, info: any) {
 }
 
 const resolvers = {
+   Task: {
+      pages: (parent: any) => {
+         return taskService.getTaskPagesById(parent.id)
+      }
+   },
    TaskBlock: {
       __resolveType: resolveTaskBlockType
    },
    Query: {
-      task: getTaskById,
+      task: getTaskInfoById,
       tasks: listTasksBySubmissionId,
       taskInfo: getTaskInfoById,
       tasksByCourse: listTasksByCourse
