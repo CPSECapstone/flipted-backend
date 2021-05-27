@@ -89,7 +89,7 @@ async function importItems(args: Arguments<flipted.IAction>) {
       const targets: Target[] = await readTargetsFromDB(args.course);
       const tasks: Task[] = await readTasksFromDB(args.course);
       const objectives = generateObjectiveItems(records, targets, tasks);
-      const output = await objectiveService.importObjectives(objectives);
+      const output = await objectiveService.importItems(objectives);
       console.log(output);
    } catch (err) {
       console.log(err);
@@ -98,7 +98,7 @@ async function importItems(args: Arguments<flipted.IAction>) {
 
 async function deleteItems() {
    try {
-      const output = await objectiveService.deleteObjectives();
+      const output = await objectiveService.deleteItems();
       console.log(output);
    } catch (err) {
       console.log(err);

@@ -60,7 +60,7 @@ function generateTaskItems(records: any[]): TaskItem[] {
                description: record.Requirements
             }
          ],
-         pages: [],
+         pages: [{ skippable: true }],
          course: record.Course,
          missionId: record.MissionId,
          missionIndex: parseInt(record.MissionIndex)
