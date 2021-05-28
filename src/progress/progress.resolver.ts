@@ -63,7 +63,7 @@ async function getTaskObjectiveProgress(
          ? args.username
          : context.username;
 
-   const items = await service.listUserMasteryItemsByTask(args.taskId, user);
+   const items = await service.listUserMasteryItemsByTask(user, args.taskId);
 
    const objectiveIdsForTask: string[] = await service.listObjectivesIdsByTask(args.taskId);
 

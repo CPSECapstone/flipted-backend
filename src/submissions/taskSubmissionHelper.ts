@@ -160,11 +160,11 @@ export function dbItemToFreeResponseAnswer(input: FreeResponseAnswerItem): Answe
 export function dbItemsToQuestionAnswerItems(input: QuestionAnswerItem[]): Answer[] {
    return input.map(element => {
       if ("answerIndex" in element) {
-         return dbItemToMultipleChoiceAnswer(element);
+         return dbItemToMultipleChoiceAnswer(<MultipleChoiceAnswerItem>element);
       }
 
       if ("answer" in element) {
-         return dbItemToFreeResponseAnswer(element);
+         return dbItemToFreeResponseAnswer(<FreeResponseAnswerItem>element);
       }
       throw new Error("Type mismatch on question answer type");
    });
