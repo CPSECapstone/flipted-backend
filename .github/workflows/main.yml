@@ -28,7 +28,7 @@ jobs:
       run: sls config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     - name: Create env file
       run: | # cp sample.env.yml env.yml
-        cat > .env.production << EOF
+        cat > .env.development << EOF
         PROVIDER_STAGE=${{ secrets.PROVIDER_STAGE_PRODUCTION }}
         DATABASE_STAGE=${{ secrets.DATABASE_STAGE }}
         AUTHORIZOR_STAGE=${{ secrets.AUTHORIZOR_STAGE }}
