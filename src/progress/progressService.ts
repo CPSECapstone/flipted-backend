@@ -7,7 +7,7 @@ import usersData from "./users.json";
 import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
 import * as missionService from "../mission/missionService";
 import taskSubmissionService from "../submissions/taskSubmission";
-import taskService from "../services/task";
+import taskService from "../task/task.service";
 import { generateMissionProgress, generateTargetProgress } from "./progressHelper";
 import { listTargetsByCourse } from "../target/targetService";
 import { listObjectiveItemsByCourse } from "../objective/objectiveService";
