@@ -1,7 +1,7 @@
 import { Arguments } from "yargs";
 import * as flipted from "./fliptedCmd";
 import * as util from "./util";
-import taskService from "../src/services/task";
+import taskService from "../src/task/task.service";
 import * as taskblockService from "../src/taskblock/taskblockService";
 import * as helper from "../src/taskblock/taskblockHelper";
 import { TaskBlockItem } from "../src/taskblock/taskblockInterface";

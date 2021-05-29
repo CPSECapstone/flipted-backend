@@ -6,7 +6,7 @@ import {
    isValidMultipleChoiceAnswer,
    quizBlockContainsQuestionIdWithPrefix
 } from "../services/questionHelper";
-import taskService, { getTask } from "../services/task";
+import taskService from "../task/task.service";
 import taskSubmissionService from "./taskSubmission";
 import {
    areTaskProgressIdsValid,
@@ -89,11 +89,12 @@ async function submitFreeResponseQuestion(_: any, args: any, context: FliptedCon
    return true;
 }
 
-async function submitTaskRubricProgress(_: any, args: any, context: FliptedContext, info: any) {
+async function submitTaskRubricProgress(_: any, args: MutationSubmitTaskProgressArgs, context: FliptedContext, info: any) {
    const taskProgInput: TaskProgressInput = args.taskProgress;
 
    // verify that the list of completed requirement ids exist in the task
-   const task: Task = await taskService.getTaskById(taskProgInput.taskId);
+   const task: Task = await taskService.getTaskInfoById(taskProgInput.taskId);
+   console.log(task)
    if (areTaskProgressIdsValid(task, taskProgInput)) {
       const taskItem = taskProgressInputToDBItem(taskProgInput, context.username);
       taskSubmissionService.submitTaskProgress(taskItem);
@@ -106,7 +107,7 @@ async function submitTaskRubricProgress(_: any, args: any, context: FliptedConte
 async function submitTask(_: any, args: any, context: FliptedContext, info: any) {
    const username: string = context.username;
    const taskId: string = args.taskId;
-   const task: Task = await taskService.getTaskById(taskId);
+   const task: Task = await taskService.getFullTaskById(taskId);
 
    // Get all submitted answers to the questions in this task by the user from the db
    const questionAnswers: Answer[] = await taskSubmissionService.getQuizProgressForTask(
@@ -114,16 +115,17 @@ async function submitTask(_: any, args: any, context: FliptedContext, info: any)
       username
    );
 
-   // Get the rubric progress of the student fromt the db
-   const taskProgress: TaskProgress = await taskSubmissionService.getTaskRubricProgress(
-      taskId,
-      username
-   );
+   if ( task.requirements.length > 0) {
+      const taskProgress: TaskProgress = await taskSubmissionService.getTaskRubricProgress(
+         taskId,
+         username
+      );
 
-   if (!taskRubricRequirementsComplete(task, taskProgress)) {
-      throw new Error("Task is ineligible for submission. Not all rubric requirements checked.");
+      if (!taskRubricRequirementsComplete(task, taskProgress)) {
+         throw new Error("Task is ineligible for submission. Not all rubric requirements checked.");
+      }
    }
-
+ 
    if (!taskQuestionsAllAnswered(task, questionAnswers)) {
       throw new Error("Task is ineligible for submission. Not all quiz questions answered.");
    }

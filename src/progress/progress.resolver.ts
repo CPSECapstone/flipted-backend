@@ -2,10 +2,10 @@ import { validateToken } from "../jws-verifer";
 import userService from "../services/user";
 import * as service from "./progressService";
 import { RoleInternal } from "../interfaces/role";
-import { getTask } from "../services/task";
 import { getObjective } from "../objective/objectiveService";
 import { MasteryItem } from "./progressInterface";
 import { dbItemToMastery } from "./progressHelper";
+import taskService from "../task/task.service";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
    return service.addProgress(args.progress);
@@ -30,7 +30,9 @@ async function getAllMissionProgress(
    info: any
 ): Promise<MissionProgress[]> {
    const user =
-      context.userRole == RoleInternal.Instructor && context.username ? context.username : context.username;
+      context.userRole == RoleInternal.Instructor && context.username
+         ? context.username
+         : context.username;
 
    return await service.getAllMissionProgressForUser(args.courseId, user);
 }
@@ -42,9 +44,11 @@ async function getAllTargetProgress(
    info: any
 ) {
    const user =
-      context.userRole == RoleInternal.Instructor && args.username ? args.username : context.username;
-   console.log(user)
-   console.log(context.userRole)
+      context.userRole == RoleInternal.Instructor && args.username
+         ? args.username
+         : context.username;
+   console.log(user);
+   console.log(context.userRole);
    return await service.getAllTargetProgressForUser(args.courseId, user);
 }
 
@@ -55,11 +59,13 @@ async function getTaskObjectiveProgress(
    info: any
 ) {
    const user =
-      context.userRole == RoleInternal.Instructor && args.username ? args.username : context.username;
+      context.userRole == RoleInternal.Instructor && args.username
+         ? args.username
+         : context.username;
 
-   const items = await service.listUserMasteryItemsByTask(args.taskId, user);
+   const items = await service.listUserMasteryItemsByTask(user, args.taskId);
 
-   const objectiveIdsForTask: string[] = await service.listObjectivesIdsByTask(args.taskId)
+   const objectiveIdsForTask: string[] = await service.listObjectivesIdsByTask(args.taskId);
 
    return objectiveIdsForTask.map(objectiveId => {
       const masteryItem: MasteryItem | undefined = items.find(item => {
@@ -76,7 +82,7 @@ async function getTaskObjectiveProgress(
          objectiveId: objectiveId,
          taskId: args.taskId,
          mastery: "NOT_GRADED" as Mastery
-      }; 
+      };
    });
 }
 
@@ -93,7 +99,9 @@ const resolvers = {
       addProgress
    },
    TaskObjectiveProgress: {
-      task: getTask,
+      task: (parent: any) => {
+         return taskService.getTaskInfoById(parent.taskId);
+      },
       objective: getObjective
    },
    Mastery: {

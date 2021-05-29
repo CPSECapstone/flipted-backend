@@ -1,5 +1,5 @@
 import dynamodbMock from "../__mocks__/dynamodb";
-import taskBusLogic from "../../src/services/taskBusLogic";
+import taskBusLogic from "../../src/task/taskBusLogic";
 import { Answer } from "../../src/submissions/taskSubmissionInterface";
 
 import {

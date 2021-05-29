@@ -1,7 +1,7 @@
 import { uid } from "uid";
 import { MissionItem, SubMissionItem } from "./missionInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import taskService from "../services/task";
+import taskService from "../task/task.service";
 
 /*
    item - the representation in database
@@ -18,7 +18,7 @@ export async function dbItemsToMissionContent(items?: any[]): Promise<MissionCon
       const [type, id] = item.PK.split("#");
 
       if (type == "TASK") {
-         promises.push(taskService.getTaskById(id));
+         promises.push(taskService.getTaskInfoById(id));
       } else if (type == "SUBMISSION") {
          missionContent.push(dbItemToSubMission(<SubMissionItem>item));
       }
