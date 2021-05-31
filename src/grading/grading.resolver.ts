@@ -11,7 +11,6 @@ async function gradeTaskSubmission(
 ) {
    if (context.userRole == RoleInternal.Instructor) {
       const attributes = await gradingService.updateTaskGrade(args.grade);
-      console.log(attributes);
       return {
          taskId: args.grade.taskId,
          student: args.grade.student,
@@ -22,10 +21,14 @@ async function gradeTaskSubmission(
    throw new ForbiddenError(`User ${context.username} is not an authorized instructor.`);
 }
 
-async function gradeAnswer(_: any, args: MutationGradeAnswerArgs, context: FliptedContext, info: any) {
+async function gradeAnswer(
+   _: any,
+   args: MutationGradeAnswerArgs,
+   context: FliptedContext,
+   info: any
+) {
    if (context.userRole == RoleInternal.Instructor) {
       const attributes = await gradingService.updateAnswerGrade(args.grade);
-      console.log(attributes);
       return {
          questionId: args.grade.questionId,
          student: args.grade.student,
@@ -36,10 +39,25 @@ async function gradeAnswer(_: any, args: MutationGradeAnswerArgs, context: Flipt
    throw new ForbiddenError(`User ${context.username} is not an authorized instructor.`);
 }
 
+async function gradeObjectiveTaskMastery(
+   _: any,
+   args: MutationGradeObjectiveTaskMasteryArgs,
+   context: FliptedContext,
+   info: any
+) {
+   if (context.userRole == RoleInternal.Instructor) {
+      await gradingService.updateMastery(args.grade);
+      return args.grade as ObjectiveTaskMastery
+   }
+
+   throw new ForbiddenError(`User ${context.username} is not an authorized instructor.`);
+}
+
 const resolvers: Resolvers = {
    Mutation: {
       gradeTaskSubmission: gradeTaskSubmission,
-      gradeAnswer: gradeAnswer
+      gradeAnswer: gradeAnswer,
+      gradeObjectiveTaskMastery: gradeObjectiveTaskMastery
    }
 };
 

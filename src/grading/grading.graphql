@@ -1,3 +1,17 @@
+input ObjectiveTaskMasteryInput {
+   student: String!
+   taskId: String!,
+   objectiveId: String!,
+   mastery: Mastery!
+}
+
+type ObjectiveTaskMastery {
+   student: String!
+   taskId: String!,
+   objectiveId: String!,
+   mastery: Mastery!
+}
+
 input TaskSubmissionGradeInput {
    taskId: String!
    student: String!
@@ -41,4 +55,5 @@ type AnswerGrade {
 type Mutation {
    gradeTaskSubmission(grade: TaskSubmissionGradeInput!) : TaskSubmissionGrade!
    gradeAnswer(grade: AnswerGradeInput!) : AnswerGrade!
+   gradeObjectiveTaskMastery(grade: ObjectiveTaskMasteryInput!) : ObjectiveTaskMastery!
 }

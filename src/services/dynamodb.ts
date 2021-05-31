@@ -395,7 +395,7 @@ declare global {
 
    export interface DeleteParam {
       tableName: string;
-      key: { [key: string]: any };
+      key: { [key: string]: any } | object;
    }
 
    export interface DBItem {

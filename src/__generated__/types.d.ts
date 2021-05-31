@@ -269,6 +269,7 @@ type Mutation = {
   deleteGoal: Scalars['String'];
   editOrCreateGoal: Scalars['String'];
   gradeAnswer: AnswerGrade;
+  gradeObjectiveTaskMastery: ObjectiveTaskMastery;
   gradeTaskSubmission: TaskSubmissionGrade;
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress: Scalars['Boolean'];
@@ -289,6 +290,7 @@ type Mutation = {
    */
   submitTaskProgress: Scalars['String'];
   updateUser?: Maybe<UpdateUserOutput>;
+  wipeAllProgress: Scalars['String'];
 };
 
 
@@ -387,6 +389,11 @@ type MutationGradeAnswerArgs = {
 };
 
 
+type MutationGradeObjectiveTaskMasteryArgs = {
+  grade: ObjectiveTaskMasteryInput;
+};
+
+
 type MutationGradeTaskSubmissionArgs = {
   grade: TaskSubmissionGradeInput;
 };
@@ -414,6 +421,11 @@ type MutationSubmitTaskProgressArgs = {
 
 type MutationUpdateUserArgs = {
   updateUserInput?: Maybe<UpdateUserInput>;
+};
+
+
+type MutationWipeAllProgressArgs = {
+  username: Scalars['String'];
 };
 
 type Objective = {
@@ -448,6 +460,21 @@ type ObjectiveProgress = {
   objectiveId: Scalars['String'];
   objectiveName: Scalars['String'];
   tasks: Array<TaskObjectiveProgress>;
+};
+
+type ObjectiveTaskMastery = {
+  __typename?: 'ObjectiveTaskMastery';
+  student: Scalars['String'];
+  taskId: Scalars['String'];
+  objectiveId: Scalars['String'];
+  mastery: Mastery;
+};
+
+type ObjectiveTaskMasteryInput = {
+  student: Scalars['String'];
+  taskId: Scalars['String'];
+  objectiveId: Scalars['String'];
+  mastery: Mastery;
 };
 
 type Page = {
