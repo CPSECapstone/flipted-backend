@@ -1,5 +1,5 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { TASK_SUBMISSIONS_TABLE } from "../environment";
+import { MASTERY_TABLE, TASK_SUBMISSIONS_TABLE } from "../environment";
 import { MasteryPK, MasterySK } from "../progress/progressInterface";
 import dynamodb from "../services/dynamodb";
 
@@ -10,7 +10,7 @@ export async function updateMastery(input: ObjectiveTaskMasteryInput) {
    };
 
    const params: UpdateParams = {
-      tableName: TASK_SUBMISSIONS_TABLE,
+      tableName: MASTERY_TABLE,
       key: key,
       conditionExpression: "attribute_exists(SK)",
       updateExpression:
