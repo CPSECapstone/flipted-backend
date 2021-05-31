@@ -50,11 +50,17 @@ async function put(params: PutParams): Promise<string> {
 async function putComposite(params: PutCompositeParams): Promise<PutItemCommandOutput> {
    const command: PutItemCommand = new PutItemCommand({
       TableName: params.tableName,
+      ConditionExpression: params.conditionalExpression,
       Item: marshall(params.item, marshallOpts),
       ReturnValues: "ALL_OLD"
    });
 
-   return client.send(command);
+   try {
+      const output: GetItemCommandOutput = await client.send(command);
+      return output;
+   } catch (err) {
+      return err;
+   }
 }
 
 async function get(params: GetParams): Promise<GetItemCommandOutput> {
@@ -334,6 +340,7 @@ declare global {
    }
 
    export interface PutCompositeParams {
+      conditionalExpression?: string;
       tableName: string;
       item: object;
    }
