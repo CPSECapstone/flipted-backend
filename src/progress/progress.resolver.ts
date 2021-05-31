@@ -2,11 +2,11 @@ import { validateToken } from "../jws-verifer";
 import userService from "../services/user";
 import * as service from "./progressService";
 import { RoleInternal } from "../interfaces/role";
-import { getTask } from "../services/task";
 import { getObjective } from "../objective/objectiveService";
 import { MasteryItem } from "./progressInterface";
 import { dbItemToMastery } from "./progressHelper";
 import { ForbiddenError } from "apollo-server-lambda";
+import taskService from "../task/task.service";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
    return service.addProgress(args.progress);
@@ -64,7 +64,7 @@ async function getTaskObjectiveProgress(
          ? args.username
          : context.username;
 
-   const items = await service.listUserMasteryItemsByTask(args.taskId, user);
+   const items = await service.listUserMasteryItemsByTask(user, args.taskId);
 
    const objectiveIdsForTask: string[] = await service.listObjectivesIdsByTask(args.taskId);
 
@@ -110,7 +110,9 @@ const resolvers = {
       wipeAllProgress
    },
    TaskObjectiveProgress: {
-      task: getTask,
+      task: (parent: any) => {
+         return taskService.getTaskInfoById(parent.taskId);
+      },
       objective: getObjective
    },
    Mastery: {

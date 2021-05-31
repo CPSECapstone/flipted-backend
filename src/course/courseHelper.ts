@@ -13,7 +13,7 @@ import { TaskPrefix } from "../interfaces/task";
 import * as missionLogic from "../mission/missionLogic";
 import { dbItemToObjective } from "../objective/objectiveHelper";
 import { dbItemToTarget } from "../target/targetHelper";
-import { dbItemToTask } from "../services/taskBusLogic";
+import { dbItemToTask } from "../task/taskBusLogic";
 
 export function courseInputToDBItem(input: CourseInput): CourseInfoItem {
    const courseId = uid();

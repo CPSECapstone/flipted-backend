@@ -10,7 +10,7 @@ import {
    StudentMissionMasteryPKPrefix,
    StudentMissionMasterySKPrefix
 } from "./missionMasteryInterface";
-import taskService from "../services/task";
+import taskService from "../task/task.service";
 
 export async function addMissionMastery(input: StudentMissionMasteryInput): Promise<string> {
    const courseItem = helper.missionMasteryInputToDBItem(input);

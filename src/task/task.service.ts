@@ -1,12 +1,12 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import taskBusLogic, {
-   dbItemsToTaskItem,
+   dbItemsToTaskItem as dbItemsToTaskPages,
    dbItemToTask,
    batchResponseToTasks
 } from "./taskBusLogic";
 import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import { TaskItem, TaskKey, TaskPrefix } from "../interfaces/task";
-import dynamodb from "./dynamodb";
+import dynamodb from "../services/dynamodb";
 
 async function add(input: TaskInput) {
    const toSubmit: TaskItem = taskBusLogic.convertTaskInputToTaskItem(input);
@@ -24,7 +24,12 @@ async function add(input: TaskInput) {
    }
 }
 
-async function getTaskById(taskId: string): Promise<Task> {
+/**
+ * 
+ * @param taskId The id for the task pages to retrieve
+ * @returns Each page along with its blcok data
+ */
+async function getTaskPagesById(taskId: string): Promise<Page[]> {
    const params: QueryParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       keyConditionExpression: "PK = :pkVal",
@@ -35,19 +40,15 @@ async function getTaskById(taskId: string): Promise<Task> {
 
    try {
       const output = await dynamodb.query(params);
-      const task = await dbItemsToTaskItem(output.Items);
-      if (!task) {
+      const taskPages = await dbItemsToTaskPages(output.Items);
+      if (!taskPages) {
          throw new Error(`Task not found with id=${taskId}`);
       }
 
-      return task;
+      return taskPages;
    } catch (err) {
       return err;
    }
-}
-
-export async function getTask(parent: any): Promise<Task> {
-   return taskService.getTaskInfoById(parent.taskId);
 }
 
 async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
@@ -68,6 +69,16 @@ async function listBySubMissionId(subMissionId: string): Promise<Task[]> {
    }
 
    return [];
+}
+
+async function getFullTaskById(taskId: string) : Promise<Task> {
+   const taskData = getTaskInfoById(taskId)
+   const pages = getTaskPagesById(taskId)
+
+   return {
+      ... await taskData,
+      pages: await pages
+   }
 }
 
 // simplified version of task, not including pages nor blocks
@@ -210,14 +221,15 @@ async function deleteTasks(): Promise<number> {
 
 const taskService = {
    add,
-   getTaskById,
+   getTaskPagesById,
    listBySubMissionId,
    getTaskInfoById,
    listTasksByCourse,
    listTasksByMissionId,
    listTasksByIds,
    importTasks,
-   deleteTasks
+   deleteTasks,
+   getFullTaskById
 };
 
 export default taskService;
