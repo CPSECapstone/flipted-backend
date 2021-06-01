@@ -1,6 +1,35 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { TASK_SUBMISSIONS_TABLE } from "../environment";
+import { MASTERY_TABLE, TASK_SUBMISSIONS_TABLE } from "../environment";
+import { MasteryPK, MasterySK } from "../progress/progressInterface";
 import dynamodb from "../services/dynamodb";
+
+export async function updateMastery(input: ObjectiveTaskMasteryInput) {
+   const key: CompositeDBItem = {
+      PK: MasteryPK(input.student),
+      SK: MasterySK(input.objectiveId, input.taskId)
+   };
+
+   const params: UpdateParams = {
+      tableName: MASTERY_TABLE,
+      key: key,
+      conditionExpression: "attribute_exists(SK)",
+      updateExpression:
+         "set mastery = :mastery",
+      expressionAttributeValues: {
+         ":mastery": input.mastery,
+      }
+   };
+   try {
+      await dynamodb.update(params);
+   } catch (err) {
+      if (err.name === "ConditionalCheckFailedException") {
+         throw new Error(
+            `Objective: ${input.objectiveId} Task: ${input.taskId} Mastery for user ${input.student} could not be found`
+         );
+      }
+      throw err;
+   }
+}
 
 export async function updateTaskGrade(input: TaskSubmissionGradeInput) {
    const key: CompositeDBItem = {

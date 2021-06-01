@@ -81,4 +81,5 @@ type Query {
 
 type Mutation {
    addProgress(progress: ProgressInput!): String!
+   wipeAllProgress(username: String!) : String!
 }

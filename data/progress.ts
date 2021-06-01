@@ -4,7 +4,7 @@ import * as flipted from "./fliptedCmd";
 import * as progressService from "../src/progress/progressService";
 import * as rosterService from "../src/roster/rosterService";
 import * as objectiveService from "../src/objective/objectiveService";
-import taskService from "../src/services/task";
+import taskService from "../src/task/task.service";
 import { MasteryItem } from "../src/progress/progressInterface";
 import { ObjectiveItem } from "../src/objective/objectiveInterface";
 import { createMasteryItem } from "../src/submissions/taskSubmissionHelper";
