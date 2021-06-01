@@ -5,7 +5,7 @@ import customType from "./custom.graphql";
 import userType from "./user.graphql";
 import missionType from "../mission/mission.graphql";
 import courseType from "../course/course.graphql";
-import taskType from "./task.graphql";
+import taskType from "../task/task.graphql";
 import quizTaskSubmission from "../submissions/taskSubmission.graphql";
 import questionType from "./question.graphql";
 import taskblockType from "../taskblock/taskblock.graphql";
@@ -20,7 +20,7 @@ import gradingType from "../grading/grading.graphql"
 
 import userResolvers from "./user.resolver";
 import courseResolvers from "../course/course.resolver";
-import taskResolvers from "./task.resolver";
+import taskResolvers from "../task/task.resolver";
 import questionResolvers from "./question.resolver";
 import quizTaskSubmissionResolvers from "../submissions/taskSubmission.resolver";
 import missionResolvers from "../mission/mission.resolver";

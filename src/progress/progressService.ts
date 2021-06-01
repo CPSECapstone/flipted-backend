@@ -1,19 +1,51 @@
-import { COURSE_CONTENT_TABLE_NAME, MASTERY_TABLE, USER_PROGRESS_TABLE_NAME } from "../environment";
+import { COURSE_CONTENT_TABLE_NAME, GOALS_TABLE_NAME, MASTERY_TABLE, TASK_SUBMISSIONS_TABLE, USER_PROGRESS_TABLE_NAME } from "../environment";
 import dynamodb from "../services/dynamodb";
 import * as helper from "./progressHelper";
-import { MasteryItem, ProgressPK } from "./progressInterface";
+import { MasteryItem, MasteryPK, ProgressPK } from "./progressInterface";
 import * as courseService from "../course/courseService";
 import usersData from "./users.json";
 import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface";
 import * as missionService from "../mission/missionService";
 import taskSubmissionService from "../submissions/taskSubmission";
-import taskService from "../services/task";
+import taskService from "../task/task.service";
 import { generateMissionProgress, generateTargetProgress } from "./progressHelper";
 import { listTargetsByCourse } from "../target/targetService";
 import { listObjectiveItemsByCourse } from "../objective/objectiveService";
 import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "../objective/objectiveInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TaskKey } from "../interfaces/task";
+
+export async function wipeAllProgressForUser(username: string) {
+   const masteryScanParams: ScanParams = {
+      tableName: MASTERY_TABLE,
+      filterExpression: "PK = :pkVal",
+      expressionAttributeValues: {
+         ":pkVal": MasteryPK(username)
+      }
+   };
+
+   const taskSubmissionsScanParams: ScanParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      filterExpression: "contains(PK, :username)",
+      expressionAttributeValues: {
+         ":username": username
+      }
+   }
+
+   const goalsScanParams: ScanParams = {
+      tableName: GOALS_TABLE_NAME,
+      filterExpression: "contains(PK, :username)",
+      expressionAttributeValues: {
+         ":username": username
+      }
+   }
+
+   const deleteMastery = dynamodb.batchDelete(masteryScanParams);
+   const deleteTaskSubmissions = dynamodb.batchDelete(taskSubmissionsScanParams)
+   const deleteGoals = dynamodb.batchDelete(goalsScanParams)
+
+   return await Promise.all([deleteMastery, deleteTaskSubmissions, deleteGoals])
+}
 
 export async function addProgress(input: ProgressInput): Promise<string> {
    const courseItem = helper.progressInputToDBItem(input);

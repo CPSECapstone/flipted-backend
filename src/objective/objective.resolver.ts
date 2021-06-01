@@ -1,4 +1,4 @@
-import taskService from "../services/task";
+import taskService from "../task/task.service";
 import * as service from "./objectiveService";
 
 async function addObjective(_: any, args: MutationAddObjectiveArgs) {

@@ -1,7 +1,7 @@
 import * as util from "./util";
 import { Arguments } from "yargs";
 import * as flipted from "./fliptedCmd";
-import taskService from "../src/services/task";
+import taskService from "../src/task/task.service";
 import * as objectiveService from "../src/objective/objectiveService";
 import * as targetService from "../src/target/targetService";
 import * as helper from "../src/objective/objectiveHelper";

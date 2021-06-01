@@ -1,6 +1,6 @@
 import { uid } from "uid";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import * as questionService from "./question";
+import * as questionService from "../services/question";
 import { TaskItem, RubricRequirementItem } from "../interfaces/task";
 import { QuizBlockItem } from "../taskblock/taskblockInterface";
 
@@ -77,7 +77,7 @@ async function dbItemToQuizBlock(item: QuizBlockItem): Promise<QuizBlock> {
    aggregate task related items () into a single task
    TaskItem, TextBlockItem, ImageBlockItem, VideoBlockItem, QuizBlockItem
 */
-export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
+export async function dbItemsToTaskItem(items?: any[]): Promise<Page[]> {
    let task: Task | undefined;
    let blocks: TaskBlock[] = [];
    let promises: Promise<QuizBlock>[] = []; // promises to get questions
@@ -121,26 +121,21 @@ export async function dbItemsToTaskItem(items?: any[]): Promise<Task> {
       };
    });
    blocks.forEach(quizblock => {
-      pages[quizblock.pageIndex].blocks.push(quizblock);
+      if(quizblock.pageIndex < pages.length) {
+         pages[quizblock.pageIndex].blocks.push(quizblock);
+      }
+      else {
+         console.log(`ERROR: Index Out Of Bounds: Quizblock PageIndex ${quizblock.pageIndex} > page length ${pages.length} in dbItemsToTaskItem`)
+      }
    });
 
    task.pages = pages;
 
-   return task;
+   return pages;
 }
 
 export function dbItemToTask(rawItem: any): Task {
-   const item = <TaskItem>unmarshall(rawItem);
-
-   return <Task>{
-      id: item.id,
-      name: item.name,
-      course: item.course,
-      instructions: item.instructions,
-      missionId: item.missionId,
-      missionIndex: item.missionIndex,
-      subMissionId: item.subMissionId
-   };
+   return <Task>unmarshall(rawItem); // TODO: make more explicit and write test
 }
 
 export function batchResponseToTasks(rawItems: any[]): Task[] {

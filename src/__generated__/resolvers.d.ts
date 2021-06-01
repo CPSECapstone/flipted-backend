@@ -116,6 +116,8 @@ export type ResolversTypes = ResolversObject<{
   ObjectiveInput: ObjectiveInput;
   ObjectiveMastery: ResolverTypeWrapper<ObjectiveMastery>;
   ObjectiveProgress: ResolverTypeWrapper<ObjectiveProgress>;
+  ObjectiveTaskMastery: ResolverTypeWrapper<ObjectiveTaskMastery>;
+  ObjectiveTaskMasteryInput: ObjectiveTaskMasteryInput;
   Page: ResolverTypeWrapper<Page>;
   PageInput: PageInput;
   Progress: ResolverTypeWrapper<Progress>;
@@ -203,6 +205,8 @@ export type ResolversParentTypes = ResolversObject<{
   ObjectiveInput: ObjectiveInput;
   ObjectiveMastery: ObjectiveMastery;
   ObjectiveProgress: ObjectiveProgress;
+  ObjectiveTaskMastery: ObjectiveTaskMastery;
+  ObjectiveTaskMasteryInput: ObjectiveTaskMasteryInput;
   Page: Page;
   PageInput: PageInput;
   Progress: Progress;
@@ -406,12 +410,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteGoal?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteGoalArgs, 'id'>>;
   editOrCreateGoal?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationEditOrCreateGoalArgs, 'goal'>>;
   gradeAnswer?: Resolver<ResolversTypes['AnswerGrade'], ParentType, ContextType, RequireFields<MutationGradeAnswerArgs, 'grade'>>;
+  gradeObjectiveTaskMastery?: Resolver<ResolversTypes['ObjectiveTaskMastery'], ParentType, ContextType, RequireFields<MutationGradeObjectiveTaskMasteryArgs, 'grade'>>;
   gradeTaskSubmission?: Resolver<ResolversTypes['TaskSubmissionGrade'], ParentType, ContextType, RequireFields<MutationGradeTaskSubmissionArgs, 'grade'>>;
   saveFreeResponseProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveFreeResponseProgressArgs, 'frBlockInput'>>;
   saveMultipleChoiceProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveMultipleChoiceProgressArgs, 'mcBlockInput'>>;
   submitTask?: Resolver<ResolversTypes['TaskSubmissionResult'], ParentType, ContextType, RequireFields<MutationSubmitTaskArgs, 'taskId'>>;
   submitTaskProgress?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSubmitTaskProgressArgs, 'taskProgress'>>;
   updateUser?: Resolver<Maybe<ResolversTypes['UpdateUserOutput']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, never>>;
+  wipeAllProgress?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationWipeAllProgressArgs, 'username'>>;
 }>;
 
 export type ObjectiveResolvers<ContextType = any, ParentType extends ResolversParentTypes['Objective'] = ResolversParentTypes['Objective']> = ResolversObject<{
@@ -436,6 +442,14 @@ export type ObjectiveProgressResolvers<ContextType = any, ParentType extends Res
   objectiveId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   objectiveName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tasks?: Resolver<Array<ResolversTypes['TaskObjectiveProgress']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ObjectiveTaskMasteryResolvers<ContextType = any, ParentType extends ResolversParentTypes['ObjectiveTaskMastery'] = ResolversParentTypes['ObjectiveTaskMastery']> = ResolversObject<{
+  student?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  taskId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  objectiveId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  mastery?: Resolver<ResolversTypes['Mastery'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -731,6 +745,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Objective?: ObjectiveResolvers<ContextType>;
   ObjectiveMastery?: ObjectiveMasteryResolvers<ContextType>;
   ObjectiveProgress?: ObjectiveProgressResolvers<ContextType>;
+  ObjectiveTaskMastery?: ObjectiveTaskMasteryResolvers<ContextType>;
   Page?: PageResolvers<ContextType>;
   Progress?: ProgressResolvers<ContextType>;
   ProgressOverview?: ProgressOverviewResolvers<ContextType>;

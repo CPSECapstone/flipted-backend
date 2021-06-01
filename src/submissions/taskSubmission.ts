@@ -196,12 +196,16 @@ async function generateMasteryItemsForTask(username: string, taskId: string, cou
 async function putMasteryItem(item: MasteryItem) {
    const params: PutCompositeParams = {
       tableName: MASTERY_TABLE,
+      conditionalExpression: "attribute_not_exists(PK) AND attribute_not_exists(SK)",
       item: item
    };
    try {
       return dynamodb.putComposite(params);
    } catch (err) {
-      return err;
+      if (err.name === "ConditionalCheckFailedException") {
+        return 
+      }
+      throw err;
    }
 }
 
