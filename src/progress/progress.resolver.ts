@@ -5,6 +5,7 @@ import { RoleInternal } from "../interfaces/role";
 import { getObjective } from "../objective/objectiveService";
 import { MasteryItem } from "./progressInterface";
 import { dbItemToMastery } from "./progressHelper";
+import { ForbiddenError } from "apollo-server-lambda";
 import taskService from "../task/task.service";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
@@ -86,6 +87,15 @@ async function getTaskObjectiveProgress(
    });
 }
 
+async function wipeAllProgress(_: any, args: MutationWipeAllProgressArgs, context: FliptedContext) {
+   if (context.userRole != RoleInternal.Instructor) {
+      throw new ForbiddenError(`User ${context.username} is not an authorized instructor.`);
+   }
+
+   await service.wipeAllProgressForUser(args.username)
+   return "success"
+}
+
 const resolvers = {
    Query: {
       progressByCourse,
@@ -96,7 +106,8 @@ const resolvers = {
       getTaskObjectiveProgress
    },
    Mutation: {
-      addProgress
+      addProgress,
+      wipeAllProgress
    },
    TaskObjectiveProgress: {
       task: (parent: any) => {
