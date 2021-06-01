@@ -94,7 +94,7 @@ export async function listObjectiveItemsByTarget(targetId: string): Promise<Obje
    return dynamodb.queryList<ObjectiveItem>(params);
 }
 
-export async function importObjectives(objectiveItems: ObjectiveItem[]): Promise<number> {
+export async function importItems(objectiveItems: ObjectiveItem[]): Promise<number> {
    const objItems = objectiveItems;
    objItems.forEach(item => {
       item.source = "imported";
@@ -128,7 +128,7 @@ export async function importObjectives(objectiveItems: ObjectiveItem[]): Promise
    }
 }
 
-export async function deleteObjectives(): Promise<number> {
+export async function deleteItems(): Promise<number> {
    const params: ScanParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       filterExpression: "begins_with(PK, :pkPrefix)",

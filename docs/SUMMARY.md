@@ -20,7 +20,7 @@
 
 ## API Documentation
 
-  * [Class Mission Mastery](missionMastery.md)
+  * [Class Mission Mastery](apis/missionMastery.md)
   * [Class Target Mastery](apis/targetMastery.md)
   * [Courses](apis/courses.md)
   * [Goals](apis/goals.md)

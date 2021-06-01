@@ -127,7 +127,7 @@ async function importItems(args: Arguments<flipted.IAction>) {
       const blocks: TaskBlockItem[] = generateTaskBlockItems(records, tasks);
       console.table(blocks, ["PK", "title", "pageIndex", "blockIndex"]);
 
-      const output = await taskblockService.importBlocks(blocks);
+      const output = await taskblockService.importItems(blocks);
       console.log(output);
    } catch (err) {
       console.log(err);
@@ -137,7 +137,7 @@ async function importItems(args: Arguments<flipted.IAction>) {
 
 async function deleteItems() {
    try {
-      const output = await taskblockService.deleteTaskBlocks();
+      const output = await taskblockService.deleteItems();
       console.log(output);
    } catch (err) {
       console.log(err);

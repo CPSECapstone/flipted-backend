@@ -98,7 +98,7 @@ export async function getQuizBlockById(taskId: string, blockId: string): Promise
    }
 }
 
-export async function importBlocks(blockItems: TaskBlockItem[]): Promise<number> {
+export async function importItems(blockItems: TaskBlockItem[]): Promise<number> {
    blockItems.forEach(blockItem => {
       blockItem.source = "imported";
    });
@@ -115,12 +115,13 @@ export async function importBlocks(blockItems: TaskBlockItem[]): Promise<number>
    }
 }
 
-export async function deleteTaskBlocks(): Promise<number> {
+export async function deleteItems(): Promise<number> {
    const params: ScanParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
-      filterExpression: "contains(SK, :skPartial)",
+      filterExpression: "contains(SK, :skPartial) and equals(source, :sourceVal)",
       expressionAttributeValues: {
-         ":skPartial": "_BLOCK"
+         ":skPartial": "_BLOCK",
+         ":sourceVal": "imported"
       }
    };
 
