@@ -6,9 +6,11 @@ import {
    TaskProgressItem,
    TaskSubmissionResultItem
 } from "./taskSubmissionInterface";
+import * as questionService from "../services/question";
 
 import dynamodb from "../services/dynamodb";
 import {
+   associateQuestionWithAnswers,
    createMasteryItem,
    dbItemsToQuestionAnswerItems,
    dbItemToTaskProgress,
@@ -124,6 +126,38 @@ async function submitTaskForGrading(
    }
 }
 
+export async function generateTaskSubmission(taskId: string, username: string) {
+   const questionAnswers: Answer[] = await taskSubmissionService.getQuizProgressForTask(
+      taskId,
+      username
+   );
+
+   // Get all questions associated with the task
+   const questions: Question[] = await questionService.listByIds(
+      questionAnswers.map(qa => {
+         return qa.questionId;
+      }),
+      true
+   );
+
+   const taskSubmission = await taskSubmissionService.getTaskSubmission(username, taskId);
+   const questionAndAnswers = associateQuestionWithAnswers(questions, questionAnswers);
+
+   // only factor in teacher awarded free points if full task is graded
+   // otherwise it will duplicate add automatically generated scores
+   const pointAwarded = questionAnswers.reduce((a, b) => a + b.pointsAwarded, 0) +
+      (taskSubmission.graded && taskSubmission.pointsAwarded ? taskSubmission.pointsAwarded : 0);
+
+   return {
+      questionAndAnswers: questionAndAnswers,
+      pointsAwarded: pointAwarded,
+      pointsPossible: taskSubmission.pointsPossible,
+      teacherComment: taskSubmission.teacherComment,
+      taskId: taskSubmission.taskId,
+      graded: taskSubmission.graded
+   };
+}
+
 async function listUserSubmissionsByCourse(
    course: string,
    username: string
@@ -218,7 +252,8 @@ const taskSubmissionService = {
    getTaskRubricProgress,
    listUserSubmissionsByCourse,
    listUserMasteryItemsByCourse,
-   generateMasteryItemsForTask
+   generateMasteryItemsForTask,
+   generateTaskSubmission
 };
 
 export default taskSubmissionService;
