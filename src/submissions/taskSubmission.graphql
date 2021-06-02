@@ -164,6 +164,11 @@ type TaskSubmissionSummary {
    studentId: String!
    taskId: String!
    taskName: String!
+
+   """
+   Todo
+   The pointsAwarded is calculated on fly when a single task submission is queried. Here we are querying a list of task submission, the pointsAwarded would not be accurate since we are not recalcuated it.
+   """
    pointsAwarded: Int
    pointsPossible: Int!
    graded: Boolean!
