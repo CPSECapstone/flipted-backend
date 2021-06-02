@@ -205,7 +205,7 @@ async function retrieveQuestionProgress(_: any, args: any, context: FliptedConte
 
 async function retrieveTaskSubmissionSummaries(
    _: any,
-   args: QueryTaskSubmissionSummariesArgs,
+   args: QueryTaskSubmissionSummaryArgs,
    context: FliptedContext
 ) {
    if (context.userRole == RoleInternal.Instructor) {

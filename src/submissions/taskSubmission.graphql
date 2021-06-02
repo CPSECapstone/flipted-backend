@@ -159,20 +159,22 @@ type QuestionAndAnswer {
    answer: Answer
 }
 
-type TaskSubmissionSummary {
+type StudentTaskSubmissionResult {
    studentName: String!
    studentId: String!
-   taskId: String!
-   taskName: String!
-
    """
    Todo
    The pointsAwarded is calculated on fly when a single task submission is queried. Here we are querying a list of task submission, the pointsAwarded would not be accurate since we are not recalcuated it.
    """
    pointsAwarded: Int
-   pointsPossible: Int!
    graded: Boolean!
    teacherComment: String
+   submitted: Boolean!
+}
+
+type TaskSubmissionSummary {
+   task: Task!
+   results: [StudentTaskSubmissionResult!]!
 }
 
 type Query {
@@ -192,7 +194,7 @@ type Query {
    """
    retrieveQuestionProgress(taskId: String!): QuestionProgress!
 
-   taskSubmissionSummaries(course: String!, taskId: String!): [TaskSubmissionSummary!]!
+   taskSubmissionSummary(course: String!, taskId: String!): TaskSubmissionSummary!
 }
 
 type Mutation {

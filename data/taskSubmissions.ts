@@ -9,19 +9,20 @@ async function listItems(args: Arguments<flipted.IAction>) {
    }
 
    try {
-      let submissions: TaskSubmissionSummary[] = await taskSubmissionService.listAllSubmissionsByCourse(
+      let summary: TaskSubmissionSummary = await taskSubmissionService.listAllSubmissionsByCourse(
          args.course,
          args.taskId
       );
-      console.table(submissions, [
+      console.log(JSON.stringify(summary.task, null, "  "));
+
+      console.table(summary.results, [
          "studentName",
          "studentId",
-         "taskName",
-         "taskId",
          "pointsAwarded",
-         "pointsPossible"
+         "graded",
+         "submitted"
       ]);
-      console.log(`Total: ${submissions.length} submission items.`);
+      console.log(`Total: ${summary.results.length} submission items.`);
    } catch (err) {
       console.log(err);
    }

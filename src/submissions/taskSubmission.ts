@@ -12,7 +12,7 @@ import dynamodb from "../services/dynamodb";
 import {
    associateQuestionWithAnswers,
    createMasteryItem,
-   createTaskSubmissionSummaries,
+   createTaskSubmissionSummary,
    dbItemsToQuestionAnswerItems,
    dbItemToTaskProgress,
    dbItemToTaskSubmissionResult,
@@ -250,7 +250,7 @@ async function putMasteryItem(item: MasteryItem) {
 async function listAllSubmissionsByCourse(
    course: string,
    taskId: string
-): Promise<TaskSubmissionSummary[]> {
+): Promise<TaskSubmissionSummary> {
    const params: QueryParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       indexName: "course-PK-index",
@@ -268,13 +268,13 @@ async function listAllSubmissionsByCourse(
          params
       );
       const students: Student[] = await rosterService.listStudentsByCourse(course);
-      const tasks: Task[] = await taskService.listTasksByCourse(course);
-      const summaries = createTaskSubmissionSummaries(students, tasks, submissions);
+      const task: Task = await taskService.getTaskInfoById(taskId);
+      const summary = createTaskSubmissionSummary(students, task, submissions);
 
-      return summaries;
+      return summary;
    } catch (err) {
       console.log(err);
-      return [];
+      return err;
    }
 }
 
