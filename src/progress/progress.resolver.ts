@@ -7,6 +7,8 @@ import { MasteryItem } from "./progressInterface";
 import { dbItemToMastery } from "./progressHelper";
 import { ForbiddenError } from "apollo-server-lambda";
 import taskService from "../task/task.service";
+import { generateTaskSubmission } from "../submissions/taskSubmission";
+import { Resolver } from "../__generated__/resolvers";
 
 async function addProgress(_: any, args: MutationAddProgressArgs, context: any, info: any) {
    return service.addProgress(args.progress);
@@ -108,6 +110,20 @@ const resolvers = {
    Mutation: {
       addProgress,
       wipeAllProgress
+   },
+   TaskStats: {
+      submission: async (_: any, args: any, context: FliptedContext) => {
+         try {
+            const res = await generateTaskSubmission(_.taskId, context.username)
+            console.log("Found Submission")
+            return res
+         }
+         catch(err) {
+            // task submission doesnt exist
+            // TODO:  if we encounter other errors
+            return null
+         }
+      }
    },
    TaskObjectiveProgress: {
       task: (parent: any) => {

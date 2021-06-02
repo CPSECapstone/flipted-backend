@@ -23,6 +23,7 @@ import * as taskblockService from "../taskblock/taskblockService";
 import { Resolvers } from "../__generated__/resolvers";
 import { RoleInternal } from "../interfaces/role";
 
+
 async function submitMultChoiceQuestion(_: any, args: any, context: FliptedContext) {
    const mcAnswerInput: MultipleChoiceAnswerInput = args.mcBlockInput;
 
@@ -178,36 +179,7 @@ async function retrieveTaskSubmission(
 
    try {
       // Get all submitted answers to the questions in this task by the user from the db
-      const questionAnswers: Answer[] = await taskSubmissionService.getQuizProgressForTask(
-         args.taskId,
-         username
-      );
-
-      // Get all questions associated with the task
-      const questions: Question[] = await questionService.listByIds(
-         questionAnswers.map(qa => {
-            return qa.questionId;
-         }),
-         true
-      );
-
-      const taskSubmission = await taskSubmissionService.getTaskSubmission(username, args.taskId);
-      const questionAndAnswers = associateQuestionWithAnswers(questions, questionAnswers);
-
-      // only factor in teacher awarded free points if full task is graded
-      // otherwise it will duplicate add automatically generated scores
-      const pointAwarded =
-         questionAnswers.reduce((a, b) => a + b.pointsAwarded, 0) +
-         (taskSubmission.graded && taskSubmission.pointsAwarded ? taskSubmission.pointsAwarded : 0);
-
-      return {
-         questionAndAnswers: questionAndAnswers,
-         pointsAwarded: pointAwarded,
-         pointsPossible: taskSubmission.pointsPossible,
-         teacherComment: taskSubmission.teacherComment,
-         taskId: taskSubmission.taskId,
-         graded: taskSubmission.graded
-      };
+      return await taskSubmissionService.generateTaskSubmission(args.taskId, username);
    } catch (err) {
       throw err;
    }
