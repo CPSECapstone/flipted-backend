@@ -164,7 +164,7 @@ export async function getAllMissionProgressForUser(
 
    const taskSubmissions: Promise<
       TaskSubmissionResultItem[]
-   > = taskSubmissionService.listUserSubmissionsByCourse(course, username); // TODO: write this
+   > = taskSubmissionService.listUserSubmissionsByCourse(course, username); 
 
    const missionProgress: MissionProgress[] = generateMissionProgress(
       await missions,
