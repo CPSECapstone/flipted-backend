@@ -141,6 +141,7 @@ export type ResolversTypes = ResolversObject<{
   StudentMissionMasteryInput: StudentMissionMasteryInput;
   StudentObjectiveMastery: ResolverTypeWrapper<StudentObjectiveMastery>;
   StudentObjectiveMasteryInput: StudentObjectiveMasteryInput;
+  StudentTaskSubmissionResult: ResolverTypeWrapper<StudentTaskSubmissionResult>;
   SubGoal: ResolverTypeWrapper<SubGoal>;
   SubGoalInput: SubGoalInput;
   SubMission: ResolverTypeWrapper<Omit<SubMission, 'missionContent'> & { missionContent?: Maybe<Array<Maybe<ResolversTypes['MissionContent']>>> }>;
@@ -158,6 +159,7 @@ export type ResolversTypes = ResolversObject<{
   TaskSubmissionGrade: ResolverTypeWrapper<TaskSubmissionGrade>;
   TaskSubmissionGradeInput: TaskSubmissionGradeInput;
   TaskSubmissionResult: ResolverTypeWrapper<TaskSubmissionResult>;
+  TaskSubmissionSummary: ResolverTypeWrapper<TaskSubmissionSummary>;
   TextBlock: ResolverTypeWrapper<TextBlock>;
   TextBlockInput: TextBlockInput;
   UpdateUserInput: UpdateUserInput;
@@ -229,6 +231,7 @@ export type ResolversParentTypes = ResolversObject<{
   StudentMissionMasteryInput: StudentMissionMasteryInput;
   StudentObjectiveMastery: StudentObjectiveMastery;
   StudentObjectiveMasteryInput: StudentObjectiveMasteryInput;
+  StudentTaskSubmissionResult: StudentTaskSubmissionResult;
   SubGoal: SubGoal;
   SubGoalInput: SubGoalInput;
   SubMission: Omit<SubMission, 'missionContent'> & { missionContent?: Maybe<Array<Maybe<ResolversParentTypes['MissionContent']>>> };
@@ -246,6 +249,7 @@ export type ResolversParentTypes = ResolversObject<{
   TaskSubmissionGrade: TaskSubmissionGrade;
   TaskSubmissionGradeInput: TaskSubmissionGradeInput;
   TaskSubmissionResult: TaskSubmissionResult;
+  TaskSubmissionSummary: TaskSubmissionSummary;
   TextBlock: TextBlock;
   TextBlockInput: TextBlockInput;
   UpdateUserInput: UpdateUserInput;
@@ -504,6 +508,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   targets?: Resolver<Array<ResolversTypes['Target']>, ParentType, ContextType, RequireFields<QueryTargetsArgs, 'course'>>;
   task?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryTaskArgs, never>>;
   taskInfo?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryTaskInfoArgs, 'taskId'>>;
+  taskSubmissionSummary?: Resolver<ResolversTypes['TaskSubmissionSummary'], ParentType, ContextType, RequireFields<QueryTaskSubmissionSummaryArgs, 'course' | 'taskId'>>;
   tasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTasksArgs, never>>;
   tasksByCourse?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTasksByCourseArgs, 'course'>>;
   userProgress?: Resolver<ResolversTypes['UserProgress'], ParentType, ContextType, RequireFields<QueryUserProgressArgs, 'userName' | 'course'>>;
@@ -576,6 +581,16 @@ export type StudentMissionMasteryResolvers<ContextType = any, ParentType extends
 export type StudentObjectiveMasteryResolvers<ContextType = any, ParentType extends ResolversParentTypes['StudentObjectiveMastery'] = ResolversParentTypes['StudentObjectiveMastery']> = ResolversObject<{
   student?: Resolver<ResolversTypes['Student'], ParentType, ContextType>;
   objectiveMasteryList?: Resolver<Array<ResolversTypes['ObjectiveMastery']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type StudentTaskSubmissionResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['StudentTaskSubmissionResult'] = ResolversParentTypes['StudentTaskSubmissionResult']> = ResolversObject<{
+  studentName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  studentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  pointsAwarded?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  graded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  teacherComment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  submitted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -684,6 +699,12 @@ export type TaskSubmissionResultResolvers<ContextType = any, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type TaskSubmissionSummaryResolvers<ContextType = any, ParentType extends ResolversParentTypes['TaskSubmissionSummary'] = ResolversParentTypes['TaskSubmissionSummary']> = ResolversObject<{
+  task?: Resolver<ResolversTypes['Task'], ParentType, ContextType>;
+  results?: Resolver<Array<ResolversTypes['StudentTaskSubmissionResult']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type TextBlockResolvers<ContextType = any, ParentType extends ResolversParentTypes['TextBlock'] = ResolversParentTypes['TextBlock']> = ResolversObject<{
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   blockId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -759,6 +780,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Student?: StudentResolvers<ContextType>;
   StudentMissionMastery?: StudentMissionMasteryResolvers<ContextType>;
   StudentObjectiveMastery?: StudentObjectiveMasteryResolvers<ContextType>;
+  StudentTaskSubmissionResult?: StudentTaskSubmissionResultResolvers<ContextType>;
   SubGoal?: SubGoalResolvers<ContextType>;
   SubMission?: SubMissionResolvers<ContextType>;
   Target?: TargetResolvers<ContextType>;
@@ -770,6 +792,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   TaskStats?: TaskStatsResolvers<ContextType>;
   TaskSubmissionGrade?: TaskSubmissionGradeResolvers<ContextType>;
   TaskSubmissionResult?: TaskSubmissionResultResolvers<ContextType>;
+  TaskSubmissionSummary?: TaskSubmissionSummaryResolvers<ContextType>;
   TextBlock?: TextBlockResolvers<ContextType>;
   UpdateUserOutput?: UpdateUserOutputResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

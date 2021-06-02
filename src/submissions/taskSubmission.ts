@@ -12,13 +12,16 @@ import dynamodb from "../services/dynamodb";
 import {
    associateQuestionWithAnswers,
    createMasteryItem,
+   createTaskSubmissionSummary,
    dbItemsToQuestionAnswerItems,
    dbItemToTaskProgress,
    dbItemToTaskSubmissionResult,
    taskSubResultToDBItem
 } from "./taskSubmissionHelper";
 import { listObjectivesIdsByTask } from "../progress/progressService";
-import { MasteryItem, MasteryPK, MasterySK } from "../progress/progressInterface";
+import * as rosterService from "../roster/rosterService";
+import { MasteryItem } from "../progress/progressInterface";
+import taskService from "../task/task.service";
 
 async function submitTaskProgress(taskProgress: TaskProgressItem) {
    const params: PutCompositeParams = {
@@ -145,7 +148,8 @@ export async function generateTaskSubmission(taskId: string, username: string) {
 
    // only factor in teacher awarded free points if full task is graded
    // otherwise it will duplicate add automatically generated scores
-   const pointAwarded = questionAnswers.reduce((a, b) => a + b.pointsAwarded, 0) +
+   const pointAwarded =
+      questionAnswers.reduce((a, b) => a + b.pointsAwarded, 0) +
       (taskSubmission.graded && taskSubmission.pointsAwarded ? taskSubmission.pointsAwarded : 0);
 
    return {
@@ -237,9 +241,40 @@ async function putMasteryItem(item: MasteryItem) {
       return dynamodb.putComposite(params);
    } catch (err) {
       if (err.name === "ConditionalCheckFailedException") {
-        return 
+         return;
       }
       throw err;
+   }
+}
+
+async function listAllSubmissionsByCourse(
+   course: string,
+   taskId: string
+): Promise<TaskSubmissionSummary> {
+   const params: QueryParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      indexName: "course-PK-index",
+      keyConditionExpression: "course = :courseVal and begins_with(PK, :pkPrefixVal)",
+      filterExpression: "SK = :skVal",
+      expressionAttributeValues: {
+         ":courseVal": course,
+         ":pkPrefixVal": `TASK_SUBMISSION`,
+         ":skVal": taskId
+      }
+   };
+
+   try {
+      const submissions: TaskSubmissionResultItem[] = await dynamodb.queryList<TaskSubmissionResultItem>(
+         params
+      );
+      const students: Student[] = await rosterService.listStudentsByCourse(course);
+      const task: Task = await taskService.getTaskInfoById(taskId);
+      const summary = createTaskSubmissionSummary(students, task, submissions);
+
+      return summary;
+   } catch (err) {
+      console.log(err);
+      return err;
    }
 }
 
@@ -253,7 +288,8 @@ const taskSubmissionService = {
    listUserSubmissionsByCourse,
    listUserMasteryItemsByCourse,
    generateMasteryItemsForTask,
-   generateTaskSubmission
+   generateTaskSubmission,
+   listAllSubmissionsByCourse
 };
 
 export default taskSubmissionService;

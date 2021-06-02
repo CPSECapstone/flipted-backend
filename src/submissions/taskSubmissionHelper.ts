@@ -44,11 +44,11 @@ export function taskSubResultToDBItem(
       username: username
    };
 
-   if ('pointsAwarded' in input) {
+   if ("pointsAwarded" in input) {
       output.pointsAwarded = <number>input.pointsAwarded;
    }
 
-   if ('pointsPossible' in input) {
+   if ("pointsPossible" in input) {
       output.pointsPossible = <number>input.pointsPossible;
    }
 
@@ -121,7 +121,7 @@ export function freeResponseAnswerInputToDBItem(
       questionBlockId: input.questionBlockId,
       answer: input.answer,
       pointsAwarded: 0, // not yet graded
-      graded: false // 
+      graded: false //
    };
 
    return freeResponseAnswerItem;
@@ -253,7 +253,7 @@ export function createTaskSubmissionResult(
       graded: graded, // TODO "auto graded" setting in task should modify this
       pointsAwarded: questionAnswers.reduce((a, b) => a + b.pointsAwarded, 0),
       pointsPossible: taskPointValue,
-      taskId: taskId,
+      taskId: taskId
    };
 
    return submissionResult;
@@ -322,4 +322,33 @@ function createQuestionAnswerUnion(answer: Answer, questions: Question[]): Quest
    }
 
    throw new Error("Question associated with answer not found");
+}
+
+export function createTaskSubmissionSummary(
+   students: Student[],
+   task: Task,
+   submissions: TaskSubmissionResultItem[]
+): TaskSubmissionSummary {
+   const submissionMap: Map<string, TaskSubmissionResultItem> = new Map();
+   submissions.forEach(submission => {
+      submissionMap.set(submission.username, submission);
+   });
+
+   const results: StudentTaskSubmissionResult[] = students.map(student => {
+      const submission = submissionMap.get(student.studentId);
+
+      return <StudentTaskSubmissionResult>{
+         studentName: student.email,
+         studentId: student.studentId,
+         pointsAwarded: submission?.pointsAwarded || 0,
+         graded: submission?.graded || false,
+         teacherComment: submission?.teacherComment || "No comment",
+         submitted: submission ? true : false
+      };
+   });
+
+   return {
+      task,
+      results
+   };
 }

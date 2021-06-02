@@ -32,7 +32,7 @@
   * [SubMissions](apis/submissions.md)
   * [Targets](apis/targets.md)
   * [Tasks](apis/tasks.md)
-  * [Task Submissions](apis/task-submissions.md)
+  * [Task Submissions](apis/taskSubmissions.md)
   * [Users](apis/users.md)
   * [User Progress](apis/userProgress.md)
 

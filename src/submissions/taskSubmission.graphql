@@ -159,6 +159,24 @@ type QuestionAndAnswer {
    answer: Answer
 }
 
+type StudentTaskSubmissionResult {
+   studentName: String!
+   studentId: String!
+   """
+   Todo
+   The pointsAwarded is calculated on fly when a single task submission is queried. Here we are querying a list of task submission, the pointsAwarded would not be accurate since we are not recalcuated it.
+   """
+   pointsAwarded: Int
+   graded: Boolean!
+   teacherComment: String
+   submitted: Boolean!
+}
+
+type TaskSubmissionSummary {
+   task: Task!
+   results: [StudentTaskSubmissionResult!]!
+}
+
 type Query {
    """
    Returns an existing task submission or errors if it does not exist.
@@ -175,6 +193,8 @@ type Query {
    Returns student's task progress on the rubric requirements if it exists.
    """
    retrieveQuestionProgress(taskId: String!): QuestionProgress!
+
+   taskSubmissionSummary(course: String!, taskId: String!): TaskSubmissionSummary!
 }
 
 type Mutation {
