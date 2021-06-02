@@ -704,6 +704,7 @@ type QueryTaskInfoArgs = {
 
 type QueryTaskSubmissionSummariesArgs = {
   course: Scalars['String'];
+  taskId: Scalars['String'];
 };
 
 
@@ -1035,6 +1036,10 @@ type TaskSubmissionSummary = {
   studentId: Scalars['String'];
   taskId: Scalars['String'];
   taskName: Scalars['String'];
+  /**
+   * Todo
+   * The pointsAwarded is calculated on fly when a single task submission is queried. Here we are querying a list of task submission, the pointsAwarded would not be accurate since we are not recalcuated it.
+   */
   pointsAwarded?: Maybe<Scalars['Int']>;
   pointsPossible: Scalars['Int'];
   graded: Scalars['Boolean'];

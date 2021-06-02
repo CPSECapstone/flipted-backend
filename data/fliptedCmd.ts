@@ -8,6 +8,7 @@ export interface IAction {
    role?: string;
    missionId?: string;
    targetId?: string;
+   taskId?: string;
 }
 
 export type ActionFn = (args: Arguments<IAction>) => void;

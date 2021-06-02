@@ -247,14 +247,19 @@ async function putMasteryItem(item: MasteryItem) {
    }
 }
 
-async function listAllSubmissionsByCourse(course: string): Promise<TaskSubmissionSummary[]> {
+async function listAllSubmissionsByCourse(
+   course: string,
+   taskId: string
+): Promise<TaskSubmissionSummary[]> {
    const params: QueryParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       indexName: "course-PK-index",
       keyConditionExpression: "course = :courseVal and begins_with(PK, :pkPrefixVal)",
+      filterExpression: "SK = :skVal",
       expressionAttributeValues: {
          ":courseVal": course,
-         ":pkPrefixVal": `TASK_SUBMISSION`
+         ":pkPrefixVal": `TASK_SUBMISSION`,
+         ":skVal": taskId
       }
    };
 

@@ -506,7 +506,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   targets?: Resolver<Array<ResolversTypes['Target']>, ParentType, ContextType, RequireFields<QueryTargetsArgs, 'course'>>;
   task?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryTaskArgs, never>>;
   taskInfo?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryTaskInfoArgs, 'taskId'>>;
-  taskSubmissionSummaries?: Resolver<Array<ResolversTypes['TaskSubmissionSummary']>, ParentType, ContextType, RequireFields<QueryTaskSubmissionSummariesArgs, 'course'>>;
+  taskSubmissionSummaries?: Resolver<Array<ResolversTypes['TaskSubmissionSummary']>, ParentType, ContextType, RequireFields<QueryTaskSubmissionSummariesArgs, 'course' | 'taskId'>>;
   tasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTasksArgs, never>>;
   tasksByCourse?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTasksByCourseArgs, 'course'>>;
   userProgress?: Resolver<ResolversTypes['UserProgress'], ParentType, ContextType, RequireFields<QueryUserProgressArgs, 'userName' | 'course'>>;

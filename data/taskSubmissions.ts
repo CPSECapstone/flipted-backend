@@ -3,11 +3,15 @@ import taskSubmissionService from "../src/submissions/taskSubmission";
 import * as flipted from "./fliptedCmd";
 
 async function listItems(args: Arguments<flipted.IAction>) {
-   const course = args.course;
+   if (!args.taskId) {
+      console.log("Missing --taskId=xxx");
+      return;
+   }
 
    try {
       let submissions: TaskSubmissionSummary[] = await taskSubmissionService.listAllSubmissionsByCourse(
-         course
+         args.course,
+         args.taskId
       );
       console.table(submissions, [
          "studentName",
