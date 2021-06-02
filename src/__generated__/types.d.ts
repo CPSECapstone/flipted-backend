@@ -553,7 +553,7 @@ type Query = {
   targets: Array<Target>;
   task: Task;
   taskInfo: Task;
-  taskSubmissionSummaries: Array<TaskSubmissionSummary>;
+  taskSubmissionSummary: TaskSubmissionSummary;
   tasks: Array<Task>;
   tasksByCourse: Array<Task>;
   userProgress: UserProgress;
@@ -702,8 +702,9 @@ type QueryTaskInfoArgs = {
 };
 
 
-type QueryTaskSubmissionSummariesArgs = {
+type QueryTaskSubmissionSummaryArgs = {
   course: Scalars['String'];
+  taskId: Scalars['String'];
 };
 
 
@@ -838,6 +839,20 @@ type StudentObjectiveMasteryInput = {
   objectiveId: Scalars['String'];
   targetId: Scalars['String'];
   mastery: Scalars['String'];
+};
+
+type StudentTaskSubmissionResult = {
+  __typename?: 'StudentTaskSubmissionResult';
+  studentName: Scalars['String'];
+  studentId: Scalars['String'];
+  /**
+   * Todo
+   * The pointsAwarded is calculated on fly when a single task submission is queried. Here we are querying a list of task submission, the pointsAwarded would not be accurate since we are not recalcuated it.
+   */
+  pointsAwarded?: Maybe<Scalars['Int']>;
+  graded: Scalars['Boolean'];
+  teacherComment?: Maybe<Scalars['String']>;
+  submitted: Scalars['Boolean'];
 };
 
 type SubGoal = {
@@ -1031,14 +1046,8 @@ type TaskSubmissionResult = {
 
 type TaskSubmissionSummary = {
   __typename?: 'TaskSubmissionSummary';
-  studentName: Scalars['String'];
-  studentId: Scalars['String'];
-  taskId: Scalars['String'];
-  taskName: Scalars['String'];
-  pointsAwarded?: Maybe<Scalars['Int']>;
-  pointsPossible: Scalars['Int'];
-  graded: Scalars['Boolean'];
-  teacherComment?: Maybe<Scalars['String']>;
+  task: Task;
+  results: Array<StudentTaskSubmissionResult>;
 };
 
 type TextBlock = TaskBlock & {

@@ -324,35 +324,31 @@ function createQuestionAnswerUnion(answer: Answer, questions: Question[]): Quest
    throw new Error("Question associated with answer not found");
 }
 
-export function createTaskSubmissionSummaries(
+export function createTaskSubmissionSummary(
    students: Student[],
-   tasks: Task[],
+   task: Task,
    submissions: TaskSubmissionResultItem[]
-): TaskSubmissionSummary[] {
-   const studentMap: Map<string, Student> = new Map();
-   students.forEach(student => {
-      studentMap.set(student.studentId, student);
-   });
-   const taskMap: Map<string, Task> = new Map();
-   tasks.forEach(task => {
-      taskMap.set(task.id, task);
+): TaskSubmissionSummary {
+   const submissionMap: Map<string, TaskSubmissionResultItem> = new Map();
+   submissions.forEach(submission => {
+      submissionMap.set(submission.username, submission);
    });
 
-   const summaries: TaskSubmissionSummary[] = submissions.map(submission => {
-      const studentName = studentMap.get(submission.username)?.email || "unknown user name";
-      const taskName = taskMap.get(submission.SK)?.name || "unknow task name";
+   const results: StudentTaskSubmissionResult[] = students.map(student => {
+      const submission = submissionMap.get(student.studentId);
 
-      return <TaskSubmissionSummary>{
-         studentName,
-         studentId: submission.username,
-         taskId: submission.SK,
-         taskName,
-         pointsAwarded: submission.pointsAwarded,
-         pointsPossible: submission.pointsAwarded,
-         graded: submission.graded,
-         teacherComment: submission.teacherComment
+      return <StudentTaskSubmissionResult>{
+         studentName: student.email,
+         studentId: student.studentId,
+         pointsAwarded: submission?.pointsAwarded || 0,
+         graded: submission?.graded || false,
+         teacherComment: submission?.teacherComment || "No comment",
+         submitted: submission ? true : false
       };
    });
 
-   return summaries;
+   return {
+      task,
+      results
+   };
 }

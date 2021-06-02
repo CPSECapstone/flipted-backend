@@ -12,7 +12,7 @@ import dynamodb from "../services/dynamodb";
 import {
    associateQuestionWithAnswers,
    createMasteryItem,
-   createTaskSubmissionSummaries,
+   createTaskSubmissionSummary,
    dbItemsToQuestionAnswerItems,
    dbItemToTaskProgress,
    dbItemToTaskSubmissionResult,
@@ -247,14 +247,19 @@ async function putMasteryItem(item: MasteryItem) {
    }
 }
 
-async function listAllSubmissionsByCourse(course: string): Promise<TaskSubmissionSummary[]> {
+async function listAllSubmissionsByCourse(
+   course: string,
+   taskId: string
+): Promise<TaskSubmissionSummary> {
    const params: QueryParams = {
       tableName: TASK_SUBMISSIONS_TABLE,
       indexName: "course-PK-index",
       keyConditionExpression: "course = :courseVal and begins_with(PK, :pkPrefixVal)",
+      filterExpression: "SK = :skVal",
       expressionAttributeValues: {
          ":courseVal": course,
-         ":pkPrefixVal": `TASK_SUBMISSION`
+         ":pkPrefixVal": `TASK_SUBMISSION`,
+         ":skVal": taskId
       }
    };
 
@@ -263,13 +268,13 @@ async function listAllSubmissionsByCourse(course: string): Promise<TaskSubmissio
          params
       );
       const students: Student[] = await rosterService.listStudentsByCourse(course);
-      const tasks: Task[] = await taskService.listTasksByCourse(course);
-      const summaries = createTaskSubmissionSummaries(students, tasks, submissions);
+      const task: Task = await taskService.getTaskInfoById(taskId);
+      const summary = createTaskSubmissionSummary(students, task, submissions);
 
-      return summaries;
+      return summary;
    } catch (err) {
       console.log(err);
-      return [];
+      return err;
    }
 }
 

@@ -23,7 +23,6 @@ import * as taskblockService from "../taskblock/taskblockService";
 import { Resolvers } from "../__generated__/resolvers";
 import { RoleInternal } from "../interfaces/role";
 
-
 async function submitMultChoiceQuestion(_: any, args: any, context: FliptedContext) {
    const mcAnswerInput: MultipleChoiceAnswerInput = args.mcBlockInput;
 
@@ -206,11 +205,11 @@ async function retrieveQuestionProgress(_: any, args: any, context: FliptedConte
 
 async function retrieveTaskSubmissionSummaries(
    _: any,
-   args: QueryTaskSubmissionSummariesArgs,
+   args: QueryTaskSubmissionSummaryArgs,
    context: FliptedContext
 ) {
    if (context.userRole == RoleInternal.Instructor) {
-      return taskSubmissionService.listAllSubmissionsByCourse(args.course);
+      return taskSubmissionService.listAllSubmissionsByCourse(args.course, args.taskId);
    }
 
    throw new ForbiddenError(`User ${context.username} is not an authorized instructor.`);
