@@ -10,13 +10,16 @@ import {
 import dynamodb from "../services/dynamodb";
 import {
    createMasteryItem,
+   createTaskSubmissionSummaries,
    dbItemsToQuestionAnswerItems,
    dbItemToTaskProgress,
    dbItemToTaskSubmissionResult,
    taskSubResultToDBItem
 } from "./taskSubmissionHelper";
 import { listObjectivesIdsByTask } from "../progress/progressService";
-import { MasteryItem, MasteryPK, MasterySK } from "../progress/progressInterface";
+import * as rosterService from "../roster/rosterService";
+import { MasteryItem } from "../progress/progressInterface";
+import taskService from "../task/task.service";
 
 async function submitTaskProgress(taskProgress: TaskProgressItem) {
    const params: PutCompositeParams = {
@@ -203,9 +206,35 @@ async function putMasteryItem(item: MasteryItem) {
       return dynamodb.putComposite(params);
    } catch (err) {
       if (err.name === "ConditionalCheckFailedException") {
-        return 
+         return;
       }
       throw err;
+   }
+}
+
+async function listAllSubmissionsByCourse(course: string): Promise<TaskSubmissionSummary[]> {
+   const params: QueryParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      indexName: "course-PK-index",
+      keyConditionExpression: "course = :courseVal and begins_with(PK, :pkPrefixVal)",
+      expressionAttributeValues: {
+         ":courseVal": course,
+         ":pkPrefixVal": `TASK_SUBMISSION`
+      }
+   };
+
+   try {
+      const submissions: TaskSubmissionResultItem[] = await dynamodb.queryList<TaskSubmissionResultItem>(
+         params
+      );
+      const students: Student[] = await rosterService.listStudentsByCourse(course);
+      const tasks: Task[] = await taskService.listTasksByCourse(course);
+      const summaries = createTaskSubmissionSummaries(students, tasks, submissions);
+
+      return summaries;
+   } catch (err) {
+      console.log(err);
+      return [];
    }
 }
 
@@ -218,7 +247,8 @@ const taskSubmissionService = {
    getTaskRubricProgress,
    listUserSubmissionsByCourse,
    listUserMasteryItemsByCourse,
-   generateMasteryItemsForTask
+   generateMasteryItemsForTask,
+   listAllSubmissionsByCourse
 };
 
 export default taskSubmissionService;

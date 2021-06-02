@@ -44,11 +44,11 @@ export function taskSubResultToDBItem(
       username: username
    };
 
-   if ('pointsAwarded' in input) {
+   if ("pointsAwarded" in input) {
       output.pointsAwarded = <number>input.pointsAwarded;
    }
 
-   if ('pointsPossible' in input) {
+   if ("pointsPossible" in input) {
       output.pointsPossible = <number>input.pointsPossible;
    }
 
@@ -121,7 +121,7 @@ export function freeResponseAnswerInputToDBItem(
       questionBlockId: input.questionBlockId,
       answer: input.answer,
       pointsAwarded: 0, // not yet graded
-      graded: false // 
+      graded: false //
    };
 
    return freeResponseAnswerItem;
@@ -253,7 +253,7 @@ export function createTaskSubmissionResult(
       graded: graded, // TODO "auto graded" setting in task should modify this
       pointsAwarded: questionAnswers.reduce((a, b) => a + b.pointsAwarded, 0),
       pointsPossible: taskPointValue,
-      taskId: taskId,
+      taskId: taskId
    };
 
    return submissionResult;
@@ -322,4 +322,37 @@ function createQuestionAnswerUnion(answer: Answer, questions: Question[]): Quest
    }
 
    throw new Error("Question associated with answer not found");
+}
+
+export function createTaskSubmissionSummaries(
+   students: Student[],
+   tasks: Task[],
+   submissions: TaskSubmissionResultItem[]
+): TaskSubmissionSummary[] {
+   const studentMap: Map<string, Student> = new Map();
+   students.forEach(student => {
+      studentMap.set(student.studentId, student);
+   });
+   const taskMap: Map<string, Task> = new Map();
+   tasks.forEach(task => {
+      taskMap.set(task.id, task);
+   });
+
+   const summaries: TaskSubmissionSummary[] = submissions.map(submission => {
+      const studentName = studentMap.get(submission.username)?.email || "unknown user name";
+      const taskName = taskMap.get(submission.SK)?.name || "unknow task name";
+
+      return <TaskSubmissionSummary>{
+         studentName,
+         studentId: submission.username,
+         taskId: submission.SK,
+         taskName,
+         pointsAwarded: submission.pointsAwarded,
+         pointsPossible: submission.pointsAwarded,
+         graded: submission.graded,
+         teacherComment: submission.teacherComment
+      };
+   });
+
+   return summaries;
 }

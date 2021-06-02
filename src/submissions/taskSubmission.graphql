@@ -159,6 +159,17 @@ type QuestionAndAnswer {
    answer: Answer
 }
 
+type TaskSubmissionSummary {
+   studentName: String!
+   studentId: String!
+   taskId: String!
+   taskName: String!
+   pointsAwarded: Int
+   pointsPossible: Int!
+   graded: Boolean!
+   teacherComment: String
+}
+
 type Query {
    """
    Returns an existing task submission or errors if it does not exist.
@@ -175,6 +186,8 @@ type Query {
    Returns student's task progress on the rubric requirements if it exists.
    """
    retrieveQuestionProgress(taskId: String!): QuestionProgress!
+
+   taskSubmissionSummaries(course: String!): [TaskSubmissionSummary!]!
 }
 
 type Mutation {

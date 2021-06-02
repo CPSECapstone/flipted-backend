@@ -1,5 +1,5 @@
-import { Answer} from "./taskSubmissionInterface";
-import { validateToken } from "../jws-verifer";
+import { Answer } from "./taskSubmissionInterface";
+import { ForbiddenError } from "apollo-server-lambda";
 import * as questionService from "../services/question";
 import {
    gradeMultipleChoiceQuestion,
@@ -89,12 +89,17 @@ async function submitFreeResponseQuestion(_: any, args: any, context: FliptedCon
    return true;
 }
 
-async function submitTaskRubricProgress(_: any, args: MutationSubmitTaskProgressArgs, context: FliptedContext, info: any) {
+async function submitTaskRubricProgress(
+   _: any,
+   args: MutationSubmitTaskProgressArgs,
+   context: FliptedContext,
+   info: any
+) {
    const taskProgInput: TaskProgressInput = args.taskProgress;
 
    // verify that the list of completed requirement ids exist in the task
    const task: Task = await taskService.getTaskInfoById(taskProgInput.taskId);
-   console.log(task)
+   console.log(task);
    if (areTaskProgressIdsValid(task, taskProgInput)) {
       const taskItem = taskProgressInputToDBItem(taskProgInput, context.username);
       taskSubmissionService.submitTaskProgress(taskItem);
@@ -115,7 +120,7 @@ async function submitTask(_: any, args: any, context: FliptedContext, info: any)
       username
    );
 
-   if ( task.requirements.length > 0) {
+   if (task.requirements.length > 0) {
       const taskProgress: TaskProgress = await taskSubmissionService.getTaskRubricProgress(
          taskId,
          username
@@ -125,7 +130,7 @@ async function submitTask(_: any, args: any, context: FliptedContext, info: any)
          throw new Error("Task is ineligible for submission. Not all rubric requirements checked.");
       }
    }
- 
+
    if (!taskQuestionsAllAnswered(task, questionAnswers)) {
       throw new Error("Task is ineligible for submission. Not all quiz questions answered.");
    }
@@ -166,7 +171,10 @@ async function retrieveTaskSubmission(
    context: FliptedContext,
    info: any
 ): Promise<TaskSubmissionResult> {
-   const username: string = context.userRole == RoleInternal.Instructor && args.username ? args.username : context.username
+   const username: string =
+      context.userRole == RoleInternal.Instructor && args.username
+         ? args.username
+         : context.username;
 
    try {
       // Get all submitted answers to the questions in this task by the user from the db
@@ -224,11 +232,24 @@ async function retrieveQuestionProgress(_: any, args: any, context: FliptedConte
    return createQuestionProgressOutput(args.taskId, answers);
 }
 
+async function retrieveTaskSubmissionSummaries(
+   _: any,
+   args: QueryTaskSubmissionSummariesArgs,
+   context: FliptedContext
+) {
+   if (context.userRole == RoleInternal.Instructor) {
+      return taskSubmissionService.listAllSubmissionsByCourse(args.course);
+   }
+
+   throw new ForbiddenError(`User ${context.username} is not an authorized instructor.`);
+}
+
 const resolvers: Resolvers = {
    Query: {
       retrieveTaskSubmission: retrieveTaskSubmission,
       retrieveTaskProgress: retrieveTaskProgress,
-      retrieveQuestionProgress: retrieveQuestionProgress
+      retrieveQuestionProgress: retrieveQuestionProgress,
+      taskSubmissionSummaries: retrieveTaskSubmissionSummaries
    },
    Mutation: {
       saveMultipleChoiceProgress: submitMultChoiceQuestion,

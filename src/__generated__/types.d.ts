@@ -553,6 +553,7 @@ type Query = {
   targets: Array<Target>;
   task: Task;
   taskInfo: Task;
+  taskSubmissionSummaries: Array<TaskSubmissionSummary>;
   tasks: Array<Task>;
   tasksByCourse: Array<Task>;
   userProgress: UserProgress;
@@ -698,6 +699,11 @@ type QueryTaskArgs = {
 
 type QueryTaskInfoArgs = {
   taskId: Scalars['String'];
+};
+
+
+type QueryTaskSubmissionSummariesArgs = {
+  course: Scalars['String'];
 };
 
 
@@ -1021,6 +1027,18 @@ type TaskSubmissionResult = {
   questionAndAnswers?: Maybe<Array<QuestionAndAnswer>>;
   teacherComment?: Maybe<Scalars['String']>;
   taskId: Scalars['String'];
+};
+
+type TaskSubmissionSummary = {
+  __typename?: 'TaskSubmissionSummary';
+  studentName: Scalars['String'];
+  studentId: Scalars['String'];
+  taskId: Scalars['String'];
+  taskName: Scalars['String'];
+  pointsAwarded?: Maybe<Scalars['Int']>;
+  pointsPossible: Scalars['Int'];
+  graded: Scalars['Boolean'];
+  teacherComment?: Maybe<Scalars['String']>;
 };
 
 type TextBlock = TaskBlock & {

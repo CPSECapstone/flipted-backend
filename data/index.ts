@@ -12,6 +12,7 @@ import targetCmd from "./targets";
 import targetMasteryCmd from "./targetMastery";
 import taskCmd from "./tasks";
 import taskblockCmd from "./taskblocks";
+import taskSubmissionCmd from "./taskSubmissions";
 
 yargs
    .command(courseCmd)
@@ -25,4 +26,5 @@ yargs
    .command(targetMasteryCmd)
    .command(taskCmd)
    .command(taskblockCmd)
+   .command(taskSubmissionCmd)
    .help().argv;
