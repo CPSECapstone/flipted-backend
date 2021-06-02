@@ -2,23 +2,27 @@
 
 ## APIs
 
-* Query Task Submission Summaries By Course
+* Query Task Submission Summaries By Course and Task Id
 
 ## Examples
 
-### Query Task Submission Summaries By Course
+### Query Task Submission Summaries By Course and Task Id
 
 ```graphql
 query {
-   taskSubmissionSummaries(course: "Integrated Science") {
-      studentId
-      studentName
-      taskId
-      taskName
-      graded
-      pointsPossible
-      pointsAwarded
-      teacherComment
+   taskSubmissionSummary(course: "Integrated Science", taskId: "90e0c730e56") {
+      task {
+         id
+         name
+         instructions
+      }
+      results {
+         studentId
+         studentName
+         graded
+         pointsAwarded
+         teacherComment
+      }
    }
 }
 ```
