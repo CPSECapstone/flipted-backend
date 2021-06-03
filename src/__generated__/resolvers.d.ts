@@ -479,7 +479,7 @@ export type ProgressOverviewResolvers<ContextType = any, ParentType extends Reso
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  classMissionMastery?: Resolver<Maybe<ResolversTypes['ClassMissionMastery']>, ParentType, ContextType, RequireFields<QueryClassMissionMasteryArgs, 'missionId'>>;
+  classMissionMastery?: Resolver<ResolversTypes['ClassMissionMastery'], ParentType, ContextType, RequireFields<QueryClassMissionMasteryArgs, 'missionId'>>;
   classTargetMastery?: Resolver<ResolversTypes['ClassTargetMastery'], ParentType, ContextType, RequireFields<QueryClassTargetMasteryArgs, 'targetId'>>;
   courseContent?: Resolver<ResolversTypes['CourseContent'], ParentType, ContextType, RequireFields<QueryCourseContentArgs, 'course'>>;
   courseInfo?: Resolver<ResolversTypes['CourseInfo'], ParentType, ContextType, RequireFields<QueryCourseInfoArgs, 'courseId'>>;
