@@ -12,7 +12,7 @@ type ClassMissionMastery {
 }
 
 type Query {
-   classMissionMastery(missionId: String!): ClassMissionMastery
+   classMissionMastery(missionId: String!): ClassMissionMastery!
 }
 
 input StudentMissionMasteryInput {

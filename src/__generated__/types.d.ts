@@ -517,7 +517,7 @@ type ProgresssDeletionInput = {
 type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']>;
-  classMissionMastery?: Maybe<ClassMissionMastery>;
+  classMissionMastery: ClassMissionMastery;
   classTargetMastery: ClassTargetMastery;
   courseContent: CourseContent;
   courseInfo: CourseInfo;
