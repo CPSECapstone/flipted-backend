@@ -220,7 +220,7 @@ const resolvers: Resolvers = {
       retrieveTaskSubmission: retrieveTaskSubmission,
       retrieveTaskProgress: retrieveTaskProgress,
       retrieveQuestionProgress: retrieveQuestionProgress,
-      taskSubmissionSummaries: retrieveTaskSubmissionSummaries
+      taskSubmissionSummary: retrieveTaskSubmissionSummaries
    },
    Mutation: {
       saveMultipleChoiceProgress: submitMultChoiceQuestion,
