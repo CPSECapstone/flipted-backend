@@ -1,4 +1,10 @@
-import { COURSE_CONTENT_TABLE_NAME, GOALS_TABLE_NAME, MASTERY_TABLE, TASK_SUBMISSIONS_TABLE, USER_PROGRESS_TABLE_NAME } from "../environment";
+import {
+   COURSE_CONTENT_TABLE_NAME,
+   GOALS_TABLE_NAME,
+   MASTERY_TABLE,
+   TASK_SUBMISSIONS_TABLE,
+   USER_PROGRESS_TABLE_NAME
+} from "../environment";
 import dynamodb from "../services/dynamodb";
 import * as helper from "./progressHelper";
 import { MasteryItem, MasteryPK, ProgressPK } from "./progressInterface";
@@ -8,12 +14,13 @@ import { TaskSubmissionResultItem } from "../submissions/taskSubmissionInterface
 import * as missionService from "../mission/missionService";
 import taskSubmissionService from "../submissions/taskSubmission";
 import taskService from "../task/task.service";
-import { generateMissionProgress, generateTargetProgress } from "./progressHelper";
+import * as progressHelper from "./progressHelper";
 import { listTargetsByCourse } from "../target/targetService";
 import { listObjectiveItemsByCourse } from "../objective/objectiveService";
 import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "../objective/objectiveInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TaskKey } from "../interfaces/task";
+import subMissionService from "../mission/subMission";
 
 export async function wipeAllProgressForUser(username: string) {
    const masteryScanParams: ScanParams = {
@@ -30,7 +37,7 @@ export async function wipeAllProgressForUser(username: string) {
       expressionAttributeValues: {
          ":username": username
       }
-   }
+   };
 
    const goalsScanParams: ScanParams = {
       tableName: GOALS_TABLE_NAME,
@@ -38,13 +45,13 @@ export async function wipeAllProgressForUser(username: string) {
       expressionAttributeValues: {
          ":username": username
       }
-   }
+   };
 
    const deleteMastery = dynamodb.batchDelete(masteryScanParams);
-   const deleteTaskSubmissions = dynamodb.batchDelete(taskSubmissionsScanParams)
-   const deleteGoals = dynamodb.batchDelete(goalsScanParams)
+   const deleteTaskSubmissions = dynamodb.batchDelete(taskSubmissionsScanParams);
+   const deleteGoals = dynamodb.batchDelete(goalsScanParams);
 
-   return await Promise.all([deleteMastery, deleteTaskSubmissions, deleteGoals])
+   return await Promise.all([deleteMastery, deleteTaskSubmissions, deleteGoals]);
 }
 
 export async function addProgress(input: ProgressInput): Promise<string> {
@@ -164,9 +171,9 @@ export async function getAllMissionProgressForUser(
 
    const taskSubmissions: Promise<
       TaskSubmissionResultItem[]
-   > = taskSubmissionService.listUserSubmissionsByCourse(course, username); 
+   > = taskSubmissionService.listUserSubmissionsByCourse(course, username);
 
-   const missionProgress: MissionProgress[] = generateMissionProgress(
+   const missionProgress: MissionProgress[] = progressHelper.generateMissionProgress(
       await missions,
       await tasks,
       await taskSubmissions,
@@ -181,7 +188,7 @@ export async function getAllTargetProgressForUser(course: string, username: stri
 
    const objectives: Promise<ObjectiveItem[]> = listObjectiveItemsByCourse(course);
    const userMasteryItems: Promise<MasteryItem[]> = listUserMasteryItemsByCourse(username, course);
-   const targetProgress = generateTargetProgress(
+   const targetProgress = progressHelper.generateTargetProgress(
       await targets,
       await objectives,
       await userMasteryItems,
@@ -261,6 +268,26 @@ export async function listUserMasteryItemsByTask(
    };
 
    return dynamodb.queryList<MasteryItem>(params);
+}
+
+export async function getUserMissionProgress(
+   missionId: string,
+   username: string
+): Promise<MissionProgress> {
+   const mission: Mission = await missionService.getMissionById(missionId);
+   const tasks: Task[] = await taskService.listTasksByMissionId(missionId);
+   const submissions: TaskSubmissionResultItem[] = await taskSubmissionService.listUserSubmissionByMission(
+      missionId,
+      username
+   );
+
+   const progress: TaskStats[] = progressHelper.generateTaskStats(mission, tasks, submissions);
+
+   return {
+      mission,
+      progress,
+      student: username
+   };
 }
 
 export async function listMasteryItemsByCourse(course: string): Promise<Array<MasteryItem>> {

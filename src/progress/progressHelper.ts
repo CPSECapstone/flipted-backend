@@ -62,7 +62,7 @@ export function dbItemsToProgressList(items: any[]): UserProgress[] {
    return progressList;
 }
 
-function generateTaskStats(
+export function generateTaskStats(
    mission: Mission,
    tasks: Task[],
    submissions: TaskSubmissionResultItem[]

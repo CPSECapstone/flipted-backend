@@ -556,6 +556,7 @@ type Query = {
   taskSubmissionSummary: TaskSubmissionSummary;
   tasks: Array<Task>;
   tasksByCourse: Array<Task>;
+  userMissionProgress: MissionProgress;
   userProgress: UserProgress;
 };
 
@@ -715,6 +716,12 @@ type QueryTasksArgs = {
 
 type QueryTasksByCourseArgs = {
   course: Scalars['String'];
+};
+
+
+type QueryUserMissionProgressArgs = {
+  missionId: Scalars['String'];
+  username: Scalars['String'];
 };
 
 

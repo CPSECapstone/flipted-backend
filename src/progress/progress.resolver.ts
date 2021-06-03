@@ -26,6 +26,10 @@ async function progressOverview(_: any, args: QueryProgressOverviewArgs) {
    return service.getProgressOverview(args.course);
 }
 
+async function getUserMissionProgress(_: any, args: QueryUserMissionProgressArgs) {
+   return service.getUserMissionProgress(args.missionId, args.username);
+}
+
 async function getAllMissionProgress(
    _: any,
    args: QueryGetAllMissionProgressArgs,
@@ -94,8 +98,8 @@ async function wipeAllProgress(_: any, args: MutationWipeAllProgressArgs, contex
       throw new ForbiddenError(`User ${context.username} is not an authorized instructor.`);
    }
 
-   await service.wipeAllProgressForUser(args.username)
-   return "success"
+   await service.wipeAllProgressForUser(args.username);
+   return "success";
 }
 
 const resolvers = {
@@ -105,7 +109,8 @@ const resolvers = {
       progressOverview,
       getAllMissionProgress,
       getAllTargetProgress,
-      getTaskObjectiveProgress
+      getTaskObjectiveProgress,
+      userMissionProgress: getUserMissionProgress
    },
    Mutation: {
       addProgress,
@@ -114,14 +119,13 @@ const resolvers = {
    TaskStats: {
       submission: async (_: any, args: any, context: FliptedContext) => {
          try {
-            const res = await generateTaskSubmission(_.taskId, context.username)
-            console.log("Found Submission")
-            return res
-         }
-         catch(err) {
+            const res = await generateTaskSubmission(_.taskId, context.username);
+            console.log("Found Submission");
+            return res;
+         } catch (err) {
             // task submission doesnt exist
             // TODO:  if we encounter other errors
-            return null
+            return null;
          }
       }
    },

@@ -191,6 +191,23 @@ async function listUserSubmissionsByCourse(
    }
 }
 
+async function listUserSubmissionByMission(
+   missionId: string,
+   username: string
+): Promise<TaskSubmissionResultItem[]> {
+   const params: QueryParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      indexName: "mission-PK-index",
+      keyConditionExpression: "missionId = :missionIdVal and PK = :pkVal",
+      expressionAttributeValues: {
+         ":missionIdVal": missionId,
+         ":pkVal": `TASK_SUBMISSION#${username}`
+      }
+   };
+
+   return dynamodb.queryList<TaskSubmissionResultItem>(params);
+}
+
 async function listUserMasteryItemsByCourse(
    course: string,
    username: string
@@ -289,7 +306,8 @@ const taskSubmissionService = {
    listUserMasteryItemsByCourse,
    generateMasteryItemsForTask,
    generateTaskSubmission,
-   listAllSubmissionsByCourse
+   listAllSubmissionsByCourse,
+   listUserSubmissionByMission
 };
 
 export default taskSubmissionService;

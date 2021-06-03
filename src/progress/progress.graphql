@@ -74,12 +74,13 @@ type Query {
    userProgress(userName: String!, course: String!): UserProgress!
    progressOverview(course: String!): ProgressOverview!
 
-   getAllMissionProgress(courseId: String!, username: String) : [MissionProgress!]!
-   getAllTargetProgress(courseId: String!, username: String) : [TargetProgress!]!
-   getTaskObjectiveProgress(taskId: String!, username: String) : [TaskObjectiveProgress!]!
+   userMissionProgress(missionId: String!, username: String!): MissionProgress!
+   getAllMissionProgress(courseId: String!, username: String): [MissionProgress!]!
+   getAllTargetProgress(courseId: String!, username: String): [TargetProgress!]!
+   getTaskObjectiveProgress(taskId: String!, username: String): [TaskObjectiveProgress!]!
 }
 
 type Mutation {
    addProgress(progress: ProgressInput!): String!
-   wipeAllProgress(username: String!) : String!
+   wipeAllProgress(username: String!): String!
 }
