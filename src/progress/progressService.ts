@@ -184,7 +184,6 @@ export async function getMissionProgressForUser(
    const mission = missionService.getMissionById(missionId);
    const tasks: Promise<Task[]> = taskService.listTasksByMissionId(missionId);
 
-   // TODO: Write listUserSubmissionsByMission
    const taskSubmissions: Promise<
       TaskSubmissionResultItem[]
    > = taskSubmissionService.listUserTaskSubmissionsByMission(missionId, username); 
