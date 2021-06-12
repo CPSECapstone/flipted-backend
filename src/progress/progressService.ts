@@ -14,6 +14,7 @@ import { listObjectiveItemsByCourse } from "../objective/objectiveService";
 import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "../objective/objectiveInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TaskKey } from "../interfaces/task";
+import { listStudentsByCourse } from "../roster/rosterService";
 
 export async function wipeAllProgressForUser(username: string) {
    const masteryScanParams: ScanParams = {
@@ -176,6 +177,31 @@ export async function getAllMissionProgressForUser(
    return missionProgress;
 }
 
+export async function getMissionProgressForUser(
+   missionId: string,
+   username: string
+): Promise<MissionProgress> {
+   const mission = missionService.getMissionById(missionId);
+   const tasks: Promise<Task[]> = taskService.listTasksByMissionId(missionId);
+
+   const taskSubmissions: Promise<
+      TaskSubmissionResultItem[]
+   > = taskSubmissionService.listUserTaskSubmissionsByMission(missionId, username); 
+
+   const missionProgress: MissionProgress[] = generateMissionProgress(
+      [await mission],
+      await tasks,
+      await taskSubmissions,
+      username
+   );
+
+   if (missionProgress.length != 1) {
+      throw new Error("Mission progress could not be generated based on input.")
+   }
+
+   return missionProgress[0];
+}
+
 export async function getAllTargetProgressForUser(course: string, username: string) {
    const targets: Promise<Target[]> = listTargetsByCourse(course);
 
@@ -308,4 +334,11 @@ export async function deleteItems(): Promise<number> {
    } catch (err) {
       return err;
    }
+}
+
+export async function getAllEnrolledStudentMissionProgress(courseId: string, missionId: string) {
+   const students = listStudentsByCourse(courseId)
+   return await(await students).map(student => {
+      return getMissionProgressForUser(missionId, student.studentId)
+   })
 }

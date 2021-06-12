@@ -94,7 +94,7 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
       pointsPossible: 100,
       missionId: "MISSION#123",
       course: "My Awesome Backend Mock Course",
-      username: "USER_123"
+      username: "MOCKUSER_123"
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
@@ -104,7 +104,7 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
       pointsPossible: 25,
       missionId: "MISSION#123",
       course: "My Awesome Backend Mock Course",
-      username: "USER_123"
+      username: "MOCKUSER_123"
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
@@ -112,7 +112,7 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
       graded: false,
       missionId: "MISSION#123",
       course: "My Awesome Backend Mock Course",
-      username: "USER_123"
+      username: "MOCKUSER_123"
    },
    {
       PK: "TASK_SUBMISSION#MOCKUSER_123", // #TASK_SUBMISSION + username
@@ -122,7 +122,7 @@ export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [
       course: "My Awesome Backend Mock Course",
       pointsAwarded: 8,
       pointsPossible: 10,
-      username: "USER_123"
+      username: "MOCKUSER_123"
    }
 ];
 
@@ -130,6 +130,7 @@ const mockTaskStats_1: TaskStats[] = [
    {
       taskId: "1",
       name: "Mock Task 1",
+      username: "MOCKUSER_123",
       submission: {
          graded: true,
          pointsAwarded: 93,
@@ -140,6 +141,7 @@ const mockTaskStats_1: TaskStats[] = [
    {
       taskId: "2",
       name: "Mock Task 2",
+      username: "MOCKUSER_123",
       submission: {
          graded: true,
          pointsAwarded: 14,
@@ -149,10 +151,12 @@ const mockTaskStats_1: TaskStats[] = [
    },
    {
       taskId: "3",
+      username: "MOCKUSER_123",
       name: "Mock Task 3: Submitted yet not graded",
       submission: { graded: false, taskId: "3"}
    },
    {
+      username: "MOCKUSER_123",
       taskId: "4",
       name: "Mock Task 4: No Submission"
    }
@@ -161,6 +165,7 @@ const mockTaskStats_1: TaskStats[] = [
 const mockTaskStats_2: TaskStats[] = [
    {
       taskId: "5",
+      username: "MOCKUSER_123",
       name: "Mock Task 5",
       submission: {
          graded: true,
@@ -170,6 +175,7 @@ const mockTaskStats_2: TaskStats[] = [
       }
    },
    {
+      username: "MOCKUSER_123",
       taskId: "6",
       name: "Mock Task 6"
    }
@@ -276,63 +282,63 @@ export const mockObjectives: Objective[] = [
 
 export const mockMasteryItems: MasteryItem[] = [
    {
-      PK: "USERNAME#USER_123",
+      PK: "USERNAME#MOCKUSER_123",
       SK: "OBJECTIVE#11",
-      username: "USER_123",
+      username: "MOCKUSER_123",
       taskId: "1",
       objectiveId: "1",
       course: "Mocking 101",
       mastery: "MASTERED"
    },
    {
-      PK: "USERNAME#USER_123",
+      PK: "USERNAME#MOCKUSER_123",
       SK: "OBJECTIVE#12",
-      username: "USER_123",
+      username: "MOCKUSER_123",
       taskId: "2",
       objectiveId: "1",
       course: "Mocking 101",
       mastery: "NEARLY_MASTERED"
    },
    {
-      PK: "USERNAME#USER_123",
+      PK: "USERNAME#MOCKUSER_123",
       SK: "OBJECTIVE#13",
-      username: "USER_123",
+      username: "MOCKUSER_123",
       taskId: "3",
       objectiveId: "1",
       course: "Mocking 101",
       mastery: "NOT_GRADED"
    },
    {
-      PK: "USERNAME#USER_123",
+      PK: "USERNAME#MOCKUSER_123",
       SK: "OBJECTIVE#21",
-      username: "USER_123",
+      username: "MOCKUSER_123",
       taskId: "1",
       objectiveId: "2",
       course: "Mocking 101",
       mastery: "MASTERED"
    },
    {
-      PK: "USERNAME#USER_123",
+      PK: "USERNAME#MOCKUSER_123",
       SK: "OBJECTIVE#22",
-      username: "USER_123",
+      username: "MOCKUSER_123",
       taskId: "2",
       objectiveId: "2",
       course: "Mocking 101",
       mastery: "NOT_MASTERED"
    },
    {
-      PK: "USERNAME#USER_123",
+      PK: "USERNAME#MOCKUSER_123",
       SK: "OBJECTIVE#24",
-      username: "USER_123",
+      username: "MOCKUSER_123",
       taskId: "4",
       objectiveId: "2",
       course: "Mocking 101",
       mastery: "NOT_GRADED"
    },
    {
-      PK: "USERNAME#USER_123",
+      PK: "USERNAME#MOCKUSER_123",
       SK: "OBJECTIVE#45",
-      username: "USER_123",
+      username: "MOCKUSER_123",
       taskId: "5",
       objectiveId: "4",
       course: "Mocking 101",
