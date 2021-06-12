@@ -37,6 +37,7 @@ type MissionProgress {
 type TaskStats {
    taskId: String!
    name: String!
+   username: String!
 
    """
    Null indicates that this task does not yet have an associated submission
@@ -74,6 +75,8 @@ type Query {
    userProgress(userName: String!, course: String!): UserProgress!
    progressOverview(course: String!): ProgressOverview!
 
+   getAllEnrolledStudentMissionProgress(courseId: String! missionId: String!) : [MissionProgress!]!
+   getMissionProgress(missionId: String! username: String) : MissionProgress!
    getAllMissionProgress(courseId: String!, username: String) : [MissionProgress!]!
    getAllTargetProgress(courseId: String!, username: String) : [TargetProgress!]!
    getTaskObjectiveProgress(taskId: String!, username: String) : [TaskObjectiveProgress!]!
