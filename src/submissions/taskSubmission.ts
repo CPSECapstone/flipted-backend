@@ -129,6 +129,8 @@ async function submitTaskForGrading(
    }
 }
 
+// TODO: Bug prone. Let the frontends add up the grades and submit the total for a direct replacement
+// in the TaskSubmission item instead of summing up every time. 
 export async function generateTaskSubmission(taskId: string, username: string) {
    const questionAnswers: Answer[] = await taskSubmissionService.getQuizProgressForTask(
       taskId,
@@ -162,7 +164,7 @@ export async function generateTaskSubmission(taskId: string, username: string) {
    };
 }
 
-async function listUserSubmissionsByCourse(
+async function listUserTaskSubmissionsByCourse(
    course: string,
    username: string
 ): Promise<TaskSubmissionResultItem[]> {
@@ -189,6 +191,23 @@ async function listUserSubmissionsByCourse(
    } catch (err) {
       throw err;
    }
+}
+
+async function listUserTaskSubmissionsByMission(
+   missionId: string,
+   username: string
+): Promise<TaskSubmissionResultItem[]> {
+   const params: QueryParams = {
+      tableName: TASK_SUBMISSIONS_TABLE,
+      indexName: "missionId-PK-index",
+      keyConditionExpression: "missionId = :missionVal and PK = :pkVal",
+      expressionAttributeValues: {
+         ":missionVal": missionId,
+         ":pkVal": `TASK_SUBMISSION#${username}`
+      }
+   };
+
+   return await dynamodb.queryList<TaskSubmissionResultItem>(params);
 }
 
 async function listUserMasteryItemsByCourse(
@@ -285,11 +304,12 @@ const taskSubmissionService = {
    getTaskSubmission,
    getQuizProgressForTask,
    getTaskRubricProgress,
-   listUserSubmissionsByCourse,
+   listUserSubmissionsByCourse: listUserTaskSubmissionsByCourse,
    listUserMasteryItemsByCourse,
    generateMasteryItemsForTask,
    generateTaskSubmission,
-   listAllSubmissionsByCourse
+   listAllSubmissionsByCourse,
+   listUserTaskSubmissionsByMission
 };
 
 export default taskSubmissionService;

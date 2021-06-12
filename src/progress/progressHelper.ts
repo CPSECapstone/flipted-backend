@@ -65,7 +65,8 @@ export function dbItemsToProgressList(items: any[]): UserProgress[] {
 function generateTaskStats(
    mission: Mission,
    tasks: Task[],
-   submissions: TaskSubmissionResultItem[]
+   submissions: TaskSubmissionResultItem[],
+   username: string
 ): TaskStats[] {
    const ret: TaskStats[] = [];
    for (let task of tasks) {
@@ -80,7 +81,8 @@ function generateTaskStats(
 
       let taskStat: TaskStats = {
          taskId: task.id,
-         name: task.name
+         name: task.name,
+         username: username
       };
 
       if (submissionResult) {
@@ -111,7 +113,7 @@ export function generateMissionProgress(
       const missionProg: MissionProgress = {
          mission: mission,
          student: user,
-         progress: generateTaskStats(mission, filteredTasks, filteredResults)
+         progress: generateTaskStats(mission, filteredTasks, filteredResults, user)
       };
 
       ret.push(missionProg);

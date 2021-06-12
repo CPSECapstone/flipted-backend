@@ -484,10 +484,12 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   courseContent?: Resolver<ResolversTypes['CourseContent'], ParentType, ContextType, RequireFields<QueryCourseContentArgs, 'course'>>;
   courseInfo?: Resolver<ResolversTypes['CourseInfo'], ParentType, ContextType, RequireFields<QueryCourseInfoArgs, 'courseId'>>;
   courseInfos?: Resolver<Array<ResolversTypes['CourseInfo']>, ParentType, ContextType, RequireFields<QueryCourseInfosArgs, 'instructor'>>;
+  getAllEnrolledStudentMissionProgress?: Resolver<Array<ResolversTypes['MissionProgress']>, ParentType, ContextType, RequireFields<QueryGetAllEnrolledStudentMissionProgressArgs, 'courseId' | 'missionId'>>;
   getAllGoals?: Resolver<Array<ResolversTypes['Goal']>, ParentType, ContextType>;
   getAllMissionProgress?: Resolver<Array<ResolversTypes['MissionProgress']>, ParentType, ContextType, RequireFields<QueryGetAllMissionProgressArgs, 'courseId'>>;
   getAllTargetProgress?: Resolver<Array<ResolversTypes['TargetProgress']>, ParentType, ContextType, RequireFields<QueryGetAllTargetProgressArgs, 'courseId'>>;
   getGoalById?: Resolver<ResolversTypes['Goal'], ParentType, ContextType, RequireFields<QueryGetGoalByIdArgs, 'id' | 'user'>>;
+  getMissionProgress?: Resolver<ResolversTypes['MissionProgress'], ParentType, ContextType, RequireFields<QueryGetMissionProgressArgs, 'missionId'>>;
   getTaskObjectiveProgress?: Resolver<Array<ResolversTypes['TaskObjectiveProgress']>, ParentType, ContextType, RequireFields<QueryGetTaskObjectiveProgressArgs, 'taskId'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   mission?: Resolver<Maybe<ResolversTypes['Mission']>, ParentType, ContextType, RequireFields<QueryMissionArgs, never>>;
@@ -677,6 +679,7 @@ export type TaskProgressResolvers<ContextType = any, ParentType extends Resolver
 export type TaskStatsResolvers<ContextType = any, ParentType extends ResolversParentTypes['TaskStats'] = ResolversParentTypes['TaskStats']> = ResolversObject<{
   taskId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   submission?: Resolver<Maybe<ResolversTypes['TaskSubmissionResult']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

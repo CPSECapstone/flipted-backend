@@ -522,11 +522,13 @@ type Query = {
   courseContent: CourseContent;
   courseInfo: CourseInfo;
   courseInfos: Array<CourseInfo>;
+  getAllEnrolledStudentMissionProgress: Array<MissionProgress>;
   getAllGoals: Array<Goal>;
   getAllMissionProgress: Array<MissionProgress>;
   getAllTargetProgress: Array<TargetProgress>;
   /** Instructor only: get a user's goal given the user and the goal id */
   getGoalById: Goal;
+  getMissionProgress: MissionProgress;
   getTaskObjectiveProgress: Array<TaskObjectiveProgress>;
   getUser?: Maybe<User>;
   mission?: Maybe<Mission>;
@@ -585,6 +587,12 @@ type QueryCourseInfosArgs = {
 };
 
 
+type QueryGetAllEnrolledStudentMissionProgressArgs = {
+  courseId: Scalars['String'];
+  missionId: Scalars['String'];
+};
+
+
 type QueryGetAllMissionProgressArgs = {
   courseId: Scalars['String'];
   username?: Maybe<Scalars['String']>;
@@ -600,6 +608,12 @@ type QueryGetAllTargetProgressArgs = {
 type QueryGetGoalByIdArgs = {
   id: Scalars['String'];
   user: Scalars['String'];
+};
+
+
+type QueryGetMissionProgressArgs = {
+  missionId: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
 };
 
 
@@ -991,6 +1005,7 @@ type TaskStats = {
   __typename?: 'TaskStats';
   taskId: Scalars['String'];
   name: Scalars['String'];
+  username: Scalars['String'];
   /** Null indicates that this task does not yet have an associated submission */
   submission?: Maybe<TaskSubmissionResult>;
 };

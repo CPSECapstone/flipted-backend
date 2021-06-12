@@ -40,6 +40,20 @@ async function getAllMissionProgress(
    return await service.getAllMissionProgressForUser(args.courseId, user);
 }
 
+async function getMissionProgress(
+   _: any,
+   args: QueryGetMissionProgressArgs,
+   context: FliptedContext,
+   info: any
+): Promise<MissionProgress> {
+   const user =
+      context.userRole == RoleInternal.Instructor && context.username
+         ? context.username
+         : context.username;
+
+   return await service.getMissionProgressForUser(args.missionId, user);
+}
+
 async function getAllTargetProgress(
    _: any,
    args: QueryGetAllTargetProgressArgs,
@@ -50,8 +64,7 @@ async function getAllTargetProgress(
       context.userRole == RoleInternal.Instructor && args.username
          ? args.username
          : context.username;
-   console.log(user);
-   console.log(context.userRole);
+  
    return await service.getAllTargetProgressForUser(args.courseId, user);
 }
 
@@ -98,6 +111,14 @@ async function wipeAllProgress(_: any, args: MutationWipeAllProgressArgs, contex
    return "success"
 }
 
+async function getAllEnrolledStudentMissionProgress(_: any, args: QueryGetAllEnrolledStudentMissionProgressArgs, context: FliptedContext) {
+   if (context.userRole != RoleInternal.Instructor) {
+      throw new ForbiddenError(`User ${context.username} is not an authorized instructor.`);
+   }
+
+   return service.getAllEnrolledStudentMissionProgress(args.courseId, args.missionId)
+}
+
 const resolvers = {
    Query: {
       progressByCourse,
@@ -105,16 +126,18 @@ const resolvers = {
       progressOverview,
       getAllMissionProgress,
       getAllTargetProgress,
-      getTaskObjectiveProgress
+      getTaskObjectiveProgress,
+      getMissionProgress,
+      getAllEnrolledStudentMissionProgress
    },
    Mutation: {
       addProgress,
       wipeAllProgress
    },
    TaskStats: {
-      submission: async (_: any, args: any, context: FliptedContext) => {
+      submission: async (parent: any, args: any, context: FliptedContext) => {
          try {
-            const res = await generateTaskSubmission(_.taskId, context.username)
+            const res = await generateTaskSubmission(parent.taskId, parent.username)
             console.log("Found Submission")
             return res
          }
