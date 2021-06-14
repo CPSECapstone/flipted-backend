@@ -75,14 +75,16 @@ export const mockMission_1: Mission = {
    id: "MISSION#123",
    course: "My Awesome Backend Mock Course",
    name: "Backend-Mocked Mission",
-   description: "This is a mock mission."
+   description: "This is a mock mission.",
+   missionContent: undefined as unknown as MissionContent[]
 };
 
 export const mockMission_2: Mission = {
    id: "MISSION#456",
    course: "My Awesome Backend Mock Course",
    name: "Second Backend-Mocked Mission",
-   description: "This is the second mock mission."
+   description: "This is the second mock mission.",
+   missionContent: undefined as unknown as MissionContent[]
 };
 
 export const mockTaskSubmissionItems: TaskSubmissionResultItem[] = [

@@ -165,6 +165,27 @@ type ImageBlockInput = {
   imageUrl: Scalars['String'];
 };
 
+type MarketListing = {
+  __typename?: 'MarketListing';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  image: Scalars['String'];
+  course: Scalars['String'];
+  listedDate: Scalars['Date'];
+  price: Scalars['Int'];
+  stock?: Maybe<Scalars['Int']>;
+  timesPurchased: Scalars['Int'];
+};
+
+type MarketListingInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  image: Scalars['String'];
+  price: Scalars['Int'];
+  stock?: Maybe<Scalars['Int']>;
+};
+
 enum Mastery {
   NotGraded = 'NOT_GRADED',
   NotMastered = 'NOT_MASTERED',
@@ -218,7 +239,7 @@ type Mission = {
   course: Scalars['String'];
   name: Scalars['String'];
   description: Scalars['String'];
-  missionContent?: Maybe<Array<Maybe<MissionContent>>>;
+  missionContent: Array<MissionContent>;
 };
 
 type MissionContent = Task | SubMission;
@@ -254,6 +275,7 @@ type Mutation = {
   addFrBlock: Scalars['String'];
   addFrQuestion: Scalars['String'];
   addImageBlock: Scalars['String'];
+  addMarketListing: MarketListing;
   addMcBlock: Scalars['String'];
   addMcQuestion: Scalars['String'];
   addMission: Scalars['String'];
@@ -311,6 +333,12 @@ type MutationAddFrQuestionArgs = {
 
 type MutationAddImageBlockArgs = {
   imageblock: ImageBlockInput;
+};
+
+
+type MutationAddMarketListingArgs = {
+  course: Scalars['String'];
+  listing: MarketListingInput;
 };
 
 
@@ -531,8 +559,8 @@ type Query = {
   getMissionProgress: MissionProgress;
   getTaskObjectiveProgress: Array<TaskObjectiveProgress>;
   getUser?: Maybe<User>;
-  mission?: Maybe<Mission>;
-  missions?: Maybe<Array<Maybe<Mission>>>;
+  mission: Mission;
+  missions: Array<Mission>;
   objective: Objective;
   objectives: Array<Objective>;
   progressByCourse: Array<UserProgress>;

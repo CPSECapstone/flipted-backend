@@ -101,12 +101,14 @@ export type ResolversTypes = ResolversObject<{
   GoalInput: GoalInput;
   ImageBlock: ResolverTypeWrapper<ImageBlock>;
   ImageBlockInput: ImageBlockInput;
+  MarketListing: ResolverTypeWrapper<MarketListing>;
+  MarketListingInput: MarketListingInput;
   Mastery: Mastery;
   McBlock: ResolverTypeWrapper<McBlock>;
   McBlockInput: McBlockInput;
   McQuestion: ResolverTypeWrapper<McQuestion>;
   McQuestionInput: McQuestionInput;
-  Mission: ResolverTypeWrapper<Omit<Mission, 'missionContent'> & { missionContent?: Maybe<Array<Maybe<ResolversTypes['MissionContent']>>> }>;
+  Mission: ResolverTypeWrapper<Omit<Mission, 'missionContent'> & { missionContent: Array<ResolversTypes['MissionContent']> }>;
   MissionContent: ResolversTypes['Task'] | ResolversTypes['SubMission'];
   MissionInput: MissionInput;
   MissionProgress: ResolverTypeWrapper<MissionProgress>;
@@ -193,11 +195,13 @@ export type ResolversParentTypes = ResolversObject<{
   GoalInput: GoalInput;
   ImageBlock: ImageBlock;
   ImageBlockInput: ImageBlockInput;
+  MarketListing: MarketListing;
+  MarketListingInput: MarketListingInput;
   McBlock: McBlock;
   McBlockInput: McBlockInput;
   McQuestion: McQuestion;
   McQuestionInput: McQuestionInput;
-  Mission: Omit<Mission, 'missionContent'> & { missionContent?: Maybe<Array<Maybe<ResolversParentTypes['MissionContent']>>> };
+  Mission: Omit<Mission, 'missionContent'> & { missionContent: Array<ResolversParentTypes['MissionContent']> };
   MissionContent: ResolversParentTypes['Task'] | ResolversParentTypes['SubMission'];
   MissionInput: MissionInput;
   MissionProgress: MissionProgress;
@@ -352,6 +356,19 @@ export type ImageBlockResolvers<ContextType = any, ParentType extends ResolversP
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type MarketListingResolvers<ContextType = any, ParentType extends ResolversParentTypes['MarketListing'] = ResolversParentTypes['MarketListing']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  course?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  listedDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  price?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  stock?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  timesPurchased?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type McBlockResolvers<ContextType = any, ParentType extends ResolversParentTypes['McBlock'] = ResolversParentTypes['McBlock']> = ResolversObject<{
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   blockId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -379,7 +396,7 @@ export type MissionResolvers<ContextType = any, ParentType extends ResolversPare
   course?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  missionContent?: Resolver<Maybe<Array<Maybe<ResolversTypes['MissionContent']>>>, ParentType, ContextType>;
+  missionContent?: Resolver<Array<ResolversTypes['MissionContent']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -399,6 +416,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addFrBlock?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddFrBlockArgs, 'frBlock'>>;
   addFrQuestion?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddFrQuestionArgs, 'question'>>;
   addImageBlock?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddImageBlockArgs, 'imageblock'>>;
+  addMarketListing?: Resolver<ResolversTypes['MarketListing'], ParentType, ContextType, RequireFields<MutationAddMarketListingArgs, 'course' | 'listing'>>;
   addMcBlock?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddMcBlockArgs, 'mcBlock'>>;
   addMcQuestion?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddMcQuestionArgs, 'question'>>;
   addMission?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddMissionArgs, 'mission'>>;
@@ -492,8 +510,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getMissionProgress?: Resolver<ResolversTypes['MissionProgress'], ParentType, ContextType, RequireFields<QueryGetMissionProgressArgs, 'missionId'>>;
   getTaskObjectiveProgress?: Resolver<Array<ResolversTypes['TaskObjectiveProgress']>, ParentType, ContextType, RequireFields<QueryGetTaskObjectiveProgressArgs, 'taskId'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  mission?: Resolver<Maybe<ResolversTypes['Mission']>, ParentType, ContextType, RequireFields<QueryMissionArgs, never>>;
-  missions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Mission']>>>, ParentType, ContextType, RequireFields<QueryMissionsArgs, never>>;
+  mission?: Resolver<ResolversTypes['Mission'], ParentType, ContextType, RequireFields<QueryMissionArgs, never>>;
+  missions?: Resolver<Array<ResolversTypes['Mission']>, ParentType, ContextType, RequireFields<QueryMissionsArgs, never>>;
   objective?: Resolver<ResolversTypes['Objective'], ParentType, ContextType, RequireFields<QueryObjectiveArgs, 'objectiveId'>>;
   objectives?: Resolver<Array<ResolversTypes['Objective']>, ParentType, ContextType, RequireFields<QueryObjectivesArgs, 'course'>>;
   progressByCourse?: Resolver<Array<ResolversTypes['UserProgress']>, ParentType, ContextType, RequireFields<QueryProgressByCourseArgs, 'course'>>;
@@ -760,6 +778,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   FrQuestion?: FrQuestionResolvers<ContextType>;
   Goal?: GoalResolvers<ContextType>;
   ImageBlock?: ImageBlockResolvers<ContextType>;
+  MarketListing?: MarketListingResolvers<ContextType>;
   McBlock?: McBlockResolvers<ContextType>;
   McQuestion?: McQuestionResolvers<ContextType>;
   Mission?: MissionResolvers<ContextType>;
