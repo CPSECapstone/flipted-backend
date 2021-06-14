@@ -1,0 +1,23 @@
+type MarketListing {
+   id: String!
+   name: String!
+   description: String!
+   image: String!
+   course: String!
+   listedDate: Date!,
+   price: Int!,
+   stock: Int
+   timesPurchased: Int!
+}
+
+input MarketListingInput {
+   name: String!,
+   description: String!,
+   image: String!
+   price: Int!,
+   stock: Int
+}
+
+type Mutation {
+   addMarketListing(course: String!, listing: MarketListingInput!) : MarketListing!
+}

@@ -170,6 +170,7 @@ async function query(params: QueryParams): Promise<QueryCommandOutput> {
    return client.send(command);
 }
 
+// TODO: pagination
 async function queryList<T>(params: QueryParams): Promise<T[]> {
    const command = new QueryCommand({
       TableName: params.tableName,
