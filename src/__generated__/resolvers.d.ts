@@ -588,6 +588,9 @@ export type StudentResolvers<ContextType = any, ParentType extends ResolversPare
   course?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   section?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   team?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  points?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPointsAwarded?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPointsSpent?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

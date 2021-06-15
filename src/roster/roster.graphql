@@ -5,7 +5,10 @@ type Student {
    lastName: String
    course: String!
    section: Int!
-   team: String
+   team: String,
+   points: Int!,
+   totalPointsAwarded: Int!,
+   totalPointsSpent: Int!
 }
 
 type Query {

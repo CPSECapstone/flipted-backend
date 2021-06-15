@@ -63,9 +63,6 @@ describe("Viewing marketplace items", () => {
 });
 
 describe("Creating a marketplace item", () => {
-   it("Calls putItem with the correct params", async () => {
-      expect(ListingSK("id123")).toEqual("LISTING#id123");
-   });
    it("Should do so from a graphql input type", async () => {
       const listingInput: MarketListingInput = {
          name: "Snickers Bar",

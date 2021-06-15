@@ -854,6 +854,9 @@ type Student = {
   course: Scalars['String'];
   section: Scalars['Int'];
   team?: Maybe<Scalars['String']>;
+  points: Scalars['Int'];
+  totalPointsAwarded: Scalars['Int'];
+  totalPointsSpent: Scalars['Int'];
 };
 
 type StudentInput = {
