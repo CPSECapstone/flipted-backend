@@ -18,6 +18,10 @@ input MarketListingInput {
    stock: Int
 }
 
+type Query {
+   marketListings(course: String!) : [MarketListing!]!
+}
+
 type Mutation {
    addMarketListing(course: String!, listing: MarketListingInput!) : MarketListing!
    removeMarketListing(course: String!, id: String!) : String!

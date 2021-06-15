@@ -511,6 +511,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getMissionProgress?: Resolver<ResolversTypes['MissionProgress'], ParentType, ContextType, RequireFields<QueryGetMissionProgressArgs, 'missionId'>>;
   getTaskObjectiveProgress?: Resolver<Array<ResolversTypes['TaskObjectiveProgress']>, ParentType, ContextType, RequireFields<QueryGetTaskObjectiveProgressArgs, 'taskId'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  marketListings?: Resolver<Array<ResolversTypes['MarketListing']>, ParentType, ContextType, RequireFields<QueryMarketListingsArgs, 'course'>>;
   mission?: Resolver<ResolversTypes['Mission'], ParentType, ContextType, RequireFields<QueryMissionArgs, never>>;
   missions?: Resolver<Array<ResolversTypes['Mission']>, ParentType, ContextType, RequireFields<QueryMissionsArgs, never>>;
   objective?: Resolver<ResolversTypes['Objective'], ParentType, ContextType, RequireFields<QueryObjectiveArgs, 'objectiveId'>>;

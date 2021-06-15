@@ -566,6 +566,7 @@ type Query = {
   getMissionProgress: MissionProgress;
   getTaskObjectiveProgress: Array<TaskObjectiveProgress>;
   getUser?: Maybe<User>;
+  marketListings: Array<MarketListing>;
   mission: Mission;
   missions: Array<Mission>;
   objective: Objective;
@@ -655,6 +656,11 @@ type QueryGetMissionProgressArgs = {
 type QueryGetTaskObjectiveProgressArgs = {
   taskId: Scalars['String'];
   username?: Maybe<Scalars['String']>;
+};
+
+
+type QueryMarketListingsArgs = {
+  course: Scalars['String'];
 };
 
 

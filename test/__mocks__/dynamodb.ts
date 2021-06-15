@@ -15,6 +15,9 @@ const dynamodbMock = {
    }),
    deleteItem: jest.fn().mockImplementation(() => {
       promise: awsSdkPromiseResponse;
+   }),
+   queryList: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
    })
 };
 

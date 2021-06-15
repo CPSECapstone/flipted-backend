@@ -1,7 +1,7 @@
 import dynamodbMock from "../../test/__mocks__/dynamodb";
 import { FROM_DB_DATE, MARKETPLACE_TABLE, TO_DB_DATE, TO_GRAPHQL_DATE } from "../environment";
 import { createListingItem } from "./marketplace.helper";
-import { ListingPK, ListingSK, MarketItem } from "./marketplace.interface";
+import { ListingPK, ListingSK, MarketItem, marketListingPrefix } from "./marketplace.interface";
 import * as marketService from "./marketplace.service";
 
 jest.mock("../../src/services/dynamodb", () => {
@@ -40,6 +40,25 @@ describe("Deleting a marketplace item", () => {
       expect(res).toEqual("success");
       expect(dynamodbMock.deleteItem).toHaveBeenCalledWith(expectedParamArgs);
       expect(dynamodbMock.deleteItem).toHaveBeenCalledTimes(1);
+   });
+});
+
+describe("Viewing marketplace items", () => {
+   it("Queries the items with the correct params", async () => {
+      const course = "testcourse"
+
+      const expectedParamArgs: QueryParams = {
+         tableName: MARKETPLACE_TABLE,
+         keyConditionExpression: "PK = :courseVal and begins_with(SK, :skPrefix) ",
+         expressionAttributeValues: {
+            ":courseVal": ListingPK(course),
+            ":skPrefix": marketListingPrefix
+         }
+      };
+
+      const res = await marketService.getMarketListings(course);
+      expect(dynamodbMock.queryList).toHaveBeenCalledWith(expectedParamArgs);
+      expect(dynamodbMock.queryList).toHaveBeenCalledTimes(1);
    });
 });
 

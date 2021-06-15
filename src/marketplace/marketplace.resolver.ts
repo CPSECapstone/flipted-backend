@@ -30,7 +30,14 @@ async function removeMarketListing(
    throw new ForbiddenError(notInstructorErrorMessage);
 }
 
+async function marketListings(_: any, args: QueryMarketListingsArgs, context: FliptedContext, info: any){
+   return marketService.getMarketListings(args.course)
+}
+
 const resolvers : Resolvers = {
+   Query: {
+      marketListings: marketListings
+   },
    Mutation: {
       addMarketListing: addMarketListing,
       removeMarketListing: removeMarketListing

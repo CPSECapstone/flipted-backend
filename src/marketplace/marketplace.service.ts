@@ -2,7 +2,7 @@ import { uid } from "uid/secure";
 import { MARKETPLACE_TABLE } from "../environment";
 import dynamodb from "../services/dynamodb";
 import { createListingItem } from "./marketplace.helper";
-import { ListingPK, ListingSK } from "./marketplace.interface";
+import { ListingPK, ListingSK, marketListingPrefix } from "./marketplace.interface";
 
 export async function addMarketListing(course: string, listing: MarketListingInput) {
    const item = createListingItem(uid(), new Date(), course, listing);
@@ -12,10 +12,23 @@ export async function addMarketListing(course: string, listing: MarketListingInp
    };
    try {
       dynamodb.putComposite(params);
-      return item
+      return item;
    } catch (err) {
       return err;
    }
+}
+
+export async function getMarketListings(course: string): Promise<MarketListing[]> {
+   const params: QueryParams = {
+      tableName: MARKETPLACE_TABLE,
+      keyConditionExpression: "PK = :courseVal and begins_with(SK, :skPrefix) ",
+      expressionAttributeValues: {
+         ":courseVal": ListingPK(course),
+         ":skPrefix": marketListingPrefix
+      }
+   };
+
+   return dynamodb.queryList<MarketListing>(params);
 }
 
 export async function removeMarketListing(course: string, listingId: string) {
