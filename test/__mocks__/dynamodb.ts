@@ -12,6 +12,9 @@ const dynamodbMock = {
    }),
    batchWrite: jest.fn().mockImplementation(() => {
       promise: awsSdkPromiseResponse;
+   }),
+   deleteItem: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
    })
 };
 
