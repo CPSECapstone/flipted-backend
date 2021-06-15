@@ -5,7 +5,7 @@ type Mission {
    course: String!
    name: String!
    description: String!
-   missionContent: [MissionContent]
+   missionContent: [MissionContent!]!
 }
 
 type SubMission {
@@ -19,8 +19,8 @@ type SubMission {
 }
 
 type Query {
-   mission(missionId: String): Mission
-   missions(course: String): [Mission]
+   mission(missionId: String): Mission!
+   missions(course: String): [Mission!]!
    subMission(subMissionId: String): SubMission
 }
 

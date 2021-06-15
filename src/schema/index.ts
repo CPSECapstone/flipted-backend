@@ -17,6 +17,7 @@ import rosterType from "../roster/roster.graphql";
 import missionMasteryType from "../missionMastery/missionMastery.graphql";
 import targetMasteryType from "../targetMastery/targetMastery.graphql";
 import gradingType from "../grading/grading.graphql"
+import marketplaceType from "../marketplace/marketplace.graphql"
 
 import userResolvers from "./user.resolver";
 import courseResolvers from "../course/course.resolver";
@@ -32,7 +33,8 @@ import goalsResolvers from "./goal.resolver";
 import rosterResolvers from "../roster/roster.resolver";
 import missionMasteryResolvers from "../missionMastery/missionMastery.resolver";
 import targetMasteryResolvers from "../targetMastery/targetMastery.resolver";
-import gradingResolvers from "../grading/grading.resolver"
+import gradingResolvers from "../grading/grading.resolver";
+import marketplaceResolvers from "../marketplace/marketplace.resolver";
 const customScalarResolver = {
    Date: GraphQLDate
 };
@@ -53,7 +55,8 @@ const typesArray = [
    rosterType,
    missionMasteryType,
    targetMasteryType,
-   gradingType
+   gradingType,
+   marketplaceType
 ];
 
 const resolversArray = [
@@ -72,7 +75,8 @@ const resolversArray = [
    rosterResolvers,
    missionMasteryResolvers,
    targetMasteryResolvers,
-   gradingResolvers
+   gradingResolvers,
+   marketplaceResolvers
 ];
 
 export const typeDefs = mergeTypeDefs(typesArray);

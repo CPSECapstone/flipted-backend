@@ -33,8 +33,8 @@ async function getAllMissionProgress(
    info: any
 ): Promise<MissionProgress[]> {
    const user =
-      context.userRole == RoleInternal.Instructor && context.username
-         ? context.username
+      context.userRole == RoleInternal.Instructor && args.username
+         ? args.username
          : context.username;
 
    return await service.getAllMissionProgressForUser(args.courseId, user);
@@ -47,8 +47,8 @@ async function getMissionProgress(
    info: any
 ): Promise<MissionProgress> {
    const user =
-      context.userRole == RoleInternal.Instructor && context.username
-         ? context.username
+      context.userRole == RoleInternal.Instructor && args.username
+         ? args.username
          : context.username;
 
    return await service.getMissionProgressForUser(args.missionId, user);
@@ -64,7 +64,7 @@ async function getAllTargetProgress(
       context.userRole == RoleInternal.Instructor && args.username
          ? args.username
          : context.username;
-  
+
    return await service.getAllTargetProgressForUser(args.courseId, user);
 }
 
@@ -107,16 +107,20 @@ async function wipeAllProgress(_: any, args: MutationWipeAllProgressArgs, contex
       throw new ForbiddenError(`User ${context.username} is not an authorized instructor.`);
    }
 
-   await service.wipeAllProgressForUser(args.username)
-   return "success"
+   await service.wipeAllProgressForUser(args.username);
+   return "success";
 }
 
-async function getAllEnrolledStudentMissionProgress(_: any, args: QueryGetAllEnrolledStudentMissionProgressArgs, context: FliptedContext) {
+async function getAllEnrolledStudentMissionProgress(
+   _: any,
+   args: QueryGetAllEnrolledStudentMissionProgressArgs,
+   context: FliptedContext
+) {
    if (context.userRole != RoleInternal.Instructor) {
       throw new ForbiddenError(`User ${context.username} is not an authorized instructor.`);
    }
 
-   return service.getAllEnrolledStudentMissionProgress(args.courseId, args.missionId)
+   return service.getAllEnrolledStudentMissionProgress(args.courseId, args.missionId);
 }
 
 const resolvers = {
@@ -137,14 +141,13 @@ const resolvers = {
    TaskStats: {
       submission: async (parent: any, args: any, context: FliptedContext) => {
          try {
-            const res = await generateTaskSubmission(parent.taskId, parent.username)
-            console.log("Found Submission")
-            return res
-         }
-         catch(err) {
+            const res = await generateTaskSubmission(parent.taskId, parent.username);
+            console.log("Found Submission");
+            return res;
+         } catch (err) {
             // task submission doesnt exist
             // TODO:  if we encounter other errors
-            return null
+            return null;
          }
       }
    },
