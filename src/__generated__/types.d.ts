@@ -293,6 +293,7 @@ type Mutation = {
   gradeAnswer: AnswerGrade;
   gradeObjectiveTaskMastery: ObjectiveTaskMastery;
   gradeTaskSubmission: TaskSubmissionGrade;
+  removeMarketListing: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress: Scalars['Boolean'];
   /** Saves a students answer to a multiple choice question quiz block */
@@ -424,6 +425,12 @@ type MutationGradeObjectiveTaskMasteryArgs = {
 
 type MutationGradeTaskSubmissionArgs = {
   grade: TaskSubmissionGradeInput;
+};
+
+
+type MutationRemoveMarketListingArgs = {
+  course: Scalars['String'];
+  id: Scalars['String'];
 };
 
 

@@ -17,9 +17,23 @@ async function addMarketListing(
    throw new ForbiddenError(notInstructorErrorMessage);
 }
 
+async function removeMarketListing(
+   _: any,
+   args: MutationRemoveMarketListingArgs,
+   context: FliptedContext,
+   info: any
+) {
+   if (context.userRole == RoleInternal.Instructor) {
+      return await marketService.removeMarketListing(args.course, args.id);
+   }
+
+   throw new ForbiddenError(notInstructorErrorMessage);
+}
+
 const resolvers : Resolvers = {
    Mutation: {
-      addMarketListing: addMarketListing
+      addMarketListing: addMarketListing,
+      removeMarketListing: removeMarketListing
    },
    MarketListing: {
       listedDate: (parent: any) => {

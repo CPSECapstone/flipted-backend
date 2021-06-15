@@ -20,4 +20,5 @@ input MarketListingInput {
 
 type Mutation {
    addMarketListing(course: String!, listing: MarketListingInput!) : MarketListing!
+   removeMarketListing(course: String!, id: String!) : String!
 }
