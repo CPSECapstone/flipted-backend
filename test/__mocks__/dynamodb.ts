@@ -18,6 +18,9 @@ const dynamodbMock = {
    }),
    queryList: jest.fn().mockImplementation(() => {
       promise: awsSdkPromiseResponse;
+   }),
+   update: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
    })
 };
 

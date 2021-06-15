@@ -25,4 +25,5 @@ type Query {
 type Mutation {
    addMarketListing(course: String!, listing: MarketListingInput!) : MarketListing!
    removeMarketListing(course: String!, id: String!) : String!
+   changePoints(course: String!, student: String!, points: Int!) : Int!
 }

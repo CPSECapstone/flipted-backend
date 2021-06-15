@@ -20,3 +20,9 @@ export function ListingPK(course: string): string {
 export function ListingSK(listingId: string): string {
    return `${marketListingPrefix}${listingId}`;
 }
+
+export interface StudentPointValues {
+   points: number;
+   totalPointsAwarded: number;
+   totalPointsSpent: number;
+}

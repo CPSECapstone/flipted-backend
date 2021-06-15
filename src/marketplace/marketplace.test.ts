@@ -1,12 +1,24 @@
 import dynamodbMock from "../../test/__mocks__/dynamodb";
-import { FROM_DB_DATE, MARKETPLACE_TABLE, TO_DB_DATE, TO_GRAPHQL_DATE } from "../environment";
+import { COURSE_CONTENT_TABLE_NAME, FROM_DB_DATE, MARKETPLACE_TABLE, TO_DB_DATE, TO_GRAPHQL_DATE } from "../environment";
+import { StudentPK, StudentSK } from "../roster/rosterInterface";
+import { getStudent } from "../roster/rosterService";
 import { createListingItem } from "./marketplace.helper";
-import { ListingPK, ListingSK, MarketItem, marketListingPrefix } from "./marketplace.interface";
+import {
+   ListingPK,
+   ListingSK,
+   MarketItem,
+   marketListingPrefix,
+   StudentPointValues
+} from "./marketplace.interface";
 import * as marketService from "./marketplace.service";
 
 jest.mock("../../src/services/dynamodb", () => {
    return dynamodbMock;
 });
+
+jest.mock("../roster/rosterService", () => ({
+   getStudent: jest.fn()
+}));
 
 describe("Converting to keys and datestrings", () => {
    it("Converts to a date string properly", async () => {
@@ -45,7 +57,7 @@ describe("Deleting a marketplace item", () => {
 
 describe("Viewing marketplace items", () => {
    it("Queries the items with the correct params", async () => {
-      const course = "testcourse"
+      const course = "testcourse";
 
       const expectedParamArgs: QueryParams = {
          tableName: MARKETPLACE_TABLE,
@@ -90,5 +102,55 @@ describe("Creating a marketplace item", () => {
          course: "Candy"
       };
       expect(createListingItem(uid, date, course, listingInput)).toEqual(expectedRes);
+   });
+});
+
+describe("Changing a students points", () => {
+   it("Should update the item with the correct params", async () => {
+      const pointValues: StudentPointValues = {
+         points: 1,
+         totalPointsAwarded: 6,
+         totalPointsSpent: 5
+      };
+      const expectedParamArgs: UpdateParams = {
+         tableName: COURSE_CONTENT_TABLE_NAME,
+         key: {
+            PK: StudentPK("userid"),
+            SK: StudentSK("courseId")
+         },
+         conditionExpression: "attribute_exists(SK)",
+         updateExpression:
+            "set points = :points, totalPointsAwarded = :totalPointsAwarded, totalPointsSpent = :totalPointsSpent",
+         expressionAttributeValues: {
+            ":points": pointValues.points,
+            ":totalPointsAwarded": pointValues.totalPointsAwarded,
+            ":totalPointsSpent": pointValues.totalPointsSpent
+         }
+      };
+
+      expect(await marketService.setStudentPoints("courseId", "userid", pointValues)).toEqual({
+         points: 1,
+         totalPointsAwarded: 6,
+         totalPointsSpent: 5
+      });
+
+      expect(dynamodbMock.update).toBeCalledWith(expectedParamArgs);
+      expect(dynamodbMock.update).toHaveBeenCalledTimes(1);
+      expect(dynamodbMock.put).toHaveBeenCalledTimes(0);
+      expect(dynamodbMock.get).toHaveBeenCalledTimes(0);
+   });
+
+   it("Should correctly add the points when modifying as a delta", async () => {
+      (getStudent as jest.Mock).mockReturnValue({
+         points: 5,
+         totalPointsAwarded: 15,
+         totalPointsSpent: 10
+      });
+      expect(await marketService.addStudentPoints("testCourse", "testId", 3)).toEqual({
+         points: 8,
+         totalPointsAwarded: 18,
+         totalPointsSpent: 10
+      });
+      expect(getStudent).toBeCalledTimes(1);
    });
 });

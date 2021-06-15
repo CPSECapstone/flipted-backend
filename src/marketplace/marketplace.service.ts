@@ -1,8 +1,15 @@
 import { uid } from "uid/secure";
-import { MARKETPLACE_TABLE } from "../environment";
+import { COURSE_CONTENT_TABLE_NAME, MARKETPLACE_TABLE } from "../environment";
+import { StudentPK, StudentSK } from "../roster/rosterInterface";
+import { getStudent } from "../roster/rosterService";
 import dynamodb from "../services/dynamodb";
 import { createListingItem } from "./marketplace.helper";
-import { ListingPK, ListingSK, marketListingPrefix } from "./marketplace.interface";
+import {
+   ListingPK,
+   ListingSK,
+   marketListingPrefix,
+   StudentPointValues
+} from "./marketplace.interface";
 
 export async function addMarketListing(course: string, listing: MarketListingInput) {
    const item = createListingItem(uid(), new Date(), course, listing);
@@ -46,4 +53,41 @@ export async function removeMarketListing(course: string, listingId: string) {
    } catch (err) {
       throw err;
    }
+}
+
+// This will simply set the points of the student
+// Use when we already know how many points the student had before calling
+export async function setStudentPoints(
+   course: string,
+   userId: string,
+   values: StudentPointValues
+): Promise<{ points: number; totalPointsAwarded: number; totalPointsSpent: number }> {
+   const expectedParamArgs: UpdateParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      key: {
+         PK: StudentPK(userId),
+         SK: StudentSK(course)
+      },
+      conditionExpression: "attribute_exists(SK)",
+      updateExpression:
+         "set points = :points, totalPointsAwarded = :totalPointsAwarded, totalPointsSpent = :totalPointsSpent",
+      expressionAttributeValues: {
+         ":points": values.points,
+         ":totalPointsAwarded": values.totalPointsAwarded,
+         ":totalPointsSpent": values.totalPointsSpent
+      }
+   };
+
+   await dynamodb.update(expectedParamArgs);
+   return values;
+}
+
+export async function addStudentPoints(course: string, userId: string, pointDelta: number) {
+   const student = await getStudent(course, userId);
+   const newPointValues: StudentPointValues = {
+      points: pointDelta + student.points,
+      totalPointsAwarded: pointDelta + student.totalPointsAwarded,
+      totalPointsSpent: student.totalPointsSpent
+   };
+   return await setStudentPoints(course, userId, newPointValues);
 }

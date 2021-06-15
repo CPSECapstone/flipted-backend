@@ -30,21 +30,21 @@ export async function getStudent(course: string, studentId: string): Promise<Stu
    const params: GetCompositeParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       key: {
-         PK: StudentPK(course),
-         SK: StudentSK(studentId)
+         PK: StudentPK(studentId),
+         SK: StudentSK(course)
       }
    };
    try {
       const output = await dynamodb.getComposite(params);
       if (output.Item) {
          const item = <StudentItem>unmarshall(output.Item);
-         const objective = helper.dbItemToStudent(item);
-         return objective;
+         const student = helper.dbItemToStudent(item);
+         return student;
       }
 
       throw new Error(`Student not found with course=${course} and studentId=${studentId}`);
    } catch (err) {
-      return err;
+      throw err;
    }
 }
 

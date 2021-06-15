@@ -288,6 +288,7 @@ type Mutation = {
   addTask: Scalars['String'];
   addTextBlock: Scalars['String'];
   addVideoBlock: Scalars['String'];
+  changePoints: Scalars['Int'];
   deleteGoal: Scalars['String'];
   editOrCreateGoal: Scalars['String'];
   gradeAnswer: AnswerGrade;
@@ -400,6 +401,13 @@ type MutationAddTextBlockArgs = {
 
 type MutationAddVideoBlockArgs = {
   videoblock: VideoBlockInput;
+};
+
+
+type MutationChangePointsArgs = {
+  course: Scalars['String'];
+  student: Scalars['String'];
+  points: Scalars['Int'];
 };
 
 

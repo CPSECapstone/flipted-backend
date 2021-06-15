@@ -5,7 +5,7 @@ async function addStudent(_: any, args: MutationAddStudentArgs) {
 }
 
 async function getStudent(_: any, args: QueryStudentArgs) {
-   return service.getStudent(args.studentId, args.course);
+   return service.getStudent(args.course, args.studentId);
 }
 
 async function listStudentsByCourse(_: any, args: QueryStudentsArgs) {
