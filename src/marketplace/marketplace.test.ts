@@ -1,3 +1,4 @@
+import { UpdateItemInput } from "@aws-sdk/client-dynamodb";
 import { mocked } from "ts-jest/utils";
 import { uid } from "uid";
 import dynamodbMock from "../../test/__mocks__/dynamodb";
@@ -27,6 +28,7 @@ import {
    StudentPointValues
 } from "./marketplace.interface";
 import * as marketService from "./marketplace.service";
+import { executePurchase } from "./marketplace.service";
 
 jest.mock("../../src/services/dynamodb", () => {
    return dynamodbMock;
@@ -56,21 +58,23 @@ describe("Converting to keys and datestrings", () => {
       it("Converts the listing SK properly", async () => {
          expect(ListingSK("id123")).toEqual("LISTING#id123");
       });
-      it("Converts the receipt PK properly", async () => {
-         expect(ReceiptPK("course")).toEqual("COURSE#course")
-      });
-      it("Converts the receipt SK properly", async () => {
-         expect(ReceiptSK("receiptId")).toEqual("RECEIPT#receiptId")
-      });
-      it("Converts the receipt MI_PK properly", async () => {
-         expect(ReceiptMI_PK("listingId")).toEqual("LISTING#listingId")
-      });
-      it("Converts the receipt D_SK properly", async () => {
-         expect(ReceiptD_SK(new Date(0))).toEqual("PURCHASE_DATE#1970-01-01T00:00:00.000Z")
-      });
-      it("Converts the receipt U_D_SK properly", async () => {
-         expect(ReceiptU_D_SK("userid", new Date(0))).toEqual("USER#userid#PURCHASE_DATE#1970-01-01T00:00:00.000Z")
-      });
+   it("Converts the receipt PK properly", async () => {
+      expect(ReceiptPK("course")).toEqual("COURSE#course");
+   });
+   it("Converts the receipt SK properly", async () => {
+      expect(ReceiptSK("receiptId")).toEqual("RECEIPT#receiptId");
+   });
+   it("Converts the receipt MI_PK properly", async () => {
+      expect(ReceiptMI_PK("listingId")).toEqual("LISTING#listingId");
+   });
+   it("Converts the receipt D_SK properly", async () => {
+      expect(ReceiptD_SK(new Date(0))).toEqual("PURCHASE_DATE#1970-01-01T00:00:00.000Z");
+   });
+   it("Converts the receipt U_D_SK properly", async () => {
+      expect(ReceiptU_D_SK("userid", new Date(0))).toEqual(
+         "USER#userid#PURCHASE_DATE#1970-01-01T00:00:00.000Z"
+      );
+   });
 });
 
 describe("Deleting a marketplace item", () => {
@@ -91,6 +95,20 @@ describe("Deleting a marketplace item", () => {
 });
 
 describe("Viewing marketplace items", () => {
+   it("Gets a single item with the correct params", async () => {
+      const params: GetCompositeParams = {
+         tableName: MARKETPLACE_TABLE,
+         key: {
+            PK: ListingPK("courseid"),
+            SK: ListingSK("listingid")
+         }
+      };
+
+      const res = await marketService.getMarketListing("courseid", "listingid");
+
+      expect(dynamodbMock.getCompositeDemarshall).toHaveBeenCalledWith(params);
+      expect(dynamodbMock.getCompositeDemarshall).toHaveBeenCalledTimes(1);
+   });
    it("Queries the items with the correct params", async () => {
       const course = "testcourse";
 
@@ -167,16 +185,16 @@ describe("Editing a marketplace item", () => {
             ":stock": 10
          }
       };
-      marketService.editMarketListing("courseId", "listingId", listingInput)
-      expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs)
-      expect(dynamodbMock.updateMarshall).toHaveBeenCalledTimes(1)
+      marketService.editMarketListing("courseId", "listingId", listingInput);
+      expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs);
+      expect(dynamodbMock.updateMarshall).toHaveBeenCalledTimes(1);
    });
    it("Will remove the stock attribute if the input is null", async () => {
       const listingInput: MarketListingInput = {
          listingName: "Snickers Bar",
          description: "One delicious Snickers bar.",
          image: "https://i.imgur.com/UHm9oTg.jpeg",
-         price: 5,
+         price: 5
       };
 
       const expectedParamArgs: UpdateParams = {
@@ -192,12 +210,12 @@ describe("Editing a marketplace item", () => {
             ":listingName": "Snickers Bar",
             ":description": "One delicious Snickers bar.",
             ":image": "https://i.imgur.com/UHm9oTg.jpeg",
-            ":price": 5,
+            ":price": 5
          }
       };
-      marketService.editMarketListing("courseId", "listingId", listingInput)
-      expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs)
-      expect(dynamodbMock.updateMarshall).toHaveBeenCalledTimes(2)
+      marketService.editMarketListing("courseId", "listingId", listingInput);
+      expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs);
+      expect(dynamodbMock.updateMarshall).toHaveBeenCalledTimes(2);
    });
 });
 
@@ -255,7 +273,7 @@ describe("Creating a receipt", () => {
    test("Creating dynamo db item", async () => {
       mocked(uid).mockReturnValue("receiptid");
 
-      const date = new Date(0)
+      const date = new Date(0);
       const listing: MarketListing = {
          id: "cupcakeid",
          listingName: "Chocolate Cupcake",
@@ -268,13 +286,13 @@ describe("Creating a receipt", () => {
          course: "courseid"
       };
 
-      const receiptInput : ReceiptInput = {
+      const receiptInput: ReceiptInput = {
          date: date,
          note: "With extra sprinkles!",
          quantity: 2,
          studentId: "userid",
          listing: listing
-      }
+      };
 
       const expectedRes: ReceiptItem = {
          PK: ReceiptPK("courseid"),
@@ -285,18 +303,58 @@ describe("Creating a receipt", () => {
          note: "With extra sprinkles!",
          purchaseDate: "1970-01-01T00:00:00.000Z",
          pointsSpent: 6,
-         quantity: 2, 
+         quantity: 2,
          studentId: "userid",
          receiptId: "receiptid",
          course: "courseid",
          listingName: "Chocolate Cupcake",
          listingId: "cupcakeid",
          fulfilled: false
-      }
-      expect(createReceiptItem(receiptInput)).toEqual(expectedRes)
-      expect(uid).toBeCalledTimes(1)
-
+      };
+      expect(createReceiptItem(receiptInput)).toEqual(expectedRes);
+      expect(uid).toBeCalledTimes(1);
    });
+
+   test;
 });
 
+describe("Making a purchase", () => {
+   test("Updating the marketplace listing stats with a stockless item", async () => {
+      dynamodbMock.updateMarshall.mockClear()
 
+      const expectedParamArgs: UpdateParams = {
+         tableName: MARKETPLACE_TABLE,
+         key: {
+            PK: ListingPK("courseid"),
+            SK: ListingSK("cupcakeid")
+         },
+         conditionExpression: "attribute_exists(SK)",
+         updateExpression:
+            "set timesPurchased = timesPurchased + :quantity",
+         expressionAttributeValues: {
+            ":quantity": 2,
+         }
+      };
+      marketService.updateMarketListingStats("courseid", "cupcakeid", 2)
+      expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs)
+      expect(dynamodbMock.updateMarshall).toBeCalledTimes(1)
+   });
+
+   test("Creates a graphql receipt on purchase", async () => {
+      const date = new Date(0);
+      const expectedRes: Omit<Receipt, "student" | "listing"> = {
+         note: "With extra sprinkles!",
+         purchaseDate: date,
+         pointsSpent: 6,
+         quantity: 2,
+         studentId: "userid",
+         receiptId: "receiptid",
+         course: "courseid",
+         listingId: "cupcakeid",
+         fulfilled: false
+      };
+      expect(await executePurchase("courseid", "listingid", "userid", 2)).toEqual(expectedRes);
+   });
+
+   test;
+});

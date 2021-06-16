@@ -4,27 +4,46 @@ type MarketListing {
    description: String!
    image: String!
    course: String!
-   listedDate: Date!,
-   price: Int!,
+   listedDate: Date!
+   price: Int!
    stock: Int
    timesPurchased: Int!
 }
 
 input MarketListingInput {
-   listingName: String!,
-   description: String!,
+   listingName: String!
+   description: String!
    image: String!
-   price: Int!,
+   price: Int!
    stock: Int
 }
 
+"""
+The student and listing objects contained in the receipt will reflect
+the updated values as a result of the purchase.
+"""
+type Receipt {
+   studentId: String!
+   listingId: String!
+   student: Student!
+   listing: MarketListing!
+   receiptId: String!
+   course: String!
+   note: String!
+   purchaseDate: Date!
+   pointsSpent: Int!
+   quantity: Int!
+   fulfilled: Boolean!
+}
+
 type Query {
-   marketListings(course: String!) : [MarketListing!]!
+   marketListings(course: String!): [MarketListing!]!
 }
 
 type Mutation {
-   editMarketListing(course: String! id: String!, listing: MarketListingInput!) : MarketListing!
-   addMarketListing(course: String!, listing: MarketListingInput!) : MarketListing!
-   removeMarketListing(course: String!, id: String!) : String!
-   changePoints(course: String!, student: String!, points: Int!) : Int!
+   purchase(course: String!, listingId: String!, quantity: Int!) : Receipt!
+   editMarketListing(course: String!, id: String!, listing: MarketListingInput!): MarketListing!
+   addMarketListing(course: String!, listing: MarketListingInput!): MarketListing!
+   removeMarketListing(course: String!, id: String!): String!
+   changePoints(course: String!, student: String!, points: Int!): Int!
 }

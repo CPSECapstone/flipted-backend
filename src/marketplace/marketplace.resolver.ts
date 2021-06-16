@@ -47,6 +47,10 @@ async function marketListings(_: any, args: QueryMarketListingsArgs) {
    return marketService.getMarketListings(args.course);
 }
 
+async function purchase(_: any, args: MutationPurchaseArgs, context: FliptedContext) {
+   return <Receipt><unknown>marketService.executePurchase(args.course, args.listingId, context.username, args.quantity);
+}
+
 async function changePoints(_: any, args: MutationChangePointsArgs, context: FliptedContext) {
    if (context.userRole == RoleInternal.Instructor) {
       return (await addStudentPoints(args.course, args.student, args.points)).points;
@@ -55,11 +59,12 @@ async function changePoints(_: any, args: MutationChangePointsArgs, context: Fli
    throw new ForbiddenError(notInstructorErrorMessage);
 }
 
-const resolvers: Resolvers = {
+const resolvers = {
    Query: {
       marketListings: marketListings
    },
    Mutation: {
+      purchase: purchase,
       addMarketListing: addMarketListing,
       removeMarketListing: removeMarketListing,
       editMarketListing: editMarketListing,

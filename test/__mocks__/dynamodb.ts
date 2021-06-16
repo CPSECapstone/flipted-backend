@@ -24,6 +24,9 @@ const dynamodbMock = {
    }),
    updateMarshall: jest.fn().mockImplementation(() => {
       promise: awsSdkPromiseResponse;
+   }),
+   getCompositeDemarshall: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
    })
 };
 

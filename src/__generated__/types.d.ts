@@ -295,6 +295,7 @@ type Mutation = {
   gradeAnswer: AnswerGrade;
   gradeObjectiveTaskMastery: ObjectiveTaskMastery;
   gradeTaskSubmission: TaskSubmissionGrade;
+  purchase: Receipt;
   removeMarketListing: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress: Scalars['Boolean'];
@@ -441,6 +442,13 @@ type MutationGradeObjectiveTaskMasteryArgs = {
 
 type MutationGradeTaskSubmissionArgs = {
   grade: TaskSubmissionGradeInput;
+};
+
+
+type MutationPurchaseArgs = {
+  course: Scalars['String'];
+  listingId: Scalars['String'];
+  quantity: Scalars['Int'];
 };
 
 
@@ -843,6 +851,25 @@ type QuizBlockInput = {
   requiredScore: Scalars['Int'];
   points: Scalars['Int'];
   questionIds: Array<Scalars['String']>;
+};
+
+/**
+ * The student and listing objects contained in the receipt will reflect
+ * the updated values as a result of the purchase.
+ */
+type Receipt = {
+  __typename?: 'Receipt';
+  studentId: Scalars['String'];
+  listingId: Scalars['String'];
+  student: Student;
+  listing: MarketListing;
+  receiptId: Scalars['String'];
+  course: Scalars['String'];
+  note: Scalars['String'];
+  purchaseDate: Scalars['Date'];
+  pointsSpent: Scalars['Int'];
+  quantity: Scalars['Int'];
+  fulfilled: Scalars['Boolean'];
 };
 
 enum Role {

@@ -7,6 +7,7 @@ import { createListingItem } from "./marketplace.helper";
 import {
    ListingPK,
    ListingSK,
+   MarketItem,
    marketListingPrefix,
    StudentPointValues
 } from "./marketplace.interface";
@@ -30,24 +31,23 @@ export async function editMarketListing(
    listingId: string,
    listing: MarketListingInput
 ): Promise<MarketListing> {
-
-   let updateExpression = "set listingName = :listingName, description = :description, image = :image, price = :price"
-   let expAttrValues: any =  {
+   let updateExpression =
+      "set listingName = :listingName, description = :description, image = :image, price = :price";
+   let expAttrValues: any = {
       ":listingName": listing.listingName,
       ":description": listing.description,
       ":image": listing.image,
-      ":price": listing.price,
-   }
+      ":price": listing.price
+   };
 
-   if(listing.stock != undefined) {
-      updateExpression += ", stock = :stock"
+   if (listing.stock != undefined) {
+      updateExpression += ", stock = :stock";
       expAttrValues = {
          ":stock": listing.stock,
          ...expAttrValues
-      }
-   }
-   else {
-      updateExpression += " remove stock"
+      };
+   } else {
+      updateExpression += " remove stock";
    }
 
    const params: UpdateParams = {
@@ -61,9 +61,20 @@ export async function editMarketListing(
       expressionAttributeValues: expAttrValues
    };
 
-   return dynamodb.updateMarshall<MarketListing>(params)
+   return dynamodb.updateMarshall<MarketListing>(params);
 }
 
+export async function getMarketListing(course: string, listingId: string): Promise<MarketItem> {
+   const params: GetCompositeParams = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: ListingPK(course),
+         SK: ListingSK(listingId)
+      }
+   };
+
+   return dynamodb.getCompositeDemarshall<MarketItem>(params)
+}
 export async function getMarketListings(course: string): Promise<MarketListing[]> {
    const params: QueryParams = {
       tableName: MARKETPLACE_TABLE,
@@ -101,7 +112,7 @@ export async function setStudentPoints(
    userId: string,
    values: StudentPointValues
 ): Promise<{ points: number; totalPointsAwarded: number; totalPointsSpent: number }> {
-   const expectedParamArgs: UpdateParams = {
+   const params: UpdateParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       key: {
          PK: StudentPK(userId),
@@ -117,7 +128,7 @@ export async function setStudentPoints(
       }
    };
 
-   const ret = await dynamodb.update(expectedParamArgs);
+   const ret = await dynamodb.update(params);
    return values;
 }
 
@@ -129,4 +140,36 @@ export async function addStudentPoints(course: string, userId: string, pointDelt
       totalPointsSpent: student.totalPointsSpent
    };
    return await setStudentPoints(course, userId, newPointValues);
+}
+
+// Updates values such as times purchased and stock
+export async function updateMarketListingStats(courseId: string, listingId: string, quantity: number) : Promise<MarketItem> {
+   const params: UpdateParams = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: ListingPK(courseId),
+         SK: ListingSK(listingId)
+      },
+      conditionExpression: "attribute_exists(SK)",
+      updateExpression:
+         "set timesPurchased = timesPurchased + :quantity", // Update stock after I make it non nullable
+      expressionAttributeValues: {
+         ":quantity": 2,
+      }
+   };
+
+   return await dynamodb.updateMarshall<MarketItem>(params)
+}
+
+export async function executePurchase(
+   course: string,
+   listingId: string,
+   userId: string,
+   quantity: number
+): Promise<Omit<Receipt, "student" | "listing">> {
+   const listingItem = await getMarketListing(course, listingId)
+
+   // make purchase and if successful: 
+   updateMarketListingStats(course, listingId, quantity)
+   return { pointsSpent: 3 } as unknown as Promise<Receipt>;
 }

@@ -156,6 +156,24 @@ async function getComposite(params: GetCompositeParams): Promise<GetItemCommandO
    }
 }
 
+async function getCompositeDemarshall<T>(params: GetCompositeParams): Promise<T> {
+   const command = new GetItemCommand({
+      TableName: params.tableName,
+      Key: marshall(params.key, marshallOpts),
+      ProjectionExpression: params.projectionExpression
+   });
+
+   try {
+      const output: GetItemCommandOutput = await client.send(command);
+      if(output.Item) {
+         return <T>unmarshall(output.Item)
+      }
+      return <T><unknown>undefined
+   } catch (err) {
+      return err;
+   }
+}
+
 async function scan(params: ScanParams): Promise<ScanCommandOutput> {
    const command = new ScanCommand({
       TableName: params.tableName,
@@ -354,6 +372,7 @@ const dynamodb = {
    put,
    get,
    getComposite,
+   getCompositeDemarshall,
    putComposite,
    scan,
    update,
