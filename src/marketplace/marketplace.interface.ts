@@ -1,6 +1,6 @@
 export type MarketItem = CompositeDBItem & {
    id: string;
-   name: string;
+   listingName: string;
    description: string;
    image: string;
    course: string;

@@ -102,9 +102,10 @@ async function updateMarshall<T>(params: UpdateParams): Promise<T> {
    });
 
    try {
-      const output: GetItemCommandOutput = await client.send(command);
-      if (output.Item) {
-         const item = unmarshall(output.Item);
+      const output: UpdateItemCommandOutput = await client.send(command);
+      console.log(output)
+      if (output.Attributes) {
+         const item = unmarshall(output.Attributes);
          return <T>item;
       }
 

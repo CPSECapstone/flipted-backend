@@ -168,7 +168,7 @@ type ImageBlockInput = {
 type MarketListing = {
   __typename?: 'MarketListing';
   id: Scalars['String'];
-  name: Scalars['String'];
+  listingName: Scalars['String'];
   description: Scalars['String'];
   image: Scalars['String'];
   course: Scalars['String'];
@@ -179,7 +179,7 @@ type MarketListing = {
 };
 
 type MarketListingInput = {
-  name: Scalars['String'];
+  listingName: Scalars['String'];
   description: Scalars['String'];
   image: Scalars['String'];
   price: Scalars['Int'];

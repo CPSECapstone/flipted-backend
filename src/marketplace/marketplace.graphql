@@ -1,6 +1,6 @@
 type MarketListing {
    id: String!
-   name: String!
+   listingName: String!
    description: String!
    image: String!
    course: String!
@@ -11,7 +11,7 @@ type MarketListing {
 }
 
 input MarketListingInput {
-   name: String!,
+   listingName: String!,
    description: String!,
    image: String!
    price: Int!,

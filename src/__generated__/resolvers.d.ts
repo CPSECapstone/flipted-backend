@@ -358,7 +358,7 @@ export type ImageBlockResolvers<ContextType = any, ParentType extends ResolversP
 
 export type MarketListingResolvers<ContextType = any, ParentType extends ResolversParentTypes['MarketListing'] = ResolversParentTypes['MarketListing']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  listingName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   course?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

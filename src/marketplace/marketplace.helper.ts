@@ -7,7 +7,7 @@ export function createListingItem(uid: string, date: Date, course: string, listi
       PK: ListingPK(course),
       SK: ListingSK(uid),
       id: uid,
-      name: listing.name,
+      listingName: listing.listingName,
       description: listing.description,
       image: listing.image,
       price: listing.price < 0 ? 0 : listing.price,

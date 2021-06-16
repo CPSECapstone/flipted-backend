@@ -30,6 +30,26 @@ export async function editMarketListing(
    listingId: string,
    listing: MarketListingInput
 ): Promise<MarketListing> {
+
+   let updateExpression = "set listingName = :listingName, description = :description, image = :image, price = :price"
+   let expAttrValues: any =  {
+      ":listingName": listing.listingName,
+      ":description": listing.description,
+      ":image": listing.image,
+      ":price": listing.price,
+   }
+
+   if(listing.stock != undefined) {
+      updateExpression += ", stock = :stock"
+      expAttrValues = {
+         ":stock": listing.stock,
+         ...expAttrValues
+      }
+   }
+   else {
+      updateExpression += " remove stock"
+   }
+
    const params: UpdateParams = {
       tableName: MARKETPLACE_TABLE,
       key: {
@@ -37,15 +57,8 @@ export async function editMarketListing(
          SK: ListingSK(listingId)
       },
       conditionExpression: "attribute_exists(SK)",
-      updateExpression:
-         "set name = :name, description = :description, image = :image, price = :price, stock = :stock",
-      expressionAttributeValues: {
-         ":name": listing.name,
-         ":description": listing.description,
-         ":image": listing.image,
-         ":price": listing.price,
-         ":stock": listing.stock
-      },
+      updateExpression: updateExpression,
+      expressionAttributeValues: expAttrValues
    };
 
    return dynamodb.updateMarshall<MarketListing>(params)
