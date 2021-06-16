@@ -1,6 +1,6 @@
 import { uid } from "uid";
 import { TO_DB_DATE } from "../environment";
-import { ListingPK, ListingSK, MarketItem } from "./marketplace.interface";
+import { ListingPK, ListingSK, MarketItem, ReceiptD_SK, ReceiptInput, ReceiptItem, ReceiptMI_PK, ReceiptPK, ReceiptSK, ReceiptU_D_SK } from "./marketplace.interface";
 
 export function createListingItem(uid: string, date: Date, course: string, listing: MarketListingInput) : MarketItem {
    return {
@@ -15,5 +15,26 @@ export function createListingItem(uid: string, date: Date, course: string, listi
       timesPurchased: 0,
       listedDate: TO_DB_DATE(date),
       course: course
+   }
+}
+
+export function createReceiptItem(input: ReceiptInput) : ReceiptItem {
+   const receiptId = uid()
+   return {
+      PK: ReceiptPK(input.listing.course),
+      SK: ReceiptSK(receiptId),
+      D_SK: ReceiptD_SK(input.date),
+      U_D_SK: ReceiptU_D_SK(input.studentId, input.date),
+      MI_PK: ReceiptMI_PK(input.listing.id),
+      receiptId: receiptId,
+      note: input.note,
+      purchaseDate: TO_DB_DATE(input.date),
+      pointsSpent: input.quantity * input.listing.price,
+      quantity: input.quantity, 
+      studentId: input.studentId,
+      course: input.listing.course,
+      listingName: input.listing.listingName,
+      listingId: input.listing.id,
+      fulfilled: false
    }
 }

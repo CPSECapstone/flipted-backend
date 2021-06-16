@@ -1,3 +1,5 @@
+import { mocked } from "ts-jest/utils";
+import { uid } from "uid";
 import dynamodbMock from "../../test/__mocks__/dynamodb";
 import {
    COURSE_CONTENT_TABLE_NAME,
@@ -8,12 +10,20 @@ import {
 } from "../environment";
 import { StudentPK, StudentSK } from "../roster/rosterInterface";
 import { getStudent } from "../roster/rosterService";
-import { createListingItem } from "./marketplace.helper";
+import { createListingItem, createReceiptItem } from "./marketplace.helper";
 import {
    ListingPK,
    ListingSK,
    MarketItem,
    marketListingPrefix,
+   ReceiptD_SK,
+   ReceiptInput,
+   ReceiptItem,
+   ReceiptMI_PK,
+   ReceiptPK,
+   receiptPrefix,
+   ReceiptSK,
+   ReceiptU_D_SK,
    StudentPointValues
 } from "./marketplace.interface";
 import * as marketService from "./marketplace.service";
@@ -26,6 +36,10 @@ jest.mock("../roster/rosterService", () => ({
    getStudent: jest.fn()
 }));
 
+jest.mock("uid", () => ({
+   uid: jest.fn()
+}));
+
 describe("Converting to keys and datestrings", () => {
    it("Converts to a date string properly", async () => {
       expect(TO_DB_DATE(new Date(0))).toEqual("1970-01-01T00:00:00.000Z");
@@ -36,11 +50,26 @@ describe("Converting to keys and datestrings", () => {
       it("Converts to a graphql date string properly", async () => {
          expect(TO_GRAPHQL_DATE("1970-01-01T00:00:00.000Z")).toEqual(new Date(0));
       }),
-      it("Converts the PK properly", async () => {
+      it("Converts the listing PK properly", async () => {
          expect(ListingPK("test")).toEqual("COURSE#test");
       }),
-      it("Converts the SK properly", async () => {
+      it("Converts the listing SK properly", async () => {
          expect(ListingSK("id123")).toEqual("LISTING#id123");
+      });
+      it("Converts the receipt PK properly", async () => {
+         expect(ReceiptPK("course")).toEqual("COURSE#course")
+      });
+      it("Converts the receipt SK properly", async () => {
+         expect(ReceiptSK("receiptId")).toEqual("RECEIPT#receiptId")
+      });
+      it("Converts the receipt MI_PK properly", async () => {
+         expect(ReceiptMI_PK("listingId")).toEqual("LISTING#listingId")
+      });
+      it("Converts the receipt D_SK properly", async () => {
+         expect(ReceiptD_SK(new Date(0))).toEqual("PURCHASE_DATE#1970-01-01T00:00:00.000Z")
+      });
+      it("Converts the receipt U_D_SK properly", async () => {
+         expect(ReceiptU_D_SK("userid", new Date(0))).toEqual("USER#userid#PURCHASE_DATE#1970-01-01T00:00:00.000Z")
       });
 });
 
@@ -221,3 +250,53 @@ describe("Changing a students points", () => {
       expect(getStudent).toBeCalledTimes(1);
    });
 });
+
+describe("Creating a receipt", () => {
+   test("Creating dynamo db item", async () => {
+      mocked(uid).mockReturnValue("receiptid");
+
+      const date = new Date(0)
+      const listing: MarketListing = {
+         id: "cupcakeid",
+         listingName: "Chocolate Cupcake",
+         description: "One delicious Snickers bar.",
+         image: "https://i.imgur.com/UHm9oTg.jpeg",
+         price: 3,
+         stock: 10,
+         timesPurchased: 0,
+         listedDate: date,
+         course: "courseid"
+      };
+
+      const receiptInput : ReceiptInput = {
+         date: date,
+         note: "With extra sprinkles!",
+         quantity: 2,
+         studentId: "userid",
+         listing: listing
+      }
+
+      const expectedRes: ReceiptItem = {
+         PK: ReceiptPK("courseid"),
+         SK: ReceiptSK("receiptid"),
+         D_SK: ReceiptD_SK(date),
+         U_D_SK: ReceiptU_D_SK("userid", date),
+         MI_PK: ReceiptMI_PK("cupcakeid"),
+         note: "With extra sprinkles!",
+         purchaseDate: "1970-01-01T00:00:00.000Z",
+         pointsSpent: 6,
+         quantity: 2, 
+         studentId: "userid",
+         receiptId: "receiptid",
+         course: "courseid",
+         listingName: "Chocolate Cupcake",
+         listingId: "cupcakeid",
+         fulfilled: false
+      }
+      expect(createReceiptItem(receiptInput)).toEqual(expectedRes)
+      expect(uid).toBeCalledTimes(1)
+
+   });
+});
+
+
