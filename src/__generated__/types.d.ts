@@ -290,6 +290,7 @@ type Mutation = {
   addVideoBlock: Scalars['String'];
   changePoints: Scalars['Int'];
   deleteGoal: Scalars['String'];
+  editMarketListing: MarketListing;
   editOrCreateGoal: Scalars['String'];
   gradeAnswer: AnswerGrade;
   gradeObjectiveTaskMastery: ObjectiveTaskMastery;
@@ -413,6 +414,13 @@ type MutationChangePointsArgs = {
 
 type MutationDeleteGoalArgs = {
   id: Scalars['String'];
+};
+
+
+type MutationEditMarketListingArgs = {
+  course: Scalars['String'];
+  id: Scalars['String'];
+  listing: MarketListingInput;
 };
 
 

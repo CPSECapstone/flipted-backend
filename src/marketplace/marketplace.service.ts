@@ -25,6 +25,32 @@ export async function addMarketListing(course: string, listing: MarketListingInp
    }
 }
 
+export async function editMarketListing(
+   course: string,
+   listingId: string,
+   listing: MarketListingInput
+): Promise<MarketListing> {
+   const params: UpdateParams = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: ListingPK(course),
+         SK: ListingSK(listingId)
+      },
+      conditionExpression: "attribute_exists(SK)",
+      updateExpression:
+         "set name = :name, description = :description, image = :image, price = :price, stock = :stock",
+      expressionAttributeValues: {
+         ":name": listing.name,
+         ":description": listing.description,
+         ":image": listing.image,
+         ":price": listing.price,
+         ":stock": listing.stock
+      },
+   };
+
+   return dynamodb.updateMarshall<MarketListing>(params)
+}
+
 export async function getMarketListings(course: string): Promise<MarketListing[]> {
    const params: QueryParams = {
       tableName: MARKETPLACE_TABLE,
@@ -78,7 +104,7 @@ export async function setStudentPoints(
       }
    };
 
-   await dynamodb.update(expectedParamArgs);
+   const ret = await dynamodb.update(expectedParamArgs);
    return values;
 }
 

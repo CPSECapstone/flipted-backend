@@ -10,8 +10,7 @@ import { addStudentPoints } from "./marketplace.service";
 async function addMarketListing(
    _: any,
    args: MutationAddMarketListingArgs,
-   context: FliptedContext,
-   info: any
+   context: FliptedContext
 ) {
    if (context.userRole == RoleInternal.Instructor) {
       return await marketService.addMarketListing(args.course, args.listing);
@@ -23,8 +22,7 @@ async function addMarketListing(
 async function removeMarketListing(
    _: any,
    args: MutationRemoveMarketListingArgs,
-   context: FliptedContext,
-   info: any
+   context: FliptedContext
 ) {
    if (context.userRole == RoleInternal.Instructor) {
       return await marketService.removeMarketListing(args.course, args.id);
@@ -33,21 +31,23 @@ async function removeMarketListing(
    throw new ForbiddenError(notInstructorErrorMessage);
 }
 
-async function marketListings(
+async function editMarketListing(
    _: any,
-   args: QueryMarketListingsArgs,
-   context: FliptedContext,
-   info: any
+   args: MutationEditMarketListingArgs,
+   context: FliptedContext
 ) {
+   if (context.userRole == RoleInternal.Instructor) {
+      return await marketService.editMarketListing(args.course, args.id, args.listing);
+   }
+
+   throw new ForbiddenError(notInstructorErrorMessage);
+}
+
+async function marketListings(_: any, args: QueryMarketListingsArgs) {
    return marketService.getMarketListings(args.course);
 }
 
-async function changePoints(
-   _: any,
-   args: MutationChangePointsArgs,
-   context: FliptedContext,
-   info: any
-) {
+async function changePoints(_: any, args: MutationChangePointsArgs, context: FliptedContext) {
    if (context.userRole == RoleInternal.Instructor) {
       return (await addStudentPoints(args.course, args.student, args.points)).points;
    }
@@ -62,6 +62,7 @@ const resolvers: Resolvers = {
    Mutation: {
       addMarketListing: addMarketListing,
       removeMarketListing: removeMarketListing,
+      editMarketListing: editMarketListing,
       changePoints: changePoints
    },
    MarketListing: {

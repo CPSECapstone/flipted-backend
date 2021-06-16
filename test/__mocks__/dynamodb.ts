@@ -21,6 +21,9 @@ const dynamodbMock = {
    }),
    update: jest.fn().mockImplementation(() => {
       promise: awsSdkPromiseResponse;
+   }),
+   updateMarshall: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
    })
 };
 

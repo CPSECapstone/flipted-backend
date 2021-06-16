@@ -1,5 +1,11 @@
 import dynamodbMock from "../../test/__mocks__/dynamodb";
-import { COURSE_CONTENT_TABLE_NAME, FROM_DB_DATE, MARKETPLACE_TABLE, TO_DB_DATE, TO_GRAPHQL_DATE } from "../environment";
+import {
+   COURSE_CONTENT_TABLE_NAME,
+   FROM_DB_DATE,
+   MARKETPLACE_TABLE,
+   TO_DB_DATE,
+   TO_GRAPHQL_DATE
+} from "../environment";
 import { StudentPK, StudentSK } from "../roster/rosterInterface";
 import { getStudent } from "../roster/rosterService";
 import { createListingItem } from "./marketplace.helper";
@@ -102,6 +108,38 @@ describe("Creating a marketplace item", () => {
          course: "Candy"
       };
       expect(createListingItem(uid, date, course, listingInput)).toEqual(expectedRes);
+   });
+});
+
+describe("Editing a marketplace item", () => {
+   it("Will remove the stock attribute if the input is null", async () => {
+      const listingInput: MarketListingInput = {
+         name: "Snickers Bar",
+         description: "One delicious Snickers bar.",
+         image: "https://i.imgur.com/UHm9oTg.jpeg",
+         price: 5,
+      };
+
+      const expectedParamArgs: UpdateParams = {
+         tableName: MARKETPLACE_TABLE,
+         key: {
+            PK: ListingPK("courseId"),
+            SK: ListingSK("listingId")
+         },
+         conditionExpression: "attribute_exists(SK)",
+         updateExpression:
+            "set name = :name, description = :description, image = :image, price = :price, stock = :stock",
+         expressionAttributeValues: {
+            ":name": "Snickers Bar",
+            ":description": "One delicious Snickers bar.",
+            ":image": "https://i.imgur.com/UHm9oTg.jpeg",
+            ":price": 5,
+            ":stock": undefined
+         }
+      };
+      marketService.editMarketListing("courseId", "listingId", listingInput)
+      expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs)
+      expect(dynamodbMock.updateMarshall).toHaveBeenCalledTimes(1)
    });
 });
 

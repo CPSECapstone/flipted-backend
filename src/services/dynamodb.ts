@@ -83,14 +83,46 @@ async function get(params: GetParams): Promise<GetItemCommandOutput> {
    }
 }
 
-async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
-   
+async function updateMarshall<T>(params: UpdateParams): Promise<T> {
    // determine if UpdateParams is for a composite or single key item
-   const key = (typeof params.key === 'string') ? marshall(
-      {
-         id: params.key
-      }) : marshall(params.key, marshallOpts)
-   
+   const key =
+      typeof params.key === "string"
+         ? marshall({
+              id: params.key
+           })
+         : marshall(params.key, marshallOpts);
+
+   const command = new UpdateItemCommand({
+      TableName: params.tableName,
+      Key: key,
+      ConditionExpression: params.conditionExpression,
+      UpdateExpression: params.updateExpression,
+      ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
+      ReturnValues: "ALL_NEW"
+   });
+
+   try {
+      const output: GetItemCommandOutput = await client.send(command);
+      if (output.Item) {
+         const item = unmarshall(output.Item);
+         return <T>item;
+      }
+
+      return <T><unknown>undefined
+   } catch (err) {
+      throw err;
+   }
+}
+
+async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
+   // determine if UpdateParams is for a composite or single key item
+   const key =
+      typeof params.key === "string"
+         ? marshall({
+              id: params.key
+           })
+         : marshall(params.key, marshallOpts);
+
    const command = new UpdateItemCommand({
       TableName: params.tableName,
       Key: key,
@@ -324,6 +356,7 @@ const dynamodb = {
    putComposite,
    scan,
    update,
+   updateMarshall,
    batchGet,
    query,
    queryList,
@@ -352,6 +385,7 @@ declare global {
       conditionExpression?: string;
       updateExpression: string;
       expressionAttributeValues: { [key: string]: any };
+      expressionAttributeNames?: { [key: string]: any };
    }
 
    export interface GetParams {
