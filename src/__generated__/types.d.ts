@@ -449,6 +449,7 @@ type MutationPurchaseArgs = {
   course: Scalars['String'];
   listingId: Scalars['String'];
   quantity: Scalars['Int'];
+  note: Scalars['String'];
 };
 
 

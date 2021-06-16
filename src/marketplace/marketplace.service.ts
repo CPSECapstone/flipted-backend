@@ -3,12 +3,13 @@ import { COURSE_CONTENT_TABLE_NAME, MARKETPLACE_TABLE } from "../environment";
 import { StudentPK, StudentSK } from "../roster/rosterInterface";
 import { getStudent } from "../roster/rosterService";
 import dynamodb from "../services/dynamodb";
-import { createListingItem } from "./marketplace.helper";
+import { createListingItem, createReceiptItem } from "./marketplace.helper";
 import {
    ListingPK,
    ListingSK,
    MarketItem,
    marketListingPrefix,
+   ReceiptInput,
    StudentPointValues
 } from "./marketplace.interface";
 
@@ -73,7 +74,7 @@ export async function getMarketListing(course: string, listingId: string): Promi
       }
    };
 
-   return dynamodb.getCompositeDemarshall<MarketItem>(params)
+   return dynamodb.getCompositeDemarshall<MarketItem>(params);
 }
 export async function getMarketListings(course: string): Promise<MarketListing[]> {
    const params: QueryParams = {
@@ -143,7 +144,11 @@ export async function addStudentPoints(course: string, userId: string, pointDelt
 }
 
 // Updates values such as times purchased and stock
-export async function updateMarketListingStats(courseId: string, listingId: string, quantity: number) : Promise<MarketItem> {
+export async function updateMarketListingStats(
+   courseId: string,
+   listingId: string,
+   quantity: number
+): Promise<MarketItem> {
    const params: UpdateParams = {
       tableName: MARKETPLACE_TABLE,
       key: {
@@ -151,25 +156,58 @@ export async function updateMarketListingStats(courseId: string, listingId: stri
          SK: ListingSK(listingId)
       },
       conditionExpression: "attribute_exists(SK)",
-      updateExpression:
-         "set timesPurchased = timesPurchased + :quantity", // Update stock after I make it non nullable
+      updateExpression: "set timesPurchased = timesPurchased + :quantity", // Update stock after I make it non nullable
       expressionAttributeValues: {
-         ":quantity": 2,
+         ":quantity": quantity
       }
    };
 
-   return await dynamodb.updateMarshall<MarketItem>(params)
+   return await dynamodb.updateMarshall<MarketItem>(params);
 }
 
 export async function executePurchase(
    course: string,
    listingId: string,
    userId: string,
-   quantity: number
-): Promise<Omit<Receipt, "student" | "listing">> {
-   const listingItem = await getMarketListing(course, listingId)
+   quantity: number,
+   note: string
+): Promise<Omit<Receipt, "student" | "listing" | "purchaseDate">> {
+   const [listingItem, student] = await Promise.all([
+      getMarketListing(course, listingId),
+      getStudent(course, userId)
+   ]);
+   const totalCost = listingItem.price * quantity
 
-   // make purchase and if successful: 
-   updateMarketListingStats(course, listingId, quantity)
-   return { pointsSpent: 3 } as unknown as Promise<Receipt>;
+   // TODO: AND stock > quantity after stock is not nullable
+   if (listingItem.price * quantity <= student.points) {
+      updateMarketListingStats(course, listingId, quantity);
+
+      // TODO: update total points awarded and total points spent for student
+      addStudentPoints(course, userId, -totalCost)
+
+      const receiptInput: ReceiptInput = {
+         date: new Date(),
+         note: note,
+         quantity: quantity,
+         studentId: userId,
+         listingId: listingItem.id,
+         listingName: listingItem.listingName,
+         price: listingItem.price,
+         course: course
+      }
+
+      const item = createReceiptItem(receiptInput)
+      const params: PutCompositeParams = {
+         tableName: MARKETPLACE_TABLE,
+         item: item
+      };
+      try {
+         dynamodb.putComposite(params);
+         return item;
+      } catch (err) {
+         return err;
+      }
+   }
+
+   throw new Error("Purchase failed! AHH!")
 }

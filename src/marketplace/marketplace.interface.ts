@@ -33,7 +33,10 @@ export type ReceiptInput = {
    note: string,
    quantity: number,
    studentId: string,
-   listing: MarketListing
+   course: string,
+   listingId: string,
+   price: number,
+   listingName: string,
 }
 export const userPrefix = "USER#";
 export const coursePrefix = "COURSE#";

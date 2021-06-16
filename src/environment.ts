@@ -23,7 +23,7 @@ export function TO_DB_DATE(date: Date) : string {
    return date.toISOString()
 }
 
-export function TO_GRAPHQL_DATE(date: string) : Date {
+export function TO_GRAPHQL_DATE(date: any) : Date {
    return new Date(date)
 }
 

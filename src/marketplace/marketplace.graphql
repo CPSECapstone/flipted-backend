@@ -41,7 +41,7 @@ type Query {
 }
 
 type Mutation {
-   purchase(course: String!, listingId: String!, quantity: Int!) : Receipt!
+   purchase(course: String!, listingId: String!, quantity: Int!, note: String!) : Receipt!
    editMarketListing(course: String!, id: String!, listing: MarketListingInput!): MarketListing!
    addMarketListing(course: String!, listing: MarketListingInput!): MarketListing!
    removeMarketListing(course: String!, id: String!): String!

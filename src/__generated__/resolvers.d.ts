@@ -438,7 +438,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   gradeAnswer?: Resolver<ResolversTypes['AnswerGrade'], ParentType, ContextType, RequireFields<MutationGradeAnswerArgs, 'grade'>>;
   gradeObjectiveTaskMastery?: Resolver<ResolversTypes['ObjectiveTaskMastery'], ParentType, ContextType, RequireFields<MutationGradeObjectiveTaskMasteryArgs, 'grade'>>;
   gradeTaskSubmission?: Resolver<ResolversTypes['TaskSubmissionGrade'], ParentType, ContextType, RequireFields<MutationGradeTaskSubmissionArgs, 'grade'>>;
-  purchase?: Resolver<ResolversTypes['Receipt'], ParentType, ContextType, RequireFields<MutationPurchaseArgs, 'course' | 'listingId' | 'quantity'>>;
+  purchase?: Resolver<ResolversTypes['Receipt'], ParentType, ContextType, RequireFields<MutationPurchaseArgs, 'course' | 'listingId' | 'quantity' | 'note'>>;
   removeMarketListing?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationRemoveMarketListingArgs, 'course' | 'id'>>;
   saveFreeResponseProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveFreeResponseProgressArgs, 'frBlockInput'>>;
   saveMultipleChoiceProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveMultipleChoiceProgressArgs, 'mcBlockInput'>>;

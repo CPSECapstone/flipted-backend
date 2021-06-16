@@ -21,20 +21,20 @@ export function createListingItem(uid: string, date: Date, course: string, listi
 export function createReceiptItem(input: ReceiptInput) : ReceiptItem {
    const receiptId = uid()
    return {
-      PK: ReceiptPK(input.listing.course),
+      PK: ReceiptPK(input.course),
       SK: ReceiptSK(receiptId),
       D_SK: ReceiptD_SK(input.date),
       U_D_SK: ReceiptU_D_SK(input.studentId, input.date),
-      MI_PK: ReceiptMI_PK(input.listing.id),
+      MI_PK: ReceiptMI_PK(input.listingId),
       receiptId: receiptId,
       note: input.note,
       purchaseDate: TO_DB_DATE(input.date),
-      pointsSpent: input.quantity * input.listing.price,
+      pointsSpent: input.quantity * input.price,
       quantity: input.quantity, 
       studentId: input.studentId,
-      course: input.listing.course,
-      listingName: input.listing.listingName,
-      listingId: input.listing.id,
+      course: input.course,
+      listingName: input.listingName,
+      listingId: input.listingId,
       fulfilled: false
    }
 }
