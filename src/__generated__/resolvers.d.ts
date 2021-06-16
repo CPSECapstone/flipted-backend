@@ -524,7 +524,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   retrieveQuestionProgress?: Resolver<ResolversTypes['QuestionProgress'], ParentType, ContextType, RequireFields<QueryRetrieveQuestionProgressArgs, 'taskId'>>;
   retrieveTaskProgress?: Resolver<Maybe<ResolversTypes['TaskProgress']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskProgressArgs, 'taskId'>>;
   retrieveTaskSubmission?: Resolver<Maybe<ResolversTypes['TaskSubmissionResult']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskSubmissionArgs, 'taskId'>>;
-  student?: Resolver<ResolversTypes['Student'], ParentType, ContextType, RequireFields<QueryStudentArgs, 'studentId' | 'course'>>;
+  student?: Resolver<ResolversTypes['Student'], ParentType, ContextType, RequireFields<QueryStudentArgs, 'course'>>;
   students?: Resolver<Array<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<QueryStudentsArgs, 'course'>>;
   subMission?: Resolver<Maybe<ResolversTypes['SubMission']>, ParentType, ContextType, RequireFields<QuerySubMissionArgs, never>>;
   target?: Resolver<ResolversTypes['Target'], ParentType, ContextType, RequireFields<QueryTargetArgs, 'targetId'>>;

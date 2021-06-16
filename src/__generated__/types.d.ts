@@ -730,7 +730,7 @@ type QueryRetrieveTaskSubmissionArgs = {
 
 
 type QueryStudentArgs = {
-  studentId: Scalars['String'];
+  studentId?: Maybe<Scalars['String']>;
   course: Scalars['String'];
 };
 

@@ -12,7 +12,7 @@ type Student {
 }
 
 type Query {
-   student(studentId: String!, course: String!): Student!
+   student(studentId: String, course: String!): Student!
    students(course: String!): [Student!]!
 }
 
