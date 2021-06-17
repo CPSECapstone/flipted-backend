@@ -31,6 +31,7 @@ import {
    ReceiptU_D_SK,
    StudentPointValues,
    unfulfilledPrefix,
+   UNFULFILLED_INDEX,
    userPrefix
 } from "./marketplace.interface";
 import * as marketService from "./marketplace.service";
@@ -353,13 +354,68 @@ describe("Fulfilling a purchase", () => {
             SK: ReceiptSK("receiptid")
          },
          conditionExpression: "attribute_exists(SK)",
-         updateExpression:
-            "set fulfilled = :fulfilled",
+         updateExpression: "set fulfilled = :fulfilled remove UF_SK",
          expressionAttributeValues: {
-            ":fulfilled": true,
+            ":fulfilled": true
          }
       };
-      marketService.fulfillPurchase("courseid", "receiptid", true)
+      marketService.fulfillPurchase("courseid", "receiptid", true);
+      expect(dynamodbMock.updateMarshall).toBeCalledWith(params);
+      expect(dynamodbMock.updateMarshall).toBeCalledTimes(1);
+   });
+});
+
+describe("Viewing unfulfilled purchases", () => {
+   test("Queries with the correct params", async () => {
+      dynamodbMock.queryList.mockClear();
+
+      const params: QueryParams = {
+         tableName: MARKETPLACE_TABLE,
+         indexName: UNFULFILLED_INDEX,
+         keyConditionExpression: "PK = :courseVal and begins_with(UF_SK, :ufskPrefix) ",
+         expressionAttributeValues: {
+            ":courseVal": ReceiptPK("courseid"),
+            ":ufskPrefix": unfulfilledPrefix
+         }
+      };
+      marketService.unfulfilledPurchases("courseid");
+      expect(dynamodbMock.queryList).toBeCalledWith(params);
+      expect(dynamodbMock.queryList).toBeCalledTimes(1);
+   });
+
+   test("Only returns specific student when student specified in args", async () => {
+      dynamodbMock.queryList.mockClear();
+
+      mocked(dynamodbMock.queryList).mockReturnValue([
+         { studentId: "userid" },
+         { studentId: "No Thanks" }
+      ]);
+      
+      expect(await marketService.unfulfilledPurchases("courseid", "userid")).toEqual([
+         { studentId: "userid" }
+      ]);
+      expect(dynamodbMock.queryList).toBeCalledTimes(1);
+   });
+});
+
+describe("Unfulfilling a purchase", () => {
+   test("Updates the receipt with the correct params", async () => {
+      dynamodbMock.updateMarshall.mockClear();
+
+      const params: UpdateParams = {
+         tableName: MARKETPLACE_TABLE,
+         key: {
+            PK: ReceiptPK("courseid"),
+            SK: ReceiptSK("receiptid")
+         },
+         conditionExpression: "attribute_exists(SK)",
+         updateExpression: "set fulfilled = :fulfilled, UF_SK = :unfulfilledPrefix",
+         expressionAttributeValues: {
+            ":fulfilled": false,
+            ":unfulfilledPrefix": unfulfilledPrefix
+         }
+      };
+      marketService.fulfillPurchase("courseid", "receiptid", false);
       expect(dynamodbMock.updateMarshall).toBeCalledWith(params);
       expect(dynamodbMock.updateMarshall).toBeCalledTimes(1);
    });
@@ -391,7 +447,7 @@ describe("Querying recent course purchases", () => {
    test("Queries with proper args based on input", async () => {
       dynamodbMock.queryList.mockClear();
 
-      const params : QueryParams = {
+      const params: QueryParams = {
          tableName: MARKETPLACE_TABLE,
          indexName: COURSE_DATE_INDEX,
          scanIndexForward: false,
@@ -401,7 +457,7 @@ describe("Querying recent course purchases", () => {
             ":courseVal": ReceiptPK("courseid"),
             ":dskPrefix": purchaseDatePrefix
          }
-      }
+      };
       marketService.recentClassPurchases("courseid", 4);
       expect(dynamodbMock.queryList).toBeCalledWith(params);
       expect(dynamodbMock.queryList).toBeCalledTimes(1);
@@ -412,7 +468,7 @@ describe("Querying recent student purchases", () => {
    test("Queries with proper args based on input", async () => {
       dynamodbMock.queryList.mockClear();
 
-      const params : QueryParams = {
+      const params: QueryParams = {
          tableName: MARKETPLACE_TABLE,
          indexName: COURSE_DATE_STUDENT_INDEX,
          scanIndexForward: false,
@@ -422,7 +478,7 @@ describe("Querying recent student purchases", () => {
             ":courseVal": ReceiptPK("courseid"),
             ":dskPrefix": `${userPrefix}${"studentid"}#${purchaseDatePrefix}`
          }
-      }
+      };
       marketService.recentStudentPurchases("courseid", "studentid", 3);
       expect(dynamodbMock.queryList).toBeCalledWith(params);
       expect(dynamodbMock.queryList).toBeCalledTimes(1);

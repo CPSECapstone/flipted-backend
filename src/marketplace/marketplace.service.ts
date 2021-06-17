@@ -317,7 +317,7 @@ export async function unfulfilledPurchases(course: string, user?: string) {
 
    if (user) {
       return list.filter(receipt => {
-         receipt.studentId = user;
+         return receipt.studentId == user;
       });
    }
    return list;
