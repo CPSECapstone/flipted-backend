@@ -13,11 +13,14 @@ import { StudentPK, StudentSK } from "../roster/rosterInterface";
 import { getStudent } from "../roster/rosterService";
 import { createListingItem, createReceiptItem } from "./marketplace.helper";
 import {
+   COURSE_DATE_INDEX,
+   COURSE_DATE_STUDENT_INDEX,
    ListingPK,
    ListingSK,
    MarketItem,
    marketListingPrefix,
    PointChange,
+   purchaseDatePrefix,
    ReceiptD_SK,
    ReceiptInput,
    ReceiptItem,
@@ -26,7 +29,8 @@ import {
    receiptPrefix,
    ReceiptSK,
    ReceiptU_D_SK,
-   StudentPointValues
+   StudentPointValues,
+   userPrefix
 } from "./marketplace.interface";
 import * as marketService from "./marketplace.service";
 import { updateMarketListingStats } from "./marketplace.service";
@@ -378,5 +382,47 @@ describe("Making a purchase", () => {
       marketService.updateMarketListingStats("courseid", "cupcakeid", 2);
       expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs);
       expect(dynamodbMock.updateMarshall).toBeCalledTimes(1);
+   });
+});
+
+describe("Querying recent course purchases", () => {
+   test("Queries with proper args based on input", async () => {
+      dynamodbMock.queryList.mockClear();
+
+      const params : QueryParams = {
+         tableName: MARKETPLACE_TABLE,
+         indexName: COURSE_DATE_INDEX,
+         scanIndexForward: false,
+         limit: 4,
+         keyConditionExpression: "PK = :courseVal and begins_with(D_SK, :dskPrefix) ",
+         expressionAttributeValues: {
+            ":courseVal": ReceiptPK("courseid"),
+            ":dskPrefix": purchaseDatePrefix
+         }
+      }
+      marketService.recentClassPurchases("courseid", 4);
+      expect(dynamodbMock.queryList).toBeCalledWith(params);
+      expect(dynamodbMock.queryList).toBeCalledTimes(1);
+   });
+});
+
+describe("Querying recent student purchases", () => {
+   test("Queries with proper args based on input", async () => {
+      dynamodbMock.queryList.mockClear();
+
+      const params : QueryParams = {
+         tableName: MARKETPLACE_TABLE,
+         indexName: COURSE_DATE_STUDENT_INDEX,
+         scanIndexForward: false,
+         limit: 3,
+         keyConditionExpression: "PK = :courseVal and begins_with(U_D_SK, :dskPrefix) ",
+         expressionAttributeValues: {
+            ":courseVal": ReceiptPK("courseid"),
+            ":dskPrefix": `${userPrefix}${"studentid"}#${purchaseDatePrefix}`
+         }
+      }
+      marketService.recentStudentPurchases("courseid", "studentid", 3);
+      expect(dynamodbMock.queryList).toBeCalledWith(params);
+      expect(dynamodbMock.queryList).toBeCalledTimes(1);
    });
 });

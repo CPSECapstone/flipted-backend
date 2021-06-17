@@ -103,13 +103,13 @@ async function updateMarshall<T>(params: UpdateParams): Promise<T> {
 
    try {
       const output: UpdateItemCommandOutput = await client.send(command);
-      console.log(output)
+      console.log(output);
       if (output.Attributes) {
          const item = unmarshall(output.Attributes);
          return <T>item;
       }
 
-      return <T><unknown>undefined
+      return <T>(<unknown>undefined);
    } catch (err) {
       throw err;
    }
@@ -165,10 +165,10 @@ async function getCompositeDemarshall<T>(params: GetCompositeParams): Promise<T>
 
    try {
       const output: GetItemCommandOutput = await client.send(command);
-      if(output.Item) {
-         return <T>unmarshall(output.Item)
+      if (output.Item) {
+         return <T>unmarshall(output.Item);
       }
-      return <T><unknown>undefined
+      return <T>(<unknown>undefined);
    } catch (err) {
       return err;
    }
@@ -228,7 +228,9 @@ async function queryList<T>(params: QueryParams): Promise<T[]> {
       FilterExpression: params.filterExpression,
       IndexName: params.indexName,
       KeyConditionExpression: params.keyConditionExpression,
-      ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts)
+      ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
+      ScanIndexForward: params.scanIndexForward ?? true,
+      Limit: params.limit
    });
 
    try {
@@ -446,6 +448,8 @@ declare global {
       expressionAttributeValues: { [key: string]: any };
       filterExpression?: string;
       indexName?: string;
+      scanIndexForward?: boolean;
+      limit?: number;
    }
 
    export interface DeleteParam {

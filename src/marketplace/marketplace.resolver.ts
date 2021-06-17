@@ -77,15 +77,27 @@ async function changePoints(_: any, args: MutationChangePointsArgs, context: Fli
 
 async function fulfillPurchase(_: any, args: MutationFulfillPurchaseArgs, context: FliptedContext) {
    if (context.userRole == RoleInternal.Instructor) {
-     return marketService.fulfillPurchase(args.course, args.receiptId, args.fulfilled)
+      return marketService.fulfillPurchase(args.course, args.receiptId, args.fulfilled);
    }
 
    throw new ForbiddenError(notInstructorErrorMessage);
 }
 
+async function recentPurchases(_: any, args: QueryRecentPurchasesArgs, context: FliptedContext) {
+   if (context.userRole == RoleInternal.Instructor) {
+      if(args.student) {
+         return marketService.recentStudentPurchases(args.course, args.student, args.fetch);
+      }
+      return marketService.recentClassPurchases(args.course, args.fetch);
+   } 
+
+   return marketService.recentStudentPurchases(args.course, context.username, args.fetch);
+}
+
 const resolvers = {
    Query: {
-      marketListings: marketListings
+      marketListings: marketListings,
+      recentPurchases: recentPurchases
    },
    Mutation: {
       purchase: purchase,

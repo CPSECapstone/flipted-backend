@@ -526,6 +526,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   progressOverview?: Resolver<ResolversTypes['ProgressOverview'], ParentType, ContextType, RequireFields<QueryProgressOverviewArgs, 'course'>>;
   questions?: Resolver<Array<ResolversTypes['Question']>, ParentType, ContextType, RequireFields<QueryQuestionsArgs, 'questionIds'>>;
   quizblock?: Resolver<ResolversTypes['QuizBlock'], ParentType, ContextType, RequireFields<QueryQuizblockArgs, 'taskId' | 'blockId'>>;
+  recentPurchases?: Resolver<Array<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<QueryRecentPurchasesArgs, 'course' | 'fetch'>>;
   retrieveQuestionProgress?: Resolver<ResolversTypes['QuestionProgress'], ParentType, ContextType, RequireFields<QueryRetrieveQuestionProgressArgs, 'taskId'>>;
   retrieveTaskProgress?: Resolver<Maybe<ResolversTypes['TaskProgress']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskProgressArgs, 'taskId'>>;
   retrieveTaskSubmission?: Resolver<Maybe<ResolversTypes['TaskSubmissionResult']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskSubmissionArgs, 'taskId'>>;

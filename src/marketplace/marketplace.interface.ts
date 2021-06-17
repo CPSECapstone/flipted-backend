@@ -45,6 +45,8 @@ export type PointChange = {
    totalPointsSpent: number;
 };
 
+export const COURSE_DATE_INDEX = "PK-D_SK-index"
+export const COURSE_DATE_STUDENT_INDEX = "PK-U_D_SK-index"
 export const userPrefix = "USER#";
 export const coursePrefix = "COURSE#";
 export const receiptPrefix = "RECEIPT#"

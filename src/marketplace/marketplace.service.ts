@@ -5,16 +5,21 @@ import { getStudent } from "../roster/rosterService";
 import dynamodb from "../services/dynamodb";
 import { createListingItem, createReceiptItem } from "./marketplace.helper";
 import {
+   COURSE_DATE_INDEX,
+   COURSE_DATE_STUDENT_INDEX,
    ListingPK,
    ListingSK,
    MarketItem,
    marketListingPrefix,
    PointChange,
+   purchaseDatePrefix,
+   ReceiptD_SK,
    ReceiptInput,
    ReceiptItem,
    ReceiptPK,
    ReceiptSK,
-   StudentPointValues
+   StudentPointValues,
+   userPrefix
 } from "./marketplace.interface";
 
 export async function addMarketListing(course: string, listing: MarketListingInput) {
@@ -250,3 +255,36 @@ export async function executePurchase(
       `Insufficient funds: Required: ${totalCost}, User ${userId} point balance: ${student.points}`
    );
 }
+
+export function recentClassPurchases(course: string, fetch: number) {
+   const params : QueryParams = {
+      tableName: MARKETPLACE_TABLE,
+      indexName: COURSE_DATE_INDEX,
+      scanIndexForward: false,
+      limit: fetch,
+      keyConditionExpression: "PK = :courseVal and begins_with(D_SK, :dskPrefix) ",
+      expressionAttributeValues: {
+         ":courseVal": ReceiptPK(course),
+         ":dskPrefix": purchaseDatePrefix
+      }
+   }
+
+   return dynamodb.queryList<Receipt>(params);
+}
+
+export function recentStudentPurchases(course: string, studentId: string, fetch: number) {
+   const params : QueryParams = {
+      tableName: MARKETPLACE_TABLE,
+      indexName: COURSE_DATE_STUDENT_INDEX,
+      scanIndexForward: false,
+      limit: fetch,
+      keyConditionExpression: "PK = :courseVal and begins_with(U_D_SK, :dskPrefix) ",
+      expressionAttributeValues: {
+         ":courseVal": ReceiptPK(course),
+         ":dskPrefix": `${userPrefix}${studentId}#${purchaseDatePrefix}`
+      }
+   }
+
+   return dynamodb.queryList<Receipt>(params);
+}
+

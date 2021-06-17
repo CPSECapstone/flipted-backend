@@ -608,6 +608,13 @@ type Query = {
   progressOverview: ProgressOverview;
   questions: Array<Question>;
   quizblock: QuizBlock;
+  /**
+   * If the student field is null or this API is called by a student, it will only return that student's purchases.
+   * Otherwise, it will return all for that course.
+   *
+   * Will only return the most recent N purchased passed into the fetch parameter
+   */
+  recentPurchases: Array<Receipt>;
   /** Returns student's task progress on the rubric requirements if it exists. */
   retrieveQuestionProgress: QuestionProgress;
   /** Returns student's progress on the rubric requirements for the task if it exists. */
@@ -735,6 +742,13 @@ type QueryQuestionsArgs = {
 type QueryQuizblockArgs = {
   taskId: Scalars['String'];
   blockId: Scalars['String'];
+};
+
+
+type QueryRecentPurchasesArgs = {
+  course: Scalars['String'];
+  student?: Maybe<Scalars['String']>;
+  fetch: Scalars['Int'];
 };
 
 

@@ -39,9 +39,18 @@ type Receipt {
 
 type Query {
    marketListings(course: String!): [MarketListing!]!
+   
+   """
+   If the student field is null or this API is called by a student, it will only return that student's purchases.
+   Otherwise, it will return all for that course.
+
+   Will only return the most recent N purchased passed into the fetch parameter 
+   """
+   recentPurchases(course: String!, student: String, fetch: Int!) : [Receipt!]!
 }
 
 type Mutation {
+
    fulfillPurchase(course: String! receiptId: String! fulfilled: Boolean!) : Receipt!
    purchase(course: String!, listingId: String!, quantity: Int!, note: String!) : Receipt!
    editMarketListing(course: String!, id: String!, listing: MarketListingInput!): MarketListing!
