@@ -292,6 +292,7 @@ type Mutation = {
   deleteGoal: Scalars['String'];
   editMarketListing: MarketListing;
   editOrCreateGoal: Scalars['String'];
+  fulfillPurchase: Receipt;
   gradeAnswer: AnswerGrade;
   gradeObjectiveTaskMastery: ObjectiveTaskMastery;
   gradeTaskSubmission: TaskSubmissionGrade;
@@ -427,6 +428,13 @@ type MutationEditMarketListingArgs = {
 
 type MutationEditOrCreateGoalArgs = {
   goal: GoalInput;
+};
+
+
+type MutationFulfillPurchaseArgs = {
+  course: Scalars['String'];
+  receiptId: Scalars['String'];
+  fulfilled: Scalars['Boolean'];
 };
 
 
@@ -861,6 +869,7 @@ type QuizBlockInput = {
 type Receipt = {
   __typename?: 'Receipt';
   studentId: Scalars['String'];
+  listingName: Scalars['String'];
   listingId: Scalars['String'];
   student: Student;
   listing: MarketListing;

@@ -47,7 +47,11 @@ async function marketListings(_: any, args: QueryMarketListingsArgs) {
    return marketService.getMarketListings(args.course);
 }
 
-async function purchase(_: any, args: MutationPurchaseArgs, context: FliptedContext) {
+async function purchase(
+   _: any,
+   args: MutationPurchaseArgs,
+   context: FliptedContext
+): Promise<Omit<Receipt, "student" | "listing" | "purchaseDate">> {
    return marketService.executePurchase(
       args.course,
       args.listingId,
@@ -59,7 +63,21 @@ async function purchase(_: any, args: MutationPurchaseArgs, context: FliptedCont
 
 async function changePoints(_: any, args: MutationChangePointsArgs, context: FliptedContext) {
    if (context.userRole == RoleInternal.Instructor) {
-      return (await addStudentPoints(args.course, args.student, args.points)).points;
+      return (
+         await addStudentPoints(args.course, args.student, {
+            totalPointsAwarded: args.points,
+            points: args.points,
+            totalPointsSpent: 0
+         })
+      ).points;
+   }
+
+   throw new ForbiddenError(notInstructorErrorMessage);
+}
+
+async function fulfillPurchase(_: any, args: MutationFulfillPurchaseArgs, context: FliptedContext) {
+   if (context.userRole == RoleInternal.Instructor) {
+     return marketService.fulfillPurchase(args.course, args.receiptId, args.fulfilled)
    }
 
    throw new ForbiddenError(notInstructorErrorMessage);
@@ -74,7 +92,8 @@ const resolvers = {
       addMarketListing: addMarketListing,
       removeMarketListing: removeMarketListing,
       editMarketListing: editMarketListing,
-      changePoints: changePoints
+      changePoints: changePoints,
+      fulfillPurchase: fulfillPurchase
    },
    MarketListing: {
       // TODO: will break if not from a market listing item
@@ -85,7 +104,7 @@ const resolvers = {
    Receipt: {
       purchaseDate: (parent: any) => {
          return TO_GRAPHQL_DATE(parent.purchaseDate);
-      }, 
+      },
       student: (parent: Receipt) => {
          return getStudent(parent.course, parent.studentId);
       },

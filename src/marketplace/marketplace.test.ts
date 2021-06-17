@@ -267,7 +267,7 @@ describe("Changing a students points", () => {
          points: 3,
          totalPointsAwarded: 3,
          totalPointsSpent: 0
-      }
+      };
 
       const params: UpdateParams = {
          tableName: COURSE_CONTENT_TABLE_NAME,
@@ -291,7 +291,7 @@ describe("Changing a students points", () => {
          totalPointsSpent: 10
       });
 
-      expect(dynamodbMock.updateMarshall).toBeCalledWith(params)
+      expect(dynamodbMock.updateMarshall).toBeCalledWith(params);
    });
 });
 
@@ -300,7 +300,7 @@ describe("Creating a receipt", () => {
       mocked(uid).mockReturnValue("receiptid");
 
       const date = new Date(0);
-   
+
       const receiptInput: ReceiptInput = {
          date: date,
          note: "With extra sprinkles!",
@@ -336,9 +336,32 @@ describe("Creating a receipt", () => {
    test;
 });
 
+describe("Fulfilling a purchase", () => {
+   test("Updates the receipt with the correct params", async () => {
+      dynamodbMock.updateMarshall.mockClear();
+
+      const params: UpdateParams = {
+         tableName: MARKETPLACE_TABLE,
+         key: {
+            PK: ReceiptPK("courseid"),
+            SK: ReceiptSK("receiptid")
+         },
+         conditionExpression: "attribute_exists(SK)",
+         updateExpression:
+            "set fulfilled = :fulfilled",
+         expressionAttributeValues: {
+            ":fulfilled": true,
+         }
+      };
+      marketService.fulfillPurchase("courseid", "receiptid", true)
+      expect(dynamodbMock.updateMarshall).toBeCalledWith(params);
+      expect(dynamodbMock.updateMarshall).toBeCalledTimes(1);
+   });
+});
+
 describe("Making a purchase", () => {
    test("Updating the marketplace listing stats with a stockless item", async () => {
-      dynamodbMock.updateMarshall.mockClear()
+      dynamodbMock.updateMarshall.mockClear();
 
       const expectedParamArgs: UpdateParams = {
          tableName: MARKETPLACE_TABLE,
@@ -347,36 +370,13 @@ describe("Making a purchase", () => {
             SK: ListingSK("cupcakeid")
          },
          conditionExpression: "attribute_exists(SK)",
-         updateExpression:
-            "set timesPurchased = timesPurchased + :quantity",
+         updateExpression: "set timesPurchased = timesPurchased + :quantity",
          expressionAttributeValues: {
-            ":quantity": 2,
+            ":quantity": 2
          }
       };
-      marketService.updateMarketListingStats("courseid", "cupcakeid", 2)
-      expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs)
-      expect(dynamodbMock.updateMarshall).toBeCalledTimes(1)
+      marketService.updateMarketListingStats("courseid", "cupcakeid", 2);
+      expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs);
+      expect(dynamodbMock.updateMarshall).toBeCalledTimes(1);
    });
-
-   test("Creates a graphql receipt on purchase", async () => {
-      jest.spyOn(marketService, 'updateMarketListingStats')
-      const plswork = jest.spyOn(marketService, 'getMarketListing')
-
-
-      const date = new Date(0);
-      const expectedRes: Omit<Receipt, "student" | "listing"> = {
-         note: "With extra sprinkles!",
-         purchaseDate: date,
-         pointsSpent: 6,
-         quantity: 2,
-         studentId: "userid",
-         receiptId: "receiptid",
-         course: "courseid",
-         listingId: "cupcakeid",
-         fulfilled: false
-      };
-      //await executePurchase("courseid", "listingid", "userid", 2, "thanks!")
-   });
-
-   test;
 });

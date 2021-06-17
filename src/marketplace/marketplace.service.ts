@@ -11,6 +11,9 @@ import {
    marketListingPrefix,
    PointChange,
    ReceiptInput,
+   ReceiptItem,
+   ReceiptPK,
+   ReceiptSK,
    StudentPointValues
 } from "./marketplace.interface";
 
@@ -174,6 +177,24 @@ export async function updateMarketListingStats(
    };
 
    return await dynamodb.updateMarshall<MarketItem>(params);
+}
+
+export async function fulfillPurchase(course: string, receiptId: string, fulfilled: boolean) {
+   const params: UpdateParams = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: ReceiptPK(course),
+         SK: ReceiptSK(receiptId)
+      },
+      conditionExpression: "attribute_exists(SK)",
+      updateExpression:
+         "set fulfilled = :fulfilled",
+      expressionAttributeValues: {
+         ":fulfilled": fulfilled,
+      }
+   };
+
+   return await dynamodb.updateMarshall<ReceiptItem>(params);
 }
 
 export async function executePurchase(

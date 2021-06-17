@@ -435,6 +435,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteGoal?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteGoalArgs, 'id'>>;
   editMarketListing?: Resolver<ResolversTypes['MarketListing'], ParentType, ContextType, RequireFields<MutationEditMarketListingArgs, 'course' | 'id' | 'listing'>>;
   editOrCreateGoal?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationEditOrCreateGoalArgs, 'goal'>>;
+  fulfillPurchase?: Resolver<ResolversTypes['Receipt'], ParentType, ContextType, RequireFields<MutationFulfillPurchaseArgs, 'course' | 'receiptId' | 'fulfilled'>>;
   gradeAnswer?: Resolver<ResolversTypes['AnswerGrade'], ParentType, ContextType, RequireFields<MutationGradeAnswerArgs, 'grade'>>;
   gradeObjectiveTaskMastery?: Resolver<ResolversTypes['ObjectiveTaskMastery'], ParentType, ContextType, RequireFields<MutationGradeObjectiveTaskMasteryArgs, 'grade'>>;
   gradeTaskSubmission?: Resolver<ResolversTypes['TaskSubmissionGrade'], ParentType, ContextType, RequireFields<MutationGradeTaskSubmissionArgs, 'grade'>>;
@@ -580,6 +581,7 @@ export type QuizBlockResolvers<ContextType = any, ParentType extends ResolversPa
 
 export type ReceiptResolvers<ContextType = any, ParentType extends ResolversParentTypes['Receipt'] = ResolversParentTypes['Receipt']> = ResolversObject<{
   studentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  listingName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   listingId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   student?: Resolver<ResolversTypes['Student'], ParentType, ContextType>;
   listing?: Resolver<ResolversTypes['MarketListing'], ParentType, ContextType>;

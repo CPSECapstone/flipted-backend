@@ -24,6 +24,7 @@ the updated values as a result of the purchase.
 """
 type Receipt {
    studentId: String!
+   listingName: String!
    listingId: String!
    student: Student!
    listing: MarketListing!
@@ -41,6 +42,7 @@ type Query {
 }
 
 type Mutation {
+   fulfillPurchase(course: String! receiptId: String! fulfilled: Boolean!) : Receipt!
    purchase(course: String!, listingId: String!, quantity: Int!, note: String!) : Receipt!
    editMarketListing(course: String!, id: String!, listing: MarketListingInput!): MarketListing!
    addMarketListing(course: String!, listing: MarketListingInput!): MarketListing!
