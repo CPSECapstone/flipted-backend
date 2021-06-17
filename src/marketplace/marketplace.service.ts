@@ -9,6 +9,7 @@ import {
    ListingSK,
    MarketItem,
    marketListingPrefix,
+   PointChange,
    ReceiptInput,
    StudentPointValues
 } from "./marketplace.interface";
@@ -112,7 +113,7 @@ export async function setStudentPoints(
    course: string,
    userId: string,
    values: StudentPointValues
-): Promise<{ points: number; totalPointsAwarded: number; totalPointsSpent: number }> {
+): Promise<PointChange> {
    const params: UpdateParams = {
       tableName: COURSE_CONTENT_TABLE_NAME,
       key: {
@@ -133,14 +134,24 @@ export async function setStudentPoints(
    return values;
 }
 
-export async function addStudentPoints(course: string, userId: string, pointDelta: number) {
-   const student = await getStudent(course, userId);
-   const newPointValues: StudentPointValues = {
-      points: pointDelta + student.points,
-      totalPointsAwarded: pointDelta + student.totalPointsAwarded,
-      totalPointsSpent: student.totalPointsSpent
+export async function addStudentPoints(course: string, userId: string, pointChange: PointChange) {
+   const params: UpdateParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      key: {
+         PK: StudentPK(userId),
+         SK: StudentSK(course)
+      },
+      conditionExpression: "attribute_exists(SK)",
+      updateExpression:
+         "set points = points + :points, totalPointsAwarded = totalPointsAwarded + :totalPointsAwarded, totalPointsSpent = totalPointsSpent + :totalPointsSpent",
+      expressionAttributeValues: {
+         ":points": pointChange.points,
+         ":totalPointsAwarded": pointChange.totalPointsAwarded,
+         ":totalPointsSpent": pointChange.totalPointsSpent
+      }
    };
-   return await setStudentPoints(course, userId, newPointValues);
+
+   return await dynamodb.updateMarshall<PointChange>(params);
 }
 
 // Updates values such as times purchased and stock
@@ -176,14 +187,19 @@ export async function executePurchase(
       getMarketListing(course, listingId),
       getStudent(course, userId)
    ]);
-   const totalCost = listingItem.price * quantity
+   const totalCost = listingItem.price * quantity;
 
    // TODO: AND stock > quantity after stock is not nullable
-   if (listingItem.price * quantity <= student.points) {
+   if (totalCost <= student.points) {
       updateMarketListingStats(course, listingId, quantity);
 
       // TODO: update total points awarded and total points spent for student
-      addStudentPoints(course, userId, -totalCost)
+      const pointChange : PointChange = {
+         points: -totalCost,
+         totalPointsAwarded: 0,
+         totalPointsSpent: totalCost
+      }
+      await addStudentPoints(course, userId, pointChange);
 
       const receiptInput: ReceiptInput = {
          date: new Date(),
@@ -194,9 +210,9 @@ export async function executePurchase(
          listingName: listingItem.listingName,
          price: listingItem.price,
          course: course
-      }
+      };
 
-      const item = createReceiptItem(receiptInput)
+      const item = createReceiptItem(receiptInput);
       const params: PutCompositeParams = {
          tableName: MARKETPLACE_TABLE,
          item: item
@@ -209,5 +225,7 @@ export async function executePurchase(
       }
    }
 
-   throw new Error("Purchase failed! AHH!")
+   throw new Error(
+      `Insufficient funds: Required: ${totalCost}, User ${userId} point balance: ${student.points}`
+   );
 }

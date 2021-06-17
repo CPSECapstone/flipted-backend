@@ -38,6 +38,13 @@ export type ReceiptInput = {
    price: number,
    listingName: string,
 }
+
+export type PointChange = {
+   points: number;
+   totalPointsAwarded: number;
+   totalPointsSpent: number;
+};
+
 export const userPrefix = "USER#";
 export const coursePrefix = "COURSE#";
 export const receiptPrefix = "RECEIPT#"

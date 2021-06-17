@@ -17,6 +17,7 @@ import {
    ListingSK,
    MarketItem,
    marketListingPrefix,
+   PointChange,
    ReceiptD_SK,
    ReceiptInput,
    ReceiptItem,
@@ -256,17 +257,41 @@ describe("Changing a students points", () => {
    });
 
    it("Should correctly add the points when modifying as a delta", async () => {
-      (getStudent as jest.Mock).mockReturnValue({
-         points: 5,
-         totalPointsAwarded: 15,
-         totalPointsSpent: 10
-      });
-      expect(await marketService.addStudentPoints("testCourse", "testId", 3)).toEqual({
+      (dynamodbMock.updateMarshall as jest.Mock).mockReturnValue({
          points: 8,
          totalPointsAwarded: 18,
          totalPointsSpent: 10
       });
-      expect(getStudent).toBeCalledTimes(1);
+
+      const pointChange: PointChange = {
+         points: 3,
+         totalPointsAwarded: 3,
+         totalPointsSpent: 0
+      }
+
+      const params: UpdateParams = {
+         tableName: COURSE_CONTENT_TABLE_NAME,
+         key: {
+            PK: StudentPK("testId"),
+            SK: StudentSK("testCourse")
+         },
+         conditionExpression: "attribute_exists(SK)",
+         updateExpression:
+            "set points = points + :points, totalPointsAwarded = totalPointsAwarded + :totalPointsAwarded, totalPointsSpent = totalPointsSpent + :totalPointsSpent",
+         expressionAttributeValues: {
+            ":points": 3,
+            ":totalPointsAwarded": 3,
+            ":totalPointsSpent": 0
+         }
+      };
+
+      expect(await marketService.addStudentPoints("testCourse", "testId", pointChange)).toEqual({
+         points: 8,
+         totalPointsAwarded: 18,
+         totalPointsSpent: 10
+      });
+
+      expect(dynamodbMock.updateMarshall).toBeCalledWith(params)
    });
 });
 
