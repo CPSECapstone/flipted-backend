@@ -540,6 +540,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   taskSubmissionSummary?: Resolver<ResolversTypes['TaskSubmissionSummary'], ParentType, ContextType, RequireFields<QueryTaskSubmissionSummaryArgs, 'course' | 'taskId'>>;
   tasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTasksArgs, never>>;
   tasksByCourse?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTasksByCourseArgs, 'course'>>;
+  unfulfilledPurchases?: Resolver<Array<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<QueryUnfulfilledPurchasesArgs, 'course'>>;
   userProgress?: Resolver<ResolversTypes['UserProgress'], ParentType, ContextType, RequireFields<QueryUserProgressArgs, 'userName' | 'course'>>;
 }>;
 

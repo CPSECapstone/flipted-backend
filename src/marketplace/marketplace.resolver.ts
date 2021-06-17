@@ -94,10 +94,22 @@ async function recentPurchases(_: any, args: QueryRecentPurchasesArgs, context: 
    return marketService.recentStudentPurchases(args.course, context.username, args.fetch);
 }
 
+async function unfulfilledPurchases(_: any, args: QueryRecentPurchasesArgs, context: FliptedContext) {
+   if (context.userRole == RoleInternal.Instructor) {
+      if(args.student) {
+         return marketService.unfulfilledPurchases(args.course, args.student);
+      }
+      return marketService.unfulfilledPurchases(args.course);
+   } 
+
+   return marketService.unfulfilledPurchases(args.course, context.username);
+}
+
 const resolvers = {
    Query: {
       marketListings: marketListings,
-      recentPurchases: recentPurchases
+      recentPurchases: recentPurchases,
+      unfulfilledPurchases: unfulfilledPurchases
    },
    Mutation: {
       purchase: purchase,

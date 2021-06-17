@@ -1,6 +1,6 @@
 import { uid } from "uid";
 import { TO_DB_DATE } from "../environment";
-import { ListingPK, ListingSK, MarketItem, ReceiptD_SK, ReceiptInput, ReceiptItem, ReceiptMI_PK, ReceiptPK, ReceiptSK, ReceiptU_D_SK } from "./marketplace.interface";
+import { ListingPK, ListingSK, MarketItem, ReceiptD_SK, ReceiptInput, ReceiptItem, ReceiptMI_PK, ReceiptPK, ReceiptSK, ReceiptU_D_SK, unfulfilledPrefix } from "./marketplace.interface";
 
 export function createListingItem(uid: string, date: Date, course: string, listing: MarketListingInput) : MarketItem {
    return {
@@ -35,6 +35,7 @@ export function createReceiptItem(input: ReceiptInput) : ReceiptItem {
       course: input.course,
       listingName: input.listingName,
       listingId: input.listingId,
-      fulfilled: false
+      fulfilled: false,
+      UF_SK: unfulfilledPrefix
    }
 }

@@ -634,6 +634,7 @@ type Query = {
   taskSubmissionSummary: TaskSubmissionSummary;
   tasks: Array<Task>;
   tasksByCourse: Array<Task>;
+  unfulfilledPurchases: Array<Receipt>;
   userProgress: UserProgress;
 };
 
@@ -817,6 +818,12 @@ type QueryTasksArgs = {
 
 type QueryTasksByCourseArgs = {
   course: Scalars['String'];
+};
+
+
+type QueryUnfulfilledPurchasesArgs = {
+  course: Scalars['String'];
+  student?: Maybe<Scalars['String']>;
 };
 
 

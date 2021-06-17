@@ -19,6 +19,8 @@ import {
    ReceiptPK,
    ReceiptSK,
    StudentPointValues,
+   unfulfilledPrefix,
+   UNFULFILLED_INDEX,
    userPrefix
 } from "./marketplace.interface";
 
@@ -185,6 +187,21 @@ export async function updateMarketListingStats(
 }
 
 export async function fulfillPurchase(course: string, receiptId: string, fulfilled: boolean) {
+   let updateExpression = "";
+   let expAttrValues = {};
+   if (fulfilled) {
+      updateExpression = "set fulfilled = :fulfilled remove UF_SK";
+      expAttrValues = {
+         ":fulfilled": fulfilled
+      };
+   } else {
+      updateExpression = "set fulfilled = :fulfilled, UF_SK = :unfulfilledPrefix";
+      expAttrValues = {
+         ":fulfilled": fulfilled,
+         ":unfulfilledPrefix": unfulfilledPrefix
+      };
+   }
+
    const params: UpdateParams = {
       tableName: MARKETPLACE_TABLE,
       key: {
@@ -192,11 +209,8 @@ export async function fulfillPurchase(course: string, receiptId: string, fulfill
          SK: ReceiptSK(receiptId)
       },
       conditionExpression: "attribute_exists(SK)",
-      updateExpression:
-         "set fulfilled = :fulfilled",
-      expressionAttributeValues: {
-         ":fulfilled": fulfilled,
-      }
+      updateExpression: updateExpression,
+      expressionAttributeValues: expAttrValues
    };
 
    return await dynamodb.updateMarshall<ReceiptItem>(params);
@@ -220,11 +234,11 @@ export async function executePurchase(
       updateMarketListingStats(course, listingId, quantity);
 
       // TODO: update total points awarded and total points spent for student
-      const pointChange : PointChange = {
+      const pointChange: PointChange = {
          points: -totalCost,
          totalPointsAwarded: 0,
          totalPointsSpent: totalCost
-      }
+      };
       await addStudentPoints(course, userId, pointChange);
 
       const receiptInput: ReceiptInput = {
@@ -257,7 +271,7 @@ export async function executePurchase(
 }
 
 export function recentClassPurchases(course: string, fetch: number) {
-   const params : QueryParams = {
+   const params: QueryParams = {
       tableName: MARKETPLACE_TABLE,
       indexName: COURSE_DATE_INDEX,
       scanIndexForward: false,
@@ -267,13 +281,13 @@ export function recentClassPurchases(course: string, fetch: number) {
          ":courseVal": ReceiptPK(course),
          ":dskPrefix": purchaseDatePrefix
       }
-   }
+   };
 
    return dynamodb.queryList<Receipt>(params);
 }
 
 export function recentStudentPurchases(course: string, studentId: string, fetch: number) {
-   const params : QueryParams = {
+   const params: QueryParams = {
       tableName: MARKETPLACE_TABLE,
       indexName: COURSE_DATE_STUDENT_INDEX,
       scanIndexForward: false,
@@ -283,8 +297,28 @@ export function recentStudentPurchases(course: string, studentId: string, fetch:
          ":courseVal": ReceiptPK(course),
          ":dskPrefix": `${userPrefix}${studentId}#${purchaseDatePrefix}`
       }
-   }
+   };
 
    return dynamodb.queryList<Receipt>(params);
 }
 
+export async function unfulfilledPurchases(course: string, user?: string) {
+   const params: QueryParams = {
+      tableName: MARKETPLACE_TABLE,
+      indexName: UNFULFILLED_INDEX,
+      keyConditionExpression: "PK = :courseVal and begins_with(UF_SK, :ufskPrefix) ",
+      expressionAttributeValues: {
+         ":courseVal": ReceiptPK(course),
+         ":ufskPrefix": unfulfilledPrefix
+      }
+   };
+
+   const list = await dynamodb.queryList<Receipt>(params);
+
+   if (user) {
+      return list.filter(receipt => {
+         receipt.studentId = user;
+      });
+   }
+   return list;
+}

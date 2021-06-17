@@ -47,6 +47,7 @@ type Query {
    Will only return the most recent N purchased passed into the fetch parameter 
    """
    recentPurchases(course: String!, student: String, fetch: Int!) : [Receipt!]!
+   unfulfilledPurchases(course: String!, student: String) : [Receipt!]!
 }
 
 type Mutation {

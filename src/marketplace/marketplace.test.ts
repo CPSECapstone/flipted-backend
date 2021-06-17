@@ -30,6 +30,7 @@ import {
    ReceiptSK,
    ReceiptU_D_SK,
    StudentPointValues,
+   unfulfilledPrefix,
    userPrefix
 } from "./marketplace.interface";
 import * as marketService from "./marketplace.service";
@@ -322,6 +323,7 @@ describe("Creating a receipt", () => {
          D_SK: ReceiptD_SK(date),
          U_D_SK: ReceiptU_D_SK("userid", date),
          MI_PK: ReceiptMI_PK("cupcakeid"),
+         UF_SK: unfulfilledPrefix,
          note: "With extra sprinkles!",
          purchaseDate: "1970-01-01T00:00:00.000Z",
          pointsSpent: 6,
