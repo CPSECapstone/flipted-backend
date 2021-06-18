@@ -10,10 +10,13 @@ Please see `docs` folder for more on how to start developing the project. See [m
 
 To have our own development environments, we need to do deploy to different service stacks. .env.development and .env.production is not in the repo, as they will be different on each one's machine. However, we still need them locally. Here an example.
 
+```
 // .env.development
+
 PROVIDER_STAGE="dev-zzheng07"
 DATABASE_STAGE="dev"
 AUTHORIZOR_STAGE="dev"
+```
 
 ### License
 
