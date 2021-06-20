@@ -133,6 +133,7 @@ export type ResolversTypes = ResolversObject<{
   QuestionProgress: ResolverTypeWrapper<QuestionProgress>;
   QuizBlock: ResolverTypeWrapper<QuizBlock>;
   QuizBlockInput: QuizBlockInput;
+  Receipt: ResolverTypeWrapper<Receipt>;
   Role: Role;
   RubricRequirement: ResolverTypeWrapper<RubricRequirement>;
   RubricRequirementInput: RubricRequirementInput;
@@ -226,6 +227,7 @@ export type ResolversParentTypes = ResolversObject<{
   QuestionProgress: QuestionProgress;
   QuizBlock: QuizBlock;
   QuizBlockInput: QuizBlockInput;
+  Receipt: Receipt;
   RubricRequirement: RubricRequirement;
   RubricRequirementInput: RubricRequirementInput;
   Student: Student;
@@ -358,7 +360,7 @@ export type ImageBlockResolvers<ContextType = any, ParentType extends ResolversP
 
 export type MarketListingResolvers<ContextType = any, ParentType extends ResolversParentTypes['MarketListing'] = ResolversParentTypes['MarketListing']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  listingName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   image?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   course?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -429,11 +431,16 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addTask?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddTaskArgs, 'task'>>;
   addTextBlock?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddTextBlockArgs, 'textblock'>>;
   addVideoBlock?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddVideoBlockArgs, 'videoblock'>>;
+  changePoints?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationChangePointsArgs, 'course' | 'student' | 'points'>>;
   deleteGoal?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteGoalArgs, 'id'>>;
+  editMarketListing?: Resolver<ResolversTypes['MarketListing'], ParentType, ContextType, RequireFields<MutationEditMarketListingArgs, 'course' | 'id' | 'listing'>>;
   editOrCreateGoal?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationEditOrCreateGoalArgs, 'goal'>>;
+  fulfillPurchase?: Resolver<ResolversTypes['Receipt'], ParentType, ContextType, RequireFields<MutationFulfillPurchaseArgs, 'course' | 'receiptId' | 'fulfilled'>>;
   gradeAnswer?: Resolver<ResolversTypes['AnswerGrade'], ParentType, ContextType, RequireFields<MutationGradeAnswerArgs, 'grade'>>;
   gradeObjectiveTaskMastery?: Resolver<ResolversTypes['ObjectiveTaskMastery'], ParentType, ContextType, RequireFields<MutationGradeObjectiveTaskMasteryArgs, 'grade'>>;
   gradeTaskSubmission?: Resolver<ResolversTypes['TaskSubmissionGrade'], ParentType, ContextType, RequireFields<MutationGradeTaskSubmissionArgs, 'grade'>>;
+  purchase?: Resolver<ResolversTypes['Receipt'], ParentType, ContextType, RequireFields<MutationPurchaseArgs, 'course' | 'listingId' | 'quantity' | 'note'>>;
+  removeMarketListing?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationRemoveMarketListingArgs, 'course' | 'id'>>;
   saveFreeResponseProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveFreeResponseProgressArgs, 'frBlockInput'>>;
   saveMultipleChoiceProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveMultipleChoiceProgressArgs, 'mcBlockInput'>>;
   submitTask?: Resolver<ResolversTypes['TaskSubmissionResult'], ParentType, ContextType, RequireFields<MutationSubmitTaskArgs, 'taskId'>>;
@@ -510,6 +517,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getMissionProgress?: Resolver<ResolversTypes['MissionProgress'], ParentType, ContextType, RequireFields<QueryGetMissionProgressArgs, 'missionId'>>;
   getTaskObjectiveProgress?: Resolver<Array<ResolversTypes['TaskObjectiveProgress']>, ParentType, ContextType, RequireFields<QueryGetTaskObjectiveProgressArgs, 'taskId'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  marketListings?: Resolver<Array<ResolversTypes['MarketListing']>, ParentType, ContextType, RequireFields<QueryMarketListingsArgs, 'course'>>;
   mission?: Resolver<ResolversTypes['Mission'], ParentType, ContextType, RequireFields<QueryMissionArgs, never>>;
   missions?: Resolver<Array<ResolversTypes['Mission']>, ParentType, ContextType, RequireFields<QueryMissionsArgs, never>>;
   objective?: Resolver<ResolversTypes['Objective'], ParentType, ContextType, RequireFields<QueryObjectiveArgs, 'objectiveId'>>;
@@ -518,10 +526,11 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   progressOverview?: Resolver<ResolversTypes['ProgressOverview'], ParentType, ContextType, RequireFields<QueryProgressOverviewArgs, 'course'>>;
   questions?: Resolver<Array<ResolversTypes['Question']>, ParentType, ContextType, RequireFields<QueryQuestionsArgs, 'questionIds'>>;
   quizblock?: Resolver<ResolversTypes['QuizBlock'], ParentType, ContextType, RequireFields<QueryQuizblockArgs, 'taskId' | 'blockId'>>;
+  recentPurchases?: Resolver<Array<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<QueryRecentPurchasesArgs, 'course' | 'fetch'>>;
   retrieveQuestionProgress?: Resolver<ResolversTypes['QuestionProgress'], ParentType, ContextType, RequireFields<QueryRetrieveQuestionProgressArgs, 'taskId'>>;
   retrieveTaskProgress?: Resolver<Maybe<ResolversTypes['TaskProgress']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskProgressArgs, 'taskId'>>;
   retrieveTaskSubmission?: Resolver<Maybe<ResolversTypes['TaskSubmissionResult']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskSubmissionArgs, 'taskId'>>;
-  student?: Resolver<ResolversTypes['Student'], ParentType, ContextType, RequireFields<QueryStudentArgs, 'studentId' | 'course'>>;
+  student?: Resolver<ResolversTypes['Student'], ParentType, ContextType, RequireFields<QueryStudentArgs, 'course'>>;
   students?: Resolver<Array<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<QueryStudentsArgs, 'course'>>;
   subMission?: Resolver<Maybe<ResolversTypes['SubMission']>, ParentType, ContextType, RequireFields<QuerySubMissionArgs, never>>;
   target?: Resolver<ResolversTypes['Target'], ParentType, ContextType, RequireFields<QueryTargetArgs, 'targetId'>>;
@@ -531,6 +540,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   taskSubmissionSummary?: Resolver<ResolversTypes['TaskSubmissionSummary'], ParentType, ContextType, RequireFields<QueryTaskSubmissionSummaryArgs, 'course' | 'taskId'>>;
   tasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTasksArgs, never>>;
   tasksByCourse?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTasksByCourseArgs, 'course'>>;
+  unfulfilledPurchases?: Resolver<Array<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<QueryUnfulfilledPurchasesArgs, 'course'>>;
   userProgress?: Resolver<ResolversTypes['UserProgress'], ParentType, ContextType, RequireFields<QueryUserProgressArgs, 'userName' | 'course'>>;
 }>;
 
@@ -571,6 +581,22 @@ export type QuizBlockResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ReceiptResolvers<ContextType = any, ParentType extends ResolversParentTypes['Receipt'] = ResolversParentTypes['Receipt']> = ResolversObject<{
+  studentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  listingName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  listingId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  student?: Resolver<ResolversTypes['Student'], ParentType, ContextType>;
+  listing?: Resolver<ResolversTypes['MarketListing'], ParentType, ContextType>;
+  receiptId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  course?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  purchaseDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  pointsSpent?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  quantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  fulfilled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type RubricRequirementResolvers<ContextType = any, ParentType extends ResolversParentTypes['RubricRequirement'] = ResolversParentTypes['RubricRequirement']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -586,6 +612,9 @@ export type StudentResolvers<ContextType = any, ParentType extends ResolversPare
   course?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   section?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   team?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  points?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPointsAwarded?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPointsSpent?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -798,6 +827,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   QuestionOption?: QuestionOptionResolvers<ContextType>;
   QuestionProgress?: QuestionProgressResolvers<ContextType>;
   QuizBlock?: QuizBlockResolvers<ContextType>;
+  Receipt?: ReceiptResolvers<ContextType>;
   RubricRequirement?: RubricRequirementResolvers<ContextType>;
   Student?: StudentResolvers<ContextType>;
   StudentMissionMastery?: StudentMissionMasteryResolvers<ContextType>;

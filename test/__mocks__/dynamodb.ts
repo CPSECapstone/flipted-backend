@@ -12,6 +12,21 @@ const dynamodbMock = {
    }),
    batchWrite: jest.fn().mockImplementation(() => {
       promise: awsSdkPromiseResponse;
+   }),
+   deleteItem: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
+   }),
+   queryList: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
+   }),
+   update: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
+   }),
+   updateMarshall: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
+   }),
+   getCompositeDemarshall: jest.fn().mockImplementation(() => {
+      promise: awsSdkPromiseResponse;
    })
 };
 

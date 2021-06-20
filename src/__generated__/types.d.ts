@@ -168,7 +168,7 @@ type ImageBlockInput = {
 type MarketListing = {
   __typename?: 'MarketListing';
   id: Scalars['String'];
-  name: Scalars['String'];
+  listingName: Scalars['String'];
   description: Scalars['String'];
   image: Scalars['String'];
   course: Scalars['String'];
@@ -179,7 +179,7 @@ type MarketListing = {
 };
 
 type MarketListingInput = {
-  name: Scalars['String'];
+  listingName: Scalars['String'];
   description: Scalars['String'];
   image: Scalars['String'];
   price: Scalars['Int'];
@@ -288,11 +288,16 @@ type Mutation = {
   addTask: Scalars['String'];
   addTextBlock: Scalars['String'];
   addVideoBlock: Scalars['String'];
+  changePoints: Scalars['Int'];
   deleteGoal: Scalars['String'];
+  editMarketListing: MarketListing;
   editOrCreateGoal: Scalars['String'];
+  fulfillPurchase: Receipt;
   gradeAnswer: AnswerGrade;
   gradeObjectiveTaskMastery: ObjectiveTaskMastery;
   gradeTaskSubmission: TaskSubmissionGrade;
+  purchase: Receipt;
+  removeMarketListing: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress: Scalars['Boolean'];
   /** Saves a students answer to a multiple choice question quiz block */
@@ -402,13 +407,34 @@ type MutationAddVideoBlockArgs = {
 };
 
 
+type MutationChangePointsArgs = {
+  course: Scalars['String'];
+  student: Scalars['String'];
+  points: Scalars['Int'];
+};
+
+
 type MutationDeleteGoalArgs = {
   id: Scalars['String'];
 };
 
 
+type MutationEditMarketListingArgs = {
+  course: Scalars['String'];
+  id: Scalars['String'];
+  listing: MarketListingInput;
+};
+
+
 type MutationEditOrCreateGoalArgs = {
   goal: GoalInput;
+};
+
+
+type MutationFulfillPurchaseArgs = {
+  course: Scalars['String'];
+  receiptId: Scalars['String'];
+  fulfilled: Scalars['Boolean'];
 };
 
 
@@ -424,6 +450,20 @@ type MutationGradeObjectiveTaskMasteryArgs = {
 
 type MutationGradeTaskSubmissionArgs = {
   grade: TaskSubmissionGradeInput;
+};
+
+
+type MutationPurchaseArgs = {
+  course: Scalars['String'];
+  listingId: Scalars['String'];
+  quantity: Scalars['Int'];
+  note: Scalars['String'];
+};
+
+
+type MutationRemoveMarketListingArgs = {
+  course: Scalars['String'];
+  id: Scalars['String'];
 };
 
 
@@ -559,6 +599,7 @@ type Query = {
   getMissionProgress: MissionProgress;
   getTaskObjectiveProgress: Array<TaskObjectiveProgress>;
   getUser?: Maybe<User>;
+  marketListings: Array<MarketListing>;
   mission: Mission;
   missions: Array<Mission>;
   objective: Objective;
@@ -567,6 +608,13 @@ type Query = {
   progressOverview: ProgressOverview;
   questions: Array<Question>;
   quizblock: QuizBlock;
+  /**
+   * If the student field is null or this API is called by a student, it will only return that student's purchases.
+   * Otherwise, it will return all for that course.
+   *
+   * Will only return the most recent N purchased passed into the fetch parameter
+   */
+  recentPurchases: Array<Receipt>;
   /** Returns student's task progress on the rubric requirements if it exists. */
   retrieveQuestionProgress: QuestionProgress;
   /** Returns student's progress on the rubric requirements for the task if it exists. */
@@ -586,6 +634,7 @@ type Query = {
   taskSubmissionSummary: TaskSubmissionSummary;
   tasks: Array<Task>;
   tasksByCourse: Array<Task>;
+  unfulfilledPurchases: Array<Receipt>;
   userProgress: UserProgress;
 };
 
@@ -651,6 +700,11 @@ type QueryGetTaskObjectiveProgressArgs = {
 };
 
 
+type QueryMarketListingsArgs = {
+  course: Scalars['String'];
+};
+
+
 type QueryMissionArgs = {
   missionId?: Maybe<Scalars['String']>;
 };
@@ -692,6 +746,13 @@ type QueryQuizblockArgs = {
 };
 
 
+type QueryRecentPurchasesArgs = {
+  course: Scalars['String'];
+  student?: Maybe<Scalars['String']>;
+  fetch: Scalars['Int'];
+};
+
+
 type QueryRetrieveQuestionProgressArgs = {
   taskId: Scalars['String'];
 };
@@ -709,7 +770,7 @@ type QueryRetrieveTaskSubmissionArgs = {
 
 
 type QueryStudentArgs = {
-  studentId: Scalars['String'];
+  studentId?: Maybe<Scalars['String']>;
   course: Scalars['String'];
 };
 
@@ -757,6 +818,12 @@ type QueryTasksArgs = {
 
 type QueryTasksByCourseArgs = {
   course: Scalars['String'];
+};
+
+
+type QueryUnfulfilledPurchasesArgs = {
+  course: Scalars['String'];
+  student?: Maybe<Scalars['String']>;
 };
 
 
@@ -816,6 +883,26 @@ type QuizBlockInput = {
   questionIds: Array<Scalars['String']>;
 };
 
+/**
+ * The student and listing objects contained in the receipt will reflect
+ * the updated values as a result of the purchase.
+ */
+type Receipt = {
+  __typename?: 'Receipt';
+  studentId: Scalars['String'];
+  listingName: Scalars['String'];
+  listingId: Scalars['String'];
+  student: Student;
+  listing: MarketListing;
+  receiptId: Scalars['String'];
+  course: Scalars['String'];
+  note: Scalars['String'];
+  purchaseDate: Scalars['Date'];
+  pointsSpent: Scalars['Int'];
+  quantity: Scalars['Int'];
+  fulfilled: Scalars['Boolean'];
+};
+
 enum Role {
   Student = 'STUDENT',
   Instructor = 'INSTRUCTOR'
@@ -841,6 +928,9 @@ type Student = {
   course: Scalars['String'];
   section: Scalars['Int'];
   team?: Maybe<Scalars['String']>;
+  points: Scalars['Int'];
+  totalPointsAwarded: Scalars['Int'];
+  totalPointsSpent: Scalars['Int'];
 };
 
 type StudentInput = {

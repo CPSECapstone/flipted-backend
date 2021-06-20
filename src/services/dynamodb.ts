@@ -83,14 +83,47 @@ async function get(params: GetParams): Promise<GetItemCommandOutput> {
    }
 }
 
-async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
-   
+async function updateMarshall<T>(params: UpdateParams): Promise<T> {
    // determine if UpdateParams is for a composite or single key item
-   const key = (typeof params.key === 'string') ? marshall(
-      {
-         id: params.key
-      }) : marshall(params.key, marshallOpts)
-   
+   const key =
+      typeof params.key === "string"
+         ? marshall({
+              id: params.key
+           })
+         : marshall(params.key, marshallOpts);
+
+   const command = new UpdateItemCommand({
+      TableName: params.tableName,
+      Key: key,
+      ConditionExpression: params.conditionExpression,
+      UpdateExpression: params.updateExpression,
+      ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
+      ReturnValues: "ALL_NEW"
+   });
+
+   try {
+      const output: UpdateItemCommandOutput = await client.send(command);
+      console.log(output);
+      if (output.Attributes) {
+         const item = unmarshall(output.Attributes);
+         return <T>item;
+      }
+
+      return <T>(<unknown>undefined);
+   } catch (err) {
+      throw err;
+   }
+}
+
+async function update(params: UpdateParams): Promise<UpdateItemCommandOutput> {
+   // determine if UpdateParams is for a composite or single key item
+   const key =
+      typeof params.key === "string"
+         ? marshall({
+              id: params.key
+           })
+         : marshall(params.key, marshallOpts);
+
    const command = new UpdateItemCommand({
       TableName: params.tableName,
       Key: key,
@@ -118,6 +151,24 @@ async function getComposite(params: GetCompositeParams): Promise<GetItemCommandO
    try {
       const output: GetItemCommandOutput = await client.send(command);
       return output;
+   } catch (err) {
+      return err;
+   }
+}
+
+async function getCompositeDemarshall<T>(params: GetCompositeParams): Promise<T> {
+   const command = new GetItemCommand({
+      TableName: params.tableName,
+      Key: marshall(params.key, marshallOpts),
+      ProjectionExpression: params.projectionExpression
+   });
+
+   try {
+      const output: GetItemCommandOutput = await client.send(command);
+      if (output.Item) {
+         return <T>unmarshall(output.Item);
+      }
+      return <T>(<unknown>undefined);
    } catch (err) {
       return err;
    }
@@ -177,7 +228,9 @@ async function queryList<T>(params: QueryParams): Promise<T[]> {
       FilterExpression: params.filterExpression,
       IndexName: params.indexName,
       KeyConditionExpression: params.keyConditionExpression,
-      ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts)
+      ExpressionAttributeValues: marshall(params.expressionAttributeValues, marshallOpts),
+      ScanIndexForward: params.scanIndexForward ?? true,
+      Limit: params.limit
    });
 
    try {
@@ -321,9 +374,11 @@ const dynamodb = {
    put,
    get,
    getComposite,
+   getCompositeDemarshall,
    putComposite,
    scan,
    update,
+   updateMarshall,
    batchGet,
    query,
    queryList,
@@ -352,6 +407,7 @@ declare global {
       conditionExpression?: string;
       updateExpression: string;
       expressionAttributeValues: { [key: string]: any };
+      expressionAttributeNames?: { [key: string]: any };
    }
 
    export interface GetParams {
@@ -392,6 +448,8 @@ declare global {
       expressionAttributeValues: { [key: string]: any };
       filterExpression?: string;
       indexName?: string;
+      scanIndexForward?: boolean;
+      limit?: number;
    }
 
    export interface DeleteParam {
