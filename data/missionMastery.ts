@@ -3,7 +3,7 @@ import * as util from "./util";
 import * as flipted from "./fliptedCmd";
 import * as missionMasteryService from "../src/missionMastery/missionMasteryService";
 import * as helper from "../src/missionMastery/missionMasteryHelper";
-import * as rosterService from "../src/course/rosterService";
+import * as rosterService from "../src/course/courseService";
 import { StudentMissionMasteryItem } from "../src/missionMastery/missionMasteryInterface";
 import taskService from "../src/task/task.service";
 

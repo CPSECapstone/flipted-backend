@@ -2,7 +2,7 @@ import { Arguments } from "yargs";
 import * as util from "./util";
 import * as flipted from "./fliptedCmd";
 import * as progressService from "../src/progress/progressService";
-import * as rosterService from "../src/course/rosterService";
+import * as rosterService from "../src/course/courseService";
 import * as objectiveService from "../src/objective/objectiveService";
 import taskService from "../src/task/task.service";
 import { MasteryItem } from "../src/progress/progressInterface";

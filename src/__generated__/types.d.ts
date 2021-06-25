@@ -65,6 +65,8 @@ type CourseInfo = {
 
 type CourseInput = {
   courseName: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
 };
 
 
@@ -294,7 +296,7 @@ type Mutation = {
   addVideoBlock: Scalars['String'];
   changePoints: Scalars['Int'];
   /** Creates a new course associated with the instructor caller */
-  createCourse: Scalars['String'];
+  createCourse: CourseInfo;
   deleteGoal: Scalars['String'];
   editMarketListing: MarketListing;
   editOrCreateGoal: Scalars['String'];

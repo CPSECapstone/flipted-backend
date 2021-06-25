@@ -3,7 +3,7 @@ import { COURSE_CONTENT_TABLE_NAME } from "../environment";
 import dynamodb from "../services/dynamodb";
 import * as helper from "./courseHelper";
 import {
-   CourseInfoItem,
+   CourseTeacherItem,
    CourseKey,
    CoursePrefix,
    StudentItem,
@@ -155,21 +155,8 @@ export async function getCourseContent(course: string): Promise<CourseContent> {
    }
 }
 
-export async function importCourses(courseItems: CourseInfoItem[]): Promise<number> {
-   courseItems.forEach(item => {
-      item.source = "imported";
-   });
-
-   const params: BatchWriteParams = {
-      tableName: COURSE_CONTENT_TABLE_NAME,
-      items: courseItems
-   };
-
-   try {
-      return dynamodb.batchWrite(params);
-   } catch (err) {
-      return err;
-   }
+export async function importCourses(courseItems: CourseTeacherItem[]): Promise<number> {
+  throw new Error("Not implemented")
 }
 
 export async function deleteCourses(): Promise<number> {

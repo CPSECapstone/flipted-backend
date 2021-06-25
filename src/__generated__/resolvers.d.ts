@@ -430,7 +430,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addTextBlock?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddTextBlockArgs, 'textblock'>>;
   addVideoBlock?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddVideoBlockArgs, 'videoblock'>>;
   changePoints?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationChangePointsArgs, 'course' | 'student' | 'points'>>;
-  createCourse?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationCreateCourseArgs, 'course'>>;
+  createCourse?: Resolver<ResolversTypes['CourseInfo'], ParentType, ContextType, RequireFields<MutationCreateCourseArgs, 'course'>>;
   deleteGoal?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteGoalArgs, 'id'>>;
   editMarketListing?: Resolver<ResolversTypes['MarketListing'], ParentType, ContextType, RequireFields<MutationEditMarketListingArgs, 'course' | 'id' | 'listing'>>;
   editOrCreateGoal?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationEditOrCreateGoalArgs, 'goal'>>;

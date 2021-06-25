@@ -2,7 +2,7 @@ import * as util from "./util";
 import * as flipted from "./fliptedCmd";
 import * as service from "../src/course/courseService";
 import * as helper from "../src/course/courseHelper";
-import { CourseInfoItem } from "../src/course/courseInterface";
+import { CourseTeacherItem } from "../src/course/courseInterface";
 
 async function listItems() {
    try {
@@ -15,8 +15,8 @@ async function listItems() {
 }
 
 /// "Description","Instructor","Course"
-function generateCourseItems(records: any[]): CourseInfoItem[] {
-   const courses: CourseInfoItem[] = records.map(record => {
+function generateCourseItems(records: any[]): CourseTeacherItem[] {
+   const courses: CourseTeacherItem[] = records.map(record => {
       const input: CourseInput = {
          course: record.Course,
          instructor: record.Instructor,

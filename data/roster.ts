@@ -3,7 +3,7 @@ import { Arguments } from "yargs";
 import chalk from "chalk";
 import * as flipted from "./fliptedCmd";
 import * as util from "./util";
-import * as rosterService from "../src/course/rosterService";
+import * as rosterService from "../src/course/courseService";
 import userService from "../src/services/user";
 import { RoleInternal } from "../src/interfaces/role";
 
@@ -42,7 +42,7 @@ async function importItems() {
    try {
       const users = await userService.listUsersByRole(RoleInternal.Student);
       const students = users.map(user => {
-         return <StudentInput>{
+         return <any>{
             studentId: user.id,
             email: user.email,
             firstName: user.firstName,
