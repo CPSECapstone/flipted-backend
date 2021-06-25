@@ -36,20 +36,19 @@ test("Converting course creation to db item", async () => {
       lastName: "Jones"
    };
 
-   const expRes = {
+   const expRes: CourseTeacherItem = {
       PK: TeacherPK(courseId),
       SK: TeacherSK(teacherId),
       U_PK: UserGI_PK(teacherId),
       courseName: "Test Course",
       courseId: courseId,
-      username: teacherId,
+      instructorId: teacherId,
       firstName: "Bob",
       lastName: "Jones"
    };
 
    expect(courseInputToDBItem(courseInput, teacherId, courseId)).toEqual(expRes);
 });
-
 
 test("I can: query all courses I'm managing / enrolled in", async () => {
    dynamodbMock.queryList.mockClear();

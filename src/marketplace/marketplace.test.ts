@@ -276,10 +276,10 @@ describe("Changing a students points", () => {
       };
 
       const params: UpdateParams = {
-         tableName: COURSE_CONTENT_TABLE_NAME,
+         tableName: MARKETPLACE_TABLE,
          key: {
-            PK: StudentPK("testId"),
-            SK: StudentSK("testCourse")
+            PK: StudentPK("testCourse"),
+            SK: StudentSK("testId")
          },
          conditionExpression: "attribute_exists(SK)",
          updateExpression:
