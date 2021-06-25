@@ -3,7 +3,7 @@ import * as util from "./util";
 import * as flipted from "./fliptedCmd";
 import * as targetMasteryService from "../src/targetMastery/targetMasteryService";
 import * as helper from "../src/targetMastery/targetMasteryHelper";
-import * as rosterService from "../src/roster/rosterService";
+import * as rosterService from "../src/course/rosterService";
 import * as objectiveService from "../src/objective/objectiveService";
 import { StudentObjectiveMasteryItem } from "../src/targetMastery/targetMasteryInterface";
 

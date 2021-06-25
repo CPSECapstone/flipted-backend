@@ -1,7 +1,7 @@
 import { uid } from "uid/secure";
 import { COURSE_CONTENT_TABLE_NAME, MARKETPLACE_TABLE } from "../environment";
-import { StudentPK, StudentSK } from "../roster/rosterInterface";
-import { getStudent } from "../roster/rosterService";
+import { StudentPK, StudentSK } from "../course/courseInterface";
+import { getStudent } from "../course/courseService";
 import dynamodb from "../services/dynamodb";
 import { createListingItem, createReceiptItem } from "./marketplace.helper";
 import {

@@ -3,7 +3,7 @@ import { Arguments } from "yargs";
 import chalk from "chalk";
 import * as flipted from "./fliptedCmd";
 import * as util from "./util";
-import * as rosterService from "../src/roster/rosterService";
+import * as rosterService from "../src/course/rosterService";
 import userService from "../src/services/user";
 import { RoleInternal } from "../src/interfaces/role";
 

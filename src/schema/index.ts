@@ -13,7 +13,6 @@ import objectiveType from "../objective/objective.graphql";
 import targetType from "../target/target.graphql";
 import progressType from "../progress/progress.graphql";
 import goalsType from "./goal.graphql";
-import rosterType from "../roster/roster.graphql";
 import missionMasteryType from "../missionMastery/missionMastery.graphql";
 import targetMasteryType from "../targetMastery/targetMastery.graphql";
 import gradingType from "../grading/grading.graphql"
@@ -30,7 +29,6 @@ import objectiveResolvers from "../objective/objective.resolver";
 import targetResolvers from "../target/target.resolver";
 import progressResolvers from "../progress/progress.resolver";
 import goalsResolvers from "./goal.resolver";
-import rosterResolvers from "../roster/roster.resolver";
 import missionMasteryResolvers from "../missionMastery/missionMastery.resolver";
 import targetMasteryResolvers from "../targetMastery/targetMastery.resolver";
 import gradingResolvers from "../grading/grading.resolver";
@@ -52,7 +50,6 @@ const typesArray = [
    objectiveType,
    progressType,
    goalsType,
-   rosterType,
    missionMasteryType,
    targetMasteryType,
    gradingType,
@@ -72,7 +69,6 @@ const resolversArray = [
    objectiveResolvers,
    progressResolvers,
    goalsResolvers,
-   rosterResolvers,
    missionMasteryResolvers,
    targetMasteryResolvers,
    gradingResolvers,

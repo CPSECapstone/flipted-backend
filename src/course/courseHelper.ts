@@ -1,6 +1,13 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-import { CourseInfoItem, CourseKey, CoursePrefix } from "./courseInterface";
+import {
+   CourseInfoItem,
+   CourseKey,
+   CoursePrefix,
+   StudentItem,
+   StudentPK,
+   StudentSK
+} from "./courseInterface";
 import {
    MissionItem,
    MissionPrefix,
@@ -15,26 +22,49 @@ import { dbItemToObjective } from "../objective/objectiveHelper";
 import { dbItemToTarget } from "../target/targetHelper";
 import { dbItemToTask } from "../task/taskBusLogic";
 
-export function courseInputToDBItem(input: CourseInput): CourseInfoItem {
+export function courseInputToDBItem(input: CourseInput, instructorId: string): CourseInfoItem {
    const courseId = uid();
 
    const item: CourseInfoItem = {
       PK: CourseKey(courseId),
       SK: CourseKey(courseId),
       courseId: courseId,
+      instructorId: instructorId,
+
       ...input
    };
 
    return item;
 }
 
+export function studentInputToDBItem(input: StudentInput, courseName: string): StudentItem {
+   const item: StudentItem = {
+      PK: StudentPK(input.studentId),
+      SK: StudentSK(input.courseId),
+      U_SK: 'IMPLEMENT ME',
+      points: 0,
+      totalPointsAwarded: 0,
+      totalPointsSpent: 0,
+      courseName: courseName,
+      courseId: input.courseId,
+      studentId: input.studentId,
+      firstName: input.firstName,
+      lastName: input.lastName
+   };
+
+   return item;
+}
+
+export function dbItemToStudent(item: StudentItem): Student {
+   return <Student>item;
+}
+
 export function dbItemToCourseInfo(rawItem: any): CourseInfo {
    const item = <CourseInfoItem>unmarshall(rawItem);
    return <CourseInfo>{
       courseId: item.courseId,
-      course: item.course,
-      description: item.description,
-      instructor: item.instructor
+      courseName: item.courseName,
+      instructorId: item.instructorId
    };
 }
 

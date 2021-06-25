@@ -338,7 +338,7 @@ export function createTaskSubmissionSummary(
       const submission = submissionMap.get(student.studentId);
 
       return <StudentTaskSubmissionResult>{
-         studentName: student.email,
+         studentName: student.studentId,
          studentId: student.studentId,
          pointsAwarded: submission?.pointsAwarded || 0,
          graded: submission?.graded || false,
