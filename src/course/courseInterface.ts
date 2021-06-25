@@ -1,10 +1,11 @@
+import { NumberLiteralType } from "typescript";
 import { string } from "yargs";
 
 export type CourseTeacherItem = CompositeDBItem & {
    U_PK: string;
    courseName: string;
    courseId: string;
-   username: string;
+   instructorId: string;
    firstName: string;
    lastName: string;
 };
@@ -15,10 +16,18 @@ export function CourseKey(courseId: string): string {
    return `${CoursePrefix}#${courseId}`;
 }
 
-export type StudentItem = CompositeDBItem &
-   Omit<Student, "__typename"> & {
-      U_SK: string;
-   };
+export type CourseStudentItem = CompositeDBItem & {
+   U_PK: string;
+   courseName: string;
+   courseId: string;
+   firstName: string;
+   lastName: string;
+   instructorId: string;
+   studentId: string;
+   points: number;
+   totalPointsAwarded: number
+   totalPointsSpent: number
+};
 
 export const StudentPKPrefix = "COURSE";
 export const TeacherPKPrefix = "COURSE";

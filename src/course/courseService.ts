@@ -1,34 +1,39 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { COURSE_CONTENT_TABLE_NAME } from "../environment";
+import { uid } from "uid";
+import { COURSE_CONTENT_TABLE_NAME, MARKETPLACE_TABLE } from "../environment";
 import dynamodb from "../services/dynamodb";
+import userService from "../services/user";
 import * as helper from "./courseHelper";
 import {
    CourseTeacherItem,
    CourseKey,
    CoursePrefix,
-   StudentItem,
+   CourseStudentItem,
    StudentPK,
    StudentPKPrefix,
    StudentSK,
-   StudentSKPrefix
+   StudentSKPrefix,
+   TeacherPK,
+   TeacherSK
 } from "./courseInterface";
 
 export async function addStudent(input: StudentInput) {
-   throw new Error("Not Implemented");
-
    try {
-      const courseName = "IMPLEMENT ME";
-      const studentItem = helper.studentInputToDBItem(input, courseName);
+      const courseInfo = getCourseInfo(input.courseId, input.instructorId);
+      const userinfo = await userService.get(input.studentId);
+
+
+      const studentItem = helper.studentInputToDBItem(input, (await courseInfo).courseName);
 
       const params: PutCompositeParams = {
-         tableName: COURSE_CONTENT_TABLE_NAME,
+         tableName: MARKETPLACE_TABLE,
          item: studentItem
       };
 
       const output = await dynamodb.putComposite(params);
-      return studentItem.PK;
+      return studentItem
    } catch (err) {
-      return err;
+      throw err;
    }
 }
 
@@ -43,7 +48,7 @@ export async function getStudent(course: string, studentId: string): Promise<Stu
    try {
       const output = await dynamodb.getComposite(params);
       if (output.Item) {
-         const item = <StudentItem>unmarshall(output.Item);
+         const item = <CourseStudentItem>unmarshall(output.Item);
          const student = helper.dbItemToStudent(item);
          return student;
       }
@@ -65,7 +70,7 @@ export async function listStudentsByCourse(course: string): Promise<Student[]> {
       }
    };
 
-   const studentItems: Array<StudentItem> = await dynamodb.queryList<StudentItem>(params);
+   const studentItems: Array<CourseStudentItem> = await dynamodb.queryList<CourseStudentItem>(params);
    return studentItems.map(helper.dbItemToStudent);
 }
 
@@ -92,39 +97,38 @@ export async function deleteStudents(): Promise<number> {
 }
 
 export async function addCourse(input: CourseInput, instructorId: string) {
-   const courseItem = helper.courseInputToDBItem(input, instructorId);
+   const courseItem = helper.courseInputToDBItem(input, instructorId, uid());
 
    const params: PutCompositeParams = {
-      tableName: COURSE_CONTENT_TABLE_NAME,
+      tableName: MARKETPLACE_TABLE,
       item: courseItem
    };
 
    try {
-      const output = dynamodb.putComposite(params);
-      return courseItem.SK;
+      await dynamodb.putComposite(params);
+      return courseItem;
    } catch (err) {
       return err;
    }
 }
 
-export async function getCourseInfo(courseId: string): Promise<CourseInfo> {
+export async function getCourseInfo(courseId: string, instructorId: string): Promise<CourseInfo> {
    const params: GetCompositeParams = {
-      tableName: COURSE_CONTENT_TABLE_NAME,
+      tableName: MARKETPLACE_TABLE,
       key: {
-         PK: CourseKey(courseId),
-         SK: CourseKey(courseId)
+         PK: TeacherPK(courseId),
+         SK: TeacherSK(instructorId)
       }
    };
    try {
-      const output = await dynamodb.getComposite(params);
-      if (output.Item) {
-         const objective = helper.dbItemToCourseInfo(output.Item);
-         return objective;
-      }
+      const output = await dynamodb.getCompositeDemarshall<CourseInfo>(params);
 
-      throw new Error(`Course not found with courseId=${courseId}`);
+      if (!output) {
+         throw new Error(`Course not found with courseId=${courseId}`);
+      }
+      return output;
    } catch (err) {
-      return err;
+      throw err;
    }
 }
 
@@ -156,7 +160,7 @@ export async function getCourseContent(course: string): Promise<CourseContent> {
 }
 
 export async function importCourses(courseItems: CourseTeacherItem[]): Promise<number> {
-  throw new Error("Not implemented")
+   throw new Error("Not implemented");
 }
 
 export async function deleteCourses(): Promise<number> {

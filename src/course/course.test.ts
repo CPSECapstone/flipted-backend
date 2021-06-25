@@ -10,7 +10,7 @@ import { courseInputToDBItem, studentInputToDBItem } from "./courseHelper";
 import {
    StudentPK,
    StudentSK,
-   StudentItem,
+   CourseStudentItem,
    TeacherPK,
    UserGI_PK,
    UserGI_SK,
@@ -50,19 +50,6 @@ test("Converting course creation to db item", async () => {
    expect(courseInputToDBItem(courseInput, teacherId, courseId)).toEqual(expRes);
 });
 
-test("I can: create a course as an instructor", async () => {
-   /* dynamodbMock.putComposite.mockClear();
-
-   const params: PutCompositeParams = {
-      tableName: MARKETPLACE_TABLE,
-      item: courseInputToDBItem({courseName: "Test Course"}, "instr123")
-   };
-
-   courseService.addCourse({courseName: "Test Course"}, "instr123")
-
-   expect(dynamodbMock.putComposite).toBeCalledWith(params)
-   expect(dynamodbMock.putComposite).toBeCalledTimes(1) */
-});
 
 test("I can: query all courses I'm managing / enrolled in", async () => {
    dynamodbMock.queryList.mockClear();

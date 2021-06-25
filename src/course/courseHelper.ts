@@ -4,7 +4,7 @@ import {
    CourseTeacherItem,
    CourseKey,
    CoursePrefix,
-   StudentItem,
+   CourseStudentItem,
    StudentPK,
    StudentSK,
    UserGI_PK,
@@ -31,7 +31,7 @@ export function courseInputToDBItem(input: CourseInput, instructorId: string, co
       SK: TeacherSK(instructorId),
       U_PK: UserGI_PK(instructorId),
       courseId: courseId,
-      username: instructorId,
+      instructorId: instructorId,
       courseName: input.courseName,
       firstName: input.firstName,
       lastName: input.lastName
@@ -40,11 +40,11 @@ export function courseInputToDBItem(input: CourseInput, instructorId: string, co
    return item;
 }
 
-export function studentInputToDBItem(input: StudentInput, courseName: string): StudentItem {
-   const item: StudentItem = {
-      PK: StudentPK(input.studentId),
-      SK: StudentSK(input.courseId),
-      U_SK: "IMPLEMENT ME",
+export function studentInputToDBItem(input: StudentInput, courseName: string): CourseStudentItem {
+   const item: CourseStudentItem = {
+      PK: StudentPK(input.courseId),
+      SK: StudentSK(input.studentId),
+      U_PK: UserGI_PK(input.studentId),
       points: 0,
       totalPointsAwarded: 0,
       totalPointsSpent: 0,
@@ -52,13 +52,14 @@ export function studentInputToDBItem(input: StudentInput, courseName: string): S
       courseId: input.courseId,
       studentId: input.studentId,
       firstName: input.firstName,
-      lastName: input.lastName
+      lastName: input.lastName,
+      instructorId: input.instructorId
    };
 
    return item;
 }
 
-export function dbItemToStudent(item: StudentItem): Student {
+export function dbItemToStudent(item: CourseStudentItem): Student {
    return <Student>item;
 }
 
@@ -67,7 +68,7 @@ export function dbItemToCourseInfo(rawItem: any): CourseInfo {
    return <CourseInfo>{
       courseId: item.courseId,
       courseName: item.courseName,
-      instructorId: item.username
+      instructorId: item.instructorId
    };
 }
 

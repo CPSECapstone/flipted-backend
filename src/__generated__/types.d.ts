@@ -288,7 +288,7 @@ type Mutation = {
    *
    * If called by an instructor: overrides the instructor input
    */
-  addStudent: Scalars['String'];
+  addStudent: Student;
   addSubMission: Scalars['String'];
   addTarget: Scalars['String'];
   addTask: Scalars['String'];
@@ -663,6 +663,7 @@ type QueryClassTargetMasteryArgs = {
 
 type QueryCourseArgs = {
   courseId: Scalars['String'];
+  instructorId: Scalars['String'];
 };
 
 
@@ -932,6 +933,7 @@ type Student = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   courseId: Scalars['String'];
+  instructorId: Scalars['String'];
   courseName: Scalars['String'];
   points: Scalars['Int'];
   totalPointsAwarded: Scalars['Int'];

@@ -21,6 +21,7 @@ type Student {
    firstName: String!
    lastName: String!
    courseId: String!
+   instructorId: String!
    courseName: String!
    points: Int!,
    totalPointsAwarded: Int!,
@@ -36,7 +37,7 @@ input StudentInput {
 }
 
 type Query {
-   course(courseId: String!): CourseInfo!
+   course(courseId: String!, instructorId: String!): CourseInfo!
    
    """
    Returns info on all courses associated with the user
@@ -73,5 +74,5 @@ type Mutation {
 
    If called by an instructor: overrides the instructor input
    """
-   addStudent(student: StudentInput!): String!
+   addStudent(student: StudentInput!): Student!
 }

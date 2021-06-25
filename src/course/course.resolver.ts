@@ -4,7 +4,12 @@ import { RoleInternal } from "../interfaces/role";
 import { Resolvers } from "../__generated__/resolvers";
 import * as service from "./courseService";
 
-async function addStudent(_: any, args: MutationAddStudentArgs) {
+async function addStudent(_: any, args: MutationAddStudentArgs, context: FliptedContext) {
+   if (context.userRole == RoleInternal.Instructor) {
+      args.student.instructorId = context.username
+      return service.addStudent(args.student);
+   }
+   args.student.studentId = context.username
    return service.addStudent(args.student);
 }
 
@@ -30,7 +35,7 @@ const resolvers: Resolvers = {
       student: getStudent,
       students: listStudentsByCourse,
       course: (_, args, context) => {
-         return service.getCourseInfo(args.courseId);
+         return service.getCourseInfo(args.courseId, args.instructorId);
       },
       courses: (_, args, context: FliptedContext) => {
          return service.listCourseInfos(context.username);
@@ -42,7 +47,10 @@ const resolvers: Resolvers = {
    Mutation: {
       addStudent: addStudent,
       createCourse(_, args: MutationCreateCourseArgs, context: FliptedContext) {
-         return service.addCourse(args.course, context.username);
+         if (context.userRole == RoleInternal.Instructor) {
+            return service.addCourse(args.course, context.username);
+         }
+         throw new ForbiddenError(notInstructorErrorMessage);
       }
    }
 };
