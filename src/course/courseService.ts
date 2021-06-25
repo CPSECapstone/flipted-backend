@@ -14,14 +14,15 @@ import {
    StudentSK,
    StudentSKPrefix,
    TeacherPK,
-   TeacherSK
+   TeacherSK,
+   USER_COURSE_INDEX,
+   UserGI_PK
 } from "./courseInterface";
 
 export async function addStudent(input: StudentInput) {
    try {
       const courseInfo = getCourseInfo(input.courseId, input.instructorId);
       const userinfo = await userService.get(input.studentId);
-
 
       const studentItem = helper.studentInputToDBItem(input, (await courseInfo).courseName);
 
@@ -31,7 +32,7 @@ export async function addStudent(input: StudentInput) {
       };
 
       const output = await dynamodb.putComposite(params);
-      return studentItem
+      return studentItem;
    } catch (err) {
       throw err;
    }
@@ -39,10 +40,10 @@ export async function addStudent(input: StudentInput) {
 
 export async function getStudent(course: string, studentId: string): Promise<Student> {
    const params: GetCompositeParams = {
-      tableName: COURSE_CONTENT_TABLE_NAME,
+      tableName: MARKETPLACE_TABLE,
       key: {
-         PK: StudentPK(studentId),
-         SK: StudentSK(course)
+         PK: StudentPK(course),
+         SK: StudentSK(studentId)
       }
    };
    try {
@@ -61,16 +62,17 @@ export async function getStudent(course: string, studentId: string): Promise<Stu
 
 export async function listStudentsByCourse(course: string): Promise<Student[]> {
    const params: QueryParams = {
-      tableName: COURSE_CONTENT_TABLE_NAME,
-      indexName: "course-PK-index",
-      keyConditionExpression: "course = :courseVal and begins_with(PK, :pkPrefix) ",
+      tableName: MARKETPLACE_TABLE,
+      keyConditionExpression: "PK = :courseVal and begins_with(SK, :skPrefix) ",
       expressionAttributeValues: {
-         ":courseVal": course,
-         ":pkPrefix": StudentPKPrefix
+         ":courseVal": StudentPK(course),
+         ":skPrefix": StudentSKPrefix
       }
    };
 
-   const studentItems: Array<CourseStudentItem> = await dynamodb.queryList<CourseStudentItem>(params);
+   const studentItems: Array<CourseStudentItem> = await dynamodb.queryList<CourseStudentItem>(
+      params
+   );
    return studentItems.map(helper.dbItemToStudent);
 }
 
@@ -133,7 +135,17 @@ export async function getCourseInfo(courseId: string, instructorId: string): Pro
 }
 
 export async function listCourseInfos(username: string): Promise<CourseInfo[]> {
-   throw new Error("NOT IMPLEMENTED");
+   const params: QueryParams = {
+      tableName: MARKETPLACE_TABLE,
+      indexName: USER_COURSE_INDEX,
+      keyConditionExpression: "U_PK = :userpk and begins_with(PK, :pkPrefix)",
+      expressionAttributeValues: {
+         ":userpk": UserGI_PK(username),
+         ":pkPrefix": CoursePrefix
+      }
+   };
+
+   return await dynamodb.queryList<CourseInfo>(params);
 }
 
 export async function getCourseContent(course: string): Promise<CourseContent> {

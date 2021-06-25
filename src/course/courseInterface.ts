@@ -29,6 +29,8 @@ export type CourseStudentItem = CompositeDBItem & {
    totalPointsSpent: number
 };
 
+export const USER_COURSE_INDEX = "U_PK-PK-index"
+
 export const StudentPKPrefix = "COURSE";
 export const TeacherPKPrefix = "COURSE";
 
