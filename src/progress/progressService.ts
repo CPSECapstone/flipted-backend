@@ -14,7 +14,7 @@ import { listObjectiveItemsByCourse } from "../objective/objectiveService";
 import { ObjectiveItem, ObjectiveKey, ObjectivePrefix } from "../objective/objectiveInterface";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { TaskKey } from "../interfaces/task";
-import { listStudentsByCourse } from "../roster/rosterService";
+import { listStudentsByCourse } from "../course/courseService";
 
 export async function wipeAllProgressForUser(username: string) {
    const masteryScanParams: ScanParams = {

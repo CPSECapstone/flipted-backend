@@ -15,9 +15,6 @@ const verifier = verifierFactory({
 
 export const validateToken = async (token: String) => {
    try {
-      return {
-         username: "Google_114560337406279161954"
-      }
       const tokenPayload = await verifier.verify(token);
       return tokenPayload;
    } catch (e) {

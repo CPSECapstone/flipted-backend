@@ -1,67 +1,151 @@
-import { COURSE_CONTENT_TABLE_NAME } from "../environment";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { uid } from "uid";
+import { COURSE_CONTENT_TABLE_NAME, MARKETPLACE_TABLE } from "../environment";
 import dynamodb from "../services/dynamodb";
+import userService from "../services/user";
 import * as helper from "./courseHelper";
-import { CourseInfoItem, CourseKey, CoursePrefix } from "./courseInterface";
+import {
+   CourseTeacherItem,
+   CourseKey,
+   CoursePrefix,
+   CourseStudentItem,
+   StudentPK,
+   StudentPKPrefix,
+   StudentSK,
+   StudentSKPrefix,
+   TeacherPK,
+   TeacherSK,
+   USER_COURSE_INDEX,
+   UserGI_PK
+} from "./courseInterface";
 
-export async function addCourse(input: CourseInput) {
-   const courseItem = helper.courseInputToDBItem(input);
-
-   const params: PutCompositeParams = {
-      tableName: COURSE_CONTENT_TABLE_NAME,
-      item: courseItem
-   };
-
+export async function addStudent(input: StudentInput) {
    try {
-      const output = dynamodb.putComposite(params);
-      return courseItem.SK;
+      const courseInfo = getCourseInfo(input.courseId, input.instructorId);
+      const userinfo = await userService.get(input.studentId);
+
+      const studentItem = helper.studentInputToDBItem(input, (await courseInfo).courseName);
+
+      const params: PutCompositeParams = {
+         tableName: MARKETPLACE_TABLE,
+         item: studentItem
+      };
+
+      const output = await dynamodb.putComposite(params);
+      return studentItem;
    } catch (err) {
-      return err;
+      throw err;
    }
 }
 
-export async function getCourseInfo(courseId: string): Promise<CourseInfo> {
+export async function getStudent(course: string, studentId: string): Promise<Student> {
    const params: GetCompositeParams = {
-      tableName: COURSE_CONTENT_TABLE_NAME,
+      tableName: MARKETPLACE_TABLE,
       key: {
-         PK: CourseKey(courseId),
-         SK: CourseKey(courseId)
+         PK: StudentPK(course),
+         SK: StudentSK(studentId)
       }
    };
    try {
       const output = await dynamodb.getComposite(params);
       if (output.Item) {
-         const objective = helper.dbItemToCourseInfo(output.Item);
-         return objective;
+         const item = <CourseStudentItem>unmarshall(output.Item);
+         const student = helper.dbItemToStudent(item);
+         return student;
       }
 
-      throw new Error(`Course not found with courseId=${courseId}`);
+      throw new Error(`Student not found with course=${course} and studentId=${studentId}`);
+   } catch (err) {
+      throw err;
+   }
+}
+
+export async function listStudentsByCourse(course: string): Promise<Student[]> {
+   const params: QueryParams = {
+      tableName: MARKETPLACE_TABLE,
+      keyConditionExpression: "PK = :courseVal and begins_with(SK, :skPrefix) ",
+      expressionAttributeValues: {
+         ":courseVal": StudentPK(course),
+         ":skPrefix": StudentSKPrefix
+      }
+   };
+
+   const studentItems: Array<CourseStudentItem> = await dynamodb.queryList<CourseStudentItem>(
+      params
+   );
+   return studentItems.map(helper.dbItemToStudent);
+}
+
+export async function importStudents(studentInput: StudentInput[]): Promise<number> {
+   throw new Error("Not Implemented");
+}
+
+export async function deleteStudents(): Promise<number> {
+   const params: ScanParams = {
+      tableName: COURSE_CONTENT_TABLE_NAME,
+      filterExpression: "begins_with(PK, :pkPrefix) and begins_with(SK, :skPrefix)",
+      expressionAttributeValues: {
+         ":pkPrefix": StudentPKPrefix,
+         ":skPrefix": StudentSKPrefix
+      }
+   };
+
+   try {
+      const output = await dynamodb.batchDelete(params);
+      return output;
    } catch (err) {
       return err;
    }
 }
 
-export async function listCourseInfos(instructor: string): Promise<CourseInfo[]> {
-   const params: ScanParams = {
-      tableName: COURSE_CONTENT_TABLE_NAME,
-      filterExpression: "begins_with(SK, :skPrefix) And instructor = :instructorVal",
-      expressionAttributeValues: {
-         ":skPrefix": CoursePrefix,
-         ":instructorVal": instructor
-      }
+export async function addCourse(input: CourseInput, instructorId: string) {
+   const courseItem = helper.courseInputToDBItem(input, instructorId, uid());
+
+   const params: PutCompositeParams = {
+      tableName: MARKETPLACE_TABLE,
+      item: courseItem
    };
 
    try {
-      const output = await dynamodb.scan(params);
-      if (output.Items) {
-         const courses = helper.dbItemsToCourseInfos(output.Items);
-         return courses;
-      }
-
-      return [];
+      await dynamodb.putComposite(params);
+      return courseItem;
    } catch (err) {
-      console.error(err);
       return err;
    }
+}
+
+export async function getCourseInfo(courseId: string, instructorId: string): Promise<CourseInfo> {
+   const params: GetCompositeParams = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: TeacherPK(courseId),
+         SK: TeacherSK(instructorId)
+      }
+   };
+   try {
+      const output = await dynamodb.getCompositeDemarshall<CourseInfo>(params);
+
+      if (!output) {
+         throw new Error(`Course not found with courseId=${courseId}`);
+      }
+      return output;
+   } catch (err) {
+      throw err;
+   }
+}
+
+export async function listCourseInfos(username: string): Promise<CourseInfo[]> {
+   const params: QueryParams = {
+      tableName: MARKETPLACE_TABLE,
+      indexName: USER_COURSE_INDEX,
+      keyConditionExpression: "U_PK = :userpk and begins_with(PK, :pkPrefix)",
+      expressionAttributeValues: {
+         ":userpk": UserGI_PK(username),
+         ":pkPrefix": CoursePrefix
+      }
+   };
+
+   return await dynamodb.queryList<CourseInfo>(params);
 }
 
 export async function getCourseContent(course: string): Promise<CourseContent> {
@@ -87,21 +171,8 @@ export async function getCourseContent(course: string): Promise<CourseContent> {
    }
 }
 
-export async function importCourses(courseItems: CourseInfoItem[]): Promise<number> {
-   courseItems.forEach(item => {
-      item.source = "imported";
-   });
-
-   const params: BatchWriteParams = {
-      tableName: COURSE_CONTENT_TABLE_NAME,
-      items: courseItems
-   };
-
-   try {
-      return dynamodb.batchWrite(params);
-   } catch (err) {
-      return err;
-   }
+export async function importCourses(courseItems: CourseTeacherItem[]): Promise<number> {
+   throw new Error("Not implemented");
 }
 
 export async function deleteCourses(): Promise<number> {

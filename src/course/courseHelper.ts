@@ -1,6 +1,16 @@
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { uid } from "uid/secure";
-import { CourseInfoItem, CourseKey, CoursePrefix } from "./courseInterface";
+import {
+   CourseTeacherItem,
+   CourseKey,
+   CoursePrefix,
+   CourseStudentItem,
+   StudentPK,
+   StudentSK,
+   UserGI_PK,
+   TeacherPK,
+   TeacherSK
+} from "./courseInterface";
 import {
    MissionItem,
    MissionPrefix,
@@ -15,26 +25,50 @@ import { dbItemToObjective } from "../objective/objectiveHelper";
 import { dbItemToTarget } from "../target/targetHelper";
 import { dbItemToTask } from "../task/taskBusLogic";
 
-export function courseInputToDBItem(input: CourseInput): CourseInfoItem {
-   const courseId = uid();
-
-   const item: CourseInfoItem = {
-      PK: CourseKey(courseId),
-      SK: CourseKey(courseId),
+export function courseInputToDBItem(input: CourseInput, instructorId: string, courseId: string) {
+   const item: CourseTeacherItem = {
+      PK: TeacherPK(courseId),
+      SK: TeacherSK(instructorId),
+      U_PK: UserGI_PK(instructorId),
       courseId: courseId,
-      ...input
+      instructorId: instructorId,
+      courseName: input.courseName,
+      firstName: input.firstName,
+      lastName: input.lastName
    };
 
    return item;
 }
 
+export function studentInputToDBItem(input: StudentInput, courseName: string): CourseStudentItem {
+   const item: CourseStudentItem = {
+      PK: StudentPK(input.courseId),
+      SK: StudentSK(input.studentId),
+      U_PK: UserGI_PK(input.studentId),
+      points: 0,
+      totalPointsAwarded: 0,
+      totalPointsSpent: 0,
+      courseName: courseName,
+      courseId: input.courseId,
+      studentId: input.studentId,
+      firstName: input.firstName,
+      lastName: input.lastName,
+      instructorId: input.instructorId
+   };
+
+   return item;
+}
+
+export function dbItemToStudent(item: CourseStudentItem): Student {
+   return <Student>item;
+}
+
 export function dbItemToCourseInfo(rawItem: any): CourseInfo {
-   const item = <CourseInfoItem>unmarshall(rawItem);
+   const item = <CourseTeacherItem>unmarshall(rawItem);
    return <CourseInfo>{
       courseId: item.courseId,
-      course: item.course,
-      description: item.description,
-      instructor: item.instructor
+      courseName: item.courseName,
+      instructorId: item.instructorId
    };
 }
 

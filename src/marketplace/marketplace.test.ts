@@ -9,8 +9,8 @@ import {
    TO_DB_DATE,
    TO_GRAPHQL_DATE
 } from "../environment";
-import { StudentPK, StudentSK } from "../roster/rosterInterface";
-import { getStudent } from "../roster/rosterService";
+import { StudentPK, StudentSK } from "../course/courseInterface";
+import { getStudent } from "../course/courseService";
 import { createListingItem, createReceiptItem } from "./marketplace.helper";
 import {
    COURSE_DATE_INDEX,
@@ -42,7 +42,7 @@ jest.mock("../../src/services/dynamodb", () => {
    return dynamodbMock;
 });
 
-jest.mock("../roster/rosterService", () => ({
+jest.mock("../course/courseService", () => ({
    getStudent: jest.fn()
 }));
 
@@ -276,10 +276,10 @@ describe("Changing a students points", () => {
       };
 
       const params: UpdateParams = {
-         tableName: COURSE_CONTENT_TABLE_NAME,
+         tableName: MARKETPLACE_TABLE,
          key: {
-            PK: StudentPK("testId"),
-            SK: StudentSK("testCourse")
+            PK: StudentPK("testCourse"),
+            SK: StudentSK("testId")
          },
          conditionExpression: "attribute_exists(SK)",
          updateExpression:

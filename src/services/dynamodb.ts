@@ -168,9 +168,9 @@ async function getCompositeDemarshall<T>(params: GetCompositeParams): Promise<T>
       if (output.Item) {
          return <T>unmarshall(output.Item);
       }
-      return <T>(<unknown>undefined);
+      throw new Error("Item not found")
    } catch (err) {
-      return err;
+      throw err;
    }
 }
 

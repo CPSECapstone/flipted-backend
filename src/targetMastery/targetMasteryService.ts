@@ -5,7 +5,7 @@ import {
    StudentObjectiveMasteryPKPrefix,
    StudentObjectiveMasterySKPrefix
 } from "./targetMasteryInterface";
-import * as rosterService from "../roster/rosterService";
+import * as rosterService from "../course/courseService";
 import * as helper from "./targetMasteryHelper";
 import * as objectiveHelper from "../objective/objectiveHelper";
 import * as targetService from "../target/targetService";

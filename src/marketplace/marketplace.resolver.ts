@@ -1,7 +1,7 @@
 import { ForbiddenError } from "apollo-server-lambda";
 import { notInstructorErrorMessage, TO_GRAPHQL_DATE } from "../environment";
 import { RoleInternal } from "../interfaces/role";
-import { getStudent } from "../roster/rosterService";
+import { getStudent } from "../course/courseService";
 import { Resolvers } from "../__generated__/resolvers";
 import { ReceiptItem, StudentPointValues } from "./marketplace.interface";
 import * as marketService from "./marketplace.service";

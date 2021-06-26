@@ -19,7 +19,7 @@ import {
    taskSubResultToDBItem
 } from "./taskSubmissionHelper";
 import { listObjectivesIdsByTask } from "../progress/progressService";
-import * as rosterService from "../roster/rosterService";
+import * as rosterService from "../course/courseService";
 import { MasteryItem } from "../progress/progressInterface";
 import taskService from "../task/task.service";
 

@@ -1,12 +1,7 @@
-type Query {
-   _empty: String
-}
-
 type CourseInfo {
    courseId: String!
-   course: String!
-   instructor: String!
-   description: String!
+   courseName: String!
+   instructorId: String!
 }
 
 type CourseContent {
@@ -16,17 +11,68 @@ type CourseContent {
 }
 
 input CourseInput {
-   course: String!
-   instructor: String!
-   description: String!
+   courseName: String!
+   firstName: String!
+   lastName: String!
+}
+
+type Student {
+   studentId: String!
+   firstName: String!
+   lastName: String!
+   courseId: String!
+   instructorId: String!
+   courseName: String!
+   points: Int!,
+   totalPointsAwarded: Int!,
+   totalPointsSpent: Int!
+}
+
+input StudentInput {
+   studentId: String!
+   firstName: String!
+   lastName: String!
+   courseId: String!
+   instructorId: String!
 }
 
 type Query {
-   courseInfo(courseId: String!): CourseInfo!
-   courseInfos(instructor: String!): [CourseInfo!]!
+   course(courseId: String!, instructorId: String!): CourseInfo!
+   
+   """
+   Returns info on all courses associated with the user
+   """
+   courses: [CourseInfo!]!
+
+   """
+   DEPRECATED
+   """
    courseContent(course: String!): CourseContent!
+
+   """
+   Returns information on a specific student associated with a course.
+   """
+   student(studentId: String, courseId: String!): Student!
+
+   """ 
+   Returns all students enrolled in a course
+   """
+   students(courseId: String!): [Student!]!
 }
 
 type Mutation {
-   addCourse(course: CourseInput!): String!
+   """
+   Creates a new course associated with the instructor caller
+   """
+   createCourse(course: CourseInput!): CourseInfo!
+
+   """
+   Callable by both instructor and student roles, but with different
+   values overridden by the authentication header.
+
+   If called by student: overrides the student input
+
+   If called by an instructor: overrides the instructor input
+   """
+   addStudent(student: StudentInput!): Student!
 }

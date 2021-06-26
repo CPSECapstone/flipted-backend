@@ -2,7 +2,7 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { USER_PROGRESS_TABLE_NAME } from "../environment";
 import dynamodb from "../services/dynamodb";
 import * as missionService from "../mission/missionService";
-import * as rosterService from "../roster/rosterService";
+import * as rosterService from "../course/courseService";
 import * as helper from "./missionMasteryHelper";
 import {
    StudentMissionMasteryItem,

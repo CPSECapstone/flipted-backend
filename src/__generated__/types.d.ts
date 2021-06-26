@@ -59,15 +59,14 @@ type CourseContent = {
 type CourseInfo = {
   __typename?: 'CourseInfo';
   courseId: Scalars['String'];
-  course: Scalars['String'];
-  instructor: Scalars['String'];
-  description: Scalars['String'];
+  courseName: Scalars['String'];
+  instructorId: Scalars['String'];
 };
 
 type CourseInput = {
-  course: Scalars['String'];
-  instructor: Scalars['String'];
-  description: Scalars['String'];
+  courseName: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
 };
 
 
@@ -271,7 +270,6 @@ type MultipleChoiceAnswerInput = {
 
 type Mutation = {
   __typename?: 'Mutation';
-  addCourse: Scalars['String'];
   addFrBlock: Scalars['String'];
   addFrQuestion: Scalars['String'];
   addImageBlock: Scalars['String'];
@@ -282,13 +280,23 @@ type Mutation = {
   addObjective: Scalars['String'];
   addProgress: Scalars['String'];
   addQuizBlock: Scalars['String'];
-  addStudent: Scalars['String'];
+  /**
+   * Callable by both instructor and student roles, but with different
+   * values overridden by the authentication header.
+   *
+   * If called by student: overrides the student input
+   *
+   * If called by an instructor: overrides the instructor input
+   */
+  addStudent: Student;
   addSubMission: Scalars['String'];
   addTarget: Scalars['String'];
   addTask: Scalars['String'];
   addTextBlock: Scalars['String'];
   addVideoBlock: Scalars['String'];
   changePoints: Scalars['Int'];
+  /** Creates a new course associated with the instructor caller */
+  createCourse: CourseInfo;
   deleteGoal: Scalars['String'];
   editMarketListing: MarketListing;
   editOrCreateGoal: Scalars['String'];
@@ -318,11 +326,6 @@ type Mutation = {
   submitTaskProgress: Scalars['String'];
   updateUser?: Maybe<UpdateUserOutput>;
   wipeAllProgress: Scalars['String'];
-};
-
-
-type MutationAddCourseArgs = {
-  course: CourseInput;
 };
 
 
@@ -411,6 +414,11 @@ type MutationChangePointsArgs = {
   course: Scalars['String'];
   student: Scalars['String'];
   points: Scalars['Int'];
+};
+
+
+type MutationCreateCourseArgs = {
+  course: CourseInput;
 };
 
 
@@ -587,9 +595,11 @@ type Query = {
   _empty?: Maybe<Scalars['String']>;
   classMissionMastery: ClassMissionMastery;
   classTargetMastery: ClassTargetMastery;
+  course: CourseInfo;
+  /** DEPRECATED */
   courseContent: CourseContent;
-  courseInfo: CourseInfo;
-  courseInfos: Array<CourseInfo>;
+  /** Returns info on all courses associated with the user */
+  courses: Array<CourseInfo>;
   getAllEnrolledStudentMissionProgress: Array<MissionProgress>;
   getAllGoals: Array<Goal>;
   getAllMissionProgress: Array<MissionProgress>;
@@ -624,7 +634,9 @@ type Query = {
    * May be useful as a TaskSubmissionResult can change as a result of instructor actions.
    */
   retrieveTaskSubmission?: Maybe<TaskSubmissionResult>;
+  /** Returns information on a specific student associated with a course. */
   student: Student;
+  /** Returns all students enrolled in a course */
   students: Array<Student>;
   subMission?: Maybe<SubMission>;
   target: Target;
@@ -649,18 +661,14 @@ type QueryClassTargetMasteryArgs = {
 };
 
 
+type QueryCourseArgs = {
+  courseId: Scalars['String'];
+  instructorId: Scalars['String'];
+};
+
+
 type QueryCourseContentArgs = {
   course: Scalars['String'];
-};
-
-
-type QueryCourseInfoArgs = {
-  courseId: Scalars['String'];
-};
-
-
-type QueryCourseInfosArgs = {
-  instructor: Scalars['String'];
 };
 
 
@@ -771,12 +779,12 @@ type QueryRetrieveTaskSubmissionArgs = {
 
 type QueryStudentArgs = {
   studentId?: Maybe<Scalars['String']>;
-  course: Scalars['String'];
+  courseId: Scalars['String'];
 };
 
 
 type QueryStudentsArgs = {
-  course: Scalars['String'];
+  courseId: Scalars['String'];
 };
 
 
@@ -922,12 +930,11 @@ type RubricRequirementInput = {
 type Student = {
   __typename?: 'Student';
   studentId: Scalars['String'];
-  email: Scalars['String'];
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  course: Scalars['String'];
-  section: Scalars['Int'];
-  team?: Maybe<Scalars['String']>;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  courseId: Scalars['String'];
+  instructorId: Scalars['String'];
+  courseName: Scalars['String'];
   points: Scalars['Int'];
   totalPointsAwarded: Scalars['Int'];
   totalPointsSpent: Scalars['Int'];
@@ -935,12 +942,10 @@ type Student = {
 
 type StudentInput = {
   studentId: Scalars['String'];
-  email: Scalars['String'];
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  course: Scalars['String'];
-  section: Scalars['Int'];
-  team?: Maybe<Scalars['String']>;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  courseId: Scalars['String'];
+  instructorId: Scalars['String'];
 };
 
 type StudentMissionMastery = {
