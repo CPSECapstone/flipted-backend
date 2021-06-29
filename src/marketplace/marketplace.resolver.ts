@@ -61,15 +61,39 @@ async function purchase(
    );
 }
 
-async function changePoints(_: any, args: MutationChangePointsArgs, context: FliptedContext) {
+async function awardStudentPoints(
+   _: any,
+   args: MutationAwardStudentPointsArgs,
+   context: FliptedContext
+) {
    if (context.userRole == RoleInternal.Instructor) {
       return (
-         await addStudentPoints(args.course, args.student, {
+         await addStudentPoints(args.courseId, args.student, {
             totalPointsAwarded: args.points,
             points: args.points,
             totalPointsSpent: 0
          })
       ).points;
+   }
+
+   throw new ForbiddenError(notInstructorErrorMessage);
+}
+
+async function awardStudentsPoints(
+   _: any,
+   args: MutationAwardStudentsPointsArgs,
+   context: FliptedContext
+) {
+   if (context.userRole == RoleInternal.Instructor) {
+      return await Promise.all(
+         args.studentIds.map(async id => {
+            return await addStudentPoints(args.courseId, id, {
+               totalPointsAwarded: args.points,
+               points: args.points,
+               totalPointsSpent: 0
+            });
+         })
+      );
    }
 
    throw new ForbiddenError(notInstructorErrorMessage);
@@ -85,22 +109,26 @@ async function fulfillPurchase(_: any, args: MutationFulfillPurchaseArgs, contex
 
 async function recentPurchases(_: any, args: QueryRecentPurchasesArgs, context: FliptedContext) {
    if (context.userRole == RoleInternal.Instructor) {
-      if(args.student) {
+      if (args.student) {
          return marketService.recentStudentPurchases(args.course, args.student, args.fetch);
       }
       return marketService.recentClassPurchases(args.course, args.fetch);
-   } 
+   }
 
    return marketService.recentStudentPurchases(args.course, context.username, args.fetch);
 }
 
-async function unfulfilledPurchases(_: any, args: QueryRecentPurchasesArgs, context: FliptedContext) {
+async function unfulfilledPurchases(
+   _: any,
+   args: QueryRecentPurchasesArgs,
+   context: FliptedContext
+) {
    if (context.userRole == RoleInternal.Instructor) {
-      if(args.student) {
+      if (args.student) {
          return marketService.unfulfilledPurchases(args.course, args.student);
       }
       return marketService.unfulfilledPurchases(args.course);
-   } 
+   }
 
    return marketService.unfulfilledPurchases(args.course, context.username);
 }
@@ -116,7 +144,8 @@ const resolvers = {
       addMarketListing: addMarketListing,
       removeMarketListing: removeMarketListing,
       editMarketListing: editMarketListing,
-      changePoints: changePoints,
+      awardStudentPoints: awardStudentPoints,
+      awardStudentsPoints: awardStudentsPoints,
       fulfillPurchase: fulfillPurchase
    },
    MarketListing: {
