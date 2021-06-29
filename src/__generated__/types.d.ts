@@ -294,7 +294,8 @@ type Mutation = {
   addTask: Scalars['String'];
   addTextBlock: Scalars['String'];
   addVideoBlock: Scalars['String'];
-  changePoints: Scalars['Int'];
+  awardStudentPoints: Student;
+  awardStudentsPoints: Array<Student>;
   /** Creates a new course associated with the instructor caller */
   createCourse: CourseInfo;
   deleteGoal: Scalars['String'];
@@ -410,9 +411,16 @@ type MutationAddVideoBlockArgs = {
 };
 
 
-type MutationChangePointsArgs = {
-  course: Scalars['String'];
+type MutationAwardStudentPointsArgs = {
+  courseId: Scalars['String'];
   student: Scalars['String'];
+  points: Scalars['Int'];
+};
+
+
+type MutationAwardStudentsPointsArgs = {
+  courseId: Scalars['String'];
+  studentIds: Array<Scalars['String']>;
   points: Scalars['Int'];
 };
 
