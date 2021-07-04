@@ -85,23 +85,6 @@ describe("Converting to keys and datestrings", () => {
    });
 });
 
-describe("Deleting a marketplace item", () => {
-   it("Calls deleteItem with the correct params", async () => {
-      const expectedParamArgs: DeleteParam = {
-         tableName: MARKETPLACE_TABLE,
-         key: {
-            PK: ListingPK("course"),
-            SK: ListingSK("123")
-         }
-      };
-
-      const res = await marketService.removeMarketListing("course", "123");
-      expect(res).toEqual("success");
-      expect(dynamodbMock.deleteItem).toHaveBeenCalledWith(expectedParamArgs);
-      expect(dynamodbMock.deleteItem).toHaveBeenCalledTimes(1);
-   });
-});
-
 describe("Viewing marketplace items", () => {
    it("Gets a single item with the correct params", async () => {
       const params: GetCompositeParams = {
@@ -123,9 +106,11 @@ describe("Viewing marketplace items", () => {
       const expectedParamArgs: QueryParams = {
          tableName: MARKETPLACE_TABLE,
          keyConditionExpression: "PK = :courseVal and begins_with(SK, :skPrefix) ",
+         filterExpression: "deleted = :deletedVal",
          expressionAttributeValues: {
             ":courseVal": ListingPK(course),
-            ":skPrefix": marketListingPrefix
+            ":skPrefix": marketListingPrefix,
+            ":deletedVal": false
          }
       };
 
@@ -160,7 +145,8 @@ describe("Creating a marketplace item", () => {
          stock: 10,
          timesPurchased: 0,
          listedDate: TO_DB_DATE(date),
-         course: "Candy"
+         course: "Candy",
+         deleted: false
       };
       expect(createListingItem(uid, date, course, listingInput)).toEqual(expectedRes);
    });
@@ -168,6 +154,7 @@ describe("Creating a marketplace item", () => {
 
 describe("Editing a marketplace item", () => {
    it("Will do so with the correct update expression", async () => {
+      dynamodbMock.updateMarshall.mockClear();
       const listingInput: MarketListingInput = {
          listingName: "Snickers Bar",
          description: "One delicious Snickers bar.",

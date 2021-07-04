@@ -10,6 +10,7 @@ export type MarketItem = CompositeDBItem & {
    price: number;
    stock: number | null;
    timesPurchased: number;
+   deleted: boolean;
 };
 
 export type ReceiptItem = CompositeDBItem & {
