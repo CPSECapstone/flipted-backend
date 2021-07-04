@@ -306,6 +306,7 @@ type Mutation = {
   gradeObjectiveTaskMastery: ObjectiveTaskMastery;
   gradeTaskSubmission: TaskSubmissionGrade;
   purchase: Receipt;
+  refundPurchase: Scalars['Boolean'];
   removeMarketListing: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress: Scalars['Boolean'];
@@ -474,6 +475,12 @@ type MutationPurchaseArgs = {
   listingId: Scalars['String'];
   quantity: Scalars['Int'];
   note: Scalars['String'];
+};
+
+
+type MutationRefundPurchaseArgs = {
+  course: Scalars['String'];
+  receiptId: Scalars['String'];
 };
 
 

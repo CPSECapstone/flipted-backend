@@ -118,6 +118,17 @@ async function recentPurchases(_: any, args: QueryRecentPurchasesArgs, context: 
    return marketService.recentStudentPurchases(args.course, context.username, args.fetch);
 }
 
+async function refundPurchase(
+   _: any,
+   args: MutationRefundPurchaseArgs,
+   context: FliptedContext
+): Promise<boolean> {
+   return marketService.refundPurchase(
+      args.course,
+      args.receiptId
+   );
+}
+
 async function unfulfilledPurchases(
    _: any,
    args: QueryRecentPurchasesArgs,
@@ -140,6 +151,7 @@ const resolvers = {
       unfulfilledPurchases: unfulfilledPurchases
    },
    Mutation: {
+      refundPurchase: refundPurchase,
       purchase: purchase,
       addMarketListing: addMarketListing,
       removeMarketListing: removeMarketListing,
