@@ -123,9 +123,11 @@ describe("Viewing marketplace items", () => {
       const expectedParamArgs: QueryParams = {
          tableName: MARKETPLACE_TABLE,
          keyConditionExpression: "PK = :courseVal and begins_with(SK, :skPrefix) ",
+         filterExpression: "deleted = :deletedVal",
          expressionAttributeValues: {
             ":courseVal": ListingPK(course),
-            ":skPrefix": marketListingPrefix
+            ":skPrefix": marketListingPrefix,
+            ":deletedVal": false
          }
       };
 
@@ -160,7 +162,8 @@ describe("Creating a marketplace item", () => {
          stock: 10,
          timesPurchased: 0,
          listedDate: TO_DB_DATE(date),
-         course: "Candy"
+         course: "Candy",
+         deleted: false
       };
       expect(createListingItem(uid, date, course, listingInput)).toEqual(expectedRes);
    });

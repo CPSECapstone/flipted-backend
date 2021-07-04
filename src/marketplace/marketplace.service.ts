@@ -83,9 +83,11 @@ export async function getMarketListings(course: string): Promise<MarketListing[]
    const params: QueryParams = {
       tableName: MARKETPLACE_TABLE,
       keyConditionExpression: "PK = :courseVal and begins_with(SK, :skPrefix) ",
+      filterExpression: "deleted = :deletedVal",
       expressionAttributeValues: {
          ":courseVal": ListingPK(course),
-         ":skPrefix": marketListingPrefix
+         ":skPrefix": marketListingPrefix,
+         ":deletedVal": false
       }
    };
 
@@ -93,20 +95,21 @@ export async function getMarketListings(course: string): Promise<MarketListing[]
 }
 
 export async function removeMarketListing(course: string, listingId: string) {
-   const params: DeleteParam = {
+   const params: UpdateParams = {
       tableName: MARKETPLACE_TABLE,
       key: {
          PK: ListingPK(course),
          SK: ListingSK(listingId)
+      },
+      conditionExpression: "attribute_exists(SK)",
+      updateExpression: "set deleted = :deleted",
+      expressionAttributeValues: {
+         ":deleted": true
       }
    };
 
-   try {
-      await dynamodb.deleteItem(params);
-      return "success";
-   } catch (err) {
-      throw err;
-   }
+   await dynamodb.updateMarshall<MarketItem>(params);
+   return "success";
 }
 
 // This will simply set the points of the student
@@ -352,6 +355,8 @@ export async function deleteReceipt(courseId: string, recieptId: string) {
 
 export async function refundPurchase(course: string, receiptId: any) {
    const receipt = await getReceipt(course, receiptId);
+   const listing = await getMarketListing(course, receipt.listingId);
+   await updateMarketListingStats(course, listing.id, -receipt.quantity, listing.stock !== null);
    await deleteReceipt(course, receiptId);
    await addStudentPoints(course, receipt.studentId, {
       points: receipt.pointsSpent,
