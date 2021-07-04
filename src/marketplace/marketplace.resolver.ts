@@ -123,10 +123,15 @@ async function refundPurchase(
    args: MutationRefundPurchaseArgs,
    context: FliptedContext
 ): Promise<boolean> {
-   return marketService.refundPurchase(
-      args.course,
-      args.receiptId
-   );
+
+   if (context.userRole == RoleInternal.Instructor) {
+      return marketService.refundPurchase(
+         args.course,
+         args.receiptId
+      );
+   }
+
+   throw new ForbiddenError(notInstructorErrorMessage);
 }
 
 async function unfulfilledPurchases(
