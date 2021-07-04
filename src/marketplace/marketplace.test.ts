@@ -85,23 +85,6 @@ describe("Converting to keys and datestrings", () => {
    });
 });
 
-describe("Deleting a marketplace item", () => {
-   it("Calls deleteItem with the correct params", async () => {
-      const expectedParamArgs: DeleteParam = {
-         tableName: MARKETPLACE_TABLE,
-         key: {
-            PK: ListingPK("course"),
-            SK: ListingSK("123")
-         }
-      };
-
-      const res = await marketService.removeMarketListing("course", "123");
-      expect(res).toEqual("success");
-      expect(dynamodbMock.deleteItem).toHaveBeenCalledWith(expectedParamArgs);
-      expect(dynamodbMock.deleteItem).toHaveBeenCalledTimes(1);
-   });
-});
-
 describe("Viewing marketplace items", () => {
    it("Gets a single item with the correct params", async () => {
       const params: GetCompositeParams = {
@@ -171,6 +154,7 @@ describe("Creating a marketplace item", () => {
 
 describe("Editing a marketplace item", () => {
    it("Will do so with the correct update expression", async () => {
+      dynamodbMock.updateMarshall.mockClear();
       const listingInput: MarketListingInput = {
          listingName: "Snickers Bar",
          description: "One delicious Snickers bar.",
