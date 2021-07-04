@@ -11,7 +11,7 @@ export function createListingItem(uid: string, date: Date, course: string, listi
       description: listing.description,
       image: listing.image,
       price: listing.price < 0 ? 0 : listing.price,
-      stock: listing.stock?? undefined,
+      stock: listing.stock?? null,
       timesPurchased: 0,
       listedDate: TO_DB_DATE(date),
       course: course

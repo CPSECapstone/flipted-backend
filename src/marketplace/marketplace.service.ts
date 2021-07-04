@@ -45,23 +45,14 @@ export async function editMarketListing(
    listing: MarketListingInput
 ): Promise<MarketListing> {
    let updateExpression =
-      "set listingName = :listingName, description = :description, image = :image, price = :price";
+      "set listingName = :listingName, description = :description, image = :image, price = :price, stock = :stock";
    let expAttrValues: any = {
       ":listingName": listing.listingName,
       ":description": listing.description,
       ":image": listing.image,
-      ":price": listing.price
+      ":price": listing.price,
+      ":stock": listing.stock ?? null
    };
-
-   if (listing.stock != undefined) {
-      updateExpression += ", stock = :stock";
-      expAttrValues = {
-         ":stock": listing.stock,
-         ...expAttrValues
-      };
-   } else {
-      updateExpression += " remove stock";
-   }
 
    const params: UpdateParams = {
       tableName: MARKETPLACE_TABLE,
@@ -169,8 +160,12 @@ export async function addStudentPoints(course: string, userId: string, pointChan
 export async function updateMarketListingStats(
    courseId: string,
    listingId: string,
-   quantity: number
+   quantity: number,
+   usesStock: boolean
 ): Promise<MarketItem> {
+   let updateExpression = "set timesPurchased = timesPurchased + :quantity";
+   if (usesStock) updateExpression += ", stock = stock - :quantity";
+
    const params: UpdateParams = {
       tableName: MARKETPLACE_TABLE,
       key: {
@@ -178,7 +173,7 @@ export async function updateMarketListingStats(
          SK: ListingSK(listingId)
       },
       conditionExpression: "attribute_exists(SK)",
-      updateExpression: "set timesPurchased = timesPurchased + :quantity", // Update stock after I make it non nullable
+      updateExpression: updateExpression,
       expressionAttributeValues: {
          ":quantity": quantity
       }
@@ -230,45 +225,52 @@ export async function executePurchase(
    ]);
    const totalCost = listingItem.price * quantity;
 
-   // TODO: AND stock > quantity after stock is not nullable
-   if (totalCost <= student.points) {
-      updateMarketListingStats(course, listingId, quantity);
-
-      // TODO: update total points awarded and total points spent for student
-      const pointChange: PointChange = {
-         points: -totalCost,
-         totalPointsAwarded: 0,
-         totalPointsSpent: totalCost
-      };
-      await addStudentPoints(course, userId, pointChange);
-
-      const receiptInput: ReceiptInput = {
-         date: new Date(),
-         note: note,
-         quantity: quantity,
-         studentId: userId,
-         listingId: listingItem.id,
-         listingName: listingItem.listingName,
-         price: listingItem.price,
-         course: course
-      };
-
-      const item = createReceiptItem(receiptInput);
-      const params: PutCompositeParams = {
-         tableName: MARKETPLACE_TABLE,
-         item: item
-      };
-      try {
-         dynamodb.putComposite(params);
-         return item;
-      } catch (err) {
-         return err;
-      }
+   if (listingItem.stock !== null && listingItem.stock < quantity) {
+      throw new Error(`Insufficient stock: Required: ${quantity}, Stock: ${listingItem.stock}`);
    }
 
-   throw new Error(
-      `Insufficient funds: Required: ${totalCost}, User ${userId} point balance: ${student.points}`
-   );
+   if (quantity <= 0) {
+      throw new Error(`Insufficient quantity: Must purchase at least one item.`);
+   }
+
+   if (totalCost > student.points) {
+      throw new Error(
+         `Insufficient funds: Required: ${totalCost}, User ${userId} point balance: ${student.points}`
+      );
+   }
+
+   // Eligible for purchase
+   updateMarketListingStats(course, listingId, quantity, listingItem.stock !== null);
+
+   const pointChange: PointChange = {
+      points: -totalCost,
+      totalPointsAwarded: 0,
+      totalPointsSpent: totalCost
+   };
+   await addStudentPoints(course, userId, pointChange);
+
+   const receiptInput: ReceiptInput = {
+      date: new Date(),
+      note: note,
+      quantity: quantity,
+      studentId: userId,
+      listingId: listingItem.id,
+      listingName: listingItem.listingName,
+      price: listingItem.price,
+      course: course
+   };
+
+   const item = createReceiptItem(receiptInput);
+   const params: PutCompositeParams = {
+      tableName: MARKETPLACE_TABLE,
+      item: item
+   };
+   try {
+      dynamodb.putComposite(params);
+      return item;
+   } catch (err) {
+      return err;
+   }
 }
 
 export function recentClassPurchases(course: string, fetch: number) {
@@ -337,20 +339,24 @@ export async function getReceipt(courseId: string, receiptId: string) {
 }
 
 export async function deleteReceipt(courseId: string, recieptId: string) {
-   const params : DeleteParam = {
+   const params: DeleteParam = {
       tableName: MARKETPLACE_TABLE,
       key: {
          PK: ReceiptPK(courseId),
          SK: ReceiptSK(recieptId)
       }
-   }
+   };
 
-   return dynamodb.deleteItem(params)
+   return dynamodb.deleteItem(params);
 }
 
 export async function refundPurchase(course: string, receiptId: any) {
-   const receipt = await getReceipt(course, receiptId)
-   await deleteReceipt(course, receiptId)
-   await addStudentPoints(course, receipt.studentId, {points: receipt.pointsSpent, totalPointsSpent: -receipt.pointsSpent, totalPointsAwarded: 0})
-   return true
+   const receipt = await getReceipt(course, receiptId);
+   await deleteReceipt(course, receiptId);
+   await addStudentPoints(course, receipt.studentId, {
+      points: receipt.pointsSpent,
+      totalPointsSpent: -receipt.pointsSpent,
+      totalPointsAwarded: 0
+   });
+   return true;
 }
