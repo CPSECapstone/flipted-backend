@@ -51,7 +51,7 @@ type Query {
 }
 
 type Mutation {
-
+   refundPurchase(course: String! receiptId: String!) : Boolean!
    fulfillPurchase(course: String! receiptId: String! fulfilled: Boolean!) : Receipt!
    purchase(course: String!, listingId: String!, quantity: Int!, note: String!) : Receipt!
    editMarketListing(course: String!, id: String!, listing: MarketListingInput!): MarketListing!

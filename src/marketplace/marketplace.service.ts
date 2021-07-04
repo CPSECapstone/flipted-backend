@@ -23,6 +23,7 @@ import {
    UNFULFILLED_INDEX,
    userPrefix
 } from "./marketplace.interface";
+import { DeleteItemCommand } from "@aws-sdk/client-dynamodb";
 
 export async function addMarketListing(course: string, listing: MarketListingInput) {
    const item = createListingItem(uid(), new Date(), course, listing);
@@ -321,4 +322,35 @@ export async function unfulfilledPurchases(course: string, user?: string) {
       });
    }
    return list;
+}
+
+export async function getReceipt(courseId: string, receiptId: string) {
+   const params: GetCompositeParams = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: ReceiptPK(courseId),
+         SK: ReceiptSK(receiptId)
+      }
+   };
+
+   return dynamodb.getCompositeDemarshall<ReceiptItem>(params);
+}
+
+export async function deleteReceipt(courseId: string, recieptId: string) {
+   const params : DeleteParam = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: ReceiptPK(courseId),
+         SK: ReceiptSK(recieptId)
+      }
+   }
+
+   return dynamodb.deleteItem(params)
+}
+
+export async function refundPurchase(course: string, receiptId: any) {
+   const receipt = await getReceipt(course, receiptId)
+   await deleteReceipt(course, receiptId)
+   await addStudentPoints(course, receipt.studentId, {points: receipt.pointsSpent, totalPointsSpent: -receipt.pointsSpent, totalPointsAwarded: 0})
+   return true
 }

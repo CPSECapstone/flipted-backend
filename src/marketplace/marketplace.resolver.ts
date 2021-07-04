@@ -118,6 +118,22 @@ async function recentPurchases(_: any, args: QueryRecentPurchasesArgs, context: 
    return marketService.recentStudentPurchases(args.course, context.username, args.fetch);
 }
 
+async function refundPurchase(
+   _: any,
+   args: MutationRefundPurchaseArgs,
+   context: FliptedContext
+): Promise<boolean> {
+
+   if (context.userRole == RoleInternal.Instructor) {
+      return marketService.refundPurchase(
+         args.course,
+         args.receiptId
+      );
+   }
+
+   throw new ForbiddenError(notInstructorErrorMessage);
+}
+
 async function unfulfilledPurchases(
    _: any,
    args: QueryRecentPurchasesArgs,
@@ -140,6 +156,7 @@ const resolvers = {
       unfulfilledPurchases: unfulfilledPurchases
    },
    Mutation: {
+      refundPurchase: refundPurchase,
       purchase: purchase,
       addMarketListing: addMarketListing,
       removeMarketListing: removeMarketListing,
