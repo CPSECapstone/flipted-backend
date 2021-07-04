@@ -8,7 +8,7 @@ export type MarketItem = CompositeDBItem & {
    course: string;
    listedDate: string;
    price: number;
-   stock?: number;
+   stock: number | null;
    timesPurchased: number;
 };
 

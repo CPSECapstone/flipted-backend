@@ -167,13 +167,13 @@ describe("Creating a marketplace item", () => {
 });
 
 describe("Editing a marketplace item", () => {
-   it("Will include the stock attribute if the input is not null", async () => {
+   it("Will do so with the correct update expression", async () => {
       const listingInput: MarketListingInput = {
          listingName: "Snickers Bar",
          description: "One delicious Snickers bar.",
          image: "https://i.imgur.com/UHm9oTg.jpeg",
          price: 5,
-         stock: 10
+         stock: null
       };
 
       const expectedParamArgs: UpdateParams = {
@@ -190,40 +190,12 @@ describe("Editing a marketplace item", () => {
             ":description": "One delicious Snickers bar.",
             ":image": "https://i.imgur.com/UHm9oTg.jpeg",
             ":price": 5,
-            ":stock": 10
+            ":stock": null
          }
       };
       marketService.editMarketListing("courseId", "listingId", listingInput);
       expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs);
       expect(dynamodbMock.updateMarshall).toHaveBeenCalledTimes(1);
-   });
-   it("Will remove the stock attribute if the input is null", async () => {
-      const listingInput: MarketListingInput = {
-         listingName: "Snickers Bar",
-         description: "One delicious Snickers bar.",
-         image: "https://i.imgur.com/UHm9oTg.jpeg",
-         price: 5
-      };
-
-      const expectedParamArgs: UpdateParams = {
-         tableName: MARKETPLACE_TABLE,
-         key: {
-            PK: ListingPK("courseId"),
-            SK: ListingSK("listingId")
-         },
-         conditionExpression: "attribute_exists(SK)",
-         updateExpression:
-            "set listingName = :listingName, description = :description, image = :image, price = :price remove stock",
-         expressionAttributeValues: {
-            ":listingName": "Snickers Bar",
-            ":description": "One delicious Snickers bar.",
-            ":image": "https://i.imgur.com/UHm9oTg.jpeg",
-            ":price": 5
-         }
-      };
-      marketService.editMarketListing("courseId", "listingId", listingInput);
-      expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs);
-      expect(dynamodbMock.updateMarshall).toHaveBeenCalledTimes(2);
    });
 });
 
@@ -390,7 +362,7 @@ describe("Viewing unfulfilled purchases", () => {
          { studentId: "userid" },
          { studentId: "No Thanks" }
       ]);
-      
+
       expect(await marketService.unfulfilledPurchases("courseid", "userid")).toEqual([
          { studentId: "userid" }
       ]);
@@ -437,7 +409,28 @@ describe("Making a purchase", () => {
             ":quantity": 2
          }
       };
-      marketService.updateMarketListingStats("courseid", "cupcakeid", 2);
+      marketService.updateMarketListingStats("courseid", "cupcakeid", 2, false);
+      expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs);
+      expect(dynamodbMock.updateMarshall).toBeCalledTimes(1);
+   });
+
+   test("Updating the marketplace listing stats with a stocked item", async () => {
+      dynamodbMock.updateMarshall.mockClear();
+
+      const expectedParamArgs: UpdateParams = {
+         tableName: MARKETPLACE_TABLE,
+         key: {
+            PK: ListingPK("courseid"),
+            SK: ListingSK("cupcakeid")
+         },
+         conditionExpression: "attribute_exists(SK)",
+         updateExpression:
+            "set timesPurchased = timesPurchased + :quantity, stock = stock - :quantity",
+         expressionAttributeValues: {
+            ":quantity": 2
+         }
+      };
+      marketService.updateMarketListingStats("courseid", "cupcakeid", 2, true);
       expect(dynamodbMock.updateMarshall).toBeCalledWith(expectedParamArgs);
       expect(dynamodbMock.updateMarshall).toBeCalledTimes(1);
    });
