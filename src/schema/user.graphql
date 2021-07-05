@@ -22,7 +22,7 @@ type UpdateUserOutput {
 }
 
 type Query {
-   getUser: User
+   getUser: User!
 }
 
 type Mutation {
