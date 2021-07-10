@@ -3,8 +3,9 @@ import { COURSE_CONTENT_TABLE_NAME, MARKETPLACE_TABLE } from "../environment";
 import { StudentPK, StudentSK } from "../course/courseInterface";
 import { getStudent } from "../course/courseService";
 import dynamodb from "../services/dynamodb";
-import { createListingItem, createReceiptItem } from "./marketplace.helper";
+import { createActivityItem, createListingItem, createReceiptItem } from "./marketplace.helper";
 import {
+   activityDatePrefix,
    COURSE_DATE_INDEX,
    COURSE_DATE_STUDENT_INDEX,
    ListingPK,
@@ -155,7 +156,6 @@ export async function addStudentPoints(course: string, userId: string, pointChan
          ":totalPointsSpent": pointChange.totalPointsSpent
       }
    };
-
    return await dynamodb.updateMarshall<PointChange>(params);
 }
 
@@ -269,6 +269,7 @@ export async function executePurchase(
       item: item
    };
    try {
+      createActivity(course, userId, `Purchased ${listingItem.listingName}`, -totalCost);
       dynamodb.putComposite(params);
       return item;
    } catch (err) {
@@ -290,6 +291,22 @@ export function recentClassPurchases(course: string, fetch: number) {
    };
 
    return dynamodb.queryList<Receipt>(params);
+}
+
+export function recentClassActivity(course: string, fetch: number) {
+   const params: QueryParams = {
+      tableName: MARKETPLACE_TABLE,
+      indexName: COURSE_DATE_INDEX,
+      scanIndexForward: false,
+      limit: fetch,
+      keyConditionExpression: "PK = :courseVal and begins_with(D_SK, :dskPrefix) ",
+      expressionAttributeValues: {
+         ":courseVal": ReceiptPK(course),
+         ":dskPrefix": activityDatePrefix
+      }
+   };
+
+   return dynamodb.queryList<Activity>(params);
 }
 
 export function recentStudentPurchases(course: string, studentId: string, fetch: number) {
@@ -363,5 +380,47 @@ export async function refundPurchase(course: string, receiptId: any) {
       totalPointsSpent: -receipt.pointsSpent,
       totalPointsAwarded: 0
    });
+
+   createActivity(
+      course,
+      receipt.studentId,
+      `Purchase of ${listing.listingName} refunded`,
+      receipt.pointsSpent
+   );
    return true;
+}
+
+export async function createActivity(
+   course: string,
+   studentId: string,
+   note: string,
+   pointChange: number
+) {
+   const item = createActivityItem(course, studentId, note, pointChange, new Date());
+   const params: PutCompositeParams = {
+      tableName: MARKETPLACE_TABLE,
+      item: item
+   };
+   try {
+      dynamodb.putComposite(params);
+      return item;
+   } catch (err) {
+      return err;
+   }
+}
+
+export function recentStudentActivity(course: string, studentId: string, fetch: number) {
+   const params: QueryParams = {
+      tableName: MARKETPLACE_TABLE,
+      indexName: COURSE_DATE_STUDENT_INDEX,
+      scanIndexForward: false,
+      limit: fetch,
+      keyConditionExpression: "PK = :courseVal and begins_with(U_D_SK, :dskPrefix) ",
+      expressionAttributeValues: {
+         ":courseVal": ReceiptPK(course),
+         ":dskPrefix": `${userPrefix}${studentId}#${activityDatePrefix}`
+      }
+   };
+
+   return dynamodb.queryList<Activity>(params);
 }

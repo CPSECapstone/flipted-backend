@@ -67,6 +67,8 @@ async function awardStudentPoints(
    context: FliptedContext
 ) {
    if (context.userRole == RoleInternal.Instructor) {
+      marketService.createActivity(args.courseId, args.student, `Awarded Points`, args.points);
+
       return (
          await addStudentPoints(args.courseId, args.student, {
             totalPointsAwarded: args.points,
@@ -87,6 +89,8 @@ async function awardStudentsPoints(
    if (context.userRole == RoleInternal.Instructor) {
       return await Promise.all(
          args.studentIds.map(async id => {
+            marketService.createActivity(args.courseId, id, `Awarded Points`, args.points);
+
             return await addStudentPoints(args.courseId, id, {
                totalPointsAwarded: args.points,
                points: args.points,
@@ -118,17 +122,24 @@ async function recentPurchases(_: any, args: QueryRecentPurchasesArgs, context: 
    return marketService.recentStudentPurchases(args.course, context.username, args.fetch);
 }
 
+async function recentActivity(_: any, args: QueryRecentActivityArgs, context: FliptedContext) {
+   if (context.userRole == RoleInternal.Instructor) {
+      if (args.student) {
+         return marketService.recentStudentActivity(args.course, args.student, args.fetch);
+      }
+      return marketService.recentClassActivity(args.course, args.fetch);
+   }
+
+   return marketService.recentStudentActivity(args.course, context.username, args.fetch);
+}
+
 async function refundPurchase(
    _: any,
    args: MutationRefundPurchaseArgs,
    context: FliptedContext
 ): Promise<boolean> {
-
    if (context.userRole == RoleInternal.Instructor) {
-      return marketService.refundPurchase(
-         args.course,
-         args.receiptId
-      );
+      return marketService.refundPurchase(args.course, args.receiptId);
    }
 
    throw new ForbiddenError(notInstructorErrorMessage);
@@ -153,7 +164,8 @@ const resolvers = {
    Query: {
       marketListings: marketListings,
       recentPurchases: recentPurchases,
-      unfulfilledPurchases: unfulfilledPurchases
+      unfulfilledPurchases: unfulfilledPurchases,
+      recentActivity
    },
    Mutation: {
       refundPurchase: refundPurchase,
@@ -180,6 +192,11 @@ const resolvers = {
       },
       listing: (parent: ReceiptItem) => {
          return marketService.getMarketListing(parent.course, parent.listingId);
+      }
+   },
+   Activity: {
+      activityDate: (parent: any) => {
+         return TO_GRAPHQL_DATE(parent.activityDate);
       }
    }
 };
