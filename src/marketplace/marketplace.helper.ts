@@ -1,6 +1,11 @@
 import { uid } from "uid";
+import { string } from "yargs";
 import { TO_DB_DATE } from "../environment";
 import {
+   ActivityD_SK,
+   ActivityPK,
+   ActivitySK,
+   ActivityU_D_SK,
    ListingPK,
    ListingSK,
    MarketItem,
@@ -55,5 +60,27 @@ export function createReceiptItem(input: ReceiptInput): ReceiptItem {
       listingId: input.listingId,
       fulfilled: false,
       UF_SK: unfulfilledPrefix
+   };
+}
+
+export function createActivityItem(
+   course: string,
+   studentId: string,
+   note: string,
+   pointChange: number,
+   date: Date
+) {
+   const activityId = uid();
+   return {
+      PK: ActivityPK(course),
+      SK: ActivitySK(activityId),
+      D_SK: ActivityD_SK(date),
+      U_D_SK: ActivityU_D_SK(studentId, date),
+      activityId: activityId,
+      note: note,
+      pointChange,
+      activityDate: TO_DB_DATE(date),
+      studentId: studentId,
+      course: course
    };
 }

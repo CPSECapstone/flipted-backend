@@ -37,6 +37,14 @@ type Receipt {
    fulfilled: Boolean!
 }
 
+type Activity {
+   studentId: String!
+   course: String!
+   note: String!
+   activityDate: Date!
+   pointChange: Int!
+}
+
 type Query {
    marketListings(course: String!): [MarketListing!]!
    
@@ -47,6 +55,7 @@ type Query {
    Will only return the most recent N purchased passed into the fetch parameter 
    """
    recentPurchases(course: String!, student: String, fetch: Int!) : [Receipt!]!
+   recentActivity(course: String!, student: String, fetch: Int!) : [Activity!]!
    unfulfilledPurchases(course: String!, student: String) : [Receipt!]!
 }
 

@@ -80,9 +80,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Answer: ResolverTypeWrapper<Answer>;
+  Activity: ResolverTypeWrapper<Activity>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  Answer: ResolverTypeWrapper<Answer>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   AnswerGrade: ResolverTypeWrapper<AnswerGrade>;
   AnswerGradeInput: AnswerGradeInput;
@@ -175,9 +176,10 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Answer: Answer;
+  Activity: Activity;
   String: Scalars['String'];
   Int: Scalars['Int'];
+  Answer: Answer;
   Boolean: Scalars['Boolean'];
   AnswerGrade: AnswerGrade;
   AnswerGradeInput: AnswerGradeInput;
@@ -264,6 +266,15 @@ export type ResolversParentTypes = ResolversObject<{
   UserProgress: UserProgress;
   VideoBlock: VideoBlock;
   VideoBlockInput: VideoBlockInput;
+}>;
+
+export type ActivityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Activity'] = ResolversParentTypes['Activity']> = ResolversObject<{
+  studentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  course?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  note?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  activityDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  pointChange?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type AnswerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Answer'] = ResolversParentTypes['Answer']> = ResolversObject<{
@@ -517,7 +528,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getGoalById?: Resolver<ResolversTypes['Goal'], ParentType, ContextType, RequireFields<QueryGetGoalByIdArgs, 'id' | 'user'>>;
   getMissionProgress?: Resolver<ResolversTypes['MissionProgress'], ParentType, ContextType, RequireFields<QueryGetMissionProgressArgs, 'missionId'>>;
   getTaskObjectiveProgress?: Resolver<Array<ResolversTypes['TaskObjectiveProgress']>, ParentType, ContextType, RequireFields<QueryGetTaskObjectiveProgressArgs, 'taskId'>>;
-  getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   marketListings?: Resolver<Array<ResolversTypes['MarketListing']>, ParentType, ContextType, RequireFields<QueryMarketListingsArgs, 'course'>>;
   mission?: Resolver<ResolversTypes['Mission'], ParentType, ContextType, RequireFields<QueryMissionArgs, never>>;
   missions?: Resolver<Array<ResolversTypes['Mission']>, ParentType, ContextType, RequireFields<QueryMissionsArgs, never>>;
@@ -527,6 +538,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   progressOverview?: Resolver<ResolversTypes['ProgressOverview'], ParentType, ContextType, RequireFields<QueryProgressOverviewArgs, 'course'>>;
   questions?: Resolver<Array<ResolversTypes['Question']>, ParentType, ContextType, RequireFields<QueryQuestionsArgs, 'questionIds'>>;
   quizblock?: Resolver<ResolversTypes['QuizBlock'], ParentType, ContextType, RequireFields<QueryQuizblockArgs, 'taskId' | 'blockId'>>;
+  recentActivity?: Resolver<Array<ResolversTypes['Activity']>, ParentType, ContextType, RequireFields<QueryRecentActivityArgs, 'course' | 'fetch'>>;
   recentPurchases?: Resolver<Array<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<QueryRecentPurchasesArgs, 'course' | 'fetch'>>;
   retrieveQuestionProgress?: Resolver<ResolversTypes['QuestionProgress'], ParentType, ContextType, RequireFields<QueryRetrieveQuestionProgressArgs, 'taskId'>>;
   retrieveTaskProgress?: Resolver<Maybe<ResolversTypes['TaskProgress']>, ParentType, ContextType, RequireFields<QueryRetrieveTaskProgressArgs, 'taskId'>>;
@@ -796,6 +808,7 @@ export type VideoBlockResolvers<ContextType = any, ParentType extends ResolversP
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Activity?: ActivityResolvers<ContextType>;
   Answer?: AnswerResolvers<ContextType>;
   AnswerGrade?: AnswerGradeResolvers<ContextType>;
   ClassMissionMastery?: ClassMissionMasteryResolvers<ContextType>;

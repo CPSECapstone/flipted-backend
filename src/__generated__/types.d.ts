@@ -12,6 +12,15 @@ type Scalars = {
   Date: Date;
 };
 
+type Activity = {
+  __typename?: 'Activity';
+  studentId: Scalars['String'];
+  course: Scalars['String'];
+  note: Scalars['String'];
+  activityDate: Scalars['Date'];
+  pointChange: Scalars['Int'];
+};
+
 type Answer = {
   __typename?: 'Answer';
   questionId?: Maybe<Scalars['String']>;
@@ -623,7 +632,7 @@ type Query = {
   getGoalById: Goal;
   getMissionProgress: MissionProgress;
   getTaskObjectiveProgress: Array<TaskObjectiveProgress>;
-  getUser?: Maybe<User>;
+  getUser: User;
   marketListings: Array<MarketListing>;
   mission: Mission;
   missions: Array<Mission>;
@@ -633,6 +642,7 @@ type Query = {
   progressOverview: ProgressOverview;
   questions: Array<Question>;
   quizblock: QuizBlock;
+  recentActivity: Array<Activity>;
   /**
    * If the student field is null or this API is called by a student, it will only return that student's purchases.
    * Otherwise, it will return all for that course.
@@ -766,6 +776,13 @@ type QueryQuestionsArgs = {
 type QueryQuizblockArgs = {
   taskId: Scalars['String'];
   blockId: Scalars['String'];
+};
+
+
+type QueryRecentActivityArgs = {
+  course: Scalars['String'];
+  student?: Maybe<Scalars['String']>;
+  fetch: Scalars['Int'];
 };
 
 
