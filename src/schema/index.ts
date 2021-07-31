@@ -33,6 +33,7 @@ import missionMasteryResolvers from "../missionMastery/missionMastery.resolver";
 import targetMasteryResolvers from "../targetMastery/targetMastery.resolver";
 import gradingResolvers from "../grading/grading.resolver";
 import marketplaceResolvers from "../marketplace/marketplace.resolver";
+import { IResolvers } from "apollo-server-lambda";
 const customScalarResolver = {
    Date: GraphQLDate
 };
@@ -76,4 +77,4 @@ const resolversArray = [
 ];
 
 export const typeDefs = mergeTypeDefs(typesArray);
-export const resolvers = mergeResolvers(resolversArray);
+export const resolvers = <IResolvers<any, any>>mergeResolvers(resolversArray);
