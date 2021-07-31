@@ -189,7 +189,7 @@ const resolvers = {
       marketListings: marketListings,
       recentPurchases: recentPurchases,
       unfulfilledPurchases: unfulfilledPurchases,
-      recentActivity
+      recentActivity: recentActivity
    },
    Mutation: {
       blockStudentPurchases: blockStudentPurchases,
@@ -197,7 +197,7 @@ const resolvers = {
       purchase: purchase,
       addMarketListing: addMarketListing,
       removeMarketListing: removeMarketListing,
-      removeStudent,
+      removeStudent: removeStudent,
       editMarketListing: editMarketListing,
       awardStudentPoints: awardStudentPoints,
       awardStudentsPoints: awardStudentsPoints,
