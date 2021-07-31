@@ -305,6 +305,7 @@ type Mutation = {
   addVideoBlock: Scalars['String'];
   awardStudentPoints: Student;
   awardStudentsPoints: Array<Student>;
+  blockStudentPurchases: Student;
   /** Creates a new course associated with the instructor caller */
   createCourse: CourseInfo;
   deleteGoal: Scalars['String'];
@@ -432,6 +433,13 @@ type MutationAwardStudentsPointsArgs = {
   courseId: Scalars['String'];
   studentIds: Array<Scalars['String']>;
   points: Scalars['Int'];
+};
+
+
+type MutationBlockStudentPurchasesArgs = {
+  course: Scalars['String'];
+  student: Scalars['String'];
+  blocked: Scalars['Boolean'];
 };
 
 
@@ -970,6 +978,7 @@ type Student = {
   points: Scalars['Int'];
   totalPointsAwarded: Scalars['Int'];
   totalPointsSpent: Scalars['Int'];
+  purchaseBlocked: Scalars['Boolean'];
 };
 
 type StudentInput = {

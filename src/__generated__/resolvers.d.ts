@@ -442,6 +442,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addVideoBlock?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationAddVideoBlockArgs, 'videoblock'>>;
   awardStudentPoints?: Resolver<ResolversTypes['Student'], ParentType, ContextType, RequireFields<MutationAwardStudentPointsArgs, 'courseId' | 'student' | 'points'>>;
   awardStudentsPoints?: Resolver<Array<ResolversTypes['Student']>, ParentType, ContextType, RequireFields<MutationAwardStudentsPointsArgs, 'courseId' | 'studentIds' | 'points'>>;
+  blockStudentPurchases?: Resolver<ResolversTypes['Student'], ParentType, ContextType, RequireFields<MutationBlockStudentPurchasesArgs, 'course' | 'student' | 'blocked'>>;
   createCourse?: Resolver<ResolversTypes['CourseInfo'], ParentType, ContextType, RequireFields<MutationCreateCourseArgs, 'course'>>;
   deleteGoal?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteGoalArgs, 'id'>>;
   editMarketListing?: Resolver<ResolversTypes['MarketListing'], ParentType, ContextType, RequireFields<MutationEditMarketListingArgs, 'course' | 'id' | 'listing'>>;
@@ -627,6 +628,7 @@ export type StudentResolvers<ContextType = any, ParentType extends ResolversPare
   points?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalPointsAwarded?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalPointsSpent?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  purchaseBlocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

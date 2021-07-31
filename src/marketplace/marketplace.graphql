@@ -60,6 +60,7 @@ type Query {
 }
 
 type Mutation {
+   blockStudentPurchases(course: String! student: String!, blocked: Boolean!) : Student!
    refundPurchase(course: String! receiptId: String!) : Boolean!
    fulfillPurchase(course: String! receiptId: String! fulfilled: Boolean!) : Receipt!
    purchase(course: String!, listingId: String!, quantity: Int!, note: String!) : Receipt!

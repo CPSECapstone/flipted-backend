@@ -25,11 +25,12 @@ export type CourseStudentItem = CompositeDBItem & {
    instructorId: string;
    studentId: string;
    points: number;
-   totalPointsAwarded: number
-   totalPointsSpent: number
+   totalPointsAwarded: number;
+   totalPointsSpent: number;
+   purchaseBlocked: boolean;
 };
 
-export const USER_COURSE_INDEX = "U_PK-PK-index"
+export const USER_COURSE_INDEX = "U_PK-PK-index";
 
 export const StudentPKPrefix = "COURSE";
 export const TeacherPKPrefix = "COURSE";

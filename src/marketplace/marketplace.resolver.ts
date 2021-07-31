@@ -160,6 +160,18 @@ async function unfulfilledPurchases(
    return marketService.unfulfilledPurchases(args.course, context.username);
 }
 
+async function blockStudentPurchases(
+   _: any,
+   args: MutationBlockStudentPurchasesArgs,
+   context: FliptedContext
+) {
+   if (context.userRole == RoleInternal.Instructor) {
+      return marketService.blockStudentPurchases(args.course, args.student, args.blocked)
+   }
+
+   throw new ForbiddenError(notInstructorErrorMessage);
+}
+
 const resolvers = {
    Query: {
       marketListings: marketListings,
@@ -168,6 +180,7 @@ const resolvers = {
       recentActivity
    },
    Mutation: {
+      blockStudentPurchases: blockStudentPurchases,
       refundPurchase: refundPurchase,
       purchase: purchase,
       addMarketListing: addMarketListing,

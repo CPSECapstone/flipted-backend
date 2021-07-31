@@ -53,7 +53,8 @@ export function studentInputToDBItem(input: StudentInput, courseName: string): C
       studentId: input.studentId,
       firstName: input.firstName,
       lastName: input.lastName,
-      instructorId: input.instructorId
+      instructorId: input.instructorId,
+      purchaseBlocked: false
    };
 
    return item;
