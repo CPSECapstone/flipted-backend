@@ -113,33 +113,6 @@ export async function removeMarketListing(course: string, listingId: string) {
    return "success";
 }
 
-// This will simply set the points of the student
-// Use when we already know how many points the student had before calling
-export async function setStudentPoints(
-   course: string,
-   userId: string,
-   values: StudentPointValues
-): Promise<PointChange> {
-   const params: UpdateParams = {
-      tableName: COURSE_CONTENT_TABLE_NAME,
-      key: {
-         PK: StudentPK(userId),
-         SK: StudentSK(course)
-      },
-      conditionExpression: "attribute_exists(SK)",
-      updateExpression:
-         "set points = :points, totalPointsAwarded = :totalPointsAwarded, totalPointsSpent = :totalPointsSpent",
-      expressionAttributeValues: {
-         ":points": values.points,
-         ":totalPointsAwarded": values.totalPointsAwarded,
-         ":totalPointsSpent": values.totalPointsSpent
-      }
-   };
-
-   const ret = await dynamodb.update(params);
-   return values;
-}
-
 export async function addStudentPoints(course: string, userId: string, pointChange: PointChange) {
    const params: UpdateParams = {
       tableName: MARKETPLACE_TABLE,
@@ -240,6 +213,10 @@ export async function executePurchase(
       throw new Error(
          `Insufficient funds: Required: ${totalCost}, User ${userId} point balance: ${student.points}`
       );
+   }
+
+   if (student.purchaseBlocked) {
+      throw new Error(`Purchases blocked`);
    }
 
    // Eligible for purchase
@@ -370,6 +347,20 @@ export async function deleteReceipt(courseId: string, recieptId: string) {
    return dynamodb.deleteItem(params);
 }
 
+export async function deleteStudent(courseId: string, studentId: string) {
+   const params: DeleteParam = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: StudentPK(courseId),
+         SK: StudentSK(studentId)
+      }
+   };
+
+   await dynamodb.deleteItem(params);
+   return "success"
+}
+
+
 export async function refundPurchase(course: string, receiptId: any) {
    const receipt = await getReceipt(course, receiptId);
    const listing = await getMarketListing(course, receipt.listingId);
@@ -423,4 +414,21 @@ export function recentStudentActivity(course: string, studentId: string, fetch: 
    };
 
    return dynamodb.queryList<Activity>(params);
+}
+
+export async function blockStudentPurchases(course: string, student: string, blocked: boolean) {
+   const params: UpdateParams = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: StudentPK(course),
+         SK: StudentSK(student)
+      },
+      conditionExpression: "attribute_exists(SK)",
+      updateExpression: "set purchaseBlocked = :purchaseBlocked",
+      expressionAttributeValues: {
+         ":purchaseBlocked": blocked
+      }
+   };
+
+   return await dynamodb.updateMarshall<Student>(params);
 }

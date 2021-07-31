@@ -305,6 +305,7 @@ type Mutation = {
   addVideoBlock: Scalars['String'];
   awardStudentPoints: Student;
   awardStudentsPoints: Array<Student>;
+  blockStudentPurchases: Student;
   /** Creates a new course associated with the instructor caller */
   createCourse: CourseInfo;
   deleteGoal: Scalars['String'];
@@ -317,6 +318,7 @@ type Mutation = {
   purchase: Receipt;
   refundPurchase: Scalars['Boolean'];
   removeMarketListing: Scalars['String'];
+  removeStudent: Scalars['String'];
   /** Saves and a students answer to a free response question quiz block */
   saveFreeResponseProgress: Scalars['Boolean'];
   /** Saves a students answer to a multiple choice question quiz block */
@@ -435,6 +437,13 @@ type MutationAwardStudentsPointsArgs = {
 };
 
 
+type MutationBlockStudentPurchasesArgs = {
+  course: Scalars['String'];
+  student: Scalars['String'];
+  blocked: Scalars['Boolean'];
+};
+
+
 type MutationCreateCourseArgs = {
   course: CourseInput;
 };
@@ -496,6 +505,12 @@ type MutationRefundPurchaseArgs = {
 type MutationRemoveMarketListingArgs = {
   course: Scalars['String'];
   id: Scalars['String'];
+};
+
+
+type MutationRemoveStudentArgs = {
+  course: Scalars['String'];
+  student: Scalars['String'];
 };
 
 
@@ -970,6 +985,7 @@ type Student = {
   points: Scalars['Int'];
   totalPointsAwarded: Scalars['Int'];
   totalPointsSpent: Scalars['Int'];
+  purchaseBlocked: Scalars['Boolean'];
 };
 
 type StudentInput = {

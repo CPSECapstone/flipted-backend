@@ -187,40 +187,6 @@ describe("Editing a marketplace item", () => {
 });
 
 describe("Changing a students points", () => {
-   it("Should update the item with the correct params", async () => {
-      const pointValues: StudentPointValues = {
-         points: 1,
-         totalPointsAwarded: 6,
-         totalPointsSpent: 5
-      };
-      const expectedParamArgs: UpdateParams = {
-         tableName: COURSE_CONTENT_TABLE_NAME,
-         key: {
-            PK: StudentPK("userid"),
-            SK: StudentSK("courseId")
-         },
-         conditionExpression: "attribute_exists(SK)",
-         updateExpression:
-            "set points = :points, totalPointsAwarded = :totalPointsAwarded, totalPointsSpent = :totalPointsSpent",
-         expressionAttributeValues: {
-            ":points": pointValues.points,
-            ":totalPointsAwarded": pointValues.totalPointsAwarded,
-            ":totalPointsSpent": pointValues.totalPointsSpent
-         }
-      };
-
-      expect(await marketService.setStudentPoints("courseId", "userid", pointValues)).toEqual({
-         points: 1,
-         totalPointsAwarded: 6,
-         totalPointsSpent: 5
-      });
-
-      expect(dynamodbMock.update).toBeCalledWith(expectedParamArgs);
-      expect(dynamodbMock.update).toHaveBeenCalledTimes(1);
-      expect(dynamodbMock.put).toHaveBeenCalledTimes(0);
-      expect(dynamodbMock.get).toHaveBeenCalledTimes(0);
-   });
-
    it("Should correctly add the points when modifying as a delta", async () => {
       (dynamodbMock.updateMarshall as jest.Mock).mockReturnValue({
          points: 8,
