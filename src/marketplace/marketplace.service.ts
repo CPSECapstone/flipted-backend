@@ -348,18 +348,22 @@ export async function deleteReceipt(courseId: string, recieptId: string) {
 }
 
 export async function deleteStudent(courseId: string, studentId: string) {
-   const params: DeleteParam = {
+   const params: ScanParams = {
       tableName: MARKETPLACE_TABLE,
-      key: {
-         PK: StudentPK(courseId),
-         SK: StudentSK(studentId)
+      filterExpression: "PK = :coursePk and studentId = :studentId",
+      expressionAttributeValues: {
+         ":coursePk": StudentPK(courseId),
+         ":studentId": studentId
       }
    };
 
-   await dynamodb.deleteItem(params);
-   return "success"
+   try {
+      const output = await dynamodb.batchDelete(params);
+      return output;
+   } catch (err) {
+      return err;
+   }
 }
-
 
 export async function refundPurchase(course: string, receiptId: any) {
    const receipt = await getReceipt(course, receiptId);
