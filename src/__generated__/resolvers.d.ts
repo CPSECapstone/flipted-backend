@@ -454,6 +454,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   purchase?: Resolver<ResolversTypes['Receipt'], ParentType, ContextType, RequireFields<MutationPurchaseArgs, 'course' | 'listingId' | 'quantity' | 'note'>>;
   refundPurchase?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationRefundPurchaseArgs, 'course' | 'receiptId'>>;
   removeMarketListing?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationRemoveMarketListingArgs, 'course' | 'id'>>;
+  removeStudent?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationRemoveStudentArgs, 'course' | 'student'>>;
   saveFreeResponseProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveFreeResponseProgressArgs, 'frBlockInput'>>;
   saveMultipleChoiceProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveMultipleChoiceProgressArgs, 'mcBlockInput'>>;
   submitTask?: Resolver<ResolversTypes['TaskSubmissionResult'], ParentType, ContextType, RequireFields<MutationSubmitTaskArgs, 'taskId'>>;

@@ -172,6 +172,18 @@ async function blockStudentPurchases(
    throw new ForbiddenError(notInstructorErrorMessage);
 }
 
+async function removeStudent(
+   _: any,
+   args: MutationRemoveStudentArgs,
+   context: FliptedContext
+) {
+   if (context.userRole == RoleInternal.Instructor) {
+      return marketService.deleteStudent(args.course, args.student);
+   }
+
+   throw new ForbiddenError(notInstructorErrorMessage);
+}
+
 const resolvers = {
    Query: {
       marketListings: marketListings,
@@ -185,6 +197,7 @@ const resolvers = {
       purchase: purchase,
       addMarketListing: addMarketListing,
       removeMarketListing: removeMarketListing,
+      removeStudent,
       editMarketListing: editMarketListing,
       awardStudentPoints: awardStudentPoints,
       awardStudentsPoints: awardStudentsPoints,

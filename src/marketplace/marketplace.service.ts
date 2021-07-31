@@ -347,6 +347,20 @@ export async function deleteReceipt(courseId: string, recieptId: string) {
    return dynamodb.deleteItem(params);
 }
 
+export async function deleteStudent(courseId: string, studentId: string) {
+   const params: DeleteParam = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: StudentPK(courseId),
+         SK: StudentSK(studentId)
+      }
+   };
+
+   await dynamodb.deleteItem(params);
+   return "success"
+}
+
+
 export async function refundPurchase(course: string, receiptId: any) {
    const receipt = await getReceipt(course, receiptId);
    const listing = await getMarketListing(course, receipt.listingId);
