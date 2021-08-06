@@ -10,7 +10,7 @@ provider:
         Action:
            - "dynamodb:*"
            #This specifies the ARN of your resources
-        Resource: "arn:aws:dynamodb:us-east-1:*:*"
+        Resource: "arn:aws:dynamodb:us-west-1:*:*"
 
 functions:
    graphql:

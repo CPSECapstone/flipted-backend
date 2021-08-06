@@ -19,7 +19,7 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { uid } from "uid/secure";
 
-const client = new DynamoDBClient({ region: "us-east-1" });
+const client = new DynamoDBClient({ region: "us-west-1" });
 
 const marshallOpts: marshallOptions = {
    removeUndefinedValues: true,
