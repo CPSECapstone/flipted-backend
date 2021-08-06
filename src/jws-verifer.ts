@@ -7,9 +7,9 @@ const {
 
 // get a verifier instance. Put your config values here.
 const verifier = verifierFactory({
-   region: "us-east-1",
-   userPoolId: "us-east-1_POfbbYTKF",
-   appClientId: "24sdf1brebo58s89ja0b63c51d",
+   region: "us-west-1",
+   userPoolId: "us-west-1_0AwmhkLS2",
+   appClientId: "2fnf7vv8cofh8364p071gku4jn",
    tokenType: "access" // either "access" or "id"
 });
 
