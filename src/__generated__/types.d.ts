@@ -74,8 +74,6 @@ type CourseInfo = {
 
 type CourseInput = {
   courseName: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
 };
 
 
@@ -990,8 +988,6 @@ type Student = {
 
 type StudentInput = {
   studentId: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
   courseId: Scalars['String'];
   instructorId: Scalars['String'];
 };
@@ -1270,6 +1266,7 @@ type User = {
   __typename?: 'User';
   id: Scalars['String'];
   role: Role;
+  name: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;

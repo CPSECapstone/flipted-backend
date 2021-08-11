@@ -25,7 +25,7 @@ import { dbItemToObjective } from "../objective/objectiveHelper";
 import { dbItemToTarget } from "../target/targetHelper";
 import { dbItemToTask } from "../task/taskBusLogic";
 
-export function courseInputToDBItem(input: CourseInput, instructorId: string, courseId: string) {
+export function courseInputToDBItem(input: CourseInput, instructorId: string, courseId: string, name: string) {
    const item: CourseTeacherItem = {
       PK: TeacherPK(courseId),
       SK: TeacherSK(instructorId),
@@ -33,14 +33,14 @@ export function courseInputToDBItem(input: CourseInput, instructorId: string, co
       courseId: courseId,
       instructorId: instructorId,
       courseName: input.courseName,
-      firstName: input.firstName,
-      lastName: input.lastName
+      firstName: name,
+      lastName: ''
    };
 
    return item;
 }
 
-export function studentInputToDBItem(input: StudentInput, courseName: string): CourseStudentItem {
+export function studentInputToDBItem(input: StudentInput, courseName: string, name: string): CourseStudentItem {
    const item: CourseStudentItem = {
       PK: StudentPK(input.courseId),
       SK: StudentSK(input.studentId),
@@ -51,8 +51,8 @@ export function studentInputToDBItem(input: StudentInput, courseName: string): C
       courseName: courseName,
       courseId: input.courseId,
       studentId: input.studentId,
-      firstName: input.firstName,
-      lastName: input.lastName,
+      firstName: name,
+      lastName: '',
       instructorId: input.instructorId,
       purchaseBlocked: false
    };

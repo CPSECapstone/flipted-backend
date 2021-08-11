@@ -9,6 +9,7 @@ declare global {
    export type FliptedContext = {
       username: string
       userRole: RoleInternal
+      name: string
    }
  }
 
@@ -27,18 +28,31 @@ const apolloServer = new ApolloServer({
                event,
                userRole: RoleInternal.Instructor,
                username: "hackerman",
+               name: "Hacker Man",
+               context
+            };
+         }
+         if(event.headers.Authorization === 'backdoor_student') {
+            return {
+               headers: event.headers,
+               functionName: context.functionName,
+               event,
+               userRole: RoleInternal.Student,
+               username: "hackerman_student",
+               name: "Hacker Student Man",
                context
             };
          }
          const tokenPayload = await validateToken(event.headers.Authorization);
-         const userRole = await userService.getUserRole(tokenPayload.username)
+         const user = await userService.get(tokenPayload.username)
 
          return {
             headers: event.headers,
             functionName: context.functionName,
             event,
-            userRole: userRole,
+            userRole: user.role.toString() as RoleInternal,
             username: tokenPayload.username,
+            name: user.name,
             context
          };
       }

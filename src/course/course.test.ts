@@ -32,8 +32,6 @@ test("Converting course creation to db item", async () => {
 
    const courseInput: CourseInput = {
       courseName: "Test Course",
-      firstName: "Bob",
-      lastName: "Jones"
    };
 
    const expRes: CourseTeacherItem = {
@@ -43,11 +41,11 @@ test("Converting course creation to db item", async () => {
       courseName: "Test Course",
       courseId: courseId,
       instructorId: teacherId,
-      firstName: "Bob",
-      lastName: "Jones"
+      firstName: "Bob Jones",
+      lastName: ""
    };
 
-   expect(courseInputToDBItem(courseInput, teacherId, courseId)).toEqual(expRes);
+   expect(courseInputToDBItem(courseInput, teacherId, courseId, "Bob Jones")).toEqual(expRes);
 });
 
 test("I can: query all courses I'm managing / enrolled in", async () => {

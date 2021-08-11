@@ -24,7 +24,7 @@ export async function addStudent(input: StudentInput) {
       const courseInfo = getCourseInfo(input.courseId, input.instructorId);
       const userinfo = await userService.get(input.studentId);
 
-      const studentItem = helper.studentInputToDBItem(input, (await courseInfo).courseName);
+      const studentItem = helper.studentInputToDBItem(input, (await courseInfo).courseName, userinfo.name);
 
       const params: PutCompositeParams = {
          tableName: MARKETPLACE_TABLE,
@@ -98,8 +98,8 @@ export async function deleteStudents(): Promise<number> {
    }
 }
 
-export async function addCourse(input: CourseInput, instructorId: string) {
-   const courseItem = helper.courseInputToDBItem(input, instructorId, uid());
+export async function addCourse(input: CourseInput, instructorId: string, name: string) {
+   const courseItem = helper.courseInputToDBItem(input, instructorId, uid(), name);
 
    const params: PutCompositeParams = {
       tableName: MARKETPLACE_TABLE,

@@ -48,7 +48,7 @@ const resolvers: Resolvers = {
       addStudent: addStudent,
       createCourse(_, args: MutationCreateCourseArgs, context: FliptedContext) {
          if (context.userRole == RoleInternal.Instructor) {
-            return service.addCourse(args.course, context.username);
+            return service.addCourse(args.course, context.username, context.name);
          }
          throw new ForbiddenError(notInstructorErrorMessage);
       }
