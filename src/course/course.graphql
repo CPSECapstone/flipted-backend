@@ -12,8 +12,6 @@ type CourseContent {
 
 input CourseInput {
    courseName: String!
-   firstName: String!
-   lastName: String!
 }
 
 type Student {
@@ -31,8 +29,6 @@ type Student {
 
 input StudentInput {
    studentId: String!
-   firstName: String!
-   lastName: String!
    courseId: String!
    instructorId: String!
 }
