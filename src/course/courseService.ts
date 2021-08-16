@@ -28,7 +28,8 @@ export async function addStudent(input: StudentInput) {
 
       const params: PutCompositeParams = {
          tableName: MARKETPLACE_TABLE,
-         item: studentItem
+         item: studentItem,
+         conditionalExpression: "attribute_not_exists(PK) AND attribute_not_exists(SK)",
       };
 
       const output = await dynamodb.putComposite(params);
