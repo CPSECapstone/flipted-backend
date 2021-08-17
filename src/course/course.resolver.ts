@@ -14,7 +14,7 @@ async function addStudent(_: any, args: MutationAddStudentArgs, context: Flipted
 }
 
 async function getStudent(_: any, args: QueryStudentArgs, context: FliptedContext) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await service.isCourseAdmin(args.courseId, context.username))) {
       if (!args.studentId) {
          throw new Error("Instructor did not provide a student to query");
       }
@@ -24,7 +24,7 @@ async function getStudent(_: any, args: QueryStudentArgs, context: FliptedContex
 }
 
 async function listStudentsByCourse(_: any, args: QueryStudentsArgs, context: FliptedContext) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await service.isCourseAdmin(args.courseId, context.username))) {
       return service.listStudentsByCourse(args.courseId);
    }
    throw new ForbiddenError(notInstructorErrorMessage);
