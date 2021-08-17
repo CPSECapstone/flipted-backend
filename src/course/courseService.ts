@@ -61,6 +61,10 @@ export async function getStudent(course: string, studentId: string): Promise<Stu
    }
 }
 
+export async function isCourseAdmin(course: string, studentId: string) : Promise<Boolean> {
+   return (await getStudent(course, studentId)).admin
+}
+
 export async function listStudentsByCourse(course: string): Promise<Student[]> {
    const params: QueryParams = {
       tableName: MARKETPLACE_TABLE,

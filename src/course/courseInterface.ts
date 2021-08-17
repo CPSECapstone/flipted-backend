@@ -28,6 +28,7 @@ export type CourseStudentItem = CompositeDBItem & {
    totalPointsAwarded: number;
    totalPointsSpent: number;
    purchaseBlocked: boolean;
+   admin: boolean;
 };
 
 export const USER_COURSE_INDEX = "U_PK-PK-index";

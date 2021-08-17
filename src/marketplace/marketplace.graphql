@@ -62,6 +62,7 @@ type Query {
 type Mutation {
    removeStudent(course: String! student: String!) : String!
    blockStudentPurchases(course: String! student: String!, blocked: Boolean!) : Student!
+   setStudentAdmin(course: String! student: String!, admin: Boolean!) : Student!
    refundPurchase(course: String! receiptId: String!) : Boolean!
    fulfillPurchase(course: String! receiptId: String! fulfilled: Boolean!) : Receipt!
    purchase(course: String!, listingId: String!, quantity: Int!, note: String!) : Receipt!

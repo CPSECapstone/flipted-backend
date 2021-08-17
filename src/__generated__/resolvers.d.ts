@@ -462,6 +462,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   removeStudent?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationRemoveStudentArgs, 'course' | 'student'>>;
   saveFreeResponseProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveFreeResponseProgressArgs, 'frBlockInput'>>;
   saveMultipleChoiceProgress?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSaveMultipleChoiceProgressArgs, 'mcBlockInput'>>;
+  setStudentAdmin?: Resolver<ResolversTypes['Student'], ParentType, ContextType, RequireFields<MutationSetStudentAdminArgs, 'course' | 'student' | 'admin'>>;
   submitTask?: Resolver<ResolversTypes['TaskSubmissionResult'], ParentType, ContextType, RequireFields<MutationSubmitTaskArgs, 'taskId'>>;
   submitTaskProgress?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSubmitTaskProgressArgs, 'taskProgress'>>;
   updateUser?: Resolver<Maybe<ResolversTypes['UpdateUserOutput']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, never>>;
@@ -635,6 +636,7 @@ export type StudentResolvers<ContextType = any, ParentType extends ResolversPare
   totalPointsAwarded?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalPointsSpent?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   purchaseBlocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  admin?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

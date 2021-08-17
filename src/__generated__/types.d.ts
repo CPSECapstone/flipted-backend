@@ -321,6 +321,7 @@ type Mutation = {
   saveFreeResponseProgress: Scalars['Boolean'];
   /** Saves a students answer to a multiple choice question quiz block */
   saveMultipleChoiceProgress: Scalars['Boolean'];
+  setStudentAdmin: Student;
   /**
    * Should be called when a student has completed all rubric requirements and answered
    * all questions in the task. If the above requirements are not satisfied, this will return
@@ -519,6 +520,13 @@ type MutationSaveFreeResponseProgressArgs = {
 
 type MutationSaveMultipleChoiceProgressArgs = {
   mcBlockInput: MultipleChoiceAnswerInput;
+};
+
+
+type MutationSetStudentAdminArgs = {
+  course: Scalars['String'];
+  student: Scalars['String'];
+  admin: Scalars['Boolean'];
 };
 
 
@@ -984,6 +992,7 @@ type Student = {
   totalPointsAwarded: Scalars['Int'];
   totalPointsSpent: Scalars['Int'];
   purchaseBlocked: Scalars['Boolean'];
+  admin: Scalars['Boolean'];
 };
 
 type StudentInput = {

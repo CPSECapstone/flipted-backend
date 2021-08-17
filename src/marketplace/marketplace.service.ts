@@ -436,3 +436,20 @@ export async function blockStudentPurchases(course: string, student: string, blo
 
    return await dynamodb.updateMarshall<Student>(params);
 }
+
+export async function setStudentAdmin(course: string, student: string, admin: boolean) {
+   const params: UpdateParams = {
+      tableName: MARKETPLACE_TABLE,
+      key: {
+         PK: StudentPK(course),
+         SK: StudentSK(student)
+      },
+      conditionExpression: "attribute_exists(SK)",
+      updateExpression: "set admin = :admin",
+      expressionAttributeValues: {
+         ":admin": admin
+      }
+   };
+
+   return await dynamodb.updateMarshall<Student>(params);
+}
