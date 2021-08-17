@@ -1,7 +1,7 @@
 import { ForbiddenError } from "apollo-server-lambda";
 import { notInstructorErrorMessage, TO_GRAPHQL_DATE } from "../environment";
 import { RoleInternal } from "../interfaces/role";
-import { getStudent } from "../course/courseService";
+import { getStudent, isCourseAdmin } from "../course/courseService";
 import { Resolvers } from "../__generated__/resolvers";
 import { ReceiptItem, StudentPointValues } from "./marketplace.interface";
 import * as marketService from "./marketplace.service";
@@ -12,7 +12,7 @@ async function addMarketListing(
    args: MutationAddMarketListingArgs,
    context: FliptedContext
 ) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await isCourseAdmin(args.course, context.username))) {
       return await marketService.addMarketListing(args.course, args.listing);
    }
 
@@ -24,7 +24,7 @@ async function removeMarketListing(
    args: MutationRemoveMarketListingArgs,
    context: FliptedContext
 ) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await isCourseAdmin(args.course, context.username))) {
       return await marketService.removeMarketListing(args.course, args.id);
    }
 
@@ -36,7 +36,7 @@ async function editMarketListing(
    args: MutationEditMarketListingArgs,
    context: FliptedContext
 ) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await isCourseAdmin(args.course, context.username))) {
       return await marketService.editMarketListing(args.course, args.id, args.listing);
    }
 
@@ -66,7 +66,7 @@ async function awardStudentPoints(
    args: MutationAwardStudentPointsArgs,
    context: FliptedContext
 ) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await isCourseAdmin(args.courseId, context.username))) {
       marketService.createActivity(args.courseId, args.student, `Awarded Points`, args.points);
 
       return (
@@ -86,7 +86,7 @@ async function awardStudentsPoints(
    args: MutationAwardStudentsPointsArgs,
    context: FliptedContext
 ) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await isCourseAdmin(args.courseId, context.username))) {
       return await Promise.all(
          args.studentIds.map(async id => {
             marketService.createActivity(args.courseId, id, `Awarded Points`, args.points);
@@ -104,7 +104,7 @@ async function awardStudentsPoints(
 }
 
 async function fulfillPurchase(_: any, args: MutationFulfillPurchaseArgs, context: FliptedContext) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await isCourseAdmin(args.course, context.username))) {
       return marketService.fulfillPurchase(args.course, args.receiptId, args.fulfilled);
    }
 
@@ -112,7 +112,7 @@ async function fulfillPurchase(_: any, args: MutationFulfillPurchaseArgs, contex
 }
 
 async function recentPurchases(_: any, args: QueryRecentPurchasesArgs, context: FliptedContext) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await isCourseAdmin(args.course, context.username))) {
       if (args.student) {
          return marketService.recentStudentPurchases(args.course, args.student, args.fetch);
       }
@@ -123,7 +123,7 @@ async function recentPurchases(_: any, args: QueryRecentPurchasesArgs, context: 
 }
 
 async function recentActivity(_: any, args: QueryRecentActivityArgs, context: FliptedContext) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await isCourseAdmin(args.course, context.username))) {
       if (args.student) {
          return marketService.recentStudentActivity(args.course, args.student, args.fetch);
       }
@@ -138,7 +138,7 @@ async function refundPurchase(
    args: MutationRefundPurchaseArgs,
    context: FliptedContext
 ): Promise<boolean> {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await isCourseAdmin(args.course, context.username))) {
       return marketService.refundPurchase(args.course, args.receiptId);
    }
 
@@ -150,7 +150,7 @@ async function unfulfilledPurchases(
    args: QueryRecentPurchasesArgs,
    context: FliptedContext
 ) {
-   if (context.userRole == RoleInternal.Instructor) {
+   if (context.userRole == RoleInternal.Instructor || (await isCourseAdmin(args.course, context.username))) {
       if (args.student) {
          return marketService.unfulfilledPurchases(args.course, args.student);
       }
@@ -167,6 +167,18 @@ async function blockStudentPurchases(
 ) {
    if (context.userRole == RoleInternal.Instructor) {
       return marketService.blockStudentPurchases(args.course, args.student, args.blocked)
+   }
+
+   throw new ForbiddenError(notInstructorErrorMessage);
+}
+
+async function setStudentAdmin(
+   _: any,
+   args: MutationSetStudentAdminArgs,
+   context: FliptedContext
+) {
+   if (context.userRole == RoleInternal.Instructor) {
+      return marketService.setStudentAdmin(args.course, args.student, args.admin)
    }
 
    throw new ForbiddenError(notInstructorErrorMessage);
@@ -201,7 +213,8 @@ const resolvers = {
       editMarketListing: editMarketListing,
       awardStudentPoints: awardStudentPoints,
       awardStudentsPoints: awardStudentsPoints,
-      fulfillPurchase: fulfillPurchase
+      fulfillPurchase: fulfillPurchase,
+      setStudentAdmin: setStudentAdmin,
    },
    MarketListing: {
       // TODO: will break if not from a market listing item

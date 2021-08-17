@@ -25,6 +25,7 @@ type Student {
    totalPointsAwarded: Int!,
    totalPointsSpent: Int!
    purchaseBlocked: Boolean!
+   admin: Boolean!
 }
 
 input StudentInput {

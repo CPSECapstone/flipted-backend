@@ -28,7 +28,8 @@ export async function addStudent(input: StudentInput) {
 
       const params: PutCompositeParams = {
          tableName: MARKETPLACE_TABLE,
-         item: studentItem
+         item: studentItem,
+         conditionalExpression: "attribute_not_exists(PK) AND attribute_not_exists(SK)",
       };
 
       const output = await dynamodb.putComposite(params);
@@ -58,6 +59,10 @@ export async function getStudent(course: string, studentId: string): Promise<Stu
    } catch (err) {
       throw err;
    }
+}
+
+export async function isCourseAdmin(course: string, studentId: string) : Promise<Boolean> {
+   return (await getStudent(course, studentId)).admin
 }
 
 export async function listStudentsByCourse(course: string): Promise<Student[]> {
